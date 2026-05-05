@@ -1,0 +1,239 @@
+// sass/components/_comments.scss
+@use '../base/variables' as *;
+
+// ==========================================
+// 1. A LISTA DE COMENTÁRIOS (Os Cards)
+// ==========================================
+.comments-area {
+	margin-top: 3rem;
+	
+	.comments-title {
+		color: $brand-blue-light;
+		font-size: 1.5rem;
+		margin-bottom: 2rem;
+		border-bottom: 1px solid $border-dark;
+		padding-bottom: 10px;
+	}
+}
+
+.comment-list {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+
+	// Reset estrutural para evitar a "Caixa Dupla"
+	li.comment {
+		margin-bottom: 1.5rem;
+		display: block;
+	}
+
+	// O Card real do comentário (Agora com o Glassmorphism da Sidebar)
+	.comment-body {
+		background: $glass-bg;
+		padding: 20px;
+		border-radius: 8px;
+		border: 1px solid $glass-border;
+		
+		// Estrutura o cabeçalho do comentário (Avatar + Nome)
+		.comment-author {
+			display: flex;
+			align-items: center;
+			gap: 12px;
+			margin-bottom: 5px;
+			
+			img {
+				border-radius: 50%; // Avatar redondo
+				width: 40px;
+				height: 40px;
+			}
+			
+			.fn {
+				font-weight: 600;
+				color: $brand-blue-light;
+				font-style: normal;
+				font-size: 1rem;
+				
+				a { color: inherit; text-decoration: none; }
+			}
+			
+			// Esconde aquele "disse:" padrão e feio do WordPress
+			.says { display: none; } 
+		}
+
+		// A data do comentário
+		.comment-meta {
+			font-size: 0.8rem;
+			margin-bottom: 15px;
+			padding-left: 52px; // Alinha com o texto, respeitando o espaço do avatar de 40px + 12px de gap
+			margin-top: -15px; // Puxa a data para debaixo do nome
+			
+			a {
+				color: $text-muted-dark;
+				text-decoration: none;
+				&:hover { color: $dark-text-muted; }
+			}
+		}
+
+		// O texto em si
+		p {
+			color: $text-light;
+			line-height: 1.6;
+			margin-bottom: 15px;
+		}
+
+		// Botão de "Responder"
+		.reply a {
+			background: $dark-surface;
+			color: $dark-text;
+			padding: 5px 12px;
+			border-radius: 4px;
+			font-size: 0.8rem;
+			text-decoration: none;
+			transition: background 0.2s;
+			border: 1px solid $border-light;
+
+			&:hover {
+				background: $brand-blue-light;
+				border-color: $brand-blue-light;
+				color: #000; // Letra preta para contraste no hover azul
+			}
+		}
+	}
+
+	// Respostas Aninhadas (Filhos)
+	.children {
+		list-style: none;
+		margin: 1.5rem 0 1.5rem 1rem;
+		padding-left: 1rem;
+		border-left: 2px solid $border-light; // Uma linha sutil indicando a hierarquia
+
+		li.comment {
+			margin-bottom: 1rem;
+		}
+	}
+}
+
+// ==========================================
+// 2. O FORMULÁRIO DE COMENTÁRIOS (#respond)
+// ==========================================
+#respond {
+	// Mesma transparência de elevação da sidebar!
+	background: $glass-bg;
+	padding: 25px;
+	border-radius: 8px;
+	border: 1px solid $glass-border;
+	margin-top: 3rem;
+
+	.comment-reply-title {
+		color: $brand-blue-light;
+		font-size: 1.3rem;
+		margin-bottom: 1rem;
+	}
+
+	// O texto de ajuda (Deixa discreto para não roubar a cena)
+	.comment-notes {
+		color: $text-muted-dark;
+		font-size: 0.85rem;
+		margin-bottom: 1.5rem;
+	}
+
+	// A Mágica do Grid para organizar o formulário
+	form {
+		display: grid;
+		grid-template-columns: 1fr 1fr; // Cria duas colunas iguais
+		gap: 15px; // Espaçamento entre os campos
+		
+		p { margin: 0; } // Reseta as margens do WP
+
+		// Força esses campos a ocuparem as duas colunas (100% da largura)
+		.comment-notes,
+		.comment-form-comment,
+		.comment-form-url,
+		.comment-form-cookies-consent,
+		.form-submit {
+			grid-column: 1 / -1; 
+		}
+
+		// No Desktop, Nome e E-mail ficam lado a lado!
+		.comment-form-author { grid-column: 1 / 2; }
+		.comment-form-email { grid-column: 2 / 3; }
+
+		// No Mobile, quebra tudo para 1 coluna
+		@media (max-width: 768px) {
+			.comment-form-author,
+			.comment-form-email {
+				grid-column: 1 / -1;
+			}
+		}
+	}
+
+	// Estilização das Caixas de Texto
+	label {
+		display: block;
+		color: $text-label;
+		margin-bottom: 5px;
+		font-size: 0.9rem;
+	}
+
+	textarea,
+	input[type="text"],
+	input[type="email"],
+	input[type="url"] {
+		width: 100%;
+		background: $dark-deep; // Fundo mais profundo que a superfície
+		border: 1px solid $border-light;
+		color: $dark-text;
+		padding: 12px 15px;
+		border-radius: 6px;
+		outline: none;
+		font-family: inherit;
+		transition: border-color 0.2s;
+
+		&:focus {
+			border-color: $brand-blue-light;
+		}
+	}
+
+	textarea {
+		min-height: 120px;
+		resize: vertical; // Permite aumentar só pra baixo
+	}
+
+	// Alinhamento perfeito do Checkbox
+	.comment-form-cookies-consent {
+		display: flex;
+		align-items: center;
+		gap: 10px; // Espaço exato entre o quadradinho e o texto
+		
+		input[type="checkbox"] {
+			margin: 0;
+			width: auto;
+			cursor: pointer;
+		}
+
+		label {
+			margin: 0;
+			display: inline-block;
+			color: $text-muted-dark;
+			font-size: 0.85rem;
+			cursor: pointer;
+		}
+	}
+
+	// O Botão de Enviar
+	.submit {
+		background: $brand-blue-light;
+		color: #000;
+		border: none;
+		padding: 12px 25px;
+		border-radius: 6px;
+		font-weight: 600;
+		cursor: pointer;
+		transition: opacity 0.2s;
+		margin-top: 10px;
+
+		&:hover {
+			opacity: 0.8;
+		}
+	}
+}

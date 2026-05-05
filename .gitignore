@@ -1,0 +1,36 @@
+# === Dependências e cache ===
+node_modules/
+.sass-cache/
+
+# === Editor / IDE ===
+.claude/
+.vscode/
+.gemini/
+*.code-workspace
+.idea/
+
+
+# === Sistema operacional ===
+Thumbs.db
+ehthumbs.db
+desktop.ini
+.DS_Store
+
+# === Sensível ===
+.env
+.env.*
+*.pem
+*.key
+
+# === Backup / temporário ===
+*.bak
+*.swp
+*~
+*.log
+
+# === Logs WP/PHP ===
+debug.log
+error_log
+
+# === Sourcemaps (decisão tua, ver nota) ===
+*.css.map

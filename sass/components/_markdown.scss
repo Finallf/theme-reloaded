@@ -1,0 +1,431 @@
+// sass/components/_markdown.scss
+@use '../base/variables' as *;
+
+.entry-content {
+
+	a {
+		color: $brand-blue-light;
+	}
+
+	strong{
+		font-weight: 500;
+	}
+
+	code {
+		overflow-wrap: anywhere; /* Força a quebra em navegadores modernos */
+		word-wrap: break-word;
+		word-break: break-word; /* Quebra a palavra ao meio se bater na borda */
+		white-space: pre-wrap; /* Permite que a linha dobre para baixo */
+	}
+
+	// ==========================================
+	// ESTILIZAÇÃO DE ROLAGEM (EFEITO HOVER MINIMALISTA)
+	// ==========================================
+	pre, 
+	table {
+		// Rolagem suave em dispositivos móveis
+		-webkit-overflow-scrolling: touch;
+
+		// Suporte Padrão (Firefox)
+		scrollbar-width: thin;
+		scrollbar-color: transparent transparent; // Invisível por padrão
+		transition: scrollbar-color 0.3s ease;
+
+		&:hover {
+			scrollbar-color: #555 transparent; // Aparece ao passar o mouse
+		}
+
+		// Suporte WebKit (Chrome, Edge, Safari)
+		&::-webkit-scrollbar {
+			height: 8px;
+			width: 8px;
+		}
+
+		// Fundo da trilha oculto por padrão
+		&::-webkit-scrollbar-track {
+			background: transparent;
+			border-radius: 4px;
+		}
+
+		// A barra (Thumb) oculta por padrão
+		&::-webkit-scrollbar-thumb {
+			background: transparent;
+			border-radius: 4px;
+		}
+
+		// A MÁGICA: Revela a barra quando o mouse entra na área
+		&:hover::-webkit-scrollbar-thumb {
+			background: #555;
+			
+			&:hover {
+				background: #777; // Destaca levemente ao focar na própria barra
+			}
+		}
+
+		// Oculta setas onde o motor de renderização permitir
+		&::-webkit-scrollbar-button {
+			display: none;
+		}
+	}
+
+	// ==========================================================
+	// Estilização de Divisores (HR)
+	// ==========================================================
+	hr {
+		border: 2px solid #3d444d; // Aplica os 2px de espessura com a cor do tema
+		margin: 0 0 1.7rem 0;
+	}
+
+	// ==========================================================
+	// Estilização de Títulos H2
+	// ==========================================================
+	h2 {
+		border-bottom: 1px solid #3d444d; // Sua regra de borda inferior
+		padding-bottom: 5px; // Seu respiro entre o texto e a linha
+		margin-bottom: 1.5rem;
+		font-weight: 500;
+	}
+
+	h3 {
+		margin-bottom: 0;
+	}
+
+	// ==========================================================
+	// Tabelas (Estilo GitHub Dark)
+	// ==========================================================
+	table {
+		width: 100%; // Garante que a tabela use o espaço disponível
+		border-collapse: collapse;
+		display: block; // Permite que a tabela crie uma barra de rolagem horizontal se for muito grande
+		overflow-x: auto; // Proteção essencial para celulares
+
+		th, td {
+			border: 1px solid #30363d; // Borda clássica do GitHub
+			padding: 5px 16px; // Dá o "respiro" para o conteúdo não ficar colado
+		}
+
+		th {
+			font-weight: 600;
+			background-color: #161b22; // Fundo levemente destacado para o cabeçalho
+		}
+
+		tr {
+			background-color: #0d1117; // Fundo principal da linha
+
+			// Efeito "Zebra" do GitHub (intercala as cores das linhas sutilmente)
+			&:nth-child(2n) {
+				background-color: #161b22;
+			}
+		}
+
+		// Correção para Imagens (QR Codes, Logos e Badges) dentro das tabelas
+		img {
+			background-color: transparent;
+			max-width: 100%; 
+			display: inline-block !important; // A MÁGICA: Sobrescreve o "block" global!
+			margin: 0; // Reseta as margens
+		}
+	}
+
+	// ==========================================================
+	// Correção para Badges/Shields e Imagens Inline (Markdown)
+	// ==========================================================
+	// Permite que as badges fiquem lado a lado em vez de empilharem
+	p {
+		img {
+			display: inline-block !important; // Sobrescreve o display: block global
+			vertical-align: middle; // Alinha as badges perfeitamente com o texto ao redor
+			box-shadow: none !important; // Remove qualquer borda ou sombra indesejada
+		}
+	}
+
+	// A mágica simples e à prova de falhas
+	p[align="center"] {
+		display: block; // Desliga o Flexbox
+		font-size: large;
+		text-align: center; // Garante que tudo fique no meio
+		line-height: 1.5; // Dá um respiro vertical caso as linhas fiquem muito coladas
+
+		br + br {
+			display: none;
+		}
+
+		// A CORREÇÃO: Garante que os links que "seguram" as imagens também fiquem lado a lado
+		a {
+			display: inline-block;
+			vertical-align: middle;
+			// Removemos qualquer background ou borda de hover que os links normais tenham
+			background: transparent;
+		}
+
+		img {
+			display: inline-block;
+			vertical-align: middle;
+			margin: 15px 0px;
+			box-shadow: none;
+		}
+	}
+
+	// Corrige ícones (imagens) dentro de todos os títulos
+	h1,
+	h2,
+	h3,
+	h4,
+	h5,
+	h6 {
+		img {
+			display: inline-block;
+			vertical-align: middle; // Alinha o ícone perfeitamente com o meio do texto
+			margin: 0px 5px 3px 5px; // Dá um respiro de 8px à direita e um leve ajuste inferior
+			box-shadow: none; // Remove qualquer borda ou sombra global do tema
+			max-height: 1.2em; // Garante que o ícone não fique desproporcional ao tamanho da fonte do título
+		}
+	}
+
+	// Restaura as listas não ordenadas (bolinhas) e ordenadas (números)
+	ul,
+	ol {
+		padding-left: 2rem; // Cria o recuo à esquerda (a indentação)
+		margin-bottom: 1.5rem; // Dá um respiro entre a lista e o próximo parágrafo
+	}
+
+	ul {
+		list-style-type: disc; // Força o aparecimento das "bolinhas"
+	}
+
+	ol {
+		list-style-type: decimal; // Força o aparecimento dos números
+	}
+
+	li {
+		margin-bottom: 0.5rem; // Espaçamento entre um item e outro da lista
+		line-height: 1.6; // Melhora a leitura do texto
+	}
+
+	// Corrige o espaçamento de listas aninhadas (lista dentro de lista)
+	ul ul,
+	ol ul,
+	ul ol,
+	ol ol {
+		margin-bottom: 0; // Remove a margem extra no final da sub-lista
+		margin-top: 0.5rem; // Dá um respiro no começo da sub-lista
+	}
+
+	// Estilo Base para os Alertas do GitHub
+	.gh-alert {
+		padding: 1rem;
+		margin: 1.5rem 0;
+		border-left: 4px solid #444;
+		border-radius: 4px;
+		background-color: rgba(255, 255, 255, 0.05); // Fundo sutil
+
+		// Remove a margem do primeiro e do último parágrafo para não sobrar espaço vazio
+		p:first-of-type {
+			margin-top: 0;
+		}
+
+		p:last-of-type {
+			margin-bottom: 0;
+		}
+
+		// ==========================================================
+		// Títulos e Ícones Oficiais do GitHub (Octicons SVG)
+		// ==========================================================
+		
+		// Estilo base para todos os títulos de alerta
+		&::before {
+			display: flex;
+			align-items: center;
+			margin-bottom: 0.5rem;
+			background-repeat: no-repeat;
+			background-position: left center;
+			padding-left: 24px; // Dá o espaço exato para o ícone de 16px respirar
+		}
+
+		// 1. NOTE (Informação - Azul)
+		&.gh-alert-NOTE {
+			border-left-color: #2f81f7;
+			&::before {
+				content: 'Note';
+				color: #2f81f7;
+				// Ícone 'info'
+				background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' width='16' height='16' fill='%232f81f7'%3E%3Cpath d='M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8Zm8-6.5a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13ZM6.5 7.75A.75.75 0 0 1 7.25 7h1a.75.75 0 0 1 .75.75v2.75h.25a.75.75 0 0 1 0 1.5h-2a.75.75 0 0 1 0-1.5h.25v-2h-.25a.75.75 0 0 1-.75-.75ZM8 6a1 1 0 1 1 0-2 1 1 0 0 1 0 2Z'/%3E%3C/svg%3E");
+			}
+		}
+
+		// 2. TIP (Dica - Verde)
+		&.gh-alert-TIP {
+			border-left-color: #3fb950;
+			&::before {
+				content: 'Tip';
+				color: #3fb950;
+				// Ícone 'light-bulb' (Lâmpada)
+				background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' width='16' height='16' fill='%233fb950'%3E%3Cpath d='M8 1.5c-2.363 0-4 1.69-4 3.75 0 .984.424 1.625.984 2.304l.214.253c.223.264.47.556.673.848.284.411.537.896.621 1.49a.75.75 0 0 1-1.484.211c-.04-.282-.163-.547-.37-.843a5.314 5.314 0 0 1-.673-.849l-.213-.252C3.424 7.75 2.5 6.69 2.5 5.25 2.5 2.31 4.863 0 8 0s5.5 2.31 5.5 5.25c0 1.44-.924 2.5-1.253 3.167l-.213.252a5.315 5.315 0 0 1-.673.849c-.207.296-.33.561-.37.843a.75.75 0 0 1-1.484-.211c.084-.594.337-1.079.621-1.49.203-.292.45-.584.673-.848l.214-.253c.56-.679.984-1.32.984-2.304 0-2.06-1.637-3.75-4-3.75ZM5.75 12h4.5a.75.75 0 0 1 0 1.5h-4.5a.75.75 0 0 1 0-1.5ZM6 15.25a.75.75 0 0 1 .75-.75h2.5a.75.75 0 0 1 0 1.5h-2.5a.75.75 0 0 1-.75-.75Z'/%3E%3C/svg%3E");
+			}
+		}
+
+		// 3. IMPORTANT (Importante - Roxo)
+		&.gh-alert-IMPORTANT {
+			border-left-color: #ab7df8;
+			&::before {
+				content: 'Important';
+				color: #ab7df8;
+				// Ícone 'report' (Exclamação roxa)
+				background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' width='16' height='16' fill='%23ab7df8'%3E%3Cpath d='M0 1.75C0 .784.784 0 1.75 0h12.5C15.216 0 16 .784 16 1.75v9.5A1.75 1.75 0 0 1 14.25 13H8.06l-2.573 2.573A1.458 1.458 0 0 1 3 14.543V13H1.75A1.75 1.75 0 0 1 0 11.25Zm1.75-.25a.25.25 0 0 0-.25.25v9.5c0 .138.112.25.25.25h2a.75.75 0 0 1 .75.75v2.19l2.72-2.72a.749.749 0 0 1 .53-.22h6.5a.25.25 0 0 0 .25-.25v-9.5a.25.25 0 0 0-.25-.25Zm7 2.25v2.5a.75.75 0 0 1-1.5 0v-2.5a.75.75 0 0 1 1.5 0ZM9 9a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z'/%3E%3C/svg%3E");
+			}
+		}
+
+		// 4. WARNING (Aviso - Amarelo/Laranja)
+		&.gh-alert-WARNING {
+			border-left-color: #d29922;
+			&::before {
+				content: 'Warning';
+				color: #d29922;
+				// Ícone 'alert' (Triângulo)
+				background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' width='16' height='16' fill='%23d29922'%3E%3Cpath d='M6.457 1.047c.659-1.234 2.427-1.234 3.086 0l6.082 11.39A1.75 1.75 0 0 1 14.082 15H1.918a1.75 1.75 0 0 1-1.543-2.563ZM8 2.814L2.039 13.5h11.922ZM9 7.5v2.5a.75.75 0 0 1-1.5 0v-2.5a.75.75 0 0 1 1.5 0Zm-.5 5a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z'/%3E%3C/svg%3E");
+			}
+		}
+
+		// 5. CAUTION (Cuidado - Vermelho)
+		&.gh-alert-CAUTION {
+			border-left-color: #f85149;
+			&::before {
+				content: 'Caution';
+				color: #f85149;
+				// Ícone 'stop' (Octógono vermelho)
+				background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' width='16' height='16' fill='%23f85149'%3E%3Cpath d='M4.47.22A.749.749 0 0 1 5 0h6c.199 0 .389.079.53.22l4.25 4.25c.141.14.22.331.22.53v6a.749.749 0 0 1-.22.53l-4.25 4.25A.749.749 0 0 1 11 16H5a.749.749 0 0 1-.53-.22L.22 11.53A.749.749 0 0 1 0 11V5c0-.199.079-.389.22-.53Zm.84 1.28L1.5 5.31v5.38l3.81 3.81h5.38l3.81-3.81V5.31L10.69 1.5ZM8 4a.75.75 0 0 1 .75.75v3.5a.75.75 0 0 1-1.5 0v-3.5A.75.75 0 0 1 8 4Zm0 8a1 1 0 1 1 0-2 1 1 0 0 1 0 2Z'/%3E%3C/svg%3E");
+			}
+		}
+	}
+
+	// ==========================================================
+	// Estilo para Blocos Expansíveis (<details> e <summary>)
+	// ==========================================================
+	details {
+
+		summary {
+			cursor: pointer; // Mostra a "mãozinha" de link
+			user-select: none; // Evita que o texto seja selecionado se o usuário clicar duas vezes sem querer
+			transition: color 0.2s ease;
+			// Ajuste para alinhar a setinha padrão do navegador com o texto
+			display: list-item;
+
+			&:hover {
+				color: $brand-blue-light; // Puxando o azul da marca no hover do expansível!
+			}
+		}
+	}
+
+
+	// Espaçamento entre parágrafos, listas e imagens
+	>* {
+		margin-bottom: 1rem;
+	}
+
+	// Estilização das Imagens (Bloco do Gutenberg)
+	.wp-block-image {
+		margin-top: 2rem;
+		margin-bottom: 2rem;
+
+		img {
+			display: block;
+			width: 100%;
+			height: auto;
+			border-radius: 5px; // Arredondamento padronizado
+			box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4); // Sombra visível no modo escuro
+		}
+
+		// A legenda da imagem
+		figcaption {
+			font-family: $font-primary; // fonte Inter
+			font-size: 0.85rem;
+			color: $text-muted-dark; // Utilizando a variável de cor pálida
+			text-align: center;
+			margin-top: 0.8rem;
+			font-style: italic;
+			line-height: 1.4;
+		}
+
+		// Alinhamentos específicos do WordPress
+		&.alignwide {
+			margin-left: -3%;
+			margin-right: -3%;
+			width: auto;
+			max-width: 110%;
+		}
+
+		&.alignfull {
+			margin-left: calc(50% - 50vw);
+			margin-right: calc(50% - 50vw);
+			width: 100%;
+			max-width: 100%;
+
+			img {
+				border-radius: 0; // Imagem full-width não costuma ter borda arredondada
+			}
+		}
+	}
+
+	// Para galerias
+	.wp-block-gallery {
+		margin-bottom: 2rem;
+		gap: 10px;
+
+		.wp-block-image {
+			margin-bottom: 0; // Reseta a margem para não quebrar o grid da galeria
+		}
+	}
+
+	// Estiliza o container que o WordPress cria para vídeos (YouTube, Vimeo)
+	.wp-block-embed {
+		margin: 1rem 0;
+
+		.wp-block-embed__wrapper {
+			aspect-ratio: 16 / 9 !important; // Mantém a proporção exata de vídeos do YouTube
+
+			// 1. Mata o "padding hack" antigo do WordPress
+			&::before {
+				display: none !important;
+				padding-top: 0 !important;
+			}
+		}
+
+		iframe {
+			border-radius: 5px; // Arredondamento padronizado
+			box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4); // Sombra visível no modo escuro
+			border: none; // Remove a borda padrão feia de alguns iframes
+		}
+
+		// Legenda do vídeo (se houver)
+		figcaption {
+			font-family: $font-primary;
+			font-size: 0.85rem;
+			color: $text-muted-dark;
+			text-align: center;
+			margin-top: 0.8rem;
+			font-style: italic;
+		}
+	}
+
+	// Estiliza o player nativo de vídeos hospedados no servidor
+	.wp-block-video {
+		margin: 1rem 0;
+
+		video {
+			width: 100%;
+			border-radius: 5px; // Arredondamento padronizado
+			box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4); // Sombra visível no modo escuro
+			display: block; // Remove o espaço em branco fantasma embaixo do player
+		}
+
+		// Legenda do vídeo local
+		figcaption {
+			font-family: $font-primary;
+			font-size: 0.85rem;
+			color: $text-muted-dark;
+			text-align: center;
+			margin-top: 0.8rem;
+			font-style: italic;
+		}
+	}
+}

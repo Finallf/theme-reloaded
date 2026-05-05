@@ -1,0 +1,151 @@
+// sass/base/_variables.scss
+
+// ==========================================================
+// Cores Dinâmicas das Categorias (Badges)
+// ==========================================================
+
+.post-tag {
+	// A cor padrão (caso você crie uma categoria nova e esqueça de colocar cor aqui)
+	background-color: #555555; 
+
+	// 1. Games (Um roxo/magenta forte)
+	&.tag-games {
+		background-color: #8a2be2;
+	}
+
+	// 2. Notícias (O seu azul clássico)
+	&.tag-noticias {
+		background-color: #00d1ff;
+		color: #000000; // Letra preta só nessa porque o azul é muito claro
+	}
+
+	// 3. Tecnologia (Um verde "Matrix" ou Ciano Escuro)
+	&.tag-tecnologia {
+		background-color: #00a859;
+	}
+
+	// 4. Vídeos (O vermelho clássico do YouTube)
+	&.tag-videos {
+		background-color: #e52d27;
+	}
+	
+	// 5. Artigos (Um laranja/dourado)
+	&.tag-artigos {
+		background-color: #f39c12;
+	}
+
+	// 6. Sem Categoria (Cinza discreto)
+	&.tag-sem-categoria, 
+	&.tag-uncategorized {
+		background-color: #333333;
+	}
+}
+
+/* ==========================================================================
+   1. Importação Local de Fontes (Alta Performance)
+   ========================================================================== */
+
+// Inter (Texto Base) - Peso 400 (Regular)
+@font-face {
+	font-family: 'Inter';
+	font-style: normal;
+	font-weight: 400;
+	font-display: swap;
+	src: url('../fonts/inter-regular.woff2') format('woff2');
+}
+
+// Poppins - Regular (400)
+@font-face {
+    font-family: 'Poppins';
+    src: url('../fonts/poppins-regular.woff2') format('woff2');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+
+// Poppins - Regular Italic (400)
+@font-face {
+    font-family: 'Poppins';
+    src: url('../fonts/poppins-italic.woff2') format('woff2');
+    font-weight: 400;
+    font-style: italic;
+    font-display: swap;
+}
+
+// Poppins - Medium (500)
+@font-face {
+    font-family: 'Poppins';
+    src: url('../fonts/poppins-medium.woff2') format('woff2'); 
+    font-weight: 500;
+    font-style: normal;
+    font-display: swap;
+}
+
+// Poppins - Semi-bold (600)
+@font-face {
+    font-family: 'Poppins';
+    src: url('../fonts/poppins-semibold.woff2') format('woff2'); 
+    font-weight: 600;
+    font-style: normal;
+    font-display: swap;
+}
+
+// Poppins - Bold (700)
+@font-face {
+    font-family: 'Poppins';
+    src: url('../fonts/poppins-bold.woff2') format('woff2'); 
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+}
+
+/* ==========================================================================
+   2. Variáveis de Tipografia e Marca
+   ========================================================================== */
+$font-primary: 'Inter', sans-serif;
+$font-heading: 'Poppins', sans-serif;
+
+// Cores da Marca (ReloadeD)
+$brand-blue-dark: #031CFF;
+$brand-blue-light: #00A8FF;
+$color-success: #2ea043;
+$brand-gradient: linear-gradient(90deg, $brand-blue-dark 0%, $brand-blue-light 100%);
+$brand-gradientv: linear-gradient(180deg, $brand-blue-dark 0%, $brand-blue-light 100%) 1;
+
+/* ==========================================================================
+   3. Esquema Dark (Cores Estruturais)
+   ========================================================================== */
+// Fundos Básicos
+$dark-bg: #151515;
+$dark-surface: #212121;
+
+// Fundos Profundos (Inputs, Textareas, Zebra de Tabelas)
+$dark-deep: #111111;
+$dark-deeper: #0d1117; 
+
+// Efeito Elevação / Glassmorphism (Cards Especiais)
+$glass-bg: rgba(255, 255, 255, 0.04);
+$glass-border: rgba(255, 255, 255, 0.08);
+
+// Variações de Texto
+$dark-text: #e0e0e0;
+$text-light: #cccccc;
+$text-label: #aaaaaa;
+$dark-text-muted: #999999;
+$text-muted-dark: #777777;
+
+// Bordas e Divisores
+$border-dark: #222222;
+$border-light: #333333;
+$border-subtle: #30363d; 
+
+/* ==========================================================================
+   4. Layout e Cabeçalho
+   ========================================================================== */
+$container-max: 1440px;
+$space-sm: 20px;
+$space-md: 30px;
+
+$color-menu-bg: #212121;
+$color-menu-hover: rgba(255, 255, 255, 0.1);
+$header-gradient: linear-gradient(90deg, #031CFF, #00A8FF);

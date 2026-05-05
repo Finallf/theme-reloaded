@@ -1,0 +1,24 @@
+// sass/style.scss
+
+// 1. Variáveis e Configurações Base
+@use 'base/variables' as *;
+@use 'base/globals';
+
+// 2. Layout (A Estrutura)
+@use 'layout/footer';
+@use 'layout/grid';
+@use 'layout/header';
+@use 'layout/media';
+@use 'layout/single';
+@use 'layout/sidebar';
+
+// 3. Componentes (Os Pedacinhos)
+@use 'components/buttons';
+@use 'components/comments';
+@use 'components/prism';
+@use 'components/backtotop';
+@use 'components/facades';
+@use 'components/lgpd';
+@use 'components/markdown';
+@use 'components/page-404';
+@use 'components/page-static';

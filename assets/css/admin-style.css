@@ -1,0 +1,52 @@
+/* assets/css/admin-style.css */
+
+body .rd-media-container {
+    background: #f0f0f1 !important;
+    padding: 10px !important;
+    border: 1px solid #c3c4c7 !important;
+    border-radius: 4px !important;
+    max-width: 450px !important;
+}
+
+body .rd-media-preview:not(:empty) {
+    margin-bottom: 5px !important;
+    padding: 8px !important;
+    background: #ffffff !important;
+    border: 2px dashed #c3c4c7 !important;
+    border-radius: 4px !important;
+    display: inline-block !important;
+}
+
+body .rd-media-preview img {
+    max-width: 100% !important;
+    height: auto !important;
+    display: block !important;
+    border-radius: 2px !important;
+}
+
+/* Botão Selecionar - Azul */
+body .rd-upload-button {
+    color: #2271b1 !important;
+    border-color: #2271b1 !important;
+    margin-right: 10px !important;
+}
+
+body .rd-upload-button:hover,
+body .rd-upload-button:focus {
+    background: #2271b1 !important;
+    color: #fff !important;
+    border-color: #2271b1 !important;
+}
+
+/* Botão Remover - Vermelho */
+body .rd-remove-button {
+    color: #d63638 !important;
+    border-color: #d63638 !important;
+}
+
+body .rd-remove-button:hover,
+body .rd-remove-button:focus {
+    background: #d63638 !important;
+    color: #fff !important;
+    border-color: #d63638 !important;
+}

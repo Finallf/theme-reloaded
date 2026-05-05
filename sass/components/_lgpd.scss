@@ -1,0 +1,71 @@
+// sass/components/_lgpd.scss
+@use '../base/variables' as *;
+
+/* ==========================================
+   BANNER DE COOKIES (LGPD)
+   ========================================== */
+.rd-cookie-banner {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: $dark-deep; // Fundo escuro imersivo do nosso tema
+    color: $text-light;
+    padding: 15px 25px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 99999;
+    box-shadow: 0 -5px 15px rgba(0, 0, 0, 0.4);
+    border-top: 1px solid $border-subtle; // Usando nossa variável de borda
+    transition: opacity 0.3s ease;
+
+    .cookie-text {
+        font-size: 0.95rem;
+        line-height: 1.5;
+        
+        a {
+            color: $brand-blue-light; // Azul oficial do portal
+            text-decoration: underline;
+            font-weight: bold;
+            transition: color 0.2s ease;
+            
+            &:hover {
+                color: #fff; // Brilha ao passar o mouse
+            }
+        }
+    }
+
+    .cookie-btn {
+        background: $color-success; // Botão com o degradê oficial
+        color: #fff;
+        border: none;
+        padding: 10px 24px;
+        border-radius: 5px; // O novo padrão de borda que você definiu!
+        font-weight: 600;
+        cursor: pointer;
+        margin-left: 20px;
+        white-space: nowrap;
+        transition: opacity 0.2s ease, transform 0.2s ease;
+
+        &:hover {
+            opacity: 0.9;
+            filter: brightness(1.1);
+            transform: translateY(-2px); // Acompanha a física dos outros botões
+        }
+    }
+
+    /* Ajuste para Celulares */
+    @media (max-width: 768px) {
+        flex-direction: column;
+        text-align: center;
+        padding: 20px 15px;
+        
+        .cookie-btn {
+            margin-left: 0;
+            margin-top: 15px;
+            width: 100%;
+            padding: 12px;
+        }
+    }
+}

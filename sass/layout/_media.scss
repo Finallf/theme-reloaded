@@ -1,0 +1,117 @@
+// sass/layout/_media.scss
+@use '../base/variables' as *;
+
+/* Estilos para telas pequenas (Mobile) */
+@media (max-width: 768px) {
+	.top-branding {
+		display: none;
+	}
+
+	.main-navigation {
+		display: flex;
+		width: 100%;
+
+		.site-branding-toggle {
+			display: flex;
+			padding: 5px 0;
+			position: relative;
+			left: 50%;
+			transform: translateX(-50%); // Puxa de volta exatamente para o meio
+			width: 8.66rem;
+		}
+
+		.menu-toggle {
+			background: transparent;
+			border: none;
+			display: block !important;
+			position: relative;
+			color: $brand-blue-light; // O seu azul vibrante oficial
+			font-size: 1.7rem;
+			margin-left: auto;
+			padding: 6px;
+			z-index: 10000;
+		}
+
+		// MENU PRINCIPAL (O painel lateral)
+		// O sinal de ">" garante que isso SÓ afeta a lista principal
+		> ul { 
+			display: block !important;
+			position: fixed;
+			top: 0;
+			left: 0;
+			width: 55%;
+			height: 100dvh;
+			background: rgba($dark-bg, 0.96);
+			z-index: 9999;
+			flex-direction: column;
+			justify-content: center;
+			list-style: none;
+			transform: translateX(-100%);
+			transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+			padding-top: 60px; // Espaço para não encostar no topo
+
+			> li { // Aplica os estilos só aos links pais (HOME, NOTÍCIAS, GAMES)
+				width: 100%;
+				text-align: center;
+
+				> a {
+					color: #fff !important;
+					text-decoration: none;
+					display: block;
+					padding: 10px;
+					border-bottom: 1px solid $glass-border;
+				}
+			}
+
+			// ==========================================
+			// SUBMENU MOBILE (Item 1 resolvido aqui!)
+			// ==========================================
+			.sub-menu {
+				// 1. Mata a flutuação! Volta ao fluxo normal do HTML
+				position: static !important; 
+				
+				// 2. Vem sempre aberto!
+				display: block !important; 
+				opacity: 1 !important;
+				visibility: visible !important;
+				transform: none !important;
+
+				// 3. Limpa estilos de caixa do Desktop para não "vazar"
+				min-width: auto !important; 
+				width: 100% !important;
+				background: transparent !important; 
+				border: none !important;
+				border-radius: 0 !important;
+				padding: 0 !important;
+				margin: 0 !important;
+
+				// Limpa as pseudo-classes (bordinha azul) do desktop
+				&::before { display: none !important; }
+
+				li {
+					width: 100%;
+
+					a {
+						width: 100%;
+						text-transform: none; // Sem gritarias nos submenus
+						border-bottom: 1px solid rgba(255, 255, 255, 0.05); // Linha super fraca
+						text-align: left; // Fica alinhado na esquerda para mostrar a hierarquia
+					}
+				}
+			}
+		}
+
+		// Quando o botão é clicado, o JS adiciona a classe 'toggled'
+		> ul.toggled {
+			transform: translateX(0);
+			box-shadow: 5px 0 25px rgba(0, 0, 0, 0.7);
+		}
+
+		// Quando o botão é clicado, o JS adiciona a classe 'toggled'
+		ul.toggled {
+			// Trazemos o menu de volta para a posição original (0)
+			transform: translateX(0);
+			box-shadow: 5px 0 25px rgba(0, 0, 0, 0.7); // Sombra para separar do conteúdo de fundo
+		}
+	}
+}

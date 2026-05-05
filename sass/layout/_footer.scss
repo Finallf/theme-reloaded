@@ -1,0 +1,137 @@
+// sass/layout/_footer.scss
+@use '../base/variables' as *;
+
+.site-footer {
+	background-color: $dark-deep; // #111 ancorado na variável
+	color: $text-muted-dark; 
+	padding-bottom: 0.5rem;
+	font-family: $font-primary; // Inter
+
+	&::before {
+		content: '';
+		display: block;
+		width: 100%;
+		height: 5px; // Espessura do risco
+		background: $header-gradient; // Usa o degradê que definimos
+	}
+
+	.footer-grid {
+		display: grid !important;
+		grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+		gap: 3rem;
+		margin: 3rem 0rem 1rem;
+	}
+
+	.footer-heading {
+		color: #fff; // Títulos brancos para máximo contraste no fundo escuro
+		font-family: $font-heading; // Poppins
+		font-size: 1.2rem;
+		margin-bottom: 1.5rem;
+		position: relative;
+
+		&::after {
+			content: '';
+			display: block;
+			height: 2px;
+			background: $header-gradient;
+			margin-top: 8px;
+		}
+	}
+
+	.footer-links,
+	.support-links {
+		list-style: none;
+		padding: 0;
+
+		li {
+			margin-bottom: 0.8rem;
+
+			a {
+				color: $text-label; // Fica um cinza claro elegante para links
+				text-decoration: none;
+				transition: color 0.3s ease, padding-left 0.3s ease;
+
+				&:hover {
+					color: $brand-blue-light;
+					padding-left: 5px;
+				}
+			}
+		}
+	}
+
+	.footer-bottom {
+		border-top: 1px solid $border-dark; // Linha divisória fina
+		padding-top: 2rem;
+		text-align: center;
+		font-size: 0.85rem;
+
+		.hosting-info {
+			margin-top: 0.5rem;
+			opacity: 0.5;
+			font-style: italic;
+		}
+	}
+}
+
+// Responsividade para tablets/mobile
+@media (max-width: 768px) {
+	.site-footer {
+		padding: 3rem 1.5rem 1.5rem;
+
+		.footer-grid {
+			gap: 2rem;
+		}
+	}
+}
+
+.footer-widget {
+
+	// Estiliza a lista de posts dentro do widget
+	ul {
+		list-style: none;
+		padding: 0;
+
+		li {
+			display: flex;
+			align-items: center;
+			gap: 12px;
+			margin-bottom: 1.2rem;
+			border-bottom: 1px solid $border-dark;
+			padding-bottom: 0.8rem;
+
+			&:last-child {
+				border-bottom: none;
+			}
+
+			// A imagem miniatura do post
+			img {
+				width: 60px;
+				height: 60px;
+				object-fit: cover;
+				border-radius: 5px; // O SEU NOVO PADRÃO DE 5PX!
+				background-color: $dark-surface; 
+			}
+
+			// O link do título do post
+			a {
+				font-size: 0.95rem;
+				line-height: 1.3;
+				color: $dark-text !important; // Substituiu o #eee
+				font-weight: 500;
+				text-decoration: none;
+
+				&:hover {
+					color: $brand-blue-light !important; // BUG CORRIGIDO AQUI!
+				}
+			}
+
+			// A data abaixo do título
+			.wp-block-latest-posts__post-date {
+				display: block;
+				font-size: 0.75rem;
+				color: $text-muted-dark;
+				margin-top: 4px;
+			}
+		}
+	}
+}

@@ -1,0 +1,135 @@
+// sass/layout/_sidebar.scss
+@use '../base/variables' as *;
+
+// Barra lateral (Sidebar)
+#secondary {
+
+	iframe {
+		margin-bottom: -6px;
+	}
+
+	.discord-style {
+		background-color: $glass-bg; // Glassmorphism padrão da sidebar!
+		border-radius: 5px; // Regra de ouro mantida
+		border: 1px solid $glass-border; // Usando a variável
+		margin-bottom: 20px;
+		box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4); // Sombra visível do dark mode
+
+		.discord-placeholder {
+			align-items: stretch;
+			background-color: #5865F2; // Mantido hardcoded: é a cor da marca do Discord
+			justify-content: space-between;
+			border-radius: 5px; // Regra de ouro
+			padding: 20px;
+			display: flex;
+			flex-wrap: wrap;
+			line-height: 0;
+
+			.logo-int {
+				width: 124px;
+			}
+		}
+	}
+
+	// No WP moderno, os widgets são seções com a classe .widget_block
+	.widget_block {
+		background-color: $glass-bg; // Unificando com o Apoie o Projeto
+		padding: 20px;
+		border-radius: 5px; // Regra de ouro
+		border: 1px solid $glass-border;
+		margin-bottom: 20px;
+		box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4); // Sombra visível do dark mode
+
+		// O novo seletor para os títulos de blocos do WP
+		h2.wp-block-heading {
+			color: #fff;
+			font-size: 1.1rem;
+			font-weight: 800;
+			margin-bottom: 5px;
+			text-transform: uppercase;
+			letter-spacing: 1.5px;
+			position: relative;
+			padding-bottom: 12px;
+			border: none;
+
+			// A linha de destaque azul
+			&::after {
+				content: '';
+				position: absolute;
+				bottom: 0;
+				left: 0;
+				width: 50px;
+				height: 3px;
+				background: $header-gradient;
+				border-radius: 2px;
+			}
+		}
+
+		// Estilizando as listas de posts/comentários dentro dos blocos
+		ul {
+			list-style: none;
+			padding: 0;
+			margin: 0;
+
+			li {
+				padding: 12px 0;
+				border-bottom: 1px solid $border-dark; // Variável oficial de borda divisória
+
+				&:last-child {
+					border-bottom: none;
+				}
+
+				a {
+					color: $dark-text;
+					text-decoration: none;
+					display: block;
+					transition: all 0.3s ease;
+
+					&:hover {
+						color: $brand-blue-light;
+						padding-left: 8px; // Deslocamento suave
+					}
+				}
+			}
+		}
+
+		// Estilização para o bloco de pesquisa (Search Block)
+		&.widget_search {
+			.wp-block-search__label {
+				color: $text-light;
+				margin-bottom: 15px;
+				display: block;
+			}
+
+			.wp-block-search__inside-wrapper {
+				border: 1px solid $border-light; // Substituiu o #333
+				border-radius: 5px; // ALERTA: Peguei o fugitivo de 8px aqui!
+				overflow: hidden;
+				display: flex; // Mantém botão e campo alinhados
+
+				.wp-block-search__input {
+					background: $dark-deep; // Substituiu o #111
+					color: $dark-text;
+					border: none;
+					padding: 10px 15px;
+					outline: none; // Evita bordas nativas do navegador ao focar
+					width: 100%;
+				}
+
+				.wp-block-search__button {
+					background: $brand-gradient; // Puxando o degradê lindo dos botões globais!
+					color: #fff;
+					border: none;
+					padding: 0 15px;
+					font-weight: bold;
+					cursor: pointer;
+					transition: opacity 0.2s ease;
+					
+					&:hover {
+						opacity: 0.9;
+					}
+				}
+			}
+		}
+	}
+}

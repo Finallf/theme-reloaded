@@ -1,0 +1,120 @@
+// sass/layout/_single.scss
+@use '../base/variables' as *;
+
+// ESTRUTURA GLOBAL DO POST (SINGLE E HOME)
+
+// Garante que todas as imagens do post (no card e no single) sejam responsivas e preencham o container sem deformar
+.post-thumbnail img {
+	width: 100%;
+	height: auto;
+	display: block; // Remove espaços vazios indesejados abaixo da imagem
+	object-fit: cover; // Preenche mantendo a proporção
+}
+
+// ==========================================================
+// 2. Estilo para o conteúdo dentro do single.php (não afetado)
+// ==========================================================
+.single-post-content {
+	background-color: $glass-bg;
+	padding: 1.25rem;
+	border-radius: 5px; // A sua regra de ouro (era 8px)!
+	border: 1px solid $glass-border; // Unificando a borda com a sidebar e grid
+
+	.entry-header {
+		margin-bottom: 20px;
+
+		.entry-title {
+			color: $brand-blue-light;
+
+		}
+
+		.entry-meta {
+			display: flex;
+			flex-wrap: wrap;
+			align-items: center;
+			gap: 12px; /* Espaçamento uniforme entre os elementos */
+			color: $dark-text-muted; // #999 substituído
+			font-size: 0.85rem;
+
+			span {
+				display: inline-flex;
+				align-items: center;
+				gap: 6px; /* Espaço entre o ícone SVG e o texto */
+				margin-right: 0; /* Limpa a margem antiga */
+			}
+
+			svg {
+				color: $brand-blue-light; /* Aplica o azul do portal nos ícones */
+				opacity: 0.9;
+			}
+
+			.meta-separator {
+				color: $border-light; // #444 alinhado para a variável
+				font-size: 1.2rem; /* Deixa a bolinha um pouco mais evidente */
+				line-height: 0; // Evita que o bullet mude a altura da linha
+			}
+
+			.byline a {
+				color: $text-light; // #ccc substituído
+				text-decoration: none;
+				transition: color 0.2s ease;
+				font-weight: 500;
+
+				&:hover {
+					color: $brand-blue-light; /* Acende o nome do autor ao passar o mouse */
+				}
+			}
+		}
+	}
+
+	.post-thumbnail {
+		margin-bottom: 1rem;
+		border-radius: 5px; // A sua regra de ouro (era 8px)!
+		overflow: hidden;
+		background-color: $dark-bg; // #151515 substituído
+
+		img {
+			width: 100%;
+			height: auto;
+			aspect-ratio: 16 / 9; /* Trava a proporção exata dos recortes do portal */
+			display: block;
+			
+			/* Serve como trava de segurança apenas se alguma imagem for "subida" fora do tamanho padrão */
+			object-fit: cover; 
+		}
+	}
+
+	// ==========================================================
+	// Rodapé do Artigo (Tags)
+	// ==========================================================
+	.entry-footer {
+		margin-top: 3rem;
+		padding-top: 1.5rem;
+		border-top: 1px solid $border-dark; // #222 substituído
+
+		.post-tags {
+			display: flex;
+			flex-wrap: wrap;
+			gap: 10px;
+			align-items: center;
+			justify-content: flex-end;
+			
+			a {
+				background-color: $dark-surface; // #212121 substituído
+				color: $dark-text; // #e0e0e0 substituído
+				padding: 5px 12px;
+				border-radius: 20px; // Mantido 20px para preservar o formato de 'pílula'
+				text-decoration: none;
+				transition: all 0.2s ease;
+				border: 1px solid $border-light; // #333 substituído
+				font-size: 0.85rem;
+
+				&:hover {
+					background-color: $brand-blue-light;
+					color: #000; // Letra preta para contraste perfeito com o azul
+					border-color: $brand-blue-light;
+				}
+			}
+		}
+	}
+}
