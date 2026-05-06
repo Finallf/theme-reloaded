@@ -6,6 +6,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 ---
 <br>
 
+
+# [0.1.0-beta.1](https://github.com/Finallf/theme-reloaded/compare/v0.0.0...v0.1.0-beta.1) (2026-05-06)
+
+
+### Features
+
+* expand WordPress compatibility up to 6.9.4 ([3c9ca1b](https://github.com/Finallf/theme-reloaded/commit/3c9ca1bd451100dfe3a3f1d515faa8bf9ae1b90d))
+
 # 📜 Legacy History (Pre-Automation)
 
 This section records improvements implemented before the migration to the current CI/CD system. Entries are dated rather than versioned, since formal releases didn't exist during early development.
