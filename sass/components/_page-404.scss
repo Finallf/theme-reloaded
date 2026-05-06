@@ -140,12 +140,13 @@
 
 .rd-404-btn-primary {
     background: $brand-gradient;
-    color: #fff;
+    color: $dark-bg;
 
     &:hover {
         opacity: 0.9;
         transform: translateY(-2px);
         box-shadow: 0 6px 20px rgba(0, 168, 255, 0.3);
+		color: $dark-bg;
     }
 }
 

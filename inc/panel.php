@@ -11,7 +11,7 @@ defined('ABSPATH') || exit;
 function rd_set_default_options() {
     // Verifica se as configurações já existem no banco
     $options = get_option('rd_settings');
-    
+
     // Se for falso, significa que é a primeira vez que o tema está sendo ativado
     if ( false === $options ) {
         $defaults = array(
@@ -139,7 +139,7 @@ function rd_options_render() {
 
         <h2 class="nav-tab-wrapper">
             <?php foreach ($tabs as $id => $name) : ?>
-                <a href="?page=rd_options&tab=<?php echo esc_attr( $id ); ?>" 
+                <a href="?page=rd_options&tab=<?php echo esc_attr( $id ); ?>"
                     class="nav-tab <?php echo $active_tab === $id ? 'nav-tab-active' : ''; ?>">
                     <?php echo esc_html( $name ); ?>
                 </a>
@@ -149,7 +149,7 @@ function rd_options_render() {
         <form action="options.php" method="post" style="background:#fff; padding:20px; border:1px solid #ccd0d4; border-top:none; margin-top:0;">
             <?php
             settings_fields('rd_options_group');
-            
+
             foreach ($tabs as $id => $name) {
                 $display = ($active_tab == $id) ? '' : 'display:none;';
                 echo '<div class="rd-tab-content" id="tab-' . esc_attr( $id ) . '" style="' . esc_attr( $display ) . '">';
@@ -267,17 +267,17 @@ function rd_master_field_cb($args) {
             echo '<div class="rd-media-container">';
             // O input oculto que realmente guarda a URL para o banco de dados
             echo '<input type="hidden" name="' . $name . '" id="' . esc_attr( $args['id'] ) . '" value="' . esc_attr( $val ) . '">';
-            
+
             // A div de preview onde a miniatura da imagem vai aparecer
             echo '<div id="' . esc_attr( $args['id'] ) . '_preview" class="rd-media-preview" style="margin-bottom: 10px;">';
             if ( $val ) {
                 echo '<img src="' . esc_url( $val ) . '" style="max-width: 200px; height: auto; border: 1px solid #ccc; display: block; border-radius: 4px;">';
             }
             echo '</div>';
-            
+
             // Os botões de controle
             echo '<button type="button" class="button rd-upload-button" data-input-id="' . esc_attr( $args['id'] ) . '">Selecionar Imagem</button> ';
-            
+
             $display = $val ? '' : 'display:none;';
             echo '<button type="button" class="button rd-remove-button" data-input-id="' . esc_attr( $args['id'] ) . '" style="' . $display . '">Remover</button>';
             echo '</div>';
@@ -285,18 +285,18 @@ function rd_master_field_cb($args) {
 
         case 'checkbox':
             $val = isset( $opt[$args['id']] ) ? $opt[$args['id']] : 0;
-            
+
             // Envolvemos tudo em uma tag <label> para que o texto fique na mesma linha e seja clicável
             echo '<label for="' . esc_attr( $args['id'] ) . '">';
             echo '<input type="checkbox" name="' . $name . '" id="' . esc_attr( $args['id'] ) . '" value="1" ' . checked( 1, $val, false ) . '>';
-            
+
             // Se houver descrição, imprime ela aqui dentro da label, logo após o quadradinho
             if ( isset( $args['desc'] ) ) {
                 echo ' ' . wp_kses_post( $args['desc'] );
-                
-                // O pulo do gato: removemos a descrição da variável para que 
+
+                // O pulo do gato: removemos a descrição da variável para que
                 // o código lá no final da função não imprima ela duplicada.
-                unset( $args['desc'] ); 
+                unset( $args['desc'] );
             }
             echo '</label>';
         break;
@@ -309,16 +309,16 @@ function rd_master_field_cb($args) {
             $min = isset( $args['min'] ) ? $args['min'] : 1;
             $max = isset( $args['max'] ) ? $args['max'] : 100;
             $val = empty($val) && isset($args['default']) ? $args['default'] : $val;
-            
+
             // Renderiza o input com ID e a classe nativa do WP para manter o padrão
             echo '<input type="number" name="' . $name . '" id="' . esc_attr( $args['id'] ) . '" value="' . esc_attr( $val ) . '" min="' . esc_attr($min) . '" max="' . esc_attr($max) . '" class="small-text">';
-            
+
             // Se houver descrição, imprime logo à frente do campo dentro de uma label
             if ( isset( $args['desc'] ) ) {
                 echo ' <label for="' . esc_attr( $args['id'] ) . '">' . wp_kses_post( $args['desc'] ) . '</label>';
-                
+
                 // Remove a descrição da memória para não duplicar no final da função
-                unset( $args['desc'] ); 
+                unset( $args['desc'] );
             }
         break;
 
@@ -355,15 +355,15 @@ function rd_master_field_cb($args) {
 function rd_options_sanitize( $input ) {
     $new_input = array();
     foreach($input as $key => $value) {
-        
+
         // 1. Zonas de Anúncios: Permite HTML e Scripts puros (AdSense, etc)
         if ( strpos($key, 'ad_') === 0 ) {
-            $new_input[$key] = $value; 
-        } 
+            $new_input[$key] = $value;
+        }
         // 2. Campo LGPD: Permite HTML básico seguro (Links, negrito), mas bloqueia scripts
         elseif ( $key === 'lgpd_text' ) {
             $new_input[$key] = wp_kses_post($value);
-        } 
+        }
         // 3. Demais campos: Limpeza rigorosa, destrói qualquer HTML e script
         else {
             $new_input[$key] = sanitize_text_field($value);
