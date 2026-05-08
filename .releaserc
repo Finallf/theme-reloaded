@@ -9,7 +9,7 @@
       "@semantic-release/release-notes-generator",
       {
         "writerOpts": {
-          "footerPartial": "\n---\n\n"
+          "footerPartial": "\n<br>\n\n---\n\n"
         }
       }
     ],
