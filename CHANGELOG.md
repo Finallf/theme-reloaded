@@ -7,6 +7,18 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 <br>
 
 
+# [0.1.0-beta.3](https://github.com/Finallf/theme-reloaded/compare/v0.1.0-beta.2...v0.1.0-beta.3) (2026-05-08)
+
+
+### Features
+
+* **templates:** add author and archive templates ([dae69b4](https://github.com/Finallf/theme-reloaded/commit/dae69b452e7ca9f7801f3b6b0bab2e294da6a9ce))
+
+
+<br>
+
+---
+
 # [0.1.0-beta.2](https://github.com/Finallf/theme-reloaded/compare/v0.1.0-beta.1...v0.1.0-beta.2) (2026-05-08)
 
 
