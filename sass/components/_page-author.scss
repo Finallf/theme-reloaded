@@ -1,0 +1,113 @@
+// ==========================================================
+// PÁGINA DE AUTOR (Fase 4)
+// Header com avatar, nome, bio e meta; lista de posts logo abaixo
+// usando o card .layout-vertical compartilhado de _search.scss
+// ==========================================================
+@use '../base/variables' as *;
+
+.rd-author-page {
+    padding-top: 30px;
+}
+
+.rd-author-header {
+    display: flex;
+    align-items: center;
+    gap: 25px;
+    background: $glass-bg;
+    border: 1px solid $glass-border;
+    border-radius: 5px;
+    padding: 30px;
+    margin-bottom: 40px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+
+    // Borda superior com gradiente da marca (mesmo padrão do card 404)
+    position: relative;
+    overflow: hidden;
+
+    &::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 3px;
+        background: $brand-gradient;
+    }
+
+    .rd-author-avatar {
+        flex-shrink: 0;
+
+        img {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            border: 3px solid $brand-blue-light;
+            display: block;
+            box-shadow: 0 4px 12px rgba(0, 168, 255, 0.25);
+        }
+    }
+
+    .rd-author-info {
+        flex: 1;
+        min-width: 0;
+    }
+
+    .rd-author-name {
+        font-family: $font-heading;
+        font-size: 1.8rem;
+        font-weight: 700;
+        color: $dark-text;
+        margin: 0 0 10px;
+        letter-spacing: 0.5px;
+    }
+
+    .rd-author-bio {
+        color: $text-light;
+        font-size: 0.95rem;
+        line-height: 1.6;
+        margin: 0 0 14px;
+    }
+
+    .rd-author-meta {
+        display: flex;
+        gap: 20px;
+        flex-wrap: wrap;
+        font-size: 0.85rem;
+        color: $text-muted-dark;
+
+        .rd-author-meta-item {
+            display: inline-flex;
+            align-items: center;
+
+            // separador entre os items
+            & + .rd-author-meta-item::before {
+                content: "•";
+                margin-right: 20px;
+                margin-left: -10px;
+                color: $border-light;
+            }
+        }
+    }
+
+    // mobile: empilha avatar acima das infos e centraliza
+    @media (max-width: 600px) {
+        flex-direction: column;
+        text-align: center;
+        gap: 18px;
+        padding: 25px 20px;
+
+        .rd-author-meta {
+            justify-content: center;
+        }
+    }
+}
+
+.rd-no-posts {
+    color: $text-light;
+    font-size: 1rem;
+    text-align: center;
+    padding: 40px 20px;
+    background: $glass-bg;
+    border: 1px solid $glass-border;
+    border-radius: 5px;
+}
