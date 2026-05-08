@@ -83,7 +83,7 @@ add_action('after_switch_theme', 'rd_set_default_options');
 /***********************************************************************************
  * Busca uma opção do painel de forma segura (Defensive Programming) - (Hardcoded) *
  ***********************************************************************************/
-function rd_get_option( $key, $default = false ) {
+function rd_get_option( string $key, $default = false ) {
     $opt = get_option('rd_settings');
 
     if ( ! isset( $opt ) || ! isset( $opt[$key] ) ) {
@@ -259,7 +259,7 @@ add_action('admin_init', 'rd_settings_init');
 /*******************************************************************************
  * Funções de renderização dos campos (Reutilizáveis)
  *******************************************************************************/
-function rd_master_field_cb($args) {
+function rd_master_field_cb( array $args ) {
     // 1. Puxa as opções do banco de dados apenas uma vez
     $opt = get_option('rd_settings');
 
@@ -364,7 +364,7 @@ function rd_master_field_cb($args) {
 /*******************************************************************************
  * SANITIZAÇÃO DOS DADOS (Segurança)
  *******************************************************************************/
-function rd_options_sanitize( $input ) {
+function rd_options_sanitize( array $input ) {
     $new_input = array();
     foreach($input as $key => $value) {
 

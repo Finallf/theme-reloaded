@@ -14,7 +14,7 @@ defined('ABSPATH') || exit;
  * Esta função é consumida pelo helper rd_post_card_text() em
  * inc/post-card.php quando is_search() é verdadeiro.
  */
-function rd_search_highlight( $text ) {
+function rd_search_highlight( string $text ) {
     $query = get_search_query();
     if ( empty( $query ) ) return $text;
 
