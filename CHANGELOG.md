@@ -7,6 +7,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 <br>
 
 
+# [0.1.0-beta.2](https://github.com/Finallf/theme-reloaded/compare/v0.1.0-beta.1...v0.1.0-beta.2) (2026-05-08)
+
+
+### Features
+
+* **search:** add multi-layout search results page ([914e138](https://github.com/Finallf/theme-reloaded/commit/914e13876470af6da290038fe458a310a2cfbea4))
+
 # [0.1.0-beta.1](https://github.com/Finallf/theme-reloaded/compare/v0.0.0...v0.1.0-beta.1) (2026-05-06)
 
 
