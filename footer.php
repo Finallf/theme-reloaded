@@ -54,7 +54,7 @@
 
 		</div>
 
-		<?php if ( rd_get_option('back_to_top') == 1 ) : ?>
+		<?php if ( rd_get_option_bool('back_to_top') ) : ?>
 			<button id="back-to-top" class="back-to-top" aria-label="Voltar ao topo">
 				<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
 					<polyline points="18 15 12 9 6 15"></polyline>

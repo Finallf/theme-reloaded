@@ -94,6 +94,15 @@ function rd_get_option( string $key, $default = false ) {
     return $opt[$key];
 }
 
+/***********************************************************************************
+ * Versão booleana — devolve true/false aceitando qualquer formato histórico       *
+ * de armazenamento (1, '1', 0, '0', false, null, ausente).                        *
+ * Use em todos os call sites de toggles do tipo checkbox.                         *
+ ***********************************************************************************/
+function rd_get_option_bool( string $key ): bool {
+    return (int) rd_get_option( $key ) === 1;
+}
+
 /*******************************************************************************
  * Cria o Menu no Painel
  *******************************************************************************/
@@ -157,7 +166,7 @@ function rd_options_render() {
             settings_fields('rd_options_group');
 
             foreach ($tabs as $id => $name) {
-                $display = ($active_tab == $id) ? '' : 'display:none;';
+                $display = ($active_tab === $id) ? '' : 'display:none;';
                 echo '<div class="rd-tab-content" id="tab-' . esc_attr( $id ) . '" style="' . esc_attr( $display ) . '">';
                 do_settings_sections('rd_options_' . $id);
                 echo '</div>';
@@ -300,6 +309,10 @@ function rd_master_field_cb( array $args ) {
         case 'checkbox':
             $val = isset( $opt[$args['id']] ) ? $opt[$args['id']] : 0;
 
+            // Hidden de fallback: garante que checkbox DESMARCADO envie '0' explícito em vez
+            // de omitir a key do POST. Sem isso, desmarcar não viaja pro sanitizer.
+            echo '<input type="hidden" name="' . $name . '" value="0">';
+
             // Envolvemos tudo em uma tag <label> para que o texto fique na mesma linha e seja clicável
             echo '<label for="' . esc_attr( $args['id'] ) . '">';
             echo '<input type="checkbox" name="' . $name . '" id="' . esc_attr( $args['id'] ) . '" value="1" ' . checked( 1, $val, false ) . '>';
@@ -378,7 +391,12 @@ function rd_options_sanitize( array $input ) {
         elseif ( $key === 'lgpd_text' ) {
             $new_input[$key] = wp_kses_post($value);
         }
-        // 3. Demais campos: Limpeza rigorosa, destrói qualquer HTML e script
+        // 3. Checkboxes: chegam como '0' ou '1' (graças ao hidden de fallback no form).
+        //    Coage pra int pra padronizar o storage e habilitar comparações strict (=== 1).
+        elseif ( $value === '0' || $value === '1' ) {
+            $new_input[$key] = (int) $value;
+        }
+        // 4. Demais campos: Limpeza rigorosa, destrói qualquer HTML e script
         else {
             $new_input[$key] = sanitize_text_field($value);
         }

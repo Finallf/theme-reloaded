@@ -10,7 +10,7 @@
 
 	<body <?php body_class(); ?>>
 
-		<?php if ( rd_get_option('enable_top_bar') == 1 ) : ?>
+		<?php if ( rd_get_option_bool('enable_top_bar') ) : ?>
 			<div class="rd-top-bar">
 				<div class="rd-container">
 					

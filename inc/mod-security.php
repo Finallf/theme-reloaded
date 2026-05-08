@@ -17,7 +17,7 @@ defined('ABSPATH') || exit;
  */
 function rd_send_security_headers() {
     if ( is_admin() ) return;
-    if ( rd_get_option( 'enable_security_headers' ) != 1 ) return;
+    if ( ! rd_get_option_bool( 'enable_security_headers' ) ) return;
 
     // Anti-clickjacking — só permite iframes da própria origem
     header( 'X-Frame-Options: SAMEORIGIN' );

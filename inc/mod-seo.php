@@ -105,7 +105,7 @@ function rd_seo_resolve_og_image( int $post_id ) {
  *******************************************************************************/
 function rd_add_open_graph_tags() {
     if ( ! ( is_single() || is_page() ) ) return;
-    if ( rd_get_option( 'enable_open_graph' ) != 1 ) return;
+    if ( ! rd_get_option_bool( 'enable_open_graph' ) ) return;
 
     global $post;
 

@@ -11,7 +11,7 @@ defined('ABSPATH') || exit;
 // 1. Cria a caixinha (Meta Box) APENAS se a opção global estiver ativa no painel
 add_action( 'add_meta_boxes', 'rd_add_post_options_meta_box' );
 function rd_add_post_options_meta_box() {
-    if ( rd_get_option('enable_thumb_control') == 1 ) {
+    if ( rd_get_option_bool('enable_thumb_control') ) {
         add_meta_box(
             'rd_post_options',
             'Opções do Artigo (ReloadeD)',
@@ -81,7 +81,7 @@ add_filter( 'wp_editor_set_quality', 'rd_custom_image_quality' );
  *******************************************************************************/
 function rd_fix_comment_form_labels( $fields ) {
     
-    if ( rd_get_option('comment_a11y') != 1 ) return $fields;
+    if ( ! rd_get_option_bool('comment_a11y') ) return $fields;
 
     $commenter = wp_get_current_commenter();
     $req       = get_option( 'require_name_email' );

@@ -14,7 +14,7 @@ function rd_render_lgpd_banner() {
         return;
     }
 
-    if ( !isset($opt['enable_lgpd']) || $opt['enable_lgpd'] != 1 ) {
+    if ( ! rd_get_option_bool('enable_lgpd') ) {
         return;
     }
 

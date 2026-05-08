@@ -22,7 +22,7 @@ if ( ! function_exists( 'rd_setup' ) ) :
 
         // TAMANHOS DE IMAGEM PERSONALIZADOS (HARD CROP)
         // Mantido no core pois os tamanhos precisam ser registrados na inicialização do tema
-        if ( rd_get_option('image_resizing') == 1 ) {
+        if ( rd_get_option_bool('image_resizing') ) {
             add_image_size( 'rd-micro', 150, 84, true );        // Miniaturas para Widgets/Sidebar (16:9).
             add_image_size( 'rd-card', 600, 338, true );        // Tamanho para os cards da Home.
             add_image_size( 'rd-full-banner', 1200, 675, true );// Tamanho para o banner no topo da notícia.

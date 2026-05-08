@@ -9,7 +9,7 @@ defined('ABSPATH') || exit;
  *******************************************************************************/
 function rd_markdown_support( $content ) {
 
-    if ( !is_admin() && rd_get_option('markdown_enabled') == 1 ) {
+    if ( !is_admin() && rd_get_option_bool('markdown_enabled') ) {
 
         // OTIMIZAÇÃO: Carrega a biblioteca pesada apenas quando realmente for usar
         if ( !class_exists('Parsedown') ) {
@@ -79,7 +79,7 @@ function rd_scripts() {
     wp_enqueue_script( 'rd-navigation', get_template_directory_uri() . '/assets/js/navigation.js', array(), rd_asset_version('/assets/js/navigation.js'), true ); // Carrega no footer
 
     // Trava do Painel: Só carrega o Prism.js se a chave estiver ligada
-    if ( rd_get_option('prism_js') == 1 ) {
+    if ( rd_get_option_bool('prism_js') ) {
         // Carrega o Prism.js apenas nas páginas de artigo.
         if ( is_single() || is_page() ) {
             wp_enqueue_script( 'rd-prism-js', get_template_directory_uri() . '/assets/js/prism.js', array(), '1.0.0', true );
@@ -93,7 +93,7 @@ add_action( 'wp_enqueue_scripts', 'rd_scripts' );
  *******************************************************************************/
 function rd_disable_emojis() {
 
-    if ( rd_get_option('disable_emojis') != 1 ) return;
+    if ( ! rd_get_option_bool('disable_emojis') ) return;
 
     remove_action( 'wp_head', 'print_emoji_detection_script', 7 );
     remove_action( 'admin_print_scripts', 'print_emoji_detection_script' );
@@ -109,7 +109,7 @@ add_action( 'init', 'rd_disable_emojis' );
  * Melhora a segurança, remove a versão do WP                  - (Performance) *
  *******************************************************************************/
 add_filter('the_generator', function($gen) {
-    return (rd_get_option('hide_wp_ver') == 1) ? '' : $gen;
+    return rd_get_option_bool('hide_wp_ver') ? '' : $gen;
 });
 
 /*******************************************************************************
@@ -117,7 +117,7 @@ add_filter('the_generator', function($gen) {
  *******************************************************************************/
 function rd_youtube_facade($cache, $url, $attr) {
 
-    if ( rd_get_option('facades_enabled') != 1 ) { return $cache; }
+    if ( ! rd_get_option_bool('facades_enabled') ) { return $cache; }
 
     if (strpos($url, 'youtube.com') !== false || strpos($url, 'youtu.be') !== false || strpos($url, 'youtube-nocookie.com') !== false) {
         preg_match('~(?:youtube\.com/(?:watch\?v=|embed/|shorts/|v/)|youtu\.be/|youtube-nocookie\.com/embed/)([a-zA-Z0-9_-]{11})~', $url, $matches);
@@ -143,7 +143,7 @@ add_filter('embed_oembed_html', 'rd_youtube_facade', 10, 3);
  * Desativa o CSS do Gutenberg e Global Syles                  - (Performance) *
  *******************************************************************************/
 function rd_disable_gutenberg_assets() {
-    if ( rd_get_option('disable_gutenberg_css') != 1 ) return;
+    if ( ! rd_get_option_bool('disable_gutenberg_css') ) return;
 
     add_filter( 'should_load_separate_core_block_assets', '__return_false' );
 

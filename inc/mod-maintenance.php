@@ -22,7 +22,7 @@ const RD_MAINT_LOGIN_SLUG       = 'rd-dev-login';        // URL: /?rd-dev-login
 function rd_maintenance_mode() {
 
     // Se manutenção não está ativa, não faz nada
-    if ( rd_get_option('maintenance_mode') != 1 ) {
+    if ( ! rd_get_option_bool('maintenance_mode') ) {
         return;
     }
 

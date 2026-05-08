@@ -25,7 +25,7 @@ function rd_views_enqueue_tracker() {
         return;
     }
 
-    if ( rd_get_option('enable_views_tracking') != 1 ) {
+    if ( ! rd_get_option_bool('enable_views_tracking') ) {
         return;
     }
 
