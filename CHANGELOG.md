@@ -7,6 +7,18 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 <br>
 
 
+# [0.1.0-beta.6](https://github.com/Finallf/theme-reloaded/compare/v0.1.0-beta.5...v0.1.0-beta.6) (2026-05-08)
+
+
+### Features
+
+* **security:** add HTTP security headers module ([ac440f3](https://github.com/Finallf/theme-reloaded/commit/ac440f396a89b41a8bd727d70ca9a30a09d052b7))
+
+
+<br>
+
+---
+
 # [0.1.0-beta.5](https://github.com/Finallf/theme-reloaded/compare/v0.1.0-beta.4...v0.1.0-beta.5) (2026-05-08)
 
 
