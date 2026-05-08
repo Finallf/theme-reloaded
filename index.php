@@ -34,6 +34,10 @@
 									<div class="entry-content">
 										<?php echo wp_trim_words( get_the_excerpt(), 15 ); ?>
 									</div>
+
+									<div class="entry-meta">
+										<?php echo rd_get_formatted_views( get_the_ID() ); ?>
+									</div>
 								</div>
 							</article>
 						<?php endwhile; ?>

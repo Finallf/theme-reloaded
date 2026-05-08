@@ -139,6 +139,25 @@
 			font-size: 0.9rem;
 			line-height: 1.5;
 		}
+
+		.entry-meta {
+			margin-top: 12px;
+			display: flex;
+			justify-content: flex-end;
+			font-size: 0.8rem;
+			color: $text-muted-dark;
+
+			.rd-card-views {
+				display: inline-flex;
+				align-items: center;
+				gap: 5px;
+
+				svg {
+					color: $brand-blue-light;
+					opacity: 0.85;
+				}
+			}
+		}
 	}
 }
 

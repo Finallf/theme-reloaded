@@ -621,6 +621,30 @@ a:hover {
   font-size: 0.9rem;
   line-height: 1.5;
 }
+.grid-item .post-content-area .entry-meta {
+  margin-top: 12px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: end;
+      -ms-flex-pack: end;
+          justify-content: flex-end;
+  font-size: 0.8rem;
+  color: #777777;
+}
+.grid-item .post-content-area .entry-meta .rd-card-views {
+  display: -webkit-inline-box;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  gap: 5px;
+}
+.grid-item .post-content-area .entry-meta .rd-card-views svg {
+  color: #00A8FF;
+  opacity: 0.85;
+}
 
 #secondary {
   -ms-flex-preferred-size: 30%;
