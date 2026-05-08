@@ -352,8 +352,7 @@ a:hover {
   display: block;
   width: 100%;
   height: 5px;
-  background: -webkit-gradient(linear, left top, right top, from(#031CFF), to(#00A8FF));
-  background: linear-gradient(90deg, #031CFF, #00A8FF);
+  background: linear-gradient(135deg, #031CFF 0%, #00A8FF 100%);
 }
 .site-footer .footer-grid {
   display: grid !important;
@@ -372,8 +371,7 @@ a:hover {
   content: "";
   display: block;
   height: 2px;
-  background: -webkit-gradient(linear, left top, right top, from(#031CFF), to(#00A8FF));
-  background: linear-gradient(90deg, #031CFF, #00A8FF);
+  background: linear-gradient(135deg, #031CFF 0%, #00A8FF 100%);
   margin-top: 8px;
 }
 .site-footer .footer-links,
@@ -722,8 +720,7 @@ a:hover {
   display: block;
   width: 100%;
   height: 5px;
-  background: -webkit-gradient(linear, left top, right top, from(#031CFF), to(#00A8FF));
-  background: linear-gradient(90deg, #031CFF, #00A8FF);
+  background: linear-gradient(135deg, #031CFF 0%, #00A8FF 100%);
 }
 .menu-bar-fixed .container {
   display: -webkit-box;
@@ -843,8 +840,7 @@ a:hover {
   display: block;
   width: 100%;
   height: 3px;
-  background: -webkit-gradient(linear, left top, right top, from(#031CFF), to(#00A8FF));
-  background: linear-gradient(90deg, #031CFF, #00A8FF);
+  background: linear-gradient(135deg, #031CFF 0%, #00A8FF 100%);
 }
 .menu-bar-fixed .main-navigation .sub-menu li {
   width: 100%;
@@ -1473,8 +1469,7 @@ a:hover {
   left: 0;
   width: 50px;
   height: 3px;
-  background: -webkit-gradient(linear, left top, right top, from(#031CFF), to(#00A8FF));
-  background: linear-gradient(90deg, #031CFF, #00A8FF);
+  background: linear-gradient(135deg, #031CFF 0%, #00A8FF 100%);
   border-radius: 2px;
 }
 #secondary .widget_block ul {
