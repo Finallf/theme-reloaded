@@ -7,6 +7,18 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 <br>
 
 
+# [0.1.0-beta.7](https://github.com/Finallf/theme-reloaded/compare/v0.1.0-beta.6...v0.1.0-beta.7) (2026-05-08)
+
+
+### Features
+
+* **views:** display view count in home grid and single post meta ([aedd91f](https://github.com/Finallf/theme-reloaded/commit/aedd91fdf4951e4d3fa61817a9163bc9f3e0d16c))
+
+
+<br>
+
+---
+
 # [0.1.0-beta.6](https://github.com/Finallf/theme-reloaded/compare/v0.1.0-beta.5...v0.1.0-beta.6) (2026-05-08)
 
 
