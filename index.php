@@ -39,7 +39,12 @@
 						<?php endwhile; ?>
 					</div>
 
-					<?php the_posts_navigation(); ?>
+					<?php
+					the_posts_pagination( array(
+						'prev_text' => esc_html__( '&larr; Anterior', 'reloaded' ),
+						'next_text' => esc_html__( 'Próxima &rarr;', 'reloaded' ),
+					) );
+					?>
 
 				<?php else : ?>
 					<p><?php esc_html_e( 'Nenhuma notícia encontrada.', 'reloaded' ); ?></p>

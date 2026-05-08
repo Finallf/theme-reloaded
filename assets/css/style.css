@@ -83,6 +83,20 @@
   padding: 0;
 }
 
+.screen-reader-text {
+  border: 0;
+  clip: rect(1px, 1px, 1px, 1px);
+  clip-path: inset(50%);
+  height: 1px;
+  width: 1px;
+  margin: -1px;
+  overflow: hidden;
+  padding: 0;
+  position: absolute !important;
+  white-space: nowrap;
+  word-wrap: normal !important;
+}
+
 img {
   max-width: 100%;
   height: auto;
@@ -802,8 +816,7 @@ a:hover {
   /* Classe que o WP adiciona na página atual */
 }
 .menu-bar-fixed .main-navigation > ul > li.current-menu-item > a, .menu-bar-fixed .main-navigation > ul > li.current_page_item > a, .menu-bar-fixed .main-navigation > ul > li.current-menu-ancestor > a, .menu-bar-fixed .main-navigation > ul > li.current-menu-parent > a {
-  background: -webkit-gradient(linear, left top, right top, from(#031CFF), to(#00A8FF));
-  background: linear-gradient(90deg, #031CFF 0%, #00A8FF 100%); /* Atualizado para a variável de degradê */
+  background: linear-gradient(135deg, #031CFF 0%, #00A8FF 100%); /* Atualizado para a variável de degradê */
   color: #ffffff;
 }
 .menu-bar-fixed .main-navigation {
@@ -1509,8 +1522,7 @@ a:hover {
   width: 100%;
 }
 #secondary .widget_block.widget_search .wp-block-search__inside-wrapper .wp-block-search__button {
-  background: -webkit-gradient(linear, left top, right top, from(#031CFF), to(#00A8FF));
-  background: linear-gradient(90deg, #031CFF 0%, #00A8FF 100%);
+  background: linear-gradient(135deg, #031CFF 0%, #00A8FF 100%);
   color: #fff;
   border: none;
   padding: 0 15px;
@@ -1525,8 +1537,7 @@ a:hover {
 
 .submit,
 .wp-block-button__link {
-  background: -webkit-gradient(linear, left top, right top, from(#031CFF), to(#00A8FF));
-  background: linear-gradient(90deg, #031CFF 0%, #00A8FF 100%);
+  background: linear-gradient(135deg, #031CFF 0%, #00A8FF 100%);
   color: #fff;
   border: none;
   padding: 12px 30px;
@@ -2481,8 +2492,7 @@ a:hover {
   left: 0;
   width: 100%;
   height: 3px;
-  background: -webkit-gradient(linear, left top, right top, from(#031CFF), to(#00A8FF));
-  background: linear-gradient(90deg, #031CFF 0%, #00A8FF 100%);
+  background: linear-gradient(135deg, #031CFF 0%, #00A8FF 100%);
 }
 .rd-404-card {
   -webkit-animation: rd404FadeUp 600ms ease-out;
@@ -2618,8 +2628,7 @@ a:hover {
 }
 
 .rd-404-btn-primary {
-  background: -webkit-gradient(linear, left top, right top, from(#031CFF), to(#00A8FF));
-  background: linear-gradient(90deg, #031CFF 0%, #00A8FF 100%);
+  background: linear-gradient(135deg, #031CFF 0%, #00A8FF 100%);
   color: #151515;
 }
 .rd-404-btn-primary:hover {
@@ -2797,8 +2806,7 @@ a:hover {
   line-height: 1.2;
   color: #e0e0e0;
   margin: 0;
-  background: -webkit-gradient(linear, left top, right top, from(#031CFF), to(#00A8FF));
-  background: linear-gradient(90deg, #031CFF 0%, #00A8FF 100%);
+  background: linear-gradient(135deg, #031CFF 0%, #00A8FF 100%);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -2919,8 +2927,7 @@ a:hover {
   left: 0;
   width: 100%;
   height: 3px;
-  background: -webkit-gradient(linear, left top, right top, from(#031CFF), to(#00A8FF));
-  background: linear-gradient(90deg, #031CFF 0%, #00A8FF 100%);
+  background: linear-gradient(135deg, #031CFF 0%, #00A8FF 100%);
 }
 .rd-author-header .rd-author-avatar {
   -ms-flex-negative: 0;
@@ -3028,8 +3035,7 @@ a:hover {
   left: 0;
   width: 100%;
   height: 3px;
-  background: -webkit-gradient(linear, left top, right top, from(#031CFF), to(#00A8FF));
-  background: linear-gradient(90deg, #031CFF 0%, #00A8FF 100%);
+  background: linear-gradient(135deg, #031CFF 0%, #00A8FF 100%);
 }
 .rd-archive-header .rd-archive-title {
   font-family: "Poppins", sans-serif;
@@ -3059,6 +3065,96 @@ a:hover {
   }
   .rd-archive-header .rd-archive-title {
     font-size: 1.3rem;
+  }
+}
+
+.navigation.pagination {
+  margin: 40px 0 20px;
+}
+.navigation.pagination .nav-links {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
+  gap: 6px;
+}
+.navigation.pagination .page-numbers {
+  display: -webkit-inline-box;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  min-width: 40px;
+  height: 40px;
+  padding: 0 12px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 5px;
+  color: #cccccc;
+  font-family: "Inter", sans-serif;
+  font-size: 0.95rem;
+  font-weight: 500;
+  text-decoration: none;
+  -webkit-transition: all 0.2s ease;
+  transition: all 0.2s ease;
+}
+.navigation.pagination a.page-numbers:hover {
+  background: rgba(0, 168, 255, 0.1);
+  border-color: #00A8FF;
+  color: #00A8FF;
+}
+.navigation.pagination .page-numbers.current {
+  background: linear-gradient(135deg, #031CFF 0%, #00A8FF 100%);
+  border-color: transparent;
+  color: #fff;
+  font-weight: 700;
+  cursor: default;
+}
+.navigation.pagination .page-numbers.dots {
+  background: transparent;
+  border-color: transparent;
+  color: #777777;
+  cursor: default;
+  min-width: auto;
+  padding: 0 4px;
+}
+.navigation.pagination .page-numbers.dots:hover {
+  background: transparent;
+  border-color: transparent;
+  color: #777777;
+}
+.navigation.pagination .page-numbers.prev,
+.navigation.pagination .page-numbers.next {
+  font-weight: 600;
+  padding: 0 16px;
+}
+@media (max-width: 600px) {
+  .navigation.pagination {
+    margin: 30px 0 10px;
+  }
+  .navigation.pagination .nav-links {
+    gap: 4px;
+  }
+  .navigation.pagination .page-numbers {
+    min-width: 36px;
+    height: 36px;
+    padding: 0 10px;
+    font-size: 0.85rem;
+  }
+  .navigation.pagination .page-numbers.prev,
+  .navigation.pagination .page-numbers.next {
+    padding: 0 12px;
   }
 }
 
@@ -3427,8 +3523,7 @@ mark.rd-highlight {
   color: #777777;
 }
 .rd-no-results .search-form .search-submit {
-  background: -webkit-gradient(linear, left top, right top, from(#031CFF), to(#00A8FF));
-  background: linear-gradient(90deg, #031CFF 0%, #00A8FF 100%);
+  background: linear-gradient(135deg, #031CFF 0%, #00A8FF 100%);
   color: #fff;
   border: none;
   cursor: pointer;
