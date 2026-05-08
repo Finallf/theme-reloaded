@@ -9,6 +9,11 @@ defined('ABSPATH') || exit;
  *******************************************************************************/
 if ( ! function_exists( 'rd_setup' ) ) :
     function rd_setup() {
+        // Carrega o text domain do tema. Faz o WP procurar por
+        // /languages/reloaded-{locale}.mo e habilitar __(), _e() etc.
+        // Se o .mo não existir pra um locale, o WP cai pra string-fonte (inglês).
+        load_theme_textdomain( 'reloaded', get_template_directory() . '/languages' );
+
 		add_theme_support( 'html5', array( 'search-form', 'comment-form', 'comment-list', 'gallery', 'caption', 'style', 'script' ) ); // Adicione suporte a HTML5
         add_theme_support( 'title-tag' ); // Adiciona suporte a títulos dinâmicos (gerenciados pelo WP)
         add_theme_support( 'post-thumbnails' ); // Habilita Imagens Destacadas (essencial para portais)
