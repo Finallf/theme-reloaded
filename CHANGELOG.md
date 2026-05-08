@@ -7,6 +7,18 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 <br>
 
 
+# [0.1.0-beta.5](https://github.com/Finallf/theme-reloaded/compare/v0.1.0-beta.4...v0.1.0-beta.5) (2026-05-08)
+
+
+### Bug Fixes
+
+* **seo:** validate og:image source and stop declaring fake dimensions ([e09cf82](https://github.com/Finallf/theme-reloaded/commit/e09cf8276e71660f13807261147b0912510e4f83))
+
+
+<br>
+
+---
+
 # [0.1.0-beta.4](https://github.com/Finallf/theme-reloaded/compare/v0.1.0-beta.3...v0.1.0-beta.4) (2026-05-08)
 
 
