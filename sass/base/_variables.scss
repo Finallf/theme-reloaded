@@ -109,8 +109,8 @@ $font-heading: 'Poppins', sans-serif;
 $brand-blue-dark: #031CFF;
 $brand-blue-light: #00A8FF;
 $color-success: #2ea043;
-$brand-gradient: linear-gradient(90deg, $brand-blue-dark 0%, $brand-blue-light 100%);
-$brand-gradientv: linear-gradient(180deg, $brand-blue-dark 0%, $brand-blue-light 100%) 1;
+// 135deg (diagonal) — evita o "risco mais claro" perceptível em ângulos retos
+$brand-gradient: linear-gradient(135deg, $brand-blue-dark 0%, $brand-blue-light 100%);
 
 /* ==========================================================================
    3. Esquema Dark (Cores Estruturais)
@@ -148,4 +148,3 @@ $space-md: 30px;
 
 $color-menu-bg: #212121;
 $color-menu-hover: rgba(255, 255, 255, 0.1);
-$header-gradient: linear-gradient(90deg, #031CFF, #00A8FF);

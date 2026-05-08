@@ -61,7 +61,7 @@
 		display: block;
 		width: 100%;
 		height: 5px; // Espessura do risco
-		background: $header-gradient; // Usa o degradê que definimos
+		background: $brand-gradient; // Usa o degradê que definimos
 	}
 
 	// Container interno para centralizar os links
@@ -163,7 +163,7 @@
 				display: block;
 				width: 100%;
 				height: 3px; // Espessura do risco
-				background: $header-gradient; // Usa o degradê que definimos
+				background: $brand-gradient; // Usa o degradê que definimos
 			}
 
 			li {
