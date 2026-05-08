@@ -53,7 +53,7 @@ $show_toggles = count( $active_layouts ) > 1;
 
                         while ( have_posts() ) {
                             the_post();
-                            rd_render_search_layout( $layout );
+                            rd_render_post_card( $layout );
                         }
                         rewind_posts(); // Reseta o loop para o próximo layout
 
