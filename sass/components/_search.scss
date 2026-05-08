@@ -1,0 +1,352 @@
+// ==========================================================
+// PÁGINA DE BUSCA (Fase 4)
+// ==========================================================
+@use '../base/variables' as *;
+
+// Highlight
+mark.rd-highlight {
+    background-color: transparent;
+    color: $brand-blue-light;
+    font-weight: 700;
+}
+
+.rd-search-term {
+    color: $brand-blue-light;
+}
+
+// Chips de Filtro (Glassmorphism)
+.rd-search-toggles {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: $space-md;
+    flex-wrap: wrap;
+
+    .rd-toggles-label {
+        color: $text-label;
+        font-size: 0.9rem;
+    }
+
+    .rd-chip {
+        background: $glass-bg;
+        border: 1px solid $glass-border;
+        color: $dark-text-muted;
+        padding: 6px 16px;
+        border-radius: 20px;
+        cursor: pointer;
+        font-family: $font-primary;
+        font-size: 0.85rem;
+        transition: all 0.3s ease;
+
+        &:hover {
+            background: rgba(255, 255, 255, 0.08);
+            color: $text-light;
+        }
+
+        &.active {
+            background: rgba(0, 168, 255, 0.15); // brand-blue-light com transparência
+            border-color: $brand-blue-light;
+            color: $brand-blue-light;
+        }
+    }
+}
+
+// Wrappers Base
+.rd-search-wrapper {
+    margin-bottom: 40px;
+    padding-bottom: 30px;
+    border-bottom: 1px solid $border-dark;
+
+    &:last-child {
+        border-bottom: none;
+        margin-bottom: 0;
+    }
+}
+
+// Estruturas dos 4 Layouts (Garantir escalabilidade em telas diferentes)
+
+// ----- GRID: efeito clonado dos cards "Níveis Recomendados" da página 404 -----
+.rd-wrapper-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 20px;
+
+    .rd-search-card.layout-grid {
+        background: $glass-bg;
+        border: 1px solid $glass-border;
+        border-radius: 5px;
+        overflow: hidden;
+        transition: all 250ms ease;
+
+        &:hover {
+            transform: translateY(-4px);
+            border-color: $brand-blue-light;
+            box-shadow: 0 8px 25px rgba(0, 168, 255, 0.2);
+        }
+
+        .rd-card-link {
+            display: block;
+            color: inherit;
+            text-decoration: none;
+        }
+
+        .rd-card-thumb {
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            overflow: hidden;
+            background: $dark-deep;
+
+            img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                display: block;
+                transition: transform 400ms ease;
+            }
+        }
+
+        &:hover .rd-card-thumb img {
+            transform: scale(1.05);
+        }
+
+        .rd-card-body {
+            padding: 18px 20px 20px;
+        }
+
+        .rd-card-title {
+            // limita a 2 linhas com ellipsis (mesmo do 404)
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+    }
+}
+
+// ----- VERTICAL: mesmo efeito glass do Grid, layout horizontal (thumb + body) -----
+.rd-wrapper-vertical {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+
+    .rd-search-card.layout-vertical {
+        display: flex;
+        gap: 0;
+        background: $glass-bg;
+        border: 1px solid $glass-border;
+        border-radius: 5px;
+        overflow: hidden;
+        transition: all 250ms ease;
+
+        &:hover {
+            transform: translateY(-4px);
+            border-color: $brand-blue-light;
+            box-shadow: 0 8px 25px rgba(0, 168, 255, 0.2);
+        }
+
+        .rd-card-thumb {
+            flex-shrink: 0;
+            width: 280px;
+            aspect-ratio: 16 / 9;
+            overflow: hidden;
+            background: $dark-deep;
+
+            a {
+                display: block;
+                width: 100%;
+                height: 100%;
+            }
+
+            img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                display: block;
+                transition: transform 400ms ease;
+            }
+        }
+
+        &:hover .rd-card-thumb img {
+            transform: scale(1.05);
+        }
+
+        .rd-card-body {
+            flex: 1;
+            padding: 18px 22px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            min-width: 0; // permite o ellipsis funcionar dentro do flex
+        }
+
+        .rd-card-title a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        .rd-card-excerpt {
+            color: $dark-text-muted;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin: 0 0 12px;
+
+            // limita a 3 linhas com ellipsis
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        // mobile: mantém horizontal pra não confundir com o Grid; só encolhe a thumb
+        @media (max-width: 600px) {
+            .rd-card-thumb {
+                width: 120px;
+            }
+
+            .rd-card-body {
+                padding: 12px 14px;
+            }
+
+            .rd-card-excerpt {
+                font-size: 0.85rem;
+                -webkit-line-clamp: 2;
+                line-clamp: 2;
+                margin-bottom: 8px;
+            }
+
+            .rd-card-title {
+                font-size: 1rem;
+            }
+        }
+    }
+}
+
+// ----- COMPACT: efeito clonado dos blocos da sidebar (.widget_block) -----
+.rd-wrapper-compact {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+
+    .rd-card-link-flex {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        background-color: $glass-bg;
+        padding: 12px 15px;
+        border-radius: 5px;
+        border: 1px solid $glass-border;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+        text-decoration: none;
+        color: inherit;
+        transition: all 0.25s ease;
+
+        &:hover {
+            border-color: $brand-blue-light;
+            transform: translateY(-2px);
+        }
+    }
+}
+
+.rd-wrapper-google {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+
+    .rd-card-url {
+        font-size: 0.8rem;
+        color: $text-muted-dark;
+        margin-bottom: 4px;
+    }
+}
+
+// Estilos Compartilhados
+.rd-search-card {
+    .rd-card-title {
+        font-family: $font-heading;
+        font-size: 1.1rem;
+        color: $text-light;
+        margin: 0 0 8px 0;
+    }
+
+    .rd-card-meta {
+        font-size: 0.8rem;
+        color: $text-muted-dark;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+
+        svg { opacity: 0.7; }
+    }
+}
+
+// ----- Sem resultados: form de busca com look-and-feel do header -----
+.rd-no-results {
+    text-align: center;
+    padding: 30px 0;
+
+    p {
+        color: $text-light;
+        font-size: 1rem;
+        margin: 0 0 25px;
+    }
+
+    .search-form {
+        display: inline-flex;
+        align-items: center;
+        width: 100%;
+        max-width: 480px;
+        height: 44px;
+        margin: 0 auto;
+        background: $dark-surface;
+        border: 1px solid $brand-blue-light;
+        border-radius: 5px;
+        overflow: hidden;
+        transition: box-shadow 0.3s ease;
+
+        &:focus-within {
+            box-shadow: 0 0 0 3px rgba(0, 168, 255, 0.15);
+        }
+
+        // Esconde o <label> "Search for:" do default do WP, mantendo só o input
+        label {
+            flex: 1;
+            display: flex;
+            margin: 0;
+        }
+
+        .search-field {
+            flex: 1;
+            background: transparent;
+            border: none;
+            outline: none;
+            color: #fff;
+            font-size: 1rem;
+            padding: 0 16px;
+            height: 100%;
+            width: 100%;
+
+            &::placeholder {
+                color: $text-muted-dark;
+            }
+        }
+
+        .search-submit {
+            background: $brand-gradient;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            padding: 0 20px;
+            height: 100%;
+            font-family: $font-heading;
+            font-weight: 600;
+            transition: opacity 0.2s ease;
+            flex-shrink: 0;
+
+            &:hover {
+                opacity: 0.9;
+            }
+        }
+    }
+}

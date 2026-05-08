@@ -26,6 +26,11 @@ function rd_set_default_options() {
             'date_format'           => '',
             'enable_views_tracking' => 1,
 
+            'search_layout_grid'     => 1,
+            'search_layout_vertical' => 0,
+            'search_layout_compact'  => 1,
+            'search_layout_google'   => 0,
+
             'enable_lgpd'           => 1,
             'lgpd_text'             => 'Nós usamos cookies e tecnologias semelhantes para melhorar a sua experiência. Ao continuar navegando, você concorda com a nossa <a href="/politica-de-privacidade">Política de Privacidade</a>.',
 
@@ -182,6 +187,13 @@ function rd_settings_init() {
     add_settings_field('comments_separator', 'Separador de Comentários', 'rd_master_field_cb', 'rd_options_geral', 'sec_geral', ['id' => 'comments_separator', 'type' => 'text', 'desc' => 'Texto entre o Autor e o Post (ex: "comentou no post:").<br>Deixe <strong>vazio</strong> para o padrão do WP ou digite <strong>&amp;nbsp;</strong> para ocultar.']);
     add_settings_field('date_format', 'Formato da Data', 'rd_master_field_cb', 'rd_options_geral', 'sec_geral', ['id' => 'date_format', 'type' => 'text', 'default' => 'l, j \d\e F \d\e Y', 'desc' => 'Ex: l, j \d\e F \d\e Y (Retorna: Segunda-feira, 29 de Abril de 2026). <a href="https://wordpress.org/documentation/article/customize-date-and-time-format/" target="_blank">Ver documentação do WP</a>.']);
     add_settings_field('enable_views_tracking', 'Contador de Visualizações', 'rd_master_field_cb', 'rd_options_geral', 'sec_geral', ['id' => 'enable_views_tracking', 'type' => 'checkbox', 'desc' => 'Ativa o sistema de contagem de visualizações por post. Um único IP conta apenas uma vez a cada 30 minutos. Bots conhecidos são ignorados automaticamente.']);
+
+    // --- PÁGINA DE BUSCA (Sub-seção dentro da aba Recursos Gerais) ---
+    add_settings_section('sec_geral_search', 'Página de Busca', '__return_false', 'rd_options_geral');
+    add_settings_field('search_layout_grid', 'Layout Grid', 'rd_master_field_cb', 'rd_options_geral', 'sec_geral_search', ['id' => 'search_layout_grid', 'type' => 'checkbox', 'desc' => 'Habilita o layout de Grid (Cards lado a lado).']);
+    add_settings_field('search_layout_vertical', 'Lista Vertical', 'rd_master_field_cb', 'rd_options_geral', 'sec_geral_search', ['id' => 'search_layout_vertical', 'type' => 'checkbox', 'desc' => 'Habilita o layout de Lista Vertical (Imagem grande + resumo).']);
+    add_settings_field('search_layout_compact', 'Lista Compacta', 'rd_master_field_cb', 'rd_options_geral', 'sec_geral_search', ['id' => 'search_layout_compact', 'type' => 'checkbox', 'desc' => 'Habilita o layout Compacto (Miniatura + título em linha).']);
+    add_settings_field('search_layout_google', 'Estilo Google', 'rd_master_field_cb', 'rd_options_geral', 'sec_geral_search', ['id' => 'search_layout_google', 'type' => 'checkbox', 'desc' => 'Habilita o layout minimalista focado em texto, similar a motores de busca.']);
 
     // --- PRIVACIDADE ---
     add_settings_section('sec_priv', 'LGPD e Cookies', '__return_false', 'rd_options_privacidade');

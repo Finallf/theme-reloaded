@@ -100,3 +100,45 @@ document.addEventListener("DOMContentLoaded", function() {
 		});
 	}
 });
+
+/* CONTROLE DE LAYOUT DA BUSCA (Chips & LocalStorage) */
+document.addEventListener('DOMContentLoaded', function() {
+    const togglesContainer = document.getElementById('rd-search-toggles');
+
+    if (togglesContainer) {
+        const chips = togglesContainer.querySelectorAll('.rd-chip');
+
+        // Carrega as preferências salvas
+        const savedPrefs = JSON.parse(localStorage.getItem('rd_search_prefs')) || {};
+
+        chips.forEach(chip => {
+            const targetId = chip.getAttribute('data-target');
+            const wrapper = document.getElementById(targetId);
+
+            // Aplica estado inicial baseado no LocalStorage
+            if (savedPrefs[targetId] === false) {
+                chip.classList.remove('active');
+                if (wrapper) wrapper.style.display = 'none';
+            }
+
+            // Lida com o clique
+            chip.addEventListener('click', function() {
+                const isActive = this.classList.contains('active');
+
+                if (isActive) {
+                    this.classList.remove('active');
+                    if (wrapper) wrapper.style.display = 'none';
+                    savedPrefs[targetId] = false;
+                } else {
+                    this.classList.add('active');
+                    // Remove o inline style e deixa o CSS decidir o display correto
+                    // (grid pro layout-grid, flex pros demais)
+                    if (wrapper) wrapper.style.removeProperty('display');
+                    savedPrefs[targetId] = true;
+                }
+
+                localStorage.setItem('rd_search_prefs', JSON.stringify(savedPrefs));
+            });
+        });
+    }
+});
