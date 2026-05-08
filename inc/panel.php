@@ -44,6 +44,7 @@ function rd_set_default_options() {
             'hide_wp_ver'           => 1,
             'facades_enabled'       => 1,
             'disable_gutenberg_css' => 1,
+            'enable_security_headers' => 1,
 
             'social_discord'        => '',
             'social_telegram'       => '',
@@ -212,6 +213,7 @@ function rd_settings_init() {
     add_settings_field('prism_js', 'Destaque de Código', 'rd_master_field_cb', 'rd_options_performance', 'sec_perf', ['id' => 'prism_js', 'type' => 'checkbox', 'desc' => 'Ativa o suporte a Syntax Highlight, que colore códigos de programação. É carregado apenas em posts para performance.']);
     add_settings_field('disable_emojis', 'Desativar Emojis Nativos', 'rd_master_field_cb', 'rd_options_performance', 'sec_perf', ['id' => 'disable_emojis', 'type' => 'checkbox', 'desc' => 'Remove o script de emojis do WP. Navegadores modernos já renderizam emojis nativamente, ative isso para poupar requisições.']);
     add_settings_field('hide_wp_ver', 'Ocultar Versão do WP', 'rd_master_field_cb', 'rd_options_performance', 'sec_perf', ['id' => 'hide_wp_ver', 'type' => 'checkbox', 'desc' => 'Remove a meta tag geradora do WordPress do código-fonte. Uma boa prática de segurança básica.']);
+    add_settings_field('enable_security_headers', 'Headers de Segurança', 'rd_master_field_cb', 'rd_options_performance', 'sec_perf', ['id' => 'enable_security_headers', 'type' => 'checkbox', 'desc' => 'Envia headers HTTP defensivos no frontend (X-Frame-Options, X-Content-Type-Options, Referrer-Policy, Permissions-Policy) pra mitigar clickjacking e MIME sniffing. Não afeta o painel admin.']);
     add_settings_field('facades_enabled', 'Sistema de Fachadas', 'rd_master_field_cb', 'rd_options_performance', 'sec_perf', ['id' => 'facades_enabled', 'type' => 'checkbox', 'desc' => 'Substitui iframes pesados (ex: YouTube) por uma imagem leve, carregando o player apenas quando o usuário clica.']);
     add_settings_field('disable_gutenberg_css', 'Desativa o CSS do WP (Bloat)', 'rd_master_field_cb', 'rd_options_performance', 'sec_perf', ['id' => 'disable_gutenberg_css', 'type' => 'checkbox', 'desc' => 'Remove o CSS global e de blocos do Gutenberg. Deixa o site mais leve, ideal para quem usa Markdown.']);
 

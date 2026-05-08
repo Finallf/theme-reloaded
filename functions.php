@@ -15,5 +15,6 @@ require_once get_template_directory() . '/inc/mod-donations.php';
 require_once get_template_directory() . '/inc/mod-ads.php';
 require_once get_template_directory() . '/inc/mod-maintenance.php';
 require_once get_template_directory() . '/inc/mod-views.php';
+require_once get_template_directory() . '/inc/mod-security.php';
 require_once get_template_directory() . '/inc/post-card.php';
 require_once get_template_directory() . '/inc/mod-search.php';
