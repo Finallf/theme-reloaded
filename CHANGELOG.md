@@ -7,6 +7,18 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 <br>
 
 
+# [0.1.0-beta.4](https://github.com/Finallf/theme-reloaded/compare/v0.1.0-beta.3...v0.1.0-beta.4) (2026-05-08)
+
+
+### Features
+
+* **pagination:** add styled pagination across listing pages ([d7e2a73](https://github.com/Finallf/theme-reloaded/commit/d7e2a735485b071f5f4d9748c76750f51c434907))
+
+
+<br>
+
+---
+
 # [0.1.0-beta.3](https://github.com/Finallf/theme-reloaded/compare/v0.1.0-beta.2...v0.1.0-beta.3) (2026-05-08)
 
 
