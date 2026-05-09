@@ -11,7 +11,7 @@ defined('ABSPATH') || exit;
 function rd_render_date() {
     $format = rd_get_option('date_format');
     if ( empty( $format ) ) {
-        $format = 'l, j \d\e F \d\e Y'; // Fallback de segurança
+        $format = __( 'l, F j, Y', 'reloaded' ); // Fallback de segurança em Inglês
     }
     // wp_date() é a função moderna do WP que já traduz automaticamente para o pt-BR
     echo '<span class="rd-date-display">' . wp_date( $format ) . '</span>';
@@ -30,7 +30,7 @@ function rd_render_news_ticker() {
         echo '  <ul class="rd-ticker-list">';
         while ( $ticker_query->have_posts() ) {
             $ticker_query->the_post();
-            echo '<li><a href="' . esc_url( get_permalink() ) . '">' . esc_html( get_the_title() ) . '</a></li>';   
+            echo '<li><a href="' . esc_url( get_permalink() ) . '">' . esc_html( get_the_title() ) . '</a></li>';
         }
         echo '  </ul>';
         echo '</div>';
@@ -41,7 +41,7 @@ function rd_render_news_ticker() {
 // 3. Módulo de Redes Sociais
 function rd_render_social_icons() {
     $redes = ['discord', 'telegram', 'whatsapp', 'youtube', 'instagram', 'steam', 'twitter', 'facebook'];
-    
+
     // Biblioteca de Vetores Matemáticos (SVGs Inline)
     $svgs = [
         'discord'   => '<svg viewBox="0 0 640 512" width="16" height="16"><path fill="currentColor" d="M524.531,69.836a1.5,1.5,0,0,0-.764-.7A485.065,485.065,0,0,0,404.081,32.03a1.816,1.816,0,0,0-1.923.91,337.461,337.461,0,0,0-14.9,30.6,447.848,447.848,0,0,0-134.426,0,309.541,309.541,0,0,0-15.135-30.6,1.89,1.89,0,0,0-1.924-.91A483.689,483.689,0,0,0,116.085,69.137a1.712,1.712,0,0,0-.788.676C39.068,183.651,18.186,294.69,28.43,404.354a2.016,2.016,0,0,0,.765,1.375A487.666,487.666,0,0,0,176.02,479.918a1.9,1.9,0,0,0,2.063-.276c8.3-11.232,16.068-22.951,23.235-35.1a1.884,1.884,0,0,0-1.026-2.658,309.117,309.117,0,0,1-40.428-19.167,1.821,1.821,0,0,1-.186-3.085c3.2-2.356,6.38-4.786,9.458-7.262a1.831,1.831,0,0,1,1.916-.276c83.562,38.163,173.812,38.163,256.334,0a1.848,1.848,0,0,1,1.924.276c3.085,2.476,6.265,4.906,9.489,7.262a1.825,1.825,0,0,1-.17,3.085,312.2,312.2,0,0,1-40.459,19.167,1.886,1.886,0,0,0-1.011,2.658c7.167,12.149,14.934,23.868,23.235,35.1a1.9,1.9,0,0,0,2.063.276A488.528,488.528,0,0,0,611.365,405.729a1.854,1.854,0,0,0,.765-1.375C624.167,280.9,595.6,170.835,524.531,69.836ZM222.491,337.58c-28.972,0-52.844-26.587-52.844-59.239S193.056,219.1,222.491,219.1c29.665,0,53.306,26.82,52.843,59.239C275.334,310.993,251.924,337.58,222.491,337.58Zm195.38,0c-28.971,0-52.843-26.587-52.843-59.239S388.437,219.1,417.871,219.1c29.667,0,53.307,26.82,52.844,59.239C470.715,310.993,447.538,337.58,417.871,337.58Z"/></svg>',
@@ -57,11 +57,11 @@ function rd_render_social_icons() {
     echo '<div class="rd-social-icons" style="display:flex;">';
     foreach ( $redes as $rede ) {
         $url = rd_get_option('social_' . $rede);
-        
+
         if ( ! empty( $url ) && isset($svgs[$rede]) ) {
             echo '<a href="' . esc_url( $url ) . '" target="_blank" rel="noopener noreferrer" class="rd-social-link rd-' . $rede . '" aria-label="' . ucfirst($rede) . '">';
             // Injeta o desenho matemático!
-            echo $svgs[$rede]; 
+            echo $svgs[$rede];
             echo '</a>';
         }
     }

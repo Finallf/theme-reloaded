@@ -18,14 +18,14 @@ function rd_render_lgpd_banner() {
         return;
     }
 
-    $banner_text = !empty($opt['lgpd_text']) ? $opt['lgpd_text'] : 'Nós usamos cookies e tecnologias semelhantes para melhorar a sua experiência. Ao continuar navegando, você concorda com a nossa <a href="/politica-de-privacidade">Política de Privacidade</a>.';
+    $banner_text = !empty($opt['lgpd_text']) ? $opt['lgpd_text'] : __( 'We use cookies and similar technologies to improve your experience. By continuing to browse, you agree to our <a href="/privacy-policy">Privacy Policy</a>.', 'reloaded' );
     ?>
-    
+
     <div id="rd-lgpd-banner" class="rd-cookie-banner">
         <div class="cookie-text">
             <?php echo wp_kses_post( $banner_text ); ?>
         </div>
-        <button id="rd-cookie-accept" class="cookie-btn">Entendi e Aceito</button>
+        <button id="rd-cookie-accept" class="cookie-btn"><?php esc_html_e( 'Understood and Accepted', 'reloaded' ); ?></button>
     </div>
     <?php
 }

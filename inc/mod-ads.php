@@ -24,7 +24,7 @@ function rd_render_ad_mobile_anchor() {
 
         // Botão de fechar sobreposto (Usa opacidade e movimento para sumir)
         echo '<div class="rd-ad-close-wrap">';
-        echo '<button class="rd-ad-close" onclick="this.closest(\'.rd-ad-mobile\').style.opacity=\'0\'; setTimeout(() => { this.closest(\'.rd-ad-mobile\').style.display=\'none\'; }, 300);" aria-label="Fechar anúncio">&times;</button>';
+        echo '<button class="rd-ad-close" onclick="this.closest(\'.rd-ad-mobile\').style.opacity=\'0\'; setTimeout(() => { this.closest(\'.rd-ad-mobile\').style.display=\'none\'; }, 300);" aria-label="' . esc_attr__( 'Close ad', 'reloaded' ) . '">&times;</button>';
         echo '</div>';
 
         echo $ad_mobile;
@@ -42,7 +42,7 @@ function rd_render_ad_sidebar_top() {   // Renderiza o banner da Sidebar (Topo)
 }
 
 // Renderiza o banner da Sidebar (Sticky)
-function rd_render_ad_sidebar_sticky() {    
+function rd_render_ad_sidebar_sticky() {
     $ad_sidebar_sticky = rd_get_option('ad_sidebar_sticky');
     if ( ! empty( $ad_sidebar_sticky ) ) {
         echo '<div class="rd-ad-container rd-ad-sticky">' . $ad_sidebar_sticky . '</div>';

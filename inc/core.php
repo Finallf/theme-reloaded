@@ -35,8 +35,8 @@ if ( ! function_exists( 'rd_setup' ) ) :
 
         // Registra os locais de menu
         register_nav_menus( array(
-            'menu-1'      => esc_html__( 'Cabeçalho Principal', 'reloaded' ),
-            'menu-footer' => esc_html__( 'Menu Rodapé', 'reloaded' ),
+            'menu-1'      => esc_html__( 'Primary Menu', 'reloaded' ),
+            'menu-footer' => esc_html__( 'Footer Menu', 'reloaded' ),
         ) );
     }
 endif;
@@ -79,9 +79,9 @@ function rd_widgets_init() {
 
     // Barra Lateral Principal
     register_sidebar( array(
-        'name'          => 'Barra Lateral Principal',
+        'name'          => __( 'Main Sidebar', 'reloaded' ),
         'id'            => 'sidebar-1',
-        'description'   => 'Adicione widgets aqui para aparecerem na lateral.',
+        'description'   => __( 'Add widgets here to appear in the sidebar.', 'reloaded' ),
         'before_widget' => '<section id="%1$s" class="widget %2$s">',
         'after_widget'  => '</section>',
         'before_title'  => '<h2 class="wp-block-heading widget-title">',
@@ -90,9 +90,9 @@ function rd_widgets_init() {
 
     // Rodapé - Área Dinâmica
     register_sidebar( array(
-        'name'          => 'Rodapé - Coluna 3 (Posts Populares)',
+        'name'          => __( 'Footer - Column 3 (Popular Posts)', 'reloaded' ),
         'id'            => 'footer-widget-area',
-        'description'   => 'Adicione widgets aqui para aparecerem no rodapé.',
+        'description'   => __( 'Add widgets here to appear in the footer.', 'reloaded' ),
         'before_widget' => '<div id="%1$s" class="widget footer-widget %2$s">',
         'after_widget'  => '</div>',
         'before_title'  => '<h3 class="footer-heading">',

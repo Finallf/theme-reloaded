@@ -33,24 +33,24 @@ function rd_markdown_support( $content ) {
             function( $matches ) {
                 $level = $matches[1];
                 $texto_original = $matches[2];
-                
+
                 // 1. Remove tags HTML de dentro do título
-                $texto_puro = strip_tags( $texto_original ); 
-                
+                $texto_puro = strip_tags( $texto_original );
+
                 // 2. Converte para minúsculas (suportando acentuação)
                 $id = mb_strtolower( $texto_puro, 'UTF-8' );
-                
-                // 3. A REFINAÇÃO FINAL DO GITHUB: 
-                // Mantém Letras (\p{L}), Marcadores de cor (\p{M}), Formatadores/Colas invisíveis (\p{Cf}), 
+
+                // 3. A REFINAÇÃO FINAL DO GITHUB:
+                // Mantém Letras (\p{L}), Marcadores de cor (\p{M}), Formatadores/Colas invisíveis (\p{Cf}),
                 // Números (\p{Nd}), Espaços (\s) e Hifens (-). Apaga os Símbolos base.
                 $id = preg_replace( '/[^\p{L}\p{M}\p{Cf}\p{Nd}\s-]/u', '', $id );
-                
+
                 // 4. O SEGREDO DO GITHUB: Troca CADA espaço individual por um hífen.
                 $id = preg_replace( '/\s/u', '-', $id );
-                
+
                 // 5. Codifica para URL (Transforma a "cola" e o "fantasma" invisíveis em %E2...%EF...)
                 $id = urlencode( $id );
-                
+
                 // Proteção extra: se o título sumir completamente
                 if ( empty( $id ) || $id === '-' ) {
                     $id = 'secao-' . uniqid();
@@ -61,7 +61,7 @@ function rd_markdown_support( $content ) {
             },
             $html
         );
-        
+
         // 3. Remove as tags <p> extras em volta de <br> isolados
         $html = preg_replace('/<p>\s*(<br\s*\/?>)\s*<\/p>/i', '$1', $html);
 
@@ -77,6 +77,12 @@ add_filter( 'the_content', 'rd_markdown_support', 6 );
 function rd_scripts() {
     wp_enqueue_style( 'rd-main-style', get_template_directory_uri() . '/assets/css/style.css', array(), rd_asset_version('/assets/css/style.css') );
     wp_enqueue_script( 'rd-navigation', get_template_directory_uri() . '/assets/js/navigation.js', array(), rd_asset_version('/assets/js/navigation.js'), true ); // Carrega no footer
+
+    // INJETA AS TRADUÇÕES DO JS LOGO ABAIXO DO SCRIPT PRINCIPAL
+    wp_localize_script( 'rd-navigation', 'reloaded_i18n', array(
+        'copied'     => esc_html__( 'Key Copied!', 'reloaded' ),
+        'copy_error' => esc_html__( 'Error copying: ', 'reloaded' )
+    ) );
 
     // Trava do Painel: Só carrega o Prism.js se a chave estiver ligada
     if ( rd_get_option_bool('prism_js') ) {

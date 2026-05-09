@@ -14,7 +14,7 @@ function rd_add_post_options_meta_box() {
     if ( rd_get_option_bool('enable_thumb_control') ) {
         add_meta_box(
             'rd_post_options',
-            'Opções do Artigo (ReloadeD)',
+            __( 'Post Options (ReloadeD)', 'reloaded' ),
             'rd_post_options_callback',
             'post',
             'side',
@@ -30,18 +30,18 @@ function rd_post_options_callback( $post ) {
     ?>
     <p>
         <label>
-            <input type="checkbox" name="rd_hide_thumbnail" value="yes" <?php checked( $is_hidden, 'yes' ); ?> />
-            Ocultar Imagem Destacada no topo da leitura
-        </label>
+        <input type="checkbox" name="rd_hide_thumbnail" value="yes" <?php checked( $is_hidden, 'yes' ); ?> />
+        <?php esc_html_e( 'Hide Featured Image at the top of the post', 'reloaded' ); ?>
+    </label>
     </p>
-    <p class="description">Marque para impedir que a miniatura duplique com vídeos inseridos no início do texto.</p>
+    <p class="description"><?php esc_html_e( 'Check to prevent the thumbnail from duplicating with videos inserted at the beginning of the text.', 'reloaded' ); ?></p>
     <?php
 }
 
 // 3. Salva a preferência individual no banco de dados
 add_action( 'save_post', 'rd_save_post_options' );
 function rd_save_post_options( $post_id ) {
-    if ( ! isset( $_POST['rd_post_options_nonce'] ) || 
+    if ( ! isset( $_POST['rd_post_options_nonce'] ) ||
         ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['rd_post_options_nonce'] ) ), 'rd_save_post_options' ) ) {
         return;
     }
@@ -65,11 +65,11 @@ function rd_save_post_options( $post_id ) {
  ***********************************************************************************/
 function rd_custom_image_quality( $quality ) {
     $opt = get_option('rd_settings');
-    
+
     if ( isset( $opt['jpeg_quality'] ) && !empty( $opt['jpeg_quality'] ) ) {
-        return intval( $opt['jpeg_quality'] ); 
+        return intval( $opt['jpeg_quality'] );
     }
-    return 90; 
+    return 90;
 }
 add_filter( 'jpeg_quality', 'rd_custom_image_quality' );
 add_filter( 'webp_quality', 'rd_custom_image_quality' );
@@ -80,7 +80,7 @@ add_filter( 'wp_editor_set_quality', 'rd_custom_image_quality' );
  * Corrige avisos de Acessibilidade no Formulário de Comentários     - (Geral) *
  *******************************************************************************/
 function rd_fix_comment_form_labels( $fields ) {
-    
+
     if ( ! rd_get_option_bool('comment_a11y') ) return $fields;
 
     $commenter = wp_get_current_commenter();
@@ -89,19 +89,19 @@ function rd_fix_comment_form_labels( $fields ) {
 
     // Reescreve o campo NOME (Adicionado autocomplete="name")
     $fields['author'] = '<p class="comment-form-author">' .
-                        '<label for="author_name">Nome' . ( $req ? ' <span class="required">*</span>' : '' ) . '</label> ' .
+                        '<label for="author_name">' . esc_html__( 'Name', 'reloaded' ) . ( $req ? ' <span class="required">*</span>' : '' ) . '</label> ' .
                         '<input id="author_name" name="author" type="text" value="' . esc_attr( $commenter['comment_author'] ) . '" size="30" maxlength="245" autocomplete="name"' . $html_req . ' />' .
                         '</p>';
 
     // Reescreve o campo EMAIL (Adicionado autocomplete="email")
     $fields['email']  = '<p class="comment-form-email">' .
-                        '<label for="author_email">E-mail' . ( $req ? ' <span class="required">*</span>' : '' ) . '</label> ' .
+                        '<label for="author_email">' . esc_html__( 'Email', 'reloaded' ) . ( $req ? ' <span class="required">*</span>' : '' ) . '</label> ' .
                         '<input id="author_email" name="email" type="email" value="' . esc_attr(  $commenter['comment_author_email'] ) . '" size="30" maxlength="100" aria-describedby="email-notes" autocomplete="email"' . $html_req . ' />' .
                         '</p>';
 
     // Reescreve o campo SITE (Adicionado autocomplete="url")
     $fields['url']    = '<p class="comment-form-url">' .
-                        '<label for="author_url">Site</label> ' .
+                        '<label for="author_url">' . esc_html__( 'Website', 'reloaded' ) . '</label> ' .
                         '<input id="author_url" name="url" type="url" value="' . esc_attr( $commenter['comment_author_url'] ) . '" size="30" maxlength="200" autocomplete="url" />' .
                         '</p>';
 
@@ -109,7 +109,7 @@ function rd_fix_comment_form_labels( $fields ) {
     $consent = empty( $commenter['comment_author_email'] ) ? '' : ' checked="checked"';
     $fields['cookies'] = '<p class="comment-form-cookies-consent">' .
                          '<input id="wp-comment-cookies-consent-id" name="wp-comment-cookies-consent" type="checkbox" value="yes"' . $consent . ' />' .
-                         '<label for="wp-comment-cookies-consent-id">Salvar meus dados neste navegador para a próxima vez que eu comentar.</label>' .
+                         '<label for="wp-comment-cookies-consent-id">' . esc_html__( 'Save my name, email, and website in this browser for the next time I comment.', 'reloaded' ) . '</label>' .
                          '</p>';
 
     return $fields;
@@ -121,12 +121,12 @@ add_filter( 'comment_form_default_fields', 'rd_fix_comment_form_labels' );
  *******************************************************************************/
 function rd_custom_excerpt_more( $more ) {
     $opt = get_option('rd_settings');
-    
+
     if ( isset( $opt['excerpt_text'] ) && !empty( $opt['excerpt_text'] ) ) {
         return '... <br><span class="more-link">' . esc_html( $opt['excerpt_text'] ) . '</span>';
     }
 
-    return $more; 
+    return $more;
 }
 add_filter( 'excerpt_more', 'rd_custom_excerpt_more' );
 
@@ -135,7 +135,7 @@ add_filter( 'excerpt_more', 'rd_custom_excerpt_more' );
  *******************************************************************************/
 function rd_change_latest_comments_text( $translated_text, $text, $domain ) {
     if ( $text === '%1$s on %2$s' || $text === '%s on %s' ) {
-        
+
         $opt = get_option('rd_settings');
         $sep = isset($opt['comments_separator']) ? $opt['comments_separator'] : '';
 

@@ -29,7 +29,7 @@ function rd_post_card_text( $text ) {
 function rd_get_formatted_views( $post_id ) {
     if ( ! function_exists('rd_get_post_views') ) return '';
     $views = rd_get_post_views( $post_id );
-    return '<span class="rd-card-views" aria-label="Visualizações"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg> ' . number_format_i18n($views) . '</span>';
+    return '<span class="rd-card-views" aria-label="' . esc_attr__( 'Views', 'reloaded' ) . '"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg> ' . number_format_i18n($views) . '</span>';
 }
 
 /**

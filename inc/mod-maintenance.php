@@ -84,8 +84,7 @@ function rd_maintenance_handle_login() {
     // Verifica nonce (proteção CSRF)
     if ( ! isset( $_POST['rd_maint_nonce'] ) ||
          ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['rd_maint_nonce'] ) ), 'rd_maint_login' ) ) {
-        rd_maintenance_render_login_form( 'Sessão expirada. Tente novamente.' );
-        exit;
+        rd_maintenance_render_login_form( __( 'Session expired. Please try again.', 'reloaded' ) );
     }
 
     // Rate limiting por IP
@@ -94,7 +93,7 @@ function rd_maintenance_handle_login() {
     $attempts = (int) get_transient( $rate_key );
 
     if ( $attempts >= RD_MAINT_RATE_LIMIT_MAX ) {
-        rd_maintenance_render_login_form( 'Muitas tentativas. Aguarde alguns minutos.' );
+        rd_maintenance_render_login_form( __( 'Too many attempts. Please wait a few minutes.', 'reloaded' ) );
         exit;
     }
 
@@ -108,7 +107,7 @@ function rd_maintenance_handle_login() {
 
     // Sem hash configurado: bloqueia (segurança por padrão)
     if ( empty( $stored_hash ) ) {
-        rd_maintenance_render_login_form( 'Acesso de dev não configurado.' );
+        rd_maintenance_render_login_form( __( 'Developer access not configured.', 'reloaded' ) );
         exit;
     }
 
@@ -117,7 +116,7 @@ function rd_maintenance_handle_login() {
         // Incrementa contador de tentativas
         set_transient( $rate_key, $attempts + 1, RD_MAINT_RATE_LIMIT_WINDOW );
 
-        rd_maintenance_render_login_form( 'Senha incorreta.' );
+        rd_maintenance_render_login_form( __( 'Incorrect password.', 'reloaded' ) );
         exit;
     }
 
@@ -171,16 +170,12 @@ function rd_maintenance_render_screen() {
     $custom_text = rd_get_option('maintenance_text');
     $mensagem = !empty($custom_text)
         ? wp_kses_post($custom_text)
-        : 'O portal ReloadeD está passando por uma manutenção programada para trazer novidades. Agradecemos a paciência.';
+        : __( 'The ReloadeD portal is undergoing scheduled maintenance to bring you new features. Thank you for your patience.', 'reloaded' );
 
     $logo_url = get_template_directory_uri() . '/assets/img/logo-reloaded-painel.webp';
     $html = rd_maintenance_get_template_html( $logo_url, $mensagem );
 
-    wp_die(
-        $html,
-        'Manutenção Programada - ReloadeD',
-        array( 'response' => 503 )
-    );
+    wp_die( $html, __( 'Scheduled Maintenance - ReloadeD', 'reloaded' ), array( 'response' => 503 ) );
 }
 
 /**
@@ -199,19 +194,15 @@ function rd_maintenance_render_login_form( $error_message = '' ) {
         <form method="POST" action="' . esc_url( home_url( '/?' . RD_MAINT_LOGIN_SLUG ) ) . '" class="rd-maint-form">
             ' . $error_html . '
             <input type="hidden" name="rd_maint_nonce" value="' . esc_attr( $nonce ) . '">
-            <label for="rd_maint_password">Senha de Desenvolvedor:</label>
+            <label for="rd_maint_password">' . esc_html__( 'Developer Password:', 'reloaded' ) . '</label>
             <input type="password" id="rd_maint_password" name="rd_maint_password" required autocomplete="current-password">
-            <button type="submit">Entrar</button>
+            <button type="submit">' . esc_html__( 'Log In', 'reloaded' ) . '</button>
         </form>
     ';
 
     $html = rd_maintenance_get_template_html( $logo_url, '', $form_html );
 
-    wp_die(
-        $html,
-        'Acesso Restrito - ReloadeD',
-        array( 'response' => 503 )
-    );
+    wp_die( $html, __( 'Restricted Access - ReloadeD', 'reloaded' ), array( 'response' => 503 ) );
 }
 
 /**
@@ -221,7 +212,7 @@ function rd_maintenance_get_template_html( $logo_url, $mensagem = '', $extra_htm
 
     $content_html = '';
     if ( ! empty( $mensagem ) ) {
-        $content_html .= '<h1 class="pulse-text">Trabalhando nos bastidores...</h1>';
+        $content_html .= '<h1 class="pulse-text">' . esc_html__( 'Working behind the scenes...', 'reloaded' ) . '</h1>';
         $content_html .= '<p>' . wp_kses_post( $mensagem ) . '</p>';
     }
     $content_html .= $extra_html;

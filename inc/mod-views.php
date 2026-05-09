@@ -242,7 +242,7 @@ function rd_get_popular_posts( $limit = 3, $args = array() ) {
  * Adiciona coluna "Views" na lista de posts do admin
  */
 function rd_views_admin_column( $columns ) {
-    $columns['rd_views'] = '👁️ Views';
+    $columns['rd_views'] = __('👁️ Views', 'reloaded');
     return $columns;
 }
 add_filter( 'manage_post_posts_columns', 'rd_views_admin_column' );

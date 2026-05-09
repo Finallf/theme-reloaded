@@ -22,7 +22,7 @@ document.addEventListener('DOMContentLoaded', function () {
 		});
 	}
 
-	/* 1. MENU (HAMBÚRGUER) */
+	/* MENU (HAMBÚRGUER) */
 	const ul = document.getElementById('primary-menu');
 	const button = document.querySelector('.menu-toggle');
 
@@ -42,7 +42,7 @@ document.addEventListener('DOMContentLoaded', function () {
 		};
 	}
 
-	/* 2. FACHADAS(Facades) (YOUTUBE, DISCORD, ETC.) - OTIMIZADO */
+	/* FACHADAS(Facades) (YOUTUBE, DISCORD, ETC.) - OTIMIZADO */
 	const facades = document.querySelectorAll('.rd-facade');
 	const isDiscordOpen = sessionStorage.getItem('rd_discord_open');
 
@@ -78,7 +78,32 @@ document.addEventListener('DOMContentLoaded', function () {
 		});
 	});
 
-	/* 3. PRISM - Adiciona line-numbers em todos os <pre> */
+    /* COPIAR CHAVE PIX */
+    const pixButtons = document.querySelectorAll('.js-copy-pix');
+    if (pixButtons.length > 0) {
+        pixButtons.forEach(btn => {
+            btn.addEventListener('click', function() {
+                const pixKey = this.getAttribute('data-pix-key');
+                const textSpan = this.querySelector('.rd-copy-text');
+                const originalText = textSpan.innerText;
+
+                navigator.clipboard.writeText(pixKey).then(() => {
+                    // reloaded_i18n vem do wp_localize_script no PHP
+                    textSpan.innerText = reloaded_i18n.copied;
+                    this.classList.add('copied');
+
+                    setTimeout(() => {
+                        textSpan.innerText = originalText;
+                        this.classList.remove('copied');
+                    }, 2000);
+                }).catch(err => {
+                    console.error(reloaded_i18n.copy_error, err);
+                });
+            });
+        });
+    }
+
+	/* PRISM - Adiciona line-numbers em todos os <pre> */
 	document.querySelectorAll('pre').forEach(block => block.classList.add('line-numbers'));
 
 });
