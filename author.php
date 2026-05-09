@@ -53,7 +53,7 @@ $registered = $author ? $author->user_registered : '';
                             <span class="rd-author-meta-item">
                                 <?php
                                 printf(
-                                    esc_html( _n( '%s artigo publicado', '%s artigos publicados', $post_count, 'reloaded' ) ),
+                                    esc_html( _n( '%s published article', '%s published articles', $post_count, 'reloaded' ) ),
                                     esc_html( number_format_i18n( $post_count ) )
                                 );
                                 ?>
@@ -63,7 +63,7 @@ $registered = $author ? $author->user_registered : '';
                                 <span class="rd-author-meta-item">
                                     <?php
                                     printf(
-                                        esc_html__( 'Membro desde %s', 'reloaded' ),
+                                        esc_html__( 'Member since %s', 'reloaded' ),
                                         esc_html( date_i18n( 'F \d\e Y', strtotime( $registered ) ) )
                                     );
                                     ?>
@@ -87,14 +87,14 @@ $registered = $author ? $author->user_registered : '';
 
                 <?php
                 the_posts_pagination( array(
-                    'prev_text' => esc_html__( '&larr; Anterior', 'reloaded' ),
-                    'next_text' => esc_html__( 'Próxima &rarr;', 'reloaded' ),
+                    'prev_text' => __( '&larr; Previous', 'reloaded' ),
+                    'next_text' => __( 'Next &rarr;', 'reloaded' ),
                 ) );
                 ?>
 
             <?php else : ?>
 
-                <p class="rd-no-posts"><?php esc_html_e( 'Este autor ainda não publicou nenhum artigo.', 'reloaded' ); ?></p>
+                <p class="rd-no-posts"><?php esc_html_e( 'This author has not published any articles yet.', 'reloaded' ); ?></p>
 
             <?php endif; ?>
 

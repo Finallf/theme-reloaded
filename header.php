@@ -13,13 +13,13 @@
 		<?php if ( rd_get_option_bool('enable_top_bar') ) : ?>
 			<div class="rd-top-bar">
 				<div class="rd-container">
-					
+
 					<div class="rd-top-left">
 						<?php rd_render_date(); ?>
 					</div>
 
 					<div class="rd-top-center">
-						<span class="rd-ticker-label">Últimas:</span>
+						<span class="rd-ticker-label"><?php esc_html_e( 'Latest:', 'reloaded' ); ?></span>
 						<?php rd_render_news_ticker(); ?>
 					</div>
 
@@ -55,7 +55,7 @@
 								<?php if ( function_exists('rd_render_logo') ) { rd_render_logo(); } ?>
 							</div>
 
-							<button class="menu-toggle" aria-controls="primary-menu" aria-expanded="false" aria-label="<?php esc_attr_e( 'Abrir menu de navegação', 'reloaded' ); ?>">
+							<button class="menu-toggle" aria-controls="primary-menu" aria-expanded="false" aria-label="<?php esc_attr_e( 'Open navigation menu', 'reloaded' ); ?>">
 								<span class="hamburger-icon" aria-hidden="true">&#9776;</span>
 							</button>
 							<?php
@@ -68,15 +68,15 @@
 						</nav>
 						<div class="header-search-container">
 							<form role="search" method="get" class="search-form" action="<?php echo esc_url( home_url( '/' ) ); ?>">
-								<input 
-									type="search" 
-									class="search-field" 
-									placeholder="<?php esc_attr_e( 'Pesquisar...', 'reloaded' ); ?>" 
-									value="<?php echo esc_attr( get_search_query() ); ?>" 
+								<input
+									type="search"
+									class="search-field"
+									placeholder="<?php esc_attr_e( 'Search...', 'reloaded' ); ?>"
+									value="<?php echo esc_attr( get_search_query() ); ?>"
 									name="s"
-									aria-label="<?php esc_attr_e( 'Pesquisar no site', 'reloaded' ); ?>"
+									aria-label="<?php esc_attr_e( 'Search the site', 'reloaded' ); ?>"
 								/>
-								<button type="submit" class="search-submit" aria-label="<?php esc_attr_e( 'Buscar', 'reloaded' ); ?>">
+								<button type="submit" class="search-submit" aria-label="<?php esc_attr_e( 'Search', 'reloaded' ); ?>">
 									<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="25" height="25" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="search-icon" aria-hidden="true">
 										<circle cx="11" cy="11" r="8"></circle>
 										<line x1="22" y1="22" x2="16.65" y2="16.65"></line>

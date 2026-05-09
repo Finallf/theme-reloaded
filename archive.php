@@ -37,14 +37,14 @@ get_header(); ?>
 
                 <?php
                 the_posts_pagination( array(
-                    'prev_text' => esc_html__( '&larr; Anterior', 'reloaded' ),
-                    'next_text' => esc_html__( 'Próxima &rarr;', 'reloaded' ),
+                    'prev_text' => __( '&larr; Previous', 'reloaded' ),
+                    'next_text' => __( 'Next &rarr;', 'reloaded' ),
                 ) );
                 ?>
 
             <?php else : ?>
 
-                <p class="rd-no-posts"><?php esc_html_e( 'Nenhum artigo encontrado neste arquivo.', 'reloaded' ); ?></p>
+                <p class="rd-no-posts"><?php esc_html_e( 'No articles found in this archive.', 'reloaded' ); ?></p>
 
             <?php endif; ?>
 

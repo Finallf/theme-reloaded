@@ -28,7 +28,7 @@ $show_toggles = count( $active_layouts ) > 1;
 
             <header class="rd-page-header">
                 <h1 class="rd-page-title">
-                    <?php printf( esc_html__( 'Resultados para: %s', 'reloaded' ), '<span class="rd-search-term">' . get_search_query() . '</span>' ); ?>
+                    <?php printf( esc_html__( 'Results for: %s', 'reloaded' ), '<span class="rd-search-term">' . get_search_query() . '</span>' ); ?>
                 </h1>
             </header>
 
@@ -36,7 +36,7 @@ $show_toggles = count( $active_layouts ) > 1;
 
                 <?php if ( $show_toggles ) : ?>
                     <div class="rd-search-toggles" id="rd-search-toggles">
-                        <span class="rd-toggles-label"><?php esc_html_e( 'Exibir em:', 'reloaded' ); ?></span>
+                        <span class="rd-toggles-label"><?php esc_html_e( 'View as:', 'reloaded' ); ?></span>
                         <?php foreach ( $active_layouts as $layout ) : ?>
                             <button type="button" class="rd-chip active" data-target="rd-wrap-<?php echo esc_attr($layout); ?>">
                                 <?php echo esc_html( ucfirst($layout) ); ?>
@@ -64,14 +64,14 @@ $show_toggles = count( $active_layouts ) > 1;
 
                 <?php
                 the_posts_pagination( array(
-                    'prev_text' => esc_html__( '&larr; Anterior', 'reloaded' ),
-                    'next_text' => esc_html__( 'Próxima &rarr;', 'reloaded' ),
+                    'prev_text' => __( '&larr; Previous', 'reloaded' ),
+                    'next_text' => __( 'Next &rarr;', 'reloaded' ),
                 ) );
                 ?>
 
             <?php else : ?>
                 <div class="rd-no-results">
-                    <p><?php esc_html_e( 'Nenhum nível encontrado com este termo. Tente usar outras palavras-chave.', 'reloaded' ); ?></p>
+                    <p><?php esc_html_e( 'No levels found for this term. Try using different keywords.', 'reloaded' ); ?></p>
                     <?php get_search_form(); ?>
                 </div>
             <?php endif; ?>

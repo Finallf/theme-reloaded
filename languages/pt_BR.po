@@ -1,0 +1,158 @@
+# Brazilian Portuguese translation of the ReloadeD WordPress theme.
+# Copyright (C) 2026 Finallf
+# This file is distributed under the same license as the ReloadeD theme.
+# Finallf <finallf2@gmail.com>, 2026.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: ReloadeD 0.1.0\n"
+"Report-Msgid-Bugs-To: https://github.com/Finallf/theme-reloaded/issues\n"
+"POT-Creation-Date: 2026-05-08 14:50+0000\n"
+"PO-Revision-Date: 2026-05-09 01:23-0300\n"
+"Last-Translator: Finallf <finallf2@gmail.com>\n"
+"Language-Team: Brazilian Portuguese\n"
+"Language: pt_BR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Generator: Poedit 3.9\n"
+
+# ============================================================================
+# header.php
+# ============================================================================
+#: header.php:22
+msgid "Latest:"
+msgstr "Últimas:"
+
+#: header.php:58
+msgid "Open navigation menu"
+msgstr "Abrir menu de navegação"
+
+#: header.php:74
+msgid "Search..."
+msgstr "Pesquisar..."
+
+#: header.php:77
+msgid "Search the site"
+msgstr "Pesquisar no site"
+
+#: header.php:79
+msgid "Search"
+msgstr "Buscar"
+
+#: page.php:40
+msgid "Pages:"
+msgstr "Páginas:"
+
+#: 404.php:20
+msgid "LEVEL NOT FOUND:"
+msgstr "NÍVEL NÃO ENCONTRADO:"
+
+#: 404.php:25
+msgid "This area does not exist on the portal map. The path you tried to access may have been removed, moved to another coordinate, or never existed in this universe."
+msgstr "Esta área não existe no mapa do portal. O caminho que você tentou acessar pode ter sido removido, movido para outra coordenada, ou nunca existiu neste universo."
+
+#: 404.php:31
+msgid "Back to start"
+msgstr "Voltar ao início"
+
+#: 404.php:41
+msgid "Search content"
+msgstr "Buscar conteúdo"
+
+#: 404.php:70
+msgid "Recommended Levels"
+msgstr "Níveis Recomendados"
+
+#: archive.php:40
+msgid "&larr; Previous"
+msgstr "&larr; Anterior"
+
+#: archive.php:41
+msgid "Next &rarr;"
+msgstr "Próxima &rarr;"
+
+#: archive.php:47
+msgid "No articles found in this archive."
+msgstr "Nenhum artigo encontrado neste arquivo."
+
+#: author.php:56
+msgid "%s published article"
+msgid_plural "%s published articles"
+msgstr[0] "%s artigo publicado"
+msgstr[1] "%s artigos publicados"
+
+#: author.php:66
+msgid "Member since %s"
+msgstr "Membro desde %s"
+
+#: author.php:97
+msgid "This author has not published any articles yet."
+msgstr "Este autor ainda não publicou nenhum artigo."
+
+#: footer.php:16
+msgid "Navigation"
+msgstr "Navegação"
+
+#: footer.php:33
+msgid "Featured"
+msgstr "Em Destaque"
+
+#: footer.php:34
+msgid "Add a widget in Appearance > Widgets."
+msgstr "Adicione um widget em Aparência > Widgets."
+
+#: footer.php:39
+msgid "Support the Project"
+msgstr "Apoie o Projeto"
+
+#: footer.php:41
+msgid "Community Discord"
+msgstr "Discord da Comunidade"
+
+#: footer.php:42
+msgid "GitHub Sponsors"
+msgstr "GitHub Sponsors"
+
+#: footer.php:43
+msgid "Support via PIX"
+msgstr "Apoio via PIX"
+
+#: footer.php:49
+msgid "All rights reserved."
+msgstr "Todos os direitos reservados."
+
+#: footer.php:50
+msgid "Hosted on private infrastructure."
+msgstr "Hospedado em infraestrutura própria."
+
+#: footer.php:58
+msgid "Back to top"
+msgstr "Voltar ao topo"
+
+#: comments.php:18
+msgid "%s Comment"
+msgid_plural "%s Comments"
+msgstr[0] "%s Comentário"
+msgstr[1] "%s Comentários"
+
+#: comments.php:43
+msgid "Comments are closed."
+msgstr "Os comentários estão fechados."
+
+#: index.php:54
+msgid "No news found."
+msgstr "Nenhuma notícia encontrada."
+
+#: search.php:31
+msgid "Results for: %s"
+msgstr "Resultados para: %s"
+
+#: search.php:39
+msgid "View as:"
+msgstr "Exibir em:"
+
+#: search.php:74
+msgid "No levels found for this term. Try using different keywords."
+msgstr "Nenhum nível encontrado com este termo. Tente usar outras palavras-chave."

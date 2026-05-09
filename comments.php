@@ -15,11 +15,10 @@ if ( post_password_required() ) {
         <h3 class="comments-title">
             <?php
             $comment_count = get_comments_number();
-            if ( '1' === $comment_count ) {
-                echo '1 Comentário';
-            } else {
-                echo esc_html( $comment_count ) . ' Comentários';
-            }
+            printf(
+                esc_html( _n( '%s Comment', '%s Comments', $comment_count, 'reloaded' ) ),
+                number_format_i18n( $comment_count )
+            );
             ?>
         </h3>
 
@@ -41,7 +40,7 @@ if ( post_password_required() ) {
     // Se os comentários estiverem fechados, exibe um aviso amigável
     if ( ! comments_open() && get_comments_number() && post_type_supports( get_post_type(), 'comments' ) ) :
         ?>
-        <p class="no-comments">Os comentários estão fechados.</p>
+        <p class="no-comments"><?php esc_html_e( 'Comments are closed.', 'reloaded' ); ?></p>
     <?php endif; ?>
 
     <?php

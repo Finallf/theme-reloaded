@@ -5,7 +5,7 @@ defined('ABSPATH') || exit;
  *******************************************************************************/
 
 /*******************************************************************************
- * Funções e definições do tema ReloadeD                         - (Hardcoded) * 
+ * Funções e definições do tema ReloadeD                         - (Hardcoded) *
  *******************************************************************************/
 if ( ! function_exists( 'rd_setup' ) ) :
     function rd_setup() {
@@ -105,14 +105,14 @@ add_action( 'widgets_init', 'rd_widgets_init' );
  * Carrega os scripts de mídia e css do Painel de Controle           - (Hardcoded) *
  ***********************************************************************************/
 function rd_admin_scripts( $hook ) {
-    
+
     // Agora sim! Procurando pelo slug correto da página: rd_options
     if ( strpos( $hook, 'rd_options' ) === false ) {
-        return; 
+        return;
     }
 
     // 1. Carrega o motor nativo de mídia do WP
-    wp_enqueue_media(); 
+    wp_enqueue_media();
 
     // 2. Carrega o nosso JavaScript
     wp_enqueue_script( 'rd-admin-js', get_template_directory_uri() . '/assets/js/admin-scripts.js', array('jquery'), '1.0.0', true );

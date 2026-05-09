@@ -45,13 +45,13 @@
 
 					<?php
 					the_posts_pagination( array(
-						'prev_text' => esc_html__( '&larr; Anterior', 'reloaded' ),
-						'next_text' => esc_html__( 'Próxima &rarr;', 'reloaded' ),
+                        'prev_text' => __( '&larr; Previous', 'reloaded' ),
+                        'next_text' => __( 'Next &rarr;', 'reloaded' ),
 					) );
 					?>
 
 				<?php else : ?>
-					<p><?php esc_html_e( 'Nenhuma notícia encontrada.', 'reloaded' ); ?></p>
+					<p><?php esc_html_e( 'No news found.', 'reloaded' ); ?></p>
 				<?php endif; ?>
 			</div>
 			<?php get_sidebar(); ?>

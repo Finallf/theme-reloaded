@@ -17,18 +17,18 @@ get_header(); ?>
 
             <div class="rd-404-header">
                 <span class="rd-404-code"><?php esc_html_e( '404', 'reloaded' ); ?></span>
-                <h1 class="rd-404-title"><?php esc_html_e( 'NÍVEL NÃO ENCONTRADO', 'reloaded' ); ?></h1>
+                <h1 class="rd-404-title"><?php esc_html_e( 'LEVEL NOT FOUND', 'reloaded' ); ?></h1>
             </div>
 
             <div class="rd-404-body">
                 <p class="rd-404-message">
-                    <?php esc_html_e( 'Esta área não existe no mapa do portal. O caminho que você tentou acessar pode ter sido removido, movido para outra coordenada, ou nunca existiu neste universo.', 'reloaded' ); ?>
+                    <?php esc_html_e( 'This area does not exist on the portal map. The path you tried to access may have been removed, moved to another coordinate, or never existed in this universe.', 'reloaded' ); ?>
                 </p>
 
                 <div class="rd-404-actions">
                     <a href="<?php echo esc_url( home_url('/') ); ?>" class="rd-404-btn rd-404-btn-primary">
                         <span class="rd-404-btn-icon" aria-hidden="true">▶</span>
-                        <?php esc_html_e( 'Voltar ao início', 'reloaded' ); ?>
+                        <?php esc_html_e( 'Back to start', 'reloaded' ); ?>
                     </a>
 
                     <button type="button" class="rd-404-btn rd-404-btn-secondary" id="rd-404-search-trigger">
@@ -38,7 +38,7 @@ get_header(); ?>
                                 <line x1="22" y1="22" x2="16.65" y2="16.65"></line>
                             </svg>
                         </span>
-                        <?php esc_html_e( 'Buscar conteúdo', 'reloaded' ); ?>
+                        <?php esc_html_e( 'Search content', 'reloaded' ); ?>
                     </button>
                 </div>
             </div>

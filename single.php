@@ -26,10 +26,10 @@
 							</div>
 						</header>
 
-						<?php 
+						<?php
 							// Verifica se o usuário pediu para esconder a imagem neste post específico
 							$hide_thumb = get_post_meta( get_the_ID(), '_rd_hide_thumbnail', true );
-							
+
 							// Se tem imagem e NÃO foi marcada para esconder, renderiza a thumb
 							if ( has_post_thumbnail() && $hide_thumb !== 'yes' ) : ?>
 								<div class="post-thumbnail">
@@ -43,7 +43,7 @@
 
 							wp_link_pages(
 								array(
-									'before' => '<div class="page-links">' . esc_html__( 'Páginas:', 'reloaded' ),
+									'before' => '<div class="page-links">' . esc_html__( 'Pages:', 'reloaded' ),
 									'after'  => '</div>',
 								)
 							);

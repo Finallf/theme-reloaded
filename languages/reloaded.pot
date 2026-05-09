@@ -1,21 +1,199 @@
-# Translation template for the ReloadeD WordPress theme.
 # Copyright (C) 2026 Finallf
 # This file is distributed under the same license as the ReloadeD theme.
-# Finallf <skyfall.bolsonaro@gmail.com>, 2026.
-#
-#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: ReloadeD 0.1.0\n"
-"Report-Msgid-Bugs-To: https://github.com/Finallf/theme-reloaded/issues\n"
-"POT-Creation-Date: 2026-05-08 14:50+0000\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Project-Id-Version: ReloadeD 0.1.0-beta.7\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/theme/reloaded\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2026-05-09T00:37:48-03:00\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"X-Generator: WP-CLI 2.12.0\n"
+"X-Domain: reloaded\n"
 
-# (Translatable strings will be appended here automatically when
-# Poedit / WP-CLI extracts them from the source PHP files.)
+#. Theme Name of the theme
+#: style.css
+msgid "ReloadeD"
+msgstr ""
+
+#. Theme URI of the theme
+#: style.css
+msgid "https://theme.reloaded.com.br"
+msgstr ""
+
+#. Description of the theme
+#: style.css
+msgid "Tema customizado de alta performance para portal de tecnologia, games e Notícias."
+msgstr ""
+
+#. Author of the theme
+#: style.css
+msgid "Finallf"
+msgstr ""
+
+#. Author URI of the theme
+#: style.css
+msgid "https://github.com/finallf"
+msgstr ""
+
+#: 404.php:19
+msgid "404"
+msgstr ""
+
+#: 404.php:20
+msgid "LEVEL NOT FOUND"
+msgstr ""
+
+#: 404.php:25
+msgid "This area does not exist on the portal map. The path you tried to access may have been removed, moved to another coordinate, or never existed in this universe."
+msgstr ""
+
+#: 404.php:31
+msgid "Back to start"
+msgstr ""
+
+#: 404.php:41
+msgid "Search content"
+msgstr ""
+
+#: 404.php:70
+msgid "Níveis Recomendados"
+msgstr ""
+
+#: archive.php:40
+#: author.php:90
+#: index.php:48
+#: search.php:67
+msgid "&larr; Previous"
+msgstr ""
+
+#: archive.php:41
+#: author.php:91
+#: index.php:49
+#: search.php:68
+msgid "Next &rarr;"
+msgstr ""
+
+#: archive.php:47
+msgid "No articles found in this archive."
+msgstr ""
+
+#: author.php:56
+#, php-format
+msgid "%s published article"
+msgid_plural "%s published articles"
+msgstr[0] ""
+msgstr[1] ""
+
+#: author.php:66
+#, php-format
+msgid "Member since %s"
+msgstr ""
+
+#: author.php:97
+msgid "This author has not published any articles yet."
+msgstr ""
+
+#: comments.php:19
+#, php-format
+msgid "%s Comment"
+msgid_plural "%s Comments"
+msgstr[0] ""
+msgstr[1] ""
+
+#: comments.php:43
+msgid "Comments are closed."
+msgstr ""
+
+#: footer.php:16
+msgid "Navigation"
+msgstr ""
+
+#: footer.php:33
+msgid "Featured"
+msgstr ""
+
+#: footer.php:34
+msgid "Add a widget in Appearance > Widgets."
+msgstr ""
+
+#: footer.php:39
+msgid "Support the Project"
+msgstr ""
+
+#: footer.php:41
+msgid "Community Discord"
+msgstr ""
+
+#: footer.php:42
+msgid "GitHub Sponsors"
+msgstr ""
+
+#: footer.php:43
+msgid "Support via PIX"
+msgstr ""
+
+#: footer.php:49
+msgid "All rights reserved."
+msgstr ""
+
+#: footer.php:50
+msgid "Hosted on private infrastructure."
+msgstr ""
+
+#: footer.php:58
+msgid "Back to top"
+msgstr ""
+
+#: header.php:22
+msgid "Latest:"
+msgstr ""
+
+#: header.php:58
+msgid "Open navigation menu"
+msgstr ""
+
+#: header.php:74
+msgid "Search..."
+msgstr ""
+
+#: header.php:77
+msgid "Search the site"
+msgstr ""
+
+#: header.php:79
+msgid "Search"
+msgstr ""
+
+#: inc/core.php:38
+msgid "Cabeçalho Principal"
+msgstr ""
+
+#: inc/core.php:39
+msgid "Menu Rodapé"
+msgstr ""
+
+#: index.php:54
+msgid "No news found."
+msgstr ""
+
+#: page.php:40
+#: single.php:46
+msgid "Pages:"
+msgstr ""
+
+#: search.php:31
+#, php-format
+msgid "Results for: %s"
+msgstr ""
+
+#: search.php:39
+msgid "View as:"
+msgstr ""
+
+#: search.php:74
+msgid "No levels found for this term. Try using different keywords."
+msgstr ""
