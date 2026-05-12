@@ -60,7 +60,7 @@ msgid "Search content"
 msgstr ""
 
 #: 404.php:70
-msgid "Níveis Recomendados"
+msgid "Recommended Levels"
 msgstr ""
 
 #: archive.php:40

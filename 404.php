@@ -67,7 +67,7 @@ get_header(); ?>
 
                 <h2 class="rd-404-recommended-title">
                     <span class="rd-404-recommended-icon" aria-hidden="true">🎮</span>
-                    <?php esc_html_e( 'Níveis Recomendados', 'reloaded' ); ?>
+                    <?php esc_html_e( 'Recommended Levels', 'reloaded' ); ?>
                 </h2>
 
                 <div class="rd-404-recommended-grid">
