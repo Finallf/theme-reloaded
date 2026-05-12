@@ -7,6 +7,24 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 <br>
 
 
+## [0.1.0-beta.8](https://github.com/Finallf/theme-reloaded/compare/v0.1.0-beta.7...v0.1.0-beta.8) (2026-05-12)
+
+### 🐛 Bug Fixes
+
+* **header:** corrigir SVG do toggle Dark/Light Mode ([738bb6a](https://github.com/Finallf/theme-reloaded/commit/738bb6a827078c4bfb42c9eacd12f94927ea183c)), closes [#212121](https://github.com/Finallf/theme-reloaded/issues/212121)
+* **i18n:** correct source string for "Recommended Levels" and regenerate translation files ([e5a4089](https://github.com/Finallf/theme-reloaded/commit/e5a408944c5eec0fe00c46d86700db7680d33e07))
+* **search:** aplicar cor $brand-blue-light no ícone de views do card-meta ([05b6621](https://github.com/Finallf/theme-reloaded/commit/05b66214f54715f62dd4ede52a37a981452a334a)), closes [#00A8](https://github.com/Finallf/theme-reloaded/issues/00A8)
+* **search:** padronizar cor do contador de views em search e author ([bead210](https://github.com/Finallf/theme-reloaded/commit/bead210b6f0c8fdf79c6667ab3ee5a5d67e96124)), closes [#00A8](https://github.com/Finallf/theme-reloaded/issues/00A8)
+
+### ♻️ Code Refactoring
+
+* **i18n:** migrate root templates to en-US source language ([caa6d5a](https://github.com/Finallf/theme-reloaded/commit/caa6d5a05a824ffc858e53c0f275894bab623070))
+* implement comprehensive theme internationalization (i18n) across all modules and admin panel ([f824040](https://github.com/Finallf/theme-reloaded/commit/f824040c5a97c787f66fd3fb8b9b69acf9c8b955))
+
+<br>
+
+---
+
 # [0.1.0-beta.7](https://github.com/Finallf/theme-reloaded/compare/v0.1.0-beta.6...v0.1.0-beta.7) (2026-05-08)
 
 
