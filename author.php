@@ -53,6 +53,7 @@ $registered = $author ? $author->user_registered : '';
                             <span class="rd-author-meta-item">
                                 <?php
                                 printf(
+                                    // translators: %s: number of published articles
                                     esc_html( _n( '%s published article', '%s published articles', $post_count, 'reloaded' ) ),
                                     esc_html( number_format_i18n( $post_count ) )
                                 );
@@ -63,6 +64,7 @@ $registered = $author ? $author->user_registered : '';
                                 <span class="rd-author-meta-item">
                                     <?php
                                     printf(
+                                        // translators: %s: registration date
                                         esc_html__( 'Member since %s', 'reloaded' ),
                                         esc_html( date_i18n( 'F \d\e Y', strtotime( $registered ) ) )
                                     );

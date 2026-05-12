@@ -16,6 +16,7 @@ if ( post_password_required() ) {
             <?php
             $comment_count = get_comments_number();
             printf(
+                // translators: %s: number of comments
                 esc_html( _n( '%s Comment', '%s Comments', $comment_count, 'reloaded' ) ),
                 number_format_i18n( $comment_count )
             );

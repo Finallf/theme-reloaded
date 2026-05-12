@@ -32,12 +32,14 @@ img {
 }
 
 body {
-	background-color: $dark-bg;
-	color: $dark-text;
+	background-color: var(--rd-bg);
+	color: var(--rd-text);
 	font-family: $font-primary;
 	font-size: 16px;
 	line-height: 1.5;
 	overflow-x: hidden; // Previne o scroll horizontal acidental
+	// Transição suave entre dark/light mode
+	transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 // Aplicando a Poppins em todos os cabeçalhos
@@ -50,7 +52,7 @@ h6 {
 	font-family: $font-heading;
 	font-weight: 500;
 	line-height: 1.4; // Títulos precisam de menos espaço entre linhas que o texto
-	color: $dark-text;
+	color: var(--rd-text);
 }
 
 a {
@@ -59,8 +61,16 @@ a {
 	transition: 0.3s ease;
 
 	&:hover {
-		color: $brand-blue-light;
+		color: var(--rd-blue-light);
 	}
+}
+
+// Elementos que mudam cor no dark/light mode
+// (backgrounds, borders, etc.) — transição suave
+* {
+	transition-property: background-color, border-color, color, box-shadow;
+	transition-duration: 0.3s;
+	transition-timing-function: ease;
 }
 
 .container {
@@ -88,14 +98,14 @@ a {
 
 /* --- Lógica Topo: Desktop vs Mobile (Anúncio Âncora no Topo) --- */
 .rd-ad-mobile {
-    display: none; 
+    display: none;
 }
 
 @media (max-width: 768px) {
     .rd-ad-desktop {
         display: none !important;
     }
-    
+
     .rd-ad-mobile {
         display: block;
         position: fixed;
@@ -107,7 +117,7 @@ a {
         z-index: 9999;
         text-align: center;
         /* Sombreado para baixo e para os lados */
-        box-shadow: 0 8px 20px rgba(0,0,0,0.6); 
+        box-shadow: 0 8px 20px rgba(0,0,0,0.6);
         transition: transform 0.4s ease-in-out, opacity 0.3s ease;
         background-color: transparent; /* Remove o fundo escuro */
 		border-radius: 4px;
@@ -152,27 +162,27 @@ a {
    ========================================================================== */
 /* Container Principal (Dark Mode) */
 .rd-support-block {
-    background: $glass-bg;
-    border: 1px solid $glass-border;
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+    background: var(--rd-glass-bg);
+    border: 1px solid var(--rd-glass-border);
+    box-shadow: 0 8px 20px var(--rd-glass-shadow);
     padding: 20px;
     border-radius: 5px;
     text-align: center;
     margin-bottom: 20px;
-    color: $dark-text;
+    color: var(--rd-text);
 }
 
 .rd-support-title {
     margin-top: 0;
     font-size: 1.1rem;
-    color: $dark-text;
+    color: var(--rd-text);
     margin-bottom: 20px;
 }
 
 /* Sub-itens (Separação entre PIX e PayPal) */
 .rd-support-subitem {
     margin-top: 25px; /* Mais respiro entre os blocos */
-    border-top: 1px solid $glass-border;
+    border-top: 1px solid var(--rd-glass-border);
 }
 
 /* Imagens e QR Codes */
@@ -195,7 +205,7 @@ a {
 }
 .rd-qr-link small {
     display: block;
-    color: $text-muted-dark;
+    color: var(--rd-text-dimmed);
     font-size: 0.8rem;
     margin-top: 5px;
 }
@@ -208,12 +218,12 @@ a {
     .rd-key-label {
         display: block;
         font-size: 0.85rem;
-        color: $text-muted-dark;
+        color: var(--rd-text-dimmed);
         margin-bottom: 8px;
     }
 
     .rd-copy-btn {
-        background: $dark-deep;
+        background: var(--rd-deep);
         color: $pix-color;
         border: 1px solid rgba($pix-color, 0.3);
         padding: 12px 15px;

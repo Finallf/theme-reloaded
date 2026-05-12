@@ -117,7 +117,7 @@
 			font-size: 1.25rem;
 
 			a {
-				color: #fff;
+				color: var(--rd-text);
 				text-decoration: none;
 
 				/* O "MÁGICO": esse after cobre o card todo */
@@ -169,7 +169,7 @@
 	flex-shrink: 0;
 
 	.wp-block-latest-comments {
-		
+
 		.wp-block-latest-comments__comment-link:hover {
 			padding-left: 8px;
 		}
@@ -195,7 +195,7 @@
 	}
 }
 
-#secondary > div, 
+#secondary > div,
 #secondary > section {
     break-inside: avoid;
 }

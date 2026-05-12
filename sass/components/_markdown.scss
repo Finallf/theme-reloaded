@@ -21,7 +21,7 @@
 	// ==========================================
 	// ESTILIZAÇÃO DE ROLAGEM (EFEITO HOVER MINIMALISTA)
 	// ==========================================
-	pre, 
+	pre,
 	table {
 		// Rolagem suave em dispositivos móveis
 		-webkit-overflow-scrolling: touch;
@@ -56,7 +56,7 @@
 		// A MÁGICA: Revela a barra quando o mouse entra na área
 		&:hover::-webkit-scrollbar-thumb {
 			background: #555;
-			
+
 			&:hover {
 				background: #777; // Destaca levemente ao focar na própria barra
 			}
@@ -94,14 +94,16 @@
 	// Tabelas (Estilo GitHub Dark)
 	// ==========================================================
 	table {
-		width: 100%; // Garante que a tabela use o espaço disponível
+		width: 100% !important; // Garante que a tabela use o espaço disponível
 		border-collapse: collapse;
 		display: block; // Permite que a tabela crie uma barra de rolagem horizontal se for muito grande
 		overflow-x: auto; // Proteção essencial para celulares
+		transition: border-color 0.3s ease;
 
 		th, td {
 			border: 1px solid #30363d; // Borda clássica do GitHub
 			padding: 5px 16px; // Dá o "respiro" para o conteúdo não ficar colado
+			transition: border-color 0.3s ease;
 		}
 
 		th {
@@ -111,6 +113,7 @@
 
 		tr {
 			background-color: #0d1117; // Fundo principal da linha
+			transition: background-color 0.3s ease;
 
 			// Efeito "Zebra" do GitHub (intercala as cores das linhas sutilmente)
 			&:nth-child(2n) {
@@ -121,9 +124,30 @@
 		// Correção para Imagens (QR Codes, Logos e Badges) dentro das tabelas
 		img {
 			background-color: transparent;
-			max-width: 100%; 
+			max-width: 100%;
 			display: inline-block !important; // A MÁGICA: Sobrescreve o "block" global!
 			margin: 0; // Reseta as margens
+		}
+
+		// ==========================================================
+		// DARK/LIGHT MODE — Light Mode Overrides (GitHub Light)
+		// ==========================================================
+		[data-theme="light"] & {
+			th, td {
+				border: 1px solid #d0d7de !important;
+			}
+
+			th {
+				background-color: #f6f8fa !important;
+			}
+
+			tr {
+				background-color: #ffffff !important;
+
+				&:nth-child(2n) {
+					background-color: #f6f8fa !important;
+				}
+			}
 		}
 	}
 
@@ -217,7 +241,13 @@
 		margin: 1.5rem 0;
 		border-left: 4px solid #444;
 		border-radius: 4px;
-		background-color: rgba(255, 255, 255, 0.05); // Fundo sutil
+		background-color: rgba(255, 255, 255, 0.05); // Fundo sutil (dark mode)
+		transition: background-color 0.3s ease;
+
+		// Light mode: inverter opacidade (rgba preto em vez de branco)
+		[data-theme="light"] & {
+			background-color: rgba(0, 0, 0, 0.03) !important;
+		}
 
 		// Remove a margem do primeiro e do último parágrafo para não sobrar espaço vazio
 		p:first-of-type {
@@ -231,7 +261,7 @@
 		// ==========================================================
 		// Títulos e Ícones Oficiais do GitHub (Octicons SVG)
 		// ==========================================================
-		
+
 		// Estilo base para todos os títulos de alerta
 		&::before {
 			display: flex;

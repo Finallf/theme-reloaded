@@ -3,6 +3,7 @@
 // 1. Variáveis e Configurações Base
 @use 'base/variables' as *;
 @use 'base/globals';
+@use 'base/tokens'; // Design Tokens (sistema de tokens global)
 
 // 2. Layout (A Estrutura)
 @use 'layout/footer';
