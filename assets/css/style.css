@@ -1053,16 +1053,16 @@ a:hover {
           transform: scale(0.95);
 }
 .theme-toggle-btn {
-  /* Sun icon: escondido por padrão (dark mode) */
+  /* Sun icon: visível por padrão (dark mode) — clicar vai pro light */
 }
 .theme-toggle-btn .sun-icon {
-  display: none;
+  display: block;
 }
 .theme-toggle-btn {
-  /* Moon icon: visível por padrão (dark mode) */
+  /* Moon icon: escondido por padrão (dark mode) */
 }
 .theme-toggle-btn .moon-icon {
-  display: block;
+  display: none;
 }
 
 /* Lógica de exibição dos ícones baseada no tema */
@@ -1074,13 +1074,13 @@ a:hover {
   color: #00A8FF;
 }
 [data-theme=light] .theme-toggle-btn {
-  /* Light mode: mostra sun, esconde moon */
+  /* Light mode: mostra moon, esconde sun — clicar vai pro dark */
 }
 [data-theme=light] .theme-toggle-btn .sun-icon {
-  display: block;
+  display: none;
 }
 [data-theme=light] .theme-toggle-btn .moon-icon {
-  display: none;
+  display: block;
 }
 
 /* No mobile, ajustamos o posicionamento ou escondemos */
@@ -3676,10 +3676,14 @@ mark.rd-highlight {
       -ms-flex-align: center;
           align-items: center;
   gap: 5px;
+  -webkit-box-pack: end;
+      -ms-flex-pack: end;
+          justify-content: flex-end;
 }
 .rd-search-card .rd-card-meta .rd-card-views svg {
   color: #00A8FF;
   opacity: 0.85;
+  vertical-align: middle;
 }
 
 .rd-no-results {

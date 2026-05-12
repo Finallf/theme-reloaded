@@ -425,7 +425,7 @@ msgid "Comments Separator"
 msgstr ""
 
 #: inc/panel.php:197
-msgid "Text between Author and Post (e.g., \\\"commented on post:\\\").<br>Leave <strong>empty</strong> for WP default or type <strong>&amp;nbsp;</strong> to hide."
+msgid "Text between Author and Post (e.g., \"commented on post:\"). Leave <strong>empty</strong> for WP default or type <strong>&amp;nbsp;</strong> to hide."
 msgstr ""
 
 #: inc/panel.php:198

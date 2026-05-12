@@ -273,14 +273,14 @@
 		transform: scale(0.95);
 	}
 
-	/* Sun icon: escondido por padrão (dark mode) */
+	/* Sun icon: visível por padrão (dark mode) — clicar vai pro light */
 	.sun-icon {
-		display: none;
+		display: block;
 	}
 
-	/* Moon icon: visível por padrão (dark mode) */
+	/* Moon icon: escondido por padrão (dark mode) */
 	.moon-icon {
-		display: block;
+		display: none;
 	}
 }
 
@@ -294,13 +294,13 @@
 			color: $brand-blue-light;
 		}
 
-		/* Light mode: mostra sun, esconde moon */
+		/* Light mode: mostra moon, esconde sun — clicar vai pro dark */
 		.sun-icon {
-			display: block;
+			display: none;
 		}
 
 		.moon-icon {
-			display: none;
+			display: block;
 		}
 	}
 }

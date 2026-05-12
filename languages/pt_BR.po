@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: ReloadeD 0.1.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/theme/reloaded\n"
 "POT-Creation-Date: 2026-05-09T19:16:40-03:00\n"
-"PO-Revision-Date: 2026-05-12 18:33-0300\n"
+"PO-Revision-Date: 2026-05-12 19:12-0300\n"
 "Last-Translator: Regis Vieira Delgado (Finallf) <finallf2@gmail.com>\n"
 "Language-Team: Brazilian Portuguese\n"
 "Language: pt_BR\n"
@@ -52,12 +52,8 @@ msgid "LEVEL NOT FOUND"
 msgstr "NÍVEL NÃO ENCONTRADO:"
 
 #: 404.php:25
-msgid ""
-"This area does not exist on the portal map. The path you tried to access may have been "
-"removed, moved to another coordinate, or never existed in this universe."
-msgstr ""
-"Esta área não existe no mapa do portal. O caminho que você tentou acessar pode ter sido "
-"removido, movido para outra coordenada, ou nunca existiu neste universo."
+msgid "This area does not exist on the portal map. The path you tried to access may have been removed, moved to another coordinate, or never existed in this universe."
+msgstr "Esta área não existe no mapa do portal. O caminho que você tentou acessar pode ter sido removido, movido para outra coordenada, ou nunca existiu neste universo."
 
 #: 404.php:31
 msgid "Back to start"
@@ -230,11 +226,8 @@ msgid "Hide Featured Image at the top of the post"
 msgstr "Ocultar Imagem Destacada no topo da leitura"
 
 #: inc/mod-general.php:37
-msgid ""
-"Check to prevent the thumbnail from duplicating with videos inserted at the beginning "
-"of the text."
-msgstr ""
-"Marque para impedir que a miniatura duplique com vídeos inseridos no início do texto."
+msgid "Check to prevent the thumbnail from duplicating with videos inserted at the beginning of the text."
+msgstr "Marque para impedir que a miniatura duplique com vídeos inseridos no início do texto."
 
 #: inc/mod-general.php:92
 msgid "Name"
@@ -269,12 +262,8 @@ msgid "Incorrect password."
 msgstr "Senha incorreta."
 
 #: inc/mod-maintenance.php:173
-msgid ""
-"The ReloadeD portal is undergoing scheduled maintenance to bring you new features. "
-"Thank you for your patience."
-msgstr ""
-"O portal ReloadeD está passando por uma manutenção programada para trazer novidades. "
-"Agradecemos a paciência."
+msgid "The ReloadeD portal is undergoing scheduled maintenance to bring you new features. Thank you for your patience."
+msgstr "O portal ReloadeD está passando por uma manutenção programada para trazer novidades. Agradecemos a paciência."
 
 #: inc/mod-maintenance.php:178
 msgid "Scheduled Maintenance - ReloadeD"
@@ -305,12 +294,9 @@ msgid "Error copying: "
 msgstr "Erro ao copiar: "
 
 #: inc/mod-privacy.php:21
-msgid ""
-"We use cookies and similar technologies to improve your experience. By continuing to "
-"browse, you agree to our <a href=\"/privacy-policy\">Privacy Policy</a>."
+msgid "We use cookies and similar technologies to improve your experience. By continuing to browse, you agree to our <a href=\"/privacy-policy\">Privacy Policy</a>."
 msgstr ""
-"Nós usamos cookies e tecnologias semelhantes para melhorar a sua experiência. Ao "
-"continuar navegando, você concorda com a nossa <a href=\"/politica-de-"
+"Nós usamos cookies e tecnologias semelhantes para melhorar a sua experiência. Ao continuar navegando, você concorda com a nossa <a href=\"/politica-de-"
 "privacidade\">Política de Privacidade</a>."
 
 #: inc/mod-privacy.php:28
@@ -379,12 +365,8 @@ msgid "Back to Top Button"
 msgstr "Botão Voltar ao Topo"
 
 #: inc/panel.php:190
-msgid ""
-"Enables a floating button in the bottom right corner for the user to quickly return to "
-"the top of the page."
-msgstr ""
-"Ativa a exibição de um botão flutuante no canto inferior direito para o usuário "
-"retornar rapidamente ao topo da página."
+msgid "Enables a floating button in the bottom right corner for the user to quickly return to the top of the page."
+msgstr "Ativa a exibição de um botão flutuante no canto inferior direito para o usuário retornar rapidamente ao topo da página."
 
 #: inc/panel.php:191
 msgid "Enable Top Bar"
@@ -399,36 +381,24 @@ msgid "Resize Images"
 msgstr "Redimensionar Imagens"
 
 #: inc/panel.php:192
-msgid ""
-"Enables exact cropping (Hard Crop) of uploaded images to ensure banners and cards are "
-"always aligned."
-msgstr ""
-"Ativa a criação de recortes exatos (Hard Crop) das imagens enviadas para garantir que "
-"banners e cards fiquem sempre alinhados."
+msgid "Enables exact cropping (Hard Crop) of uploaded images to ensure banners and cards are always aligned."
+msgstr "Ativa a criação de recortes exatos (Hard Crop) das imagens enviadas para garantir que banners e cards fiquem sempre alinhados."
 
 #: inc/panel.php:193
 msgid "Featured Image"
 msgstr "Imagem Destacada"
 
 #: inc/panel.php:193
-msgid ""
-"Adds an option in the post editor sidebar to hide the featured image when reading the "
-"article (ideal for posts with videos at the top)."
-msgstr ""
-"Adiciona uma opção na barra lateral do editor de postagens para ocultar a imagem "
-"destacada na leitura do artigo (ideal para posts com vídeos no topo)."
+msgid "Adds an option in the post editor sidebar to hide the featured image when reading the article (ideal for posts with videos at the top)."
+msgstr "Adiciona uma opção na barra lateral do editor de postagens para ocultar a imagem destacada na leitura do artigo (ideal para posts com vídeos no topo)."
 
 #: inc/panel.php:194
 msgid "Image Quality (%)"
 msgstr "Qualidade das Imagens (%)"
 
 #: inc/panel.php:194
-msgid ""
-"Changes image quality. WP default is 82. Lower values make the site faster but reduce "
-"visual quality."
-msgstr ""
-"Altera a qualidade das imagens. O padrão do WP é 82. Valores menores deixam o site mais "
-"rápido, mas reduzem a qualidade visual."
+msgid "Changes image quality. WP default is 82. Lower values make the site faster but reduce visual quality."
+msgstr "Altera a qualidade das imagens. O padrão do WP é 82. Valores menores deixam o site mais rápido, mas reduzem a qualidade visual."
 
 #: inc/panel.php:195
 msgid "Comment Accessibility"
@@ -436,9 +406,7 @@ msgstr "Acessibilidade dos Comentários"
 
 #: inc/panel.php:195
 msgid "Adds labels and autocomplete attributes to the comment form."
-msgstr ""
-"Adiciona labels e atributos de preenchimento automático (autocomplete) ao formulário de "
-"comentários."
+msgstr "Adiciona labels e atributos de preenchimento automático (autocomplete) ao formulário de comentários."
 
 #: inc/panel.php:196
 msgid "Read More Button Text"
@@ -450,20 +418,15 @@ msgstr "Ex: Continuar Lendo &rarr;"
 
 #: inc/panel.php:196
 msgid "Customizes the excerpt button text. Leave blank to use the theme default."
-msgstr ""
-"Personaliza o texto do botão de resumo. Deixe em branco para usar o padrão do tema."
+msgstr "Personaliza o texto do botão de resumo. Deixe em branco para usar o padrão do tema."
 
 #: inc/panel.php:197
 msgid "Comments Separator"
 msgstr "Separador de Comentários"
 
 #: inc/panel.php:197
-msgid ""
-"Text between Author and Post (e.g., \\\"commented on post:\\\").<br>Leave "
-"<strong>empty</strong> for WP default or type <strong>&amp;nbsp;</strong> to hide."
-msgstr ""
-"Texto entre o Autor e o Post (ex: \"comentou no post:\").<br>Deixe <strong>vazio</"
-"strong> para o padrão do WP ou digite <strong>&amp;nbsp;</strong> para ocultar."
+msgid "Text between Author and Post (e.g., \"commented on post:\"). Leave <strong>empty</strong> for WP default or type <strong>&amp;nbsp;</strong> to hide."
+msgstr "Texto entre o Autor e o Post (ex: \"comentou no post:\"). Deixe <strong>vazio</strong> para o padrão do WP ou digite <strong>&amp;nbsp;</strong> para ocultar."
 
 #: inc/panel.php:198
 msgid "Date Format"
@@ -471,12 +434,10 @@ msgstr "Formato da Data"
 
 #: inc/panel.php:198
 msgid ""
-"Ex: l, F j, Y (Returns: Monday, April 29, 2026). <a href=\\\"https://wordpress.org/"
-"documentation/article/customize-date-and-time-format/\\\" target=\\\"_blank\\\">See WP "
-"documentation</a>."
+"Ex: l, F j, Y (Returns: Monday, April 29, 2026). <a href=\\\"https://wordpress.org/documentation/article/customize-date-and-time-format/\\\" target=\\\"_blank\\\">See "
+"WP documentation</a>."
 msgstr ""
-"Ex: l, j \\d\\e F \\d\\e Y (Retorna: Segunda-feira, 29 de Abril de 2026). <a "
-"href=\"https://wordpress.org/documentation/article/customize-date-and-time-format/\" "
+"Ex: l, j \\d\\e F \\d\\e Y (Retorna: Segunda-feira, 29 de Abril de 2026). <a href=\"https://wordpress.org/documentation/article/customize-date-and-time-format/\" "
 "target=\"_blank\">Ver documentação do WP</a>."
 
 #: inc/panel.php:199
@@ -484,12 +445,8 @@ msgid "Views Counter"
 msgstr "Contador de Visualizações"
 
 #: inc/panel.php:199
-msgid ""
-"Enables the post views counting system. A single IP counts only once every 30 minutes. "
-"Known bots are automatically ignored."
-msgstr ""
-"Ativa o sistema de contagem de visualizações por post. Um único IP conta apenas uma vez "
-"a cada 30 minutos. Bots conhecidos são ignorados automaticamente."
+msgid "Enables the post views counting system. A single IP counts only once every 30 minutes. Known bots are automatically ignored."
+msgstr "Ativa o sistema de contagem de visualizações por post. Um único IP conta apenas uma vez a cada 30 minutos. Bots conhecidos são ignorados automaticamente."
 
 # --- Busca ---
 #: inc/panel.php:202
@@ -539,20 +496,15 @@ msgstr "LGPD - Banner de Cookies"
 
 #: inc/panel.php:210
 msgid "Enables the cookie consent banner in the site footer for legal compliance."
-msgstr ""
-"Ativa o banner de consentimento de cookies no rodapé do site para conformidade com a "
-"lei."
+msgstr "Ativa o banner de consentimento de cookies no rodapé do site para conformidade com a lei."
 
 #: inc/panel.php:211
 msgid "Cookie Banner Text"
 msgstr "Texto do Banner de Cookies"
 
 #: inc/panel.php:211
-msgid ""
-"Customize the message shown to the user. You can use HTML tags like &lt;a&gt; for links."
-msgstr ""
-"Personalize a mensagem que aparece para o usuário. Você pode usar tags HTML como "
-"&lt;a&gt; para links."
+msgid "Customize the message shown to the user. You can use HTML tags like &lt;a&gt; for links."
+msgstr "Personalize a mensagem que aparece para o usuário. Você pode usar tags HTML como &lt;a&gt; para links."
 
 # --- Integrações ---
 #: inc/panel.php:214
@@ -581,9 +533,7 @@ msgstr "ID do Discord"
 
 #: inc/panel.php:217
 msgid "Server ID to activate communication with the official widget in the sidebar."
-msgstr ""
-"ID do servidor (Server ID) para ativar a comunicação com o widget oficial na barra "
-"lateral."
+msgstr "ID do servidor (Server ID) para ativar a comunicação com o widget oficial na barra lateral."
 
 # --- Performance ---
 #: inc/panel.php:220
@@ -595,48 +545,32 @@ msgid "Markdown"
 msgstr "Markdown"
 
 #: inc/panel.php:221
-msgid ""
-"Enables support for Markdown syntax, allowing you to write articles natively (like "
-"GitHub or Docker Hub)."
-msgstr ""
-"Ativa o suporte a sintaxe Markdown, permitindo escrever artigos (como no GitHub ou "
-"Docker Hub) nativamente."
+msgid "Enables support for Markdown syntax, allowing you to write articles natively (like GitHub or Docker Hub)."
+msgstr "Ativa o suporte a sintaxe Markdown, permitindo escrever artigos (como no GitHub ou Docker Hub) nativamente."
 
 #: inc/panel.php:222
 msgid "Code Highlight"
 msgstr "Destaque de Código"
 
 #: inc/panel.php:222
-msgid ""
-"Enables Syntax Highlight support, which colors programming codes. It is only loaded on "
-"posts for performance."
-msgstr ""
-"Ativa o suporte a Syntax Highlight, que colore códigos de programação. É carregado "
-"apenas em posts para performance."
+msgid "Enables Syntax Highlight support, which colors programming codes. It is only loaded on posts for performance."
+msgstr "Ativa o suporte a Syntax Highlight, que colore códigos de programação. É carregado apenas em posts para performance."
 
 #: inc/panel.php:223
 msgid "Disable Native Emojis"
 msgstr "Desativar Emojis Nativos"
 
 #: inc/panel.php:223
-msgid ""
-"Removes the WP emojis script. Modern browsers already render emojis natively, enable "
-"this to save requests."
-msgstr ""
-"Remove o script de emojis do WP. Navegadores modernos já renderizam emojis nativamente, "
-"ative isso para poupar requisições."
+msgid "Removes the WP emojis script. Modern browsers already render emojis natively, enable this to save requests."
+msgstr "Remove o script de emojis do WP. Navegadores modernos já renderizam emojis nativamente, ative isso para poupar requisições."
 
 #: inc/panel.php:224
 msgid "Hide WP Version"
 msgstr "Ocultar Versão do WP"
 
 #: inc/panel.php:224
-msgid ""
-"Removes the WordPress generator meta tag from the source code. A basic security best "
-"practice."
-msgstr ""
-"Remove a meta tag geradora do WordPress do código-fonte. Uma boa prática de segurança "
-"básica."
+msgid "Removes the WordPress generator meta tag from the source code. A basic security best practice."
+msgstr "Remove a meta tag geradora do WordPress do código-fonte. Uma boa prática de segurança básica."
 
 #: inc/panel.php:225
 msgid "Security Headers"
@@ -644,12 +578,10 @@ msgstr "Headers de Segurança"
 
 #: inc/panel.php:225
 msgid ""
-"Sends defensive HTTP headers on the frontend (X-Frame-Options, X-Content-Type-Options, "
-"Referrer-Policy, Permissions-Policy) to mitigate clickjacking and MIME sniffing. Does "
-"not affect the admin panel."
+"Sends defensive HTTP headers on the frontend (X-Frame-Options, X-Content-Type-Options, Referrer-Policy, Permissions-Policy) to mitigate clickjacking and MIME sniffing. "
+"Does not affect the admin panel."
 msgstr ""
-"Envia headers HTTP defensivos no frontend (X-Frame-Options, X-Content-Type-Options, "
-"Referrer-Policy, Permissions-Policy) pra mitigar clickjacking e MIME sniffing. Não "
+"Envia headers HTTP defensivos no frontend (X-Frame-Options, X-Content-Type-Options, Referrer-Policy, Permissions-Policy) pra mitigar clickjacking e MIME sniffing. Não "
 "afeta o painel admin."
 
 #: inc/panel.php:226
@@ -657,24 +589,16 @@ msgid "Facades System"
 msgstr "Sistema de Fachadas"
 
 #: inc/panel.php:226
-msgid ""
-"Replaces heavy iframes (e.g. YouTube) with a lightweight image, loading the player only "
-"when the user clicks."
-msgstr ""
-"Substitui iframes pesados (ex: YouTube) por uma imagem leve, carregando o player apenas "
-"quando o usuário clica."
+msgid "Replaces heavy iframes (e.g. YouTube) with a lightweight image, loading the player only when the user clicks."
+msgstr "Substitui iframes pesados (ex: YouTube) por uma imagem leve, carregando o player apenas quando o usuário clica."
 
 #: inc/panel.php:227
 msgid "Disable WP CSS (Bloat)"
 msgstr "Desativa o CSS do WP (Bloat)"
 
 #: inc/panel.php:227
-msgid ""
-"Removes global and block CSS from Gutenberg. Makes the site lighter, ideal for those "
-"using Markdown."
-msgstr ""
-"Remove o CSS global e de blocos do Gutenberg. Deixa o site mais leve, ideal para quem "
-"usa Markdown."
+msgid "Removes global and block CSS from Gutenberg. Makes the site lighter, ideal for those using Markdown."
+msgstr "Remove o CSS global e de blocos do Gutenberg. Deixa o site mais leve, ideal para quem usa Markdown."
 
 # --- Redes Sociais ---
 #: inc/panel.php:230
@@ -751,12 +675,8 @@ msgid "Open Graph Meta Tags"
 msgstr "Meta Tags Open Graph"
 
 #: inc/panel.php:242
-msgid ""
-"Enables the OG Tags system. Generates the necessary tags for social networks (Facebook, "
-"Discord, WhatsApp)."
-msgstr ""
-"Ativa o sistema de OG Tags. Gera as tags necessárias para redes sociais (Facebook, "
-"Discord, WhatsApp)."
+msgid "Enables the OG Tags system. Generates the necessary tags for social networks (Facebook, Discord, WhatsApp)."
+msgstr "Ativa o sistema de OG Tags. Gera as tags necessárias para redes sociais (Facebook, Discord, WhatsApp)."
 
 #: inc/panel.php:243
 msgid "Fallback Image (Open Graph)"
@@ -788,24 +708,16 @@ msgid "PayPal QR Code"
 msgstr "QR Code do PayPal"
 
 #: inc/panel.php:249
-msgid ""
-"Upload the PayPal QR Code. When clicked on the site, it will open the link configured "
-"above."
-msgstr ""
-"Upload do QR Code do PayPal. Ao ser clicado no site, ele abrirá o link configurado "
-"acima."
+msgid "Upload the PayPal QR Code. When clicked on the site, it will open the link configured above."
+msgstr "Upload do QR Code do PayPal. Ao ser clicado no site, ele abrirá o link configurado acima."
 
 #: inc/panel.php:250
 msgid "PIX Link (Copy and Paste)"
 msgstr "Link do PIX (Copia e Cola)"
 
 #: inc/panel.php:250
-msgid ""
-"Direct URL for PIX payment (if your bank provides a link). The QR Code will be "
-"clickable."
-msgstr ""
-"URL direta para o pagamento PIX (se o seu banco fornecer link). O QR Code ficará "
-"clicável."
+msgid "Direct URL for PIX payment (if your bank provides a link). The QR Code will be clickable."
+msgstr "URL direta para o pagamento PIX (se o seu banco fornecer link). O QR Code ficará clicável."
 
 #: inc/panel.php:251
 msgid "PIX QR Code"
@@ -882,12 +794,8 @@ msgid "Enable Maintenance"
 msgstr "Ativar Manutenção"
 
 #: inc/panel.php:264
-msgid ""
-"Blocks access from regular visitors and displays a \"We'll be right back\" screen "
-"(Returns HTTP 503 to Google)."
-msgstr ""
-"Bloqueia o acesso de visitantes comuns e exibe uma tela de \"Voltamos logo\" (Retorna "
-"HTTP 503 para o Google)."
+msgid "Blocks access from regular visitors and displays a \"We'll be right back\" screen (Returns HTTP 503 to Google)."
+msgstr "Bloqueia o acesso de visitantes comuns e exibe uma tela de \"Voltamos logo\" (Retorna HTTP 503 para o Google)."
 
 #: inc/panel.php:265
 msgid "Dev Password"
@@ -895,27 +803,19 @@ msgstr "Senha de Dev"
 
 #: inc/panel.php:265
 msgid ""
-"Password for developers to bypass maintenance. Access: <strong>yourdomain.com/?rd-dev-"
-"login</strong> and enter the password in the form (do not pass it through the URL). The "
-"password is stored as a cryptographic hash — after saving, this field will appear empty "
-"(this is normal and secure)."
+"Password for developers to bypass maintenance. Access: <strong>yourdomain.com/?rd-dev-login</strong> and enter the password in the form (do not pass it through the "
+"URL). The password is stored as a cryptographic hash — after saving, this field will appear empty (this is normal and secure)."
 msgstr ""
-"Senha para desenvolvedores contornarem a manutenção. Acesse: <strong>seudominio.com.br/?"
-"rd-dev-login</strong> e digite a senha no formulário (não passe pela URL). A senha é "
-"armazenada como hash criptográfico — após salvar, este campo aparecerá vazio (isso é "
-"normal e seguro)."
+"Senha para desenvolvedores contornarem a manutenção. Acesse: <strong>seudominio.com.br/?rd-dev-login</strong> e digite a senha no formulário (não passe pela URL). A "
+"senha é armazenada como hash criptográfico — após salvar, este campo aparecerá vazio (isso é normal e seguro)."
 
 #: inc/panel.php:266
 msgid "Maintenance Text"
 msgstr "Texto de Manutenção"
 
 #: inc/panel.php:266
-msgid ""
-"Customize the message visitors will see on the block screen. Accepts basic HTML (e.g. "
-"&lt;strong&gt;, &lt;br&gt;)."
-msgstr ""
-"Personalize a mensagem que os visitantes verão na tela de bloqueio. Aceita HTML básico "
-"(ex: &lt;strong&gt;, &lt;br&gt;)."
+msgid "Customize the message visitors will see on the block screen. Accepts basic HTML (e.g. &lt;strong&gt;, &lt;br&gt;)."
+msgstr "Personalize a mensagem que os visitantes verão na tela de bloqueio. Aceita HTML básico (ex: &lt;strong&gt;, &lt;br&gt;)."
 
 # --- Botões e Componentes Reutilizáveis ---
 #: inc/panel.php:302
