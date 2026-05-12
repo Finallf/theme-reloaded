@@ -277,7 +277,10 @@ mark.rd-highlight {
         align-items: center;
         gap: 5px;
 
-        svg { opacity: 0.7; }
+        .rd-card-views svg {
+            color: $brand-blue-light;
+            opacity: 0.85;
+        }
     }
 }
 
@@ -321,14 +324,14 @@ mark.rd-highlight {
             background: transparent;
             border: none;
             outline: none;
-            color: #fff;
+            color: var(--rd-text);
             font-size: 1rem;
             padding: 0 16px;
             height: 100%;
             width: 100%;
 
             &::placeholder {
-                color: $text-muted-dark;
+                color: var(--rd-text-dimmed);
             }
         }
 

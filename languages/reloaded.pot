@@ -21,17 +21,17 @@ msgstr ""
 
 #. Theme URI of the theme
 #: style.css
-msgid "https://theme.reloaded.com.br"
+msgid "https://reloaded.com.br"
 msgstr ""
 
 #. Description of the theme
 #: style.css
-msgid "Tema customizado de alta performance para portal de tecnologia, games e Notícias."
+msgid "High-performance custom theme for technology, gaming, and news portals."
 msgstr ""
 
 #. Author of the theme
 #: style.css
-msgid "Finallf"
+msgid "Regis Vieira Delgado (Finallf)"
 msgstr ""
 
 #. Author URI of the theme

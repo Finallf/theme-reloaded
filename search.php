@@ -28,7 +28,10 @@ $show_toggles = count( $active_layouts ) > 1;
 
             <header class="rd-page-header">
                 <h1 class="rd-page-title">
-                    <?php printf( esc_html__( 'Results for: %s', 'reloaded' ), '<span class="rd-search-term">' . get_search_query() . '</span>' ); ?>
+                    <?php
+                    // translators: %s: search query
+                    printf( esc_html__( 'Results for: %s', 'reloaded' ), '<span class="rd-search-term">' . get_search_query() . '</span>' );
+                    ?>
                 </h1>
             </header>
 

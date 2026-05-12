@@ -167,3 +167,17 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 });
+
+/* DARK/LIGHT MODE TOGGLE */
+document.addEventListener('DOMContentLoaded', function() {
+    const themeToggle = document.getElementById('rd-theme-toggle');
+    if (!themeToggle) return;
+
+    themeToggle.addEventListener('click', function() {
+        const currentTheme = document.body.getAttribute('data-theme') || 'dark';
+        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+
+        document.body.setAttribute('data-theme', newTheme);
+        localStorage.setItem('rd-theme', newTheme);
+    });
+});
