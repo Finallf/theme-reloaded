@@ -6,7 +6,7 @@
 
 .post-tag {
 	// A cor padrão (caso você crie uma categoria nova e esqueça de colocar cor aqui)
-	background-color: #555555; 
+	background-color: #555555;
 
 	// 1. Games (Um roxo/magenta forte)
 	&.tag-games {
@@ -28,14 +28,14 @@
 	&.tag-videos {
 		background-color: #e52d27;
 	}
-	
+
 	// 5. Artigos (Um laranja/dourado)
 	&.tag-artigos {
 		background-color: #f39c12;
 	}
 
 	// 6. Sem Categoria (Cinza discreto)
-	&.tag-sem-categoria, 
+	&.tag-sem-categoria,
 	&.tag-uncategorized {
 		background-color: #333333;
 	}
@@ -75,7 +75,7 @@
 // Poppins - Medium (500)
 @font-face {
     font-family: 'Poppins';
-    src: url('../fonts/poppins-medium.woff2') format('woff2'); 
+    src: url('../fonts/poppins-medium.woff2') format('woff2');
     font-weight: 500;
     font-style: normal;
     font-display: swap;
@@ -84,7 +84,7 @@
 // Poppins - Semi-bold (600)
 @font-face {
     font-family: 'Poppins';
-    src: url('../fonts/poppins-semibold.woff2') format('woff2'); 
+    src: url('../fonts/poppins-semibold.woff2') format('woff2');
     font-weight: 600;
     font-style: normal;
     font-display: swap;
@@ -93,7 +93,7 @@
 // Poppins - Bold (700)
 @font-face {
     font-family: 'Poppins';
-    src: url('../fonts/poppins-bold.woff2') format('woff2'); 
+    src: url('../fonts/poppins-bold.woff2') format('woff2');
     font-weight: 700;
     font-style: normal;
     font-display: swap;
@@ -113,31 +113,106 @@ $color-success: #2ea043;
 $brand-gradient: linear-gradient(135deg, $brand-blue-dark 0%, $brand-blue-light 100%);
 
 /* ==========================================================================
-   3. Esquema Dark (Cores Estruturais)
+   3. Esquema de Cores Dinâmico (CSS Variables)
    ========================================================================== */
-// Fundos Básicos
-$dark-bg: #151515;
-$dark-surface: #212121;
 
-// Fundos Profundos (Inputs, Textareas, Zebra de Tabelas)
-$dark-deep: #111111;
-$dark-deeper: #0d1117; 
+:root {
+	// UA: scrollbars, inputs nativos e widgets do sistema alinhados ao tema escuro
+	color-scheme: dark;
 
-// Efeito Elevação / Glassmorphism (Cards Especiais)
-$glass-bg: rgba(255, 255, 255, 0.04);
-$glass-border: rgba(255, 255, 255, 0.08);
+	// Modo Dark (Padrão)
+	--rd-bg: #151515;
+	--rd-surface: #212121;
+	--rd-deep: #111111;
+	--rd-deeper: #0d1117;
 
-// Variações de Texto
-$dark-text: #e0e0e0;
-$text-light: #cccccc;
-$text-label: #aaaaaa;
-$dark-text-muted: #999999;
-$text-muted-dark: #777777;
+	--rd-text: #e0e0e0;
+	--rd-text-light: #cccccc;
+	--rd-text-label: #aaaaaa;
+	--rd-text-muted: #999999;
+	--rd-text-dimmed: #777777;
 
-// Bordas e Divisores
-$border-dark: #222222;
-$border-light: #333333;
-$border-subtle: #30363d; 
+	--rd-border: #222222;
+	--rd-border-light: #333333;
+	--rd-border-subtle: #30363d;
+
+	--rd-glass-bg: rgba(255, 255, 255, 0.04);
+	--rd-glass-border: rgba(255, 255, 255, 0.08);
+	--rd-glass-shadow: rgba(0, 0, 0, 0.4);
+
+	// Cores Fixas (Marca)
+	--rd-blue-dark: #031CFF;
+	--rd-blue-light: #00A8FF;
+}
+
+[data-theme="light"] {
+	color-scheme: light;
+
+    /* Correção Prism.js */
+	pre[class*="language-"],
+	code[class*="language-"] {
+		background: #495057 !important;
+	}
+
+    button.copy-to-clipboard-button {
+        background: #495057 !important;
+
+        &:hover {
+            background: #6c757d !important;
+        }
+    }
+
+    .gh-alert {
+        background-color: rgba(255, 255, 255, 0.5) !important;
+    }
+
+	// Modo Light (Variações)
+	--rd-bg: #f8f9fa;
+	--rd-surface: #ffffff;
+	--rd-deep: #f1f3f5;
+	--rd-deeper: #e9ecef;
+
+	--rd-text: #1a1a1a;
+	--rd-text-light: #333333;
+	--rd-text-label: #495057;
+	--rd-text-muted: #6c757d;
+	--rd-text-dimmed: #adb5bd;
+
+	--rd-border: #dee2e6;
+	--rd-border-light: #e9ecef;
+	--rd-border-subtle: #ced4da;
+
+	--rd-glass-bg: rgba(0, 0, 0, 0.03);
+	--rd-glass-border: rgba(0, 0, 0, 0.1);
+	--rd-glass-shadow: rgba(0, 0, 0, 0.08);
+}
+
+// Mapeamento para retrocompatibilidade com variáveis SCSS
+// (Evita quebrar o site inteiro enquanto refatoramos os arquivos .scss)
+$dark-bg: var(--rd-bg);
+$dark-surface: var(--rd-surface);
+$dark-deep: var(--rd-deep);
+$dark-deeper: var(--rd-deeper);
+
+$dark-text: var(--rd-text);
+$text-light: var(--rd-text-light);
+$text-label: var(--rd-text-label);
+$dark-text-muted: var(--rd-text-muted);
+$text-muted-dark: var(--rd-text-dimmed);
+
+$border-dark: var(--rd-border);
+$border-light: var(--rd-border-light);
+$border-subtle: var(--rd-border-subtle);
+
+$glass-bg: var(--rd-glass-bg);
+$glass-border: var(--rd-glass-border);
+
+/* ==========================================================================
+   3.5. Transições Suaves (Dark/Light Mode)
+   ========================================================================== */
+
+// Variáveis de transição para o esquema de cores
+$transition-theme: 0.3s ease;
 
 /* ==========================================================================
    4. Layout e Cabeçalho
@@ -148,3 +223,8 @@ $space-md: 30px;
 
 $color-menu-bg: #212121;
 $color-menu-hover: rgba(255, 255, 255, 0.1);
+
+/* ==========================================================================
+    5. Variáveis de Transição e Utilidades
+    ========================================================================== */
+    // (Estilos do theme-toggle-btn movidos para sass/layout/_header.scss)
