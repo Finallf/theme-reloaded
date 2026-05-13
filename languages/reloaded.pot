@@ -1,15 +1,15 @@
-# Copyright (C) 2026 Finallf
+# Copyright (C) 2026 Regis Vieira Delgado (Finallf)
 # This file is distributed under the same license as the ReloadeD theme.
 msgid ""
 msgstr ""
-"Project-Id-Version: ReloadeD 0.1.0-beta.7\n"
+"Project-Id-Version: ReloadeD 0.1.0-beta.9\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/theme/reloaded\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-05-09T19:16:40-03:00\n"
+"POT-Creation-Date: 2026-05-13T13:47:59-03:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: reloaded\n"
@@ -64,16 +64,16 @@ msgid "Recommended Levels"
 msgstr ""
 
 #: archive.php:40
-#: author.php:90
+#: author.php:92
 #: index.php:48
-#: search.php:67
+#: search.php:73
 msgid "&larr; Previous"
 msgstr ""
 
 #: archive.php:41
-#: author.php:91
+#: author.php:93
 #: index.php:49
-#: search.php:68
+#: search.php:74
 msgid "Next &rarr;"
 msgstr ""
 
@@ -81,31 +81,38 @@ msgstr ""
 msgid "No articles found in this archive."
 msgstr ""
 
-#: author.php:56
+#. translators: %s: number of published articles
+#: author.php:57
 #, php-format
 msgid "%s published article"
 msgid_plural "%s published articles"
 msgstr[0] ""
 msgstr[1] ""
 
-#: author.php:66
+#. translators: %s: registration date
+#: author.php:68
 #, php-format
 msgid "Member since %s"
 msgstr ""
 
-#: author.php:97
+#: author.php:99
 msgid "This author has not published any articles yet."
 msgstr ""
 
-#: comments.php:19
+#. translators: %s: number of comments
+#: comments.php:20
 #, php-format
 msgid "%s Comment"
 msgid_plural "%s Comments"
 msgstr[0] ""
 msgstr[1] ""
 
-#: comments.php:43
+#: comments.php:44
 msgid "Comments are closed."
+msgstr ""
+
+#: footer.php:12
+msgid "News, technology, games and the best of the open-source world. Where information is reloaded daily."
 msgstr ""
 
 #: footer.php:16
@@ -150,47 +157,51 @@ msgstr ""
 msgid "Back to top"
 msgstr ""
 
-#: header.php:22
+#: header.php:33
 msgid "Latest:"
 msgstr ""
 
-#: header.php:58
+#: header.php:69
 msgid "Open navigation menu"
 msgstr ""
 
-#: header.php:74
+#: header.php:86
 msgid "Search..."
 msgstr ""
 
-#: header.php:77
+#: header.php:89
 msgid "Search the site"
 msgstr ""
 
-#: header.php:79
+#: header.php:91
 msgid "Search"
 msgstr ""
 
-#: inc/core.php:38
-msgid "Primary Menu"
+#: header.php:102
+msgid "Toggle dark/light mode"
 msgstr ""
 
 #: inc/core.php:39
+msgid "Primary Menu"
+msgstr ""
+
+#: inc/core.php:40
 msgid "Footer Menu"
 msgstr ""
 
-#: inc/core.php:82
+#: inc/core.php:83
 msgid "Main Sidebar"
 msgstr ""
 
-#: inc/core.php:84
+#: inc/core.php:85
 msgid "Add widgets here to appear in the sidebar."
 msgstr ""
 
-#: inc/core.php:93
+#: inc/core.php:94
 msgid "Footer - Column 3 (Popular Posts)"
 msgstr ""
 
-#: inc/core.php:95
+#: inc/core.php:96
 msgid "Add widgets here to appear in the footer."
 msgstr ""
 
@@ -295,16 +306,17 @@ msgstr ""
 msgid "Error copying: "
 msgstr ""
 
-#: inc/mod-privacy.php:21
-msgid "We use cookies and similar technologies to improve your experience. By continuing to browse, you agree to our <a href=\"/privacy-policy\">Privacy Policy</a>."
+#: inc/mod-privacy.php:24
+msgid "Privacy Policy"
 msgstr ""
 
-#: inc/mod-privacy.php:28
+#: inc/mod-privacy.php:35
+#, php-format
+msgid "We use cookies and similar technologies to improve your experience. By continuing to browse, you agree to our %s."
+msgstr ""
+
+#: inc/mod-privacy.php:45
 msgid "Understood and Accepted"
-msgstr ""
-
-#: inc/mod-social.php:14
-msgid "l, F j, Y"
 msgstr ""
 
 #: inc/mod-views.php:245
@@ -429,19 +441,19 @@ msgid "Text between Author and Post (e.g., \"commented on post:\"). Leave <stron
 msgstr ""
 
 #: inc/panel.php:198
-msgid "Date Format"
-msgstr ""
-
-#: inc/panel.php:198
-msgid "Ex: l, F j, Y (Returns: Monday, April 29, 2026). <a href=\\\"https://wordpress.org/documentation/article/customize-date-and-time-format/\\\" target=\\\"_blank\\\">See WP documentation</a>."
-msgstr ""
-
-#: inc/panel.php:199
 msgid "Views Counter"
 msgstr ""
 
-#: inc/panel.php:199
+#: inc/panel.php:198
 msgid "Enables the post views counting system. A single IP counts only once every 30 minutes. Known bots are automatically ignored."
+msgstr ""
+
+#: inc/panel.php:199
+msgid "Dark/Light Switcher"
+msgstr ""
+
+#: inc/panel.php:199
+msgid "Enables the theme mode switcher (Dark/Light) in the header."
 msgstr ""
 
 #: inc/panel.php:202
@@ -497,7 +509,8 @@ msgid "Cookie Banner Text"
 msgstr ""
 
 #: inc/panel.php:211
-msgid "Customize the message shown to the user. You can use HTML tags like &lt;a&gt; for links."
+#, php-format
+msgid "Customize the cookie banner message. Use <strong>%s</strong> where you want the Privacy Policy link to appear — the URL comes from <em>Settings → Privacy → Privacy Policy Page</em>. Leave empty to use the default translatable text."
 msgstr ""
 
 #: inc/panel.php:214
@@ -817,15 +830,16 @@ msgstr ""
 msgid "Pages:"
 msgstr ""
 
-#: search.php:31
+#. translators: %s: search query
+#: search.php:34
 #, php-format
 msgid "Results for: %s"
 msgstr ""
 
-#: search.php:39
-msgid "View as:"
+#: search.php:40
+msgid "Display:"
 msgstr ""
 
-#: search.php:74
+#: search.php:80
 msgid "No levels found for this term. Try using different keywords."
 msgstr ""

@@ -23,7 +23,6 @@ function rd_set_default_options() {
             'comment_a11y'          => 1,
             'excerpt_text'          => '',
             'comments_separator'    => '',
-            'date_format'           => '',
             'enable_views_tracking' => 1,
             'enable_theme_switch'   => 1,
 
@@ -33,7 +32,7 @@ function rd_set_default_options() {
             'search_layout_google'   => 0,
 
             'enable_lgpd'           => 1,
-            'lgpd_text'             => 'Nós usamos cookies e tecnologias semelhantes para melhorar a sua experiência. Ao continuar navegando, você concorda com a nossa <a href="/politica-de-privacidade">Política de Privacidade</a>.',
+            'lgpd_text'             => '',
 
             'ga_id'                 => '',
             'discord_widget'        => 1,
@@ -196,7 +195,6 @@ function rd_settings_init() {
     add_settings_field('comment_a11y', __( 'Comment Accessibility', 'reloaded' ), 'rd_master_field_cb', 'rd_options_geral', 'sec_geral', ['id' => 'comment_a11y', 'type' => 'checkbox', 'desc' => __( 'Adds labels and autocomplete attributes to the comment form.', 'reloaded' )]);
     add_settings_field('excerpt_text', __( 'Read More Button Text', 'reloaded' ), 'rd_master_field_cb', 'rd_options_geral', 'sec_geral', ['id' => 'excerpt_text', 'type' => 'text', 'placeholder' => __( 'Ex: Continue Reading &rarr;', 'reloaded' ), 'desc' => __( 'Customizes the excerpt button text. Leave blank to use the theme default.', 'reloaded' )]);
     add_settings_field('comments_separator', __( 'Comments Separator', 'reloaded' ), 'rd_master_field_cb', 'rd_options_geral', 'sec_geral', ['id' => 'comments_separator', 'type' => 'text', 'desc' => __( 'Text between Author and Post (e.g., "commented on post:"). Leave <strong>empty</strong> for WP default or type <strong>&amp;nbsp;</strong> to hide.', 'reloaded' )]);
-    add_settings_field('date_format', __( 'Date Format', 'reloaded' ), 'rd_master_field_cb', 'rd_options_geral', 'sec_geral', ['id' => 'date_format', 'type' => 'text', 'default' => 'l, j \d\e F \d\e Y', 'desc' => __( 'Ex: l, F j, Y (Returns: Monday, April 29, 2026). <a href="https://wordpress.org/documentation/article/customize-date-and-time-format/" target="_blank">See WP documentation</a>.', 'reloaded' )]);
     add_settings_field('enable_views_tracking', __( 'Views Counter', 'reloaded' ), 'rd_master_field_cb', 'rd_options_geral', 'sec_geral', ['id' => 'enable_views_tracking', 'type' => 'checkbox', 'desc' => __( 'Enables the post views counting system. A single IP counts only once every 30 minutes. Known bots are automatically ignored.', 'reloaded' )]);
     add_settings_field('enable_theme_switch', __( 'Dark/Light Switcher', 'reloaded' ), 'rd_master_field_cb', 'rd_options_geral', 'sec_geral', ['id' => 'enable_theme_switch', 'type' => 'checkbox', 'desc' => __( 'Enables the theme mode switcher (Dark/Light) in the header.', 'reloaded' )]);
 
@@ -210,7 +208,7 @@ function rd_settings_init() {
     // --- PRIVACIDADE ---
     add_settings_section('sec_priv', __( 'LGPD and Cookies', 'reloaded' ), '__return_false', 'rd_options_privacidade');
     add_settings_field('enable_lgpd', __( 'LGPD - Cookie Banner', 'reloaded' ), 'rd_master_field_cb', 'rd_options_privacidade', 'sec_priv', ['id' => 'enable_lgpd', 'type' => 'checkbox', 'desc' => __( 'Enables the cookie consent banner in the site footer for legal compliance.', 'reloaded' )]);
-    add_settings_field('lgpd_text', __( 'Cookie Banner Text', 'reloaded' ), 'rd_master_field_cb', 'rd_options_privacidade', 'sec_priv', ['id' => 'lgpd_text', 'type' => 'textarea', 'desc' => __( 'Customize the message shown to the user. You can use HTML tags like &lt;a&gt; for links.', 'reloaded' )]);
+    add_settings_field('lgpd_text', __( 'Cookie Banner Text', 'reloaded' ), 'rd_master_field_cb', 'rd_options_privacidade', 'sec_priv', ['id' => 'lgpd_text', 'type' => 'textarea', 'desc' => __( 'Customize the cookie banner message. Use <strong>%s</strong> where you want the Privacy Policy link to appear — the URL comes from <em>Settings → Privacy → Privacy Policy Page</em>. Leave empty to use the default translatable text.', 'reloaded' )]);
 
     // --- INTEGRAÇÕES ---
     add_settings_section('sec_int', __( 'Scripts and IDs', 'reloaded' ), '__return_false', 'rd_options_integracoes');

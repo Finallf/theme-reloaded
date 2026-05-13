@@ -9,7 +9,7 @@
 							<?php else : ?>
 								<h2 class="footer-title">ReloadeD</h2>
 							<?php endif; ?>
-							<p>Notícias, tecnologia, games e o melhor do mundo open-source. Onde a informação é recarregada diariamente.</p>
+							<p><?php esc_html_e( 'News, technology, games and the best of the open-source world. Where information is reloaded daily.', 'reloaded' ); ?></p>
 						</div>
 
 						<div class="footer-column">

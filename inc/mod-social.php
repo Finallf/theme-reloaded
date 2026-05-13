@@ -9,12 +9,9 @@ defined('ABSPATH') || exit;
  *******************************************************************************/
 // 1. Módulo de Data
 function rd_render_date() {
-    $format = rd_get_option('date_format');
-    if ( empty( $format ) ) {
-        $format = __( 'l, F j, Y', 'reloaded' ); // Fallback de segurança em Inglês
-    }
-    // wp_date() é a função moderna do WP que já traduz automaticamente para o pt-BR
-    echo '<span class="rd-date-display">' . wp_date( $format ) . '</span>';
+    // Usa o formato de data nativo do WP (Configurações → Geral → Formato da Data).
+    // wp_date() traduz nomes de meses/dias automaticamente pro locale ativo.
+    echo '<span class="rd-date-display">' . wp_date( get_option( 'date_format' ) ) . '</span>';
 }
 
 // 2. Módulo de Ticker (Últimas Postagens)
