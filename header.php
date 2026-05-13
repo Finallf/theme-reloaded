@@ -5,21 +5,46 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<link rel="profile" href="https://gmpg.org/xfn/11">
 
+		<script>
+			/**
+			 * Script Anti-Flash (ReloadeD)
+			 * Roda no <head> ANTES do CSS, evitando qualquer flash de tema errado.
+			 * Cascata de decisão:
+			 *   1. Escolha explícita do user (localStorage 'rd-theme')
+			 *   2. Admin escolheu 'dark' ou 'light' como default → respeita
+			 *   3. Admin escolheu 'system' → segue prefers-color-scheme
+			 *   4. Fallback: dark (também usado quando navegador não suporta matchMedia)
+			 *
+			 * Atributo no <html> (document.documentElement) porque <body> ainda não
+			 * existe nesse momento de execução. Seletores CSS [data-theme="light"]
+			 * funcionam igual em qualquer elemento.
+			 */
+			(function() {
+				const adminDefault = '<?php echo esc_js( rd_get_option( 'default_theme_mode', 'system' ) ); ?>';
+				const savedTheme = localStorage.getItem('rd-theme');
+				let theme;
+
+				if (savedTheme) {
+					theme = savedTheme;
+				} else if (adminDefault === 'dark' || adminDefault === 'light') {
+					theme = adminDefault;
+				} else {
+					// system mode — segue preferência do SO
+					let systemPrefersLight = false;
+					if (window.matchMedia) {
+						systemPrefersLight = window.matchMedia('(prefers-color-scheme: light)').matches;
+					}
+					theme = systemPrefersLight ? 'light' : 'dark';
+				}
+
+				document.documentElement.setAttribute('data-theme', theme);
+			})();
+		</script>
+
 		<?php wp_head(); ?>
 	</head>
 
 	<body <?php body_class(); ?>>
-
-		<script>
-			/**
-			 * Script Anti-Flash (ReloadeD)
-			 * Executado imediatamente para evitar que a página pisque ao carregar
-			 */
-			(function() {
-				const savedTheme = localStorage.getItem('rd-theme') || 'dark';
-				document.body.setAttribute('data-theme', savedTheme);
-			})();
-		</script>
 
 		<?php if ( rd_get_option_bool('enable_top_bar') ) : ?>
 			<div class="rd-top-bar">

@@ -25,6 +25,7 @@ function rd_set_default_options() {
             'comments_separator'    => '',
             'enable_views_tracking' => 1,
             'enable_theme_switch'   => 1,
+            'default_theme_mode'    => 'system',
 
             'search_layout_grid'     => 1,
             'search_layout_vertical' => 0,
@@ -197,6 +198,16 @@ function rd_settings_init() {
     add_settings_field('comments_separator', __( 'Comments Separator', 'reloaded' ), 'rd_master_field_cb', 'rd_options_geral', 'sec_geral', ['id' => 'comments_separator', 'type' => 'text', 'desc' => __( 'Text between Author and Post (e.g., "commented on post:"). Leave <strong>empty</strong> for WP default or type <strong>&amp;nbsp;</strong> to hide.', 'reloaded' )]);
     add_settings_field('enable_views_tracking', __( 'Views Counter', 'reloaded' ), 'rd_master_field_cb', 'rd_options_geral', 'sec_geral', ['id' => 'enable_views_tracking', 'type' => 'checkbox', 'desc' => __( 'Enables the post views counting system. A single IP counts only once every 30 minutes. Known bots are automatically ignored.', 'reloaded' )]);
     add_settings_field('enable_theme_switch', __( 'Dark/Light Switcher', 'reloaded' ), 'rd_master_field_cb', 'rd_options_geral', 'sec_geral', ['id' => 'enable_theme_switch', 'type' => 'checkbox', 'desc' => __( 'Enables the theme mode switcher (Dark/Light) in the header.', 'reloaded' )]);
+    add_settings_field('default_theme_mode', __( 'Default Theme Mode', 'reloaded' ), 'rd_master_field_cb', 'rd_options_geral', 'sec_geral', [
+        'id' => 'default_theme_mode',
+        'type' => 'select',
+        'options' => [
+            'system' => __( 'System (follow OS)', 'reloaded' ),
+            'dark'   => __( 'Dark', 'reloaded' ),
+            'light'  => __( 'Light', 'reloaded' ),
+        ],
+        'desc' => __( 'Initial theme mode for first-time visitors. Visitors who clicked the switcher keep their choice in localStorage.', 'reloaded' )
+    ]);
 
     // --- PÁGINA DE BUSCA (Sub-seção dentro da aba Recursos Gerais) ---
     add_settings_section('sec_geral_search', __( 'Search Page', 'reloaded' ), '__return_false', 'rd_options_geral');

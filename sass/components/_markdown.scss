@@ -32,7 +32,7 @@
 		transition: scrollbar-color 0.3s ease;
 
 		&:hover {
-			scrollbar-color: #555 transparent; // Aparece ao passar o mouse
+			scrollbar-color: var(--rd-text-dimmed) transparent; // Aparece ao passar o mouse
 		}
 
 		// Suporte WebKit (Chrome, Edge, Safari)
@@ -55,10 +55,10 @@
 
 		// A MÁGICA: Revela a barra quando o mouse entra na área
 		&:hover::-webkit-scrollbar-thumb {
-			background: #555;
+			background: var(--rd-text-dimmed);
 
 			&:hover {
-				background: #777; // Destaca levemente ao focar na própria barra
+				background: var(--rd-text-muted); // Destaca levemente ao focar na própria barra
 			}
 		}
 
@@ -72,7 +72,7 @@
 	// Estilização de Divisores (HR)
 	// ==========================================================
 	hr {
-		border: 2px solid #3d444d; // Aplica os 2px de espessura com a cor do tema
+		border: 2px solid var(--rd-border-subtle); // Adapta entre dark/light
 		margin: 0 0 1.7rem 0;
 	}
 
@@ -80,7 +80,7 @@
 	// Estilização de Títulos H2
 	// ==========================================================
 	h2 {
-		border-bottom: 1px solid #3d444d; // Sua regra de borda inferior
+		border-bottom: 1px solid var(--rd-border-subtle); // Adapta entre dark/light
 		padding-bottom: 5px; // Seu respiro entre o texto e a linha
 		margin-bottom: 1.5rem;
 		font-weight: 500;
@@ -239,7 +239,7 @@
 	.gh-alert {
 		padding: 1rem;
 		margin: 1.5rem 0;
-		border-left: 4px solid #444;
+		border-left: 4px solid var(--rd-border-light); // Adapta entre dark/light (fallback p/ alerts sem variante de cor)
 		border-radius: 4px;
 		background-color: rgba(255, 255, 255, 0.05); // Fundo sutil (dark mode)
 		transition: background-color 0.3s ease;
@@ -362,7 +362,7 @@
 			width: 100%;
 			height: auto;
 			border-radius: 5px; // Arredondamento padronizado
-			box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4); // Sombra visível no modo escuro
+			box-shadow: 0 8px 20px var(--rd-media-shadow); // Adapta entre dark/light
 		}
 
 		// A legenda da imagem
@@ -422,7 +422,7 @@
 
 		iframe {
 			border-radius: 5px; // Arredondamento padronizado
-			box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4); // Sombra visível no modo escuro
+			box-shadow: 0 8px 20px var(--rd-media-shadow); // Adapta entre dark/light
 			border: none; // Remove a borda padrão feia de alguns iframes
 		}
 
@@ -444,7 +444,7 @@
 		video {
 			width: 100%;
 			border-radius: 5px; // Arredondamento padronizado
-			box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4); // Sombra visível no modo escuro
+			box-shadow: 0 8px 20px var(--rd-media-shadow); // Adapta entre dark/light
 			display: block; // Remove o espaço em branco fantasma embaixo do player
 		}
 

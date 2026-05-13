@@ -174,10 +174,12 @@ document.addEventListener('DOMContentLoaded', function() {
     if (!themeToggle) return;
 
     themeToggle.addEventListener('click', function() {
-        const currentTheme = document.body.getAttribute('data-theme') || 'dark';
+        // Lê e escreve no <html> (documentElement) — consistente com o
+        // script anti-FOUC que roda no <head>.
+        const currentTheme = document.documentElement.getAttribute('data-theme') || 'dark';
         const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
 
-        document.body.setAttribute('data-theme', newTheme);
+        document.documentElement.setAttribute('data-theme', newTheme);
         localStorage.setItem('rd-theme', newTheme);
     });
 });

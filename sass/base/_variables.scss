@@ -140,6 +140,10 @@ $brand-gradient: linear-gradient(135deg, $brand-blue-dark 0%, $brand-blue-light 
 	--rd-glass-border: rgba(255, 255, 255, 0.08);
 	--rd-glass-shadow: rgba(0, 0, 0, 0.4);
 
+	// Sombra dedicada pra mídia (imagens, vídeos, iframes embebidos).
+	// Mantém presença em light mode (mais sutil que o dark, mas perceptível).
+	--rd-media-shadow: rgba(0, 0, 0, 0.4);
+
 	// Cores Fixas (Marca)
 	--rd-blue-dark: #031CFF;
 	--rd-blue-light: #00A8FF;
@@ -185,6 +189,9 @@ $brand-gradient: linear-gradient(135deg, $brand-blue-dark 0%, $brand-blue-light 
 	--rd-glass-bg: rgba(0, 0, 0, 0.03);
 	--rd-glass-border: rgba(0, 0, 0, 0.1);
 	--rd-glass-shadow: rgba(0, 0, 0, 0.08);
+
+	// Sombra mais sutil pra mídia em light (preserva presença sem peso)
+	--rd-media-shadow: rgba(0, 0, 0, 0.15);
 }
 
 // Mapeamento para retrocompatibilidade com variáveis SCSS
