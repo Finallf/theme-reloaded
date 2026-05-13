@@ -56,9 +56,13 @@
         font-family: $font-heading;
         font-size: 1.8rem;
         font-weight: 700;
-        color: $dark-text;
         margin: 0 0 10px;
         letter-spacing: 0.5px;
+        background: $brand-gradient;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        width: fit-content;
     }
 
     .rd-author-bio {

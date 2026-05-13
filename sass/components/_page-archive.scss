@@ -1,14 +1,9 @@
 // ==========================================================
-// PÁGINA DE ARCHIVE (Fase 4)
+// PÁGINA DE ARCHIVE
 // Cobre os fallbacks do template hierarchy: category, tag, date
-// O title e a description vêm do WordPress via the_archive_title()
-// e the_archive_description()
+// O title e a description vêm do WordPress via the_archive_title() e the_archive_description()
 // ==========================================================
 @use '../base/variables' as *;
-
-.rd-archive-page {
-    padding-top: 30px;
-}
 
 .rd-archive-header {
     position: relative;
@@ -17,7 +12,7 @@
     border: 1px solid $glass-border;
     border-radius: 5px;
     padding: 25px 30px;
-    margin-bottom: 30px;
+    margin-bottom: 25px;
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
 
     // Borda superior com gradiente da marca
@@ -36,13 +31,15 @@
         font-size: 1.6rem;
         font-weight: 700;
         color: $dark-text;
-        margin: 0 0 8px;
         letter-spacing: 0.5px;
 
         // O the_archive_title() do WP envolve a parte dinâmica
         // (nome da categoria/tag/data) em um <span>
         span {
-            color: $brand-blue-light;
+            background: $brand-gradient;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
     }
 

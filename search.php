@@ -26,27 +26,30 @@ $show_toggles = count( $active_layouts ) > 1;
     <div class="container">
         <div class="content-area">
 
-            <header class="rd-page-header">
-                <h1 class="rd-page-title">
-                    <?php
-                    // translators: %s: search query
-                    printf( esc_html__( 'Results for: %s', 'reloaded' ), '<span class="rd-search-term">' . get_search_query() . '</span>' );
-                    ?>
-                </h1>
+            <header class="rd-search-header">
+                <div class="rd-search-header-inner">
+                    <h1 class="rd-page-title">
+                        <?php
+                        // translators: %s: search query
+                        printf( esc_html__( 'Results for: %s', 'reloaded' ), '<span class="rd-search-term">' . get_search_query() . '</span>' );
+                        ?>
+                    </h1>
+
+                    <?php if ( $show_toggles ) : ?>
+                        <div class="rd-search-toggles" id="rd-search-toggles">
+                            <span class="rd-toggles-label"><?php esc_html_e( 'Display:', 'reloaded' ); ?></span>
+                            <?php foreach ( $active_layouts as $layout ) : ?>
+                                <button type="button" class="rd-chip active" data-target="rd-wrap-<?php echo esc_attr($layout); ?>">
+                                    <?php echo esc_html( ucfirst($layout) ); ?>
+                                </button>
+                            <?php endforeach; ?>
+                        </div>
+                    <?php endif; ?>
+
+                </div>
             </header>
 
             <?php if ( have_posts() ) : ?>
-
-                <?php if ( $show_toggles ) : ?>
-                    <div class="rd-search-toggles" id="rd-search-toggles">
-                        <span class="rd-toggles-label"><?php esc_html_e( 'View as:', 'reloaded' ); ?></span>
-                        <?php foreach ( $active_layouts as $layout ) : ?>
-                            <button type="button" class="rd-chip active" data-target="rd-wrap-<?php echo esc_attr($layout); ?>">
-                                <?php echo esc_html( ucfirst($layout) ); ?>
-                            </button>
-                        <?php endforeach; ?>
-                    </div>
-                <?php endif; ?>
 
                 <div class="rd-search-results-containers">
                     <?php

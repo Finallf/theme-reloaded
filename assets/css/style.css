@@ -2992,15 +2992,6 @@ a:hover {
 /* ==========================================================================
    Páginas Estáticas (page.php)
    ========================================================================== */
-.rd-page {
-  padding: 40px 0 60px;
-}
-@media (max-width: 768px) {
-  .rd-page {
-    padding: 20px 0 40px;
-  }
-}
-
 /* ===== ARTIGO PRINCIPAL ===== */
 .rd-page-article {
   background: var(--rd-glass-bg);
@@ -3032,7 +3023,6 @@ a:hover {
   font-family: "Poppins", sans-serif;
   font-size: 2.4rem;
   font-weight: 700;
-  line-height: 1.2;
   color: var(--rd-text);
   margin: 0;
   background: linear-gradient(135deg, #031CFF 0%, #00A8FF 100%);
@@ -3181,9 +3171,15 @@ a:hover {
   font-family: "Poppins", sans-serif;
   font-size: 1.8rem;
   font-weight: 700;
-  color: var(--rd-text);
   margin: 0 0 10px;
   letter-spacing: 0.5px;
+  background: linear-gradient(135deg, #031CFF 0%, #00A8FF 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  width: -webkit-fit-content;
+  width: -moz-fit-content;
+  width: fit-content;
 }
 .rd-author-header .rd-author-bio {
   color: var(--rd-text-light);
@@ -3242,10 +3238,6 @@ a:hover {
   border-radius: 5px;
 }
 
-.rd-archive-page {
-  padding-top: 30px;
-}
-
 .rd-archive-header {
   position: relative;
   overflow: hidden;
@@ -3253,7 +3245,7 @@ a:hover {
   border: 1px solid var(--rd-glass-border);
   border-radius: 5px;
   padding: 25px 30px;
-  margin-bottom: 30px;
+  margin-bottom: 25px;
   -webkit-box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
           box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
 }
@@ -3271,11 +3263,13 @@ a:hover {
   font-size: 1.6rem;
   font-weight: 700;
   color: var(--rd-text);
-  margin: 0 0 8px;
   letter-spacing: 0.5px;
 }
 .rd-archive-header .rd-archive-title span {
-  color: #00A8FF;
+  background: linear-gradient(135deg, #031CFF 0%, #00A8FF 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 .rd-archive-header .rd-archive-description {
   color: var(--rd-text-light);
@@ -3394,9 +3388,59 @@ mark.rd-highlight {
 }
 
 .rd-search-term {
-  color: #00A8FF;
+  background: linear-gradient(135deg, #031CFF 0%, #00A8FF 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-weight: 700;
 }
 
+.rd-search-header {
+  background: var(--rd-glass-bg);
+  border: 1px solid var(--rd-glass-border);
+  border-radius: 5px;
+  padding: 25px 30px;
+  margin-bottom: 25px;
+  -webkit-box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+          box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+  position: relative;
+  overflow: hidden;
+}
+.rd-search-header::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background: linear-gradient(135deg, #031CFF 0%, #00A8FF 100%);
+}
+.rd-search-header .rd-search-header-inner {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  gap: 20px;
+}
+.rd-search-header .rd-page-title {
+  margin: 0;
+  font-family: "Poppins", sans-serif;
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--rd-text);
+  white-space: nowrap;
+  background: none;
+  -webkit-background-clip: initial;
+  background-clip: initial;
+  -webkit-text-fill-color: initial;
+}
+
+/* Chips de Filtro (Glassmorphism) — right-aligned */
 .rd-search-toggles {
   display: -webkit-box;
   display: -ms-flexbox;
@@ -3405,9 +3449,11 @@ mark.rd-highlight {
       -ms-flex-align: center;
           align-items: center;
   gap: 10px;
-  margin-bottom: 30px;
   -ms-flex-wrap: wrap;
       flex-wrap: wrap;
+  -webkit-box-pack: end;
+      -ms-flex-pack: end;
+          justify-content: flex-end;
 }
 .rd-search-toggles .rd-toggles-label {
   color: var(--rd-text-label);
@@ -3417,7 +3463,7 @@ mark.rd-highlight {
   background: var(--rd-glass-bg);
   border: 1px solid var(--rd-glass-border);
   color: var(--rd-text-muted);
-  padding: 6px 16px;
+  padding: 1px 8px;
   border-radius: 20px;
   cursor: pointer;
   font-family: "Inter", sans-serif;
