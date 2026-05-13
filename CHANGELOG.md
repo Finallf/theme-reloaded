@@ -7,6 +7,20 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 <br>
 
 
+## [0.1.0-beta.9](https://github.com/Finallf/theme-reloaded/compare/v0.1.0-beta.8...v0.1.0-beta.9) (2026-05-13)
+
+### ✨ Features
+
+* **ui:** embed layout switches inside search header card ([a6ce638](https://github.com/Finallf/theme-reloaded/commit/a6ce6388e6a2983c4cc0e4d1db44d84730dd0628))
+
+### 🐛 Bug Fixes
+
+* **ui:** align views icon to right in search and author cards ([4f643a3](https://github.com/Finallf/theme-reloaded/commit/4f643a3ccb39e55cbd8ba0872c01907ed1a49df4))
+
+<br>
+
+---
+
 ## [0.1.0-beta.8](https://github.com/Finallf/theme-reloaded/compare/v0.1.0-beta.7...v0.1.0-beta.8) (2026-05-12)
 
 ### 🐛 Bug Fixes
