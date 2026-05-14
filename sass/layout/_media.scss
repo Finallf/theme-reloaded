@@ -104,14 +104,14 @@
 		// Quando o botão é clicado, o JS adiciona a classe 'toggled'
 		> ul.toggled {
 			transform: translateX(0);
-			box-shadow: 5px 0 25px rgba(0, 0, 0, 0.7);
+			box-shadow: 5px 0 25px rgba(0, 0, 0, 0.5);
 		}
 
 		// Quando o botão é clicado, o JS adiciona a classe 'toggled'
 		ul.toggled {
 			// Trazemos o menu de volta para a posição original (0)
 			transform: translateX(0);
-			box-shadow: 5px 0 25px rgba(0, 0, 0, 0.7); // Sombra para separar do conteúdo de fundo
+			box-shadow: 5px 0 25px rgba(0, 0, 0, 0.5); // Sombra para separar do conteúdo de fundo
 		}
 	}
 }

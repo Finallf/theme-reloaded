@@ -54,6 +54,6 @@
         right: 20px;
         width: 45px; // Um pouco menor para não atrapalhar o toque
         height: 45px;
-        box-shadow: 0 2px 10px rgba(0,0,0,0.2); // Remove sombras pesadas que podem causar lag em celulares antigos
+        box-shadow: 0 2px 10px rgba(0,0,0,0.5); // Dimensões pequenas pra não dar lag em celulares antigos; opacidade no padrão 0.5
     }
 }
