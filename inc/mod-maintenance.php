@@ -170,12 +170,24 @@ function rd_maintenance_render_screen() {
     $custom_text = rd_get_option('maintenance_text');
     $mensagem = !empty($custom_text)
         ? wp_kses_post($custom_text)
-        : __( 'The ReloadeD portal is undergoing scheduled maintenance to bring you new features. Thank you for your patience.', 'reloaded' );
+        : sprintf(
+            /* translators: %s: site name from WordPress general settings */
+            __( 'The %s portal is undergoing scheduled maintenance to bring you new features. Thank you for your patience.', 'reloaded' ),
+            get_bloginfo( 'name' )
+        );
 
     $logo_url = get_template_directory_uri() . '/assets/img/logo-reloaded-painel.webp';
     $html = rd_maintenance_get_template_html( $logo_url, $mensagem );
 
-    wp_die( $html, __( 'Scheduled Maintenance - ReloadeD', 'reloaded' ), array( 'response' => 503 ) );
+    wp_die(
+        $html,
+        sprintf(
+            /* translators: %s: site name from WordPress general settings */
+            __( 'Scheduled Maintenance - %s', 'reloaded' ),
+            get_bloginfo( 'name' )
+        ),
+        array( 'response' => 503 )
+    );
 }
 
 /**
@@ -202,7 +214,15 @@ function rd_maintenance_render_login_form( $error_message = '' ) {
 
     $html = rd_maintenance_get_template_html( $logo_url, '', $form_html );
 
-    wp_die( $html, __( 'Restricted Access - ReloadeD', 'reloaded' ), array( 'response' => 503 ) );
+    wp_die(
+        $html,
+        sprintf(
+            /* translators: %s: site name from WordPress general settings */
+            __( 'Restricted Access - %s', 'reloaded' ),
+            get_bloginfo( 'name' )
+        ),
+        array( 'response' => 503 )
+    );
 }
 
 /**
@@ -300,7 +320,7 @@ function rd_maintenance_get_template_html( $logo_url, $mensagem = '', $extra_htm
 
     <div class="rd-maintenance-container">
         <div class="rd-maintenance-card">
-            <img src="' . esc_url( $logo_url ) . '" alt="ReloadeD" class="rd-maintenance-logo">
+            <img src="' . esc_url( $logo_url ) . '" alt="' . esc_attr( get_bloginfo( 'name' ) ) . '" class="rd-maintenance-logo">
             ' . $content_html . '
         </div>
     </div>

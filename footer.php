@@ -7,7 +7,7 @@
 							<?php if ( has_custom_logo() ) : ?>
 								<div class="footer-logo"><?php the_custom_logo(); ?></div>
 							<?php else : ?>
-								<h2 class="footer-title">ReloadeD</h2>
+								<h2 class="footer-title"><?php echo esc_html( get_bloginfo( 'name' ) ); ?></h2>
 							<?php endif; ?>
 							<p><?php esc_html_e( 'News, technology, games and the best of the open-source world. Where information is reloaded daily.', 'reloaded' ); ?></p>
 						</div>

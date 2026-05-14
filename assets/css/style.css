@@ -169,7 +169,7 @@ img {
 
 body {
   background-color: var(--rd-bg);
-  color: var(--rd-text);
+  color: var(--rd-text-light);
   font-family: "Inter", sans-serif;
   font-size: 16px;
   line-height: 1.5;
@@ -189,7 +189,7 @@ h6 {
   font-family: "Poppins", sans-serif;
   font-weight: 500;
   line-height: 1.4;
-  color: var(--rd-text);
+  color: var(--rd-text-light);
 }
 
 a {
@@ -313,13 +313,12 @@ a:hover {
   border-radius: 5px;
   text-align: center;
   margin-bottom: 20px;
-  color: var(--rd-text);
+  color: var(--rd-text-light);
 }
 
 .rd-support-title {
   margin-top: 0;
   font-size: 1.1rem;
-  color: var(--rd-text);
   margin-bottom: 20px;
 }
 
@@ -686,7 +685,6 @@ a:hover {
   font-size: 1.25rem;
 }
 .grid-item .post-content-area .entry-title a {
-  color: var(--rd-text);
   text-decoration: none;
   /* O "MÁGICO": esse after cobre o card todo */
 }
@@ -1200,7 +1198,6 @@ a:hover {
    ========================================================================== */
 .rd-top-bar {
   background: var(--rd-deep); /* Substituiu o #111 */
-  color: var(--rd-text-light); /* Substituiu o #ccc */
   font-size: 0.85rem;
   border-bottom: 1px solid var(--rd-glass-border); /* Usando nossa transparência unificada */
   height: 30px;
@@ -1332,7 +1329,6 @@ a:hover {
 }
 
 .rd-ticker-list a {
-  color: var(--rd-text-light); /* Substituiu o #ccc */
   text-decoration: none;
   -webkit-transition: color 0.2s ease;
   transition: color 0.2s ease;
@@ -1557,7 +1553,6 @@ a:hover {
   line-height: 0;
 }
 .single-post-content .entry-header .entry-meta .byline a {
-  color: var(--rd-text-light);
   text-decoration: none;
   -webkit-transition: color 0.2s ease;
   transition: color 0.2s ease;
@@ -1704,7 +1699,6 @@ a:hover {
   padding-left: 8px;
 }
 #secondary .widget_block.widget_search .wp-block-search__label {
-  color: var(--rd-text-light);
   margin-bottom: 15px;
   display: block;
 }
@@ -1832,7 +1826,6 @@ a:hover {
   color: var(--rd-text-muted);
 }
 .comment-list .comment-body p {
-  color: var(--rd-text-light);
   line-height: 1.6;
   margin-bottom: 15px;
 }
@@ -2286,7 +2279,6 @@ a:hover {
   left: 0;
   width: 100%;
   background-color: var(--rd-deep);
-  color: var(--rd-text-light);
   padding: 15px 25px;
   display: -webkit-box;
   display: -ms-flexbox;
@@ -2812,7 +2804,6 @@ a:hover {
   font-family: "Inter", sans-serif;
   font-size: 1.05rem;
   line-height: 1.7;
-  color: var(--rd-text-light);
   margin: 0 0 35px;
 }
 @media (max-width: 768px) {
@@ -3112,7 +3103,6 @@ a:hover {
   border-left: 4px solid #00A8FF;
   border-radius: 4px;
   font-style: italic;
-  color: var(--rd-text-light);
 }
 .rd-page-content img {
   max-width: 100%;
@@ -3193,7 +3183,6 @@ a:hover {
   width: fit-content;
 }
 .rd-author-header .rd-author-bio {
-  color: var(--rd-text-light);
   font-size: 0.95rem;
   line-height: 1.6;
   margin: 0 0 14px;
@@ -3240,7 +3229,6 @@ a:hover {
 }
 
 .rd-no-posts {
-  color: var(--rd-text-light);
   font-size: 1rem;
   text-align: center;
   padding: 40px 20px;
@@ -3283,7 +3271,6 @@ a:hover {
   background-clip: text;
 }
 .rd-archive-header .rd-archive-description {
-  color: var(--rd-text-light);
   font-size: 0.95rem;
   line-height: 1.6;
 }
@@ -3335,7 +3322,6 @@ a:hover {
   background: var(--rd-glass-bg);
   border: 1px solid var(--rd-glass-border);
   border-radius: 5px;
-  color: var(--rd-text-light);
   font-family: "Inter", sans-serif;
   font-size: 0.95rem;
   font-weight: 500;
@@ -3443,7 +3429,6 @@ mark.rd-highlight {
   font-family: "Poppins", sans-serif;
   font-size: 1.6rem;
   font-weight: 700;
-  color: var(--rd-text);
   white-space: nowrap;
   background: none;
   -webkit-background-clip: initial;
@@ -3760,7 +3745,6 @@ mark.rd-highlight {
 .rd-search-card .rd-card-title {
   font-family: "Poppins", sans-serif;
   font-size: 1.1rem;
-  color: var(--rd-text-light);
   margin: 0 0 8px 0;
 }
 .rd-search-card .rd-card-meta {
@@ -3788,7 +3772,6 @@ mark.rd-highlight {
   padding: 30px 0;
 }
 .rd-no-results p {
-  color: var(--rd-text-light);
   font-size: 1rem;
   margin: 0 0 25px;
 }

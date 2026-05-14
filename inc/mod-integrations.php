@@ -56,7 +56,7 @@ function rd_render_discord_widget() {
                     ?>
                 </div>
                 <div class="logo-int">
-                    <img src="<?php echo esc_url( get_template_directory_uri() ); ?>/assets/img/logo-reloaded-painel.webp" alt="ReloadeD">
+                    <img src="<?php echo esc_url( get_template_directory_uri() ); ?>/assets/img/logo-reloaded-painel.webp" alt="<?php echo esc_attr( get_bloginfo( 'name' ) ); ?>">
                 </div>
             </div>
         </div>
