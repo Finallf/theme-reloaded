@@ -7,6 +7,20 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 <br>
 
 
+## [0.2.2-beta.1](https://github.com/Finallf/theme-reloaded/compare/v0.2.1...v0.2.2-beta.1) (2026-05-14)
+
+### 🐛 Bug Fixes
+
+* **grid:** expand content-area to full width on tablet breakpoint ([ccd69b8](https://github.com/Finallf/theme-reloaded/commit/ccd69b8f934252a113011583d0ae760aca03a740))
+
+### ♻️ Code Refactoring
+
+* **soc:** move inline scripts and styles to dedicated files ([0d2e71f](https://github.com/Finallf/theme-reloaded/commit/0d2e71faeb7efdc7ed5d4f9bf829bf2d630bde73))
+
+<br>
+
+---
+
 ## [0.2.1](https://github.com/Finallf/theme-reloaded/compare/v0.2.0...v0.2.1) (2026-05-14)
 
 ### 🐛 Bug Fixes
