@@ -41,7 +41,7 @@
 	border-radius: 5px; // A sua regra de ouro já estava aqui!
 	overflow: hidden;
 	border: 1px solid $glass-border; // Borda translúcida padrão
-	box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+	box-shadow: 0 8px 20px var(--rd-glass-shadow); // Adapta dark/light (plana no light)
 	transition: all 0.3s ease;
 	display: flex;
 	flex-direction: column;

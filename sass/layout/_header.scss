@@ -54,6 +54,7 @@
 	font-weight: 500;
 	margin-left: calc(-50vw + 50%); // Truque do CSS para centralizar um elemento de largura total
 	margin-right: calc(-50vw + 50%);
+	box-shadow: 0 2px 8px var(--rd-glass-shadow); // Adapta dark/light
 
 	// O RISCO DEGRADÊ: No topo da barra de menu
 	&::before {

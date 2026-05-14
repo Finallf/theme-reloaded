@@ -595,8 +595,8 @@ a:hover {
   border-radius: 5px;
   overflow: hidden;
   border: 1px solid var(--rd-glass-border);
-  -webkit-box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
-          box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+  -webkit-box-shadow: 0 8px 20px var(--rd-glass-shadow);
+          box-shadow: 0 8px 20px var(--rd-glass-shadow);
   -webkit-transition: all 0.3s ease;
   transition: all 0.3s ease;
   display: -webkit-box;
@@ -821,6 +821,8 @@ a:hover {
   font-weight: 500;
   margin-left: calc(-50vw + 50%);
   margin-right: calc(-50vw + 50%);
+  -webkit-box-shadow: 0 2px 8px var(--rd-glass-shadow);
+          box-shadow: 0 2px 8px var(--rd-glass-shadow);
 }
 .menu-bar-fixed::before {
   content: "";
@@ -1622,8 +1624,8 @@ a:hover {
   border-radius: 5px;
   border: 1px solid var(--rd-glass-border);
   margin-bottom: 20px;
-  -webkit-box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
-          box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+  -webkit-box-shadow: 0 8px 20px var(--rd-glass-shadow);
+          box-shadow: 0 8px 20px var(--rd-glass-shadow);
 }
 #secondary .discord-style .discord-placeholder {
   -webkit-box-align: stretch;
@@ -1651,8 +1653,8 @@ a:hover {
   border-radius: 5px;
   border: 1px solid var(--rd-glass-border);
   margin-bottom: 20px;
-  -webkit-box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
-          box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+  -webkit-box-shadow: 0 8px 20px var(--rd-glass-shadow);
+          box-shadow: 0 8px 20px var(--rd-glass-shadow);
 }
 #secondary .widget_block h2.wp-block-heading {
   color: var(--rd-text);
@@ -3547,6 +3549,8 @@ mark.rd-highlight {
   border: 1px solid var(--rd-glass-border);
   border-radius: 5px;
   overflow: hidden;
+  -webkit-box-shadow: 0 8px 20px var(--rd-glass-shadow);
+          box-shadow: 0 8px 20px var(--rd-glass-shadow);
   -webkit-transition: all 250ms ease;
   transition: all 250ms ease;
 }
@@ -3613,6 +3617,8 @@ mark.rd-highlight {
   border: 1px solid var(--rd-glass-border);
   border-radius: 5px;
   overflow: hidden;
+  -webkit-box-shadow: 0 8px 20px var(--rd-glass-shadow);
+          box-shadow: 0 8px 20px var(--rd-glass-shadow);
   -webkit-transition: all 250ms ease;
   transition: all 250ms ease;
 }
@@ -3723,8 +3729,8 @@ mark.rd-highlight {
   padding: 12px 15px;
   border-radius: 5px;
   border: 1px solid var(--rd-glass-border);
-  -webkit-box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
-          box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+  -webkit-box-shadow: 0 8px 20px var(--rd-glass-shadow);
+          box-shadow: 0 8px 20px var(--rd-glass-shadow);
   text-decoration: none;
   color: inherit;
   -webkit-transition: all 0.25s ease;
@@ -3734,6 +3740,8 @@ mark.rd-highlight {
   border-color: #00A8FF;
   -webkit-transform: translateY(-2px);
           transform: translateY(-2px);
+  -webkit-box-shadow: 0 8px 25px rgba(0, 168, 255, 0.2);
+          box-shadow: 0 8px 25px rgba(0, 168, 255, 0.2);
 }
 
 .rd-wrapper-google {
