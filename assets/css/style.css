@@ -1601,20 +1601,22 @@ a:hover {
           justify-content: flex-end;
 }
 .single-post-content .entry-footer .post-tags a {
-  background-color: var(--rd-surface);
-  color: var(--rd-text);
-  padding: 5px 12px;
+  background: var(--rd-glass-bg);
+  border: 1px solid var(--rd-glass-border);
+  color: var(--rd-text-muted);
+  padding: 1px 8px;
   border-radius: 20px;
-  text-decoration: none;
-  -webkit-transition: all 0.2s ease;
-  transition: all 0.2s ease;
-  border: 1px solid var(--rd-border-light);
+  font-family: "Inter", sans-serif;
   font-size: 0.85rem;
+  line-height: normal;
+  text-decoration: none;
+  -webkit-transition: all 0.3s ease;
+  transition: all 0.3s ease;
 }
 .single-post-content .entry-footer .post-tags a:hover {
-  background-color: #00A8FF;
-  color: #000;
+  background: rgba(0, 168, 255, 0.15);
   border-color: #00A8FF;
+  color: #00A8FF;
 }
 
 #secondary iframe {
@@ -3610,10 +3612,6 @@ mark.rd-highlight {
   gap: 20px;
 }
 .rd-wrapper-vertical .rd-search-card.layout-vertical {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  gap: 0;
   background: var(--rd-glass-bg);
   border: 1px solid var(--rd-glass-border);
   border-radius: 5px;
@@ -3630,6 +3628,13 @@ mark.rd-highlight {
   -webkit-box-shadow: 0 8px 25px rgba(0, 168, 255, 0.2);
           box-shadow: 0 8px 25px rgba(0, 168, 255, 0.2);
 }
+.rd-wrapper-vertical .rd-search-card.layout-vertical .rd-card-link {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  color: inherit;
+  text-decoration: none;
+}
 .rd-wrapper-vertical .rd-search-card.layout-vertical .rd-card-thumb {
   -ms-flex-negative: 0;
       flex-shrink: 0;
@@ -3637,11 +3642,6 @@ mark.rd-highlight {
   aspect-ratio: 16/9;
   overflow: hidden;
   background: var(--rd-deep);
-}
-.rd-wrapper-vertical .rd-search-card.layout-vertical .rd-card-thumb a {
-  display: block;
-  width: 100%;
-  height: 100%;
 }
 .rd-wrapper-vertical .rd-search-card.layout-vertical .rd-card-thumb img {
   width: 100%;
@@ -3674,10 +3674,6 @@ mark.rd-highlight {
       -ms-flex-pack: center;
           justify-content: center;
   min-width: 0;
-}
-.rd-wrapper-vertical .rd-search-card.layout-vertical .rd-card-title a {
-  color: inherit;
-  text-decoration: none;
 }
 .rd-wrapper-vertical .rd-search-card.layout-vertical .rd-card-excerpt {
   color: var(--rd-text-muted);

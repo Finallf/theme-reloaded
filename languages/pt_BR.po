@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: ReloadeD 0.1.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/theme/reloaded\n"
 "POT-Creation-Date: 2026-05-13T13:47:59-03:00\n"
-"PO-Revision-Date: 2026-05-13 13:49-0300\n"
+"PO-Revision-Date: 2026-05-14 12:58-0300\n"
 "Last-Translator: Regis Vieira Delgado (Finallf) <finallf2@gmail.com>\n"
 "Language-Team: Brazilian Portuguese\n"
 "Language: pt_BR\n"
@@ -979,7 +979,7 @@ msgstr "Páginas:"
 #: search.php:34
 #, php-format
 msgid "Results for: %s"
-msgstr "Resultados para: %s"
+msgstr "Pesquisou por: %s"
 
 #: search.php:40
 msgid "Display:"

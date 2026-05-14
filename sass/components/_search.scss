@@ -213,8 +213,6 @@ mark.rd-highlight {
     gap: 20px;
 
     .rd-search-card.layout-vertical {
-        display: flex;
-        gap: 0;
         background: $glass-bg;
         border: 1px solid $glass-border;
         border-radius: 5px;
@@ -228,18 +226,20 @@ mark.rd-highlight {
             box-shadow: 0 8px 25px rgba(0, 168, 255, 0.2);
         }
 
+        // Wrapper <a> que torna o card todo clicável (substitui os anchors
+        // internos da thumb e do título — HTML5 permite <a> envolvendo blocos).
+        .rd-card-link {
+            display: flex;
+            color: inherit;
+            text-decoration: none;
+        }
+
         .rd-card-thumb {
             flex-shrink: 0;
             width: 280px;
             aspect-ratio: 16 / 9;
             overflow: hidden;
             background: $dark-deep;
-
-            a {
-                display: block;
-                width: 100%;
-                height: 100%;
-            }
 
             img {
                 width: 100%;
@@ -261,11 +261,6 @@ mark.rd-highlight {
             flex-direction: column;
             justify-content: center;
             min-width: 0; // permite o ellipsis funcionar dentro do flex
-        }
-
-        .rd-card-title a {
-            color: inherit;
-            text-decoration: none;
         }
 
         .rd-card-excerpt {

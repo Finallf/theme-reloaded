@@ -78,9 +78,9 @@
 			height: auto;
 			aspect-ratio: 16 / 9; /* Trava a proporção exata dos recortes do portal */
 			display: block;
-			
+
 			/* Serve como trava de segurança apenas se alguma imagem for "subida" fora do tamanho padrão */
-			object-fit: cover; 
+			object-fit: cover;
 		}
 	}
 
@@ -98,21 +98,28 @@
 			gap: 10px;
 			align-items: center;
 			justify-content: flex-end;
-			
-			a {
-				background-color: $dark-surface; // #212121 substituído
-				color: $dark-text; // #e0e0e0 substituído
-				padding: 5px 12px;
-				border-radius: 20px; // Mantido 20px para preservar o formato de 'pílula'
-				text-decoration: none;
-				transition: all 0.2s ease;
-				border: 1px solid $border-light; // #333 substituído
-				font-size: 0.85rem;
 
+			// Visual idêntico aos chips da busca (.rd-chip em _search.scss).
+			// line-height: normal força o mesmo comportamento do <button> nativo
+			// (que ignora o line-height: 1.5 herdado do body); sem isso, o <a>
+			// fica ~4px mais alto que o chip.
+			a {
+				background: $glass-bg;
+				border: 1px solid $glass-border;
+				color: $dark-text-muted;
+				padding: 1px 8px;
+				border-radius: 20px;
+				font-family: $font-primary;
+				font-size: 0.85rem;
+				line-height: normal;
+				text-decoration: none;
+				transition: all 0.3s ease;
+
+				// Hover replica o estado .active dos chips (azul transparente)
 				&:hover {
-					background-color: $brand-blue-light;
-					color: #000; // Letra preta para contraste perfeito com o azul
+					background: rgba(0, 168, 255, 0.15);
 					border-color: $brand-blue-light;
+					color: $brand-blue-light;
 				}
 			}
 		}

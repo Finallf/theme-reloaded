@@ -90,13 +90,16 @@ function rd_render_post_card( $type ) {
             break;
 
         case 'vertical':
+            // Wrap completo em <a> pra o card inteiro ser clicável (mesma estratégia do grid/compact).
+            // HTML5 permite <a> envolvendo flow content (block-level); proibido só ter <a> aninhado.
             echo '<article class="rd-search-card layout-vertical">';
-            echo '<div class="rd-card-thumb"><a href="' . esc_url($link) . '">' . $thumb . '</a></div>';
+            echo '<a href="' . esc_url($link) . '" class="rd-card-link">';
+            echo '<div class="rd-card-thumb">' . $thumb . '</div>';
             echo '<div class="rd-card-body">';
-            echo '<h3 class="rd-card-title"><a href="' . esc_url($link) . '">' . $title . '</a></h3>';
+            echo '<h3 class="rd-card-title">' . $title . '</h3>';
             echo '<p class="rd-card-excerpt">' . $excerpt . '</p>';
             echo '<div class="rd-card-meta">' . $views . '</div>';
-            echo '</div></article>';
+            echo '</div></a></article>';
             break;
 
         case 'compact':
