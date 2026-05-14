@@ -320,7 +320,11 @@
 .header-search-container {
 	display: flex;
 	align-items: center;
-	margin-left: 20px;
+	// margin-left: auto empurra search (e o theme-switch que vem depois) pra
+	// direita do container, mantendo nav alinhado à esquerda. Substitui o
+	// comportamento do justify-content: space-between que distribuía os 3
+	// itens (deixando search no meio).
+	margin-left: auto;
 
 	.search-form {
 		display: flex;
