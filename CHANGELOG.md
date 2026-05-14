@@ -7,6 +7,21 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 <br>
 
 
+## [0.3.0-beta.1](https://github.com/Finallf/theme-reloaded/compare/v0.2.2...v0.3.0-beta.1) (2026-05-14)
+
+### ✨ Features
+
+* **header:** extend hamburger to tablet range with integrated search panel ([1e5e4b7](https://github.com/Finallf/theme-reloaded/commit/1e5e4b77eca0a1076a2a4b17d3631fd1b78eb44d))
+
+### ♻️ Code Refactoring
+
+* **brand:** replace hardcoded "ReloadeD" with site name in user-facing strings ([55ca928](https://github.com/Finallf/theme-reloaded/commit/55ca928c0573633b8ae164d917de1b9d277c4481))
+* **theme:** adopt --rd-text-light as default body and headings color ([ae4dbd6](https://github.com/Finallf/theme-reloaded/commit/ae4dbd61d1853b79b0047b2168e19db72d2256a1))
+
+<br>
+
+---
+
 ## [0.2.2](https://github.com/Finallf/theme-reloaded/compare/v0.2.1...v0.2.2) (2026-05-14)
 
 ### 🐛 Bug Fixes
