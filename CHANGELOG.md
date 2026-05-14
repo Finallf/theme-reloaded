@@ -7,6 +7,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 <br>
 
 
+## [0.1.0-beta.12](https://github.com/Finallf/theme-reloaded/compare/v0.1.0-beta.11...v0.1.0-beta.12) (2026-05-14)
+
+### ✨ Features
+
+* **search:** distribute results across active layouts ([7bcc415](https://github.com/Finallf/theme-reloaded/commit/7bcc415e6ab1b292b80eb84fa6b485c2f9f542d7))
+
+<br>
+
+---
+
 ## [0.1.0-beta.11](https://github.com/Finallf/theme-reloaded/compare/v0.1.0-beta.10...v0.1.0-beta.11) (2026-05-13)
 
 ### 🐛 Bug Fixes
