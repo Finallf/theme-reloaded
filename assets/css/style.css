@@ -216,7 +216,7 @@ a:hover {
 .container {
   max-width: 1440px;
   margin: 0 auto;
-  padding: 0 20px;
+  padding: 0 10px;
 }
 
 .post-tag,
@@ -840,16 +840,23 @@ a:hover {
   -webkit-box-align: center;
       -ms-flex-align: center;
           align-items: center;
+  position: relative;
 }
 .menu-bar-fixed .main-navigation ul {
   list-style: none;
   margin: 0;
   padding: 0;
 }
+.menu-bar-fixed .main-navigation .menu-panel {
+  display: contents;
+}
+.menu-bar-fixed .main-navigation .menu-search-form {
+  display: none;
+}
 .menu-bar-fixed .main-navigation {
   /* Nível 1: Menu Principal */
 }
-.menu-bar-fixed .main-navigation > ul {
+.menu-bar-fixed .main-navigation .menu-panel > ul {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -857,11 +864,11 @@ a:hover {
       -ms-flex-align: center;
           align-items: center;
 }
-.menu-bar-fixed .main-navigation > ul > li {
+.menu-bar-fixed .main-navigation .menu-panel > ul > li {
   position: relative;
   /* CRÍTICO: Segura o submenu para ele não voar pela tela */
 }
-.menu-bar-fixed .main-navigation > ul > li > a {
+.menu-bar-fixed .main-navigation .menu-panel > ul > li > a {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -877,10 +884,10 @@ a:hover {
   -webkit-transition: background-color 0.3s ease;
   transition: background-color 0.3s ease;
 }
-.menu-bar-fixed .main-navigation > ul > li {
+.menu-bar-fixed .main-navigation .menu-panel > ul > li {
   /* Estilo da setinha para itens que têm submenu */
 }
-.menu-bar-fixed .main-navigation > ul > li.menu-item-has-children > a::after {
+.menu-bar-fixed .main-navigation .menu-panel > ul > li.menu-item-has-children > a::after {
   content: "";
   display: inline-block;
   width: 0;
@@ -894,33 +901,33 @@ a:hover {
   transition: transform 0.3s ease;
   transition: transform 0.3s ease, -webkit-transform 0.3s ease;
 }
-.menu-bar-fixed .main-navigation > ul > li {
+.menu-bar-fixed .main-navigation .menu-panel > ul > li {
   /* Efeito Hover no Menu Principal */
 }
-.menu-bar-fixed .main-navigation > ul > li:hover > a {
+.menu-bar-fixed .main-navigation .menu-panel > ul > li:hover > a {
   background-color: rgba(255, 255, 255, 0.1);
 }
-.menu-bar-fixed .main-navigation > ul > li {
+.menu-bar-fixed .main-navigation .menu-panel > ul > li {
   /* Faz a setinha girar 180 graus quando o menu abre (Opcional, mas dá um charme) */
 }
-.menu-bar-fixed .main-navigation > ul > li:hover > a::after {
+.menu-bar-fixed .main-navigation .menu-panel > ul > li:hover > a::after {
   -webkit-transform: rotate(180deg);
           transform: rotate(180deg);
 }
-.menu-bar-fixed .main-navigation > ul > li {
+.menu-bar-fixed .main-navigation .menu-panel > ul > li {
   /* Quando passa o mouse no item pai, mostra o submenu */
 }
-.menu-bar-fixed .main-navigation > ul > li:hover > .sub-menu {
+.menu-bar-fixed .main-navigation .menu-panel > ul > li:hover > .sub-menu {
   opacity: 1;
   visibility: visible;
   -webkit-transform: translateY(0);
           transform: translateY(0);
   /* Volta para a posição original */
 }
-.menu-bar-fixed .main-navigation > ul > li {
+.menu-bar-fixed .main-navigation .menu-panel > ul > li {
   /* Classe que o WP adiciona na página atual */
 }
-.menu-bar-fixed .main-navigation > ul > li.current-menu-item > a, .menu-bar-fixed .main-navigation > ul > li.current_page_item > a, .menu-bar-fixed .main-navigation > ul > li.current-menu-ancestor > a, .menu-bar-fixed .main-navigation > ul > li.current-menu-parent > a {
+.menu-bar-fixed .main-navigation .menu-panel > ul > li.current-menu-item > a, .menu-bar-fixed .main-navigation .menu-panel > ul > li.current_page_item > a, .menu-bar-fixed .main-navigation .menu-panel > ul > li.current-menu-ancestor > a, .menu-bar-fixed .main-navigation .menu-panel > ul > li.current-menu-parent > a {
   background: linear-gradient(135deg, #031CFF 0%, #00A8FF 100%); /* Atualizado para a variável de degradê */
   color: #ffffff;
 }
@@ -931,8 +938,7 @@ a:hover {
   position: absolute;
   top: 100%;
   left: 0;
-  /*background-color: rgba($dark-bg, 0.96); /* Substituiu o #151515 */
-  background-color: color-mix(in srgb, var(--rd-bg) 90%, transparent);
+  background-color: rgba(33, 33, 33, 0.96);
   min-width: 200px;
   border-radius: 0 0 5px 5px; /* A NOVA REGRA DE OURO AQUI! */
   overflow: hidden;
@@ -963,9 +969,9 @@ a:hover {
   text-decoration: none;
   -webkit-transition: all 0.3s ease;
   transition: all 0.3s ease;
+  color: #fff;
 }
 .menu-bar-fixed .main-navigation .sub-menu li a:hover {
-  color: #fff;
   padding-left: 40px;
   background-color: rgba(255, 255, 255, 0.1);
 }
@@ -997,12 +1003,12 @@ a:hover {
   display: flex;
 }
 
-/* Esconde o botão hamburguer no Desktop */
-@media (min-width: 769px) {
-  .menu-toggle {
-    display: none;
-  }
+/* Por padrão, esconde botões da versão hambúrguer (visíveis em ≤1440px via _media.scss) */
+.menu-toggle,
+.menu-search-toggle {
+  display: none;
 }
+
 /* ==========================================================================
     Dark/Light Mode Toggle
     ========================================================================== */
@@ -1018,10 +1024,6 @@ a:hover {
   border-left: 1px solid rgba(255, 255, 255, 0.1);
   -webkit-transition: border-color 0.3s ease;
   transition: border-color 0.3s ease;
-}
-
-[data-theme=light] .theme-switch-wrapper {
-  border-left-color: rgba(0, 0, 0, 0.1);
 }
 
 .theme-toggle-btn {
@@ -1072,17 +1074,8 @@ a:hover {
   display: none;
 }
 
-/* Lógica de exibição dos ícones baseada no tema */
-[data-theme=light] .theme-toggle-btn {
-  /* Branco para manter visibilidade no menu escuro ($color-menu-bg: #212121) */
-  color: #fff;
-}
-[data-theme=light] .theme-toggle-btn:hover {
-  color: #00A8FF;
-}
-[data-theme=light] .theme-toggle-btn {
-  /* Light mode: mostra moon, esconde sun — clicar vai pro dark */
-}
+/* Lógica de exibição dos ícones baseada no tema — em light mostra moon, em dark mostra sun.
+   Cores do botão NÃO mudam: como o menu é sempre dark, herdam o padrão (#fff). */
 [data-theme=light] .theme-toggle-btn .sun-icon {
   display: none;
 }
@@ -1090,10 +1083,10 @@ a:hover {
   display: block;
 }
 
-/* No mobile, ajustamos o posicionamento ou escondemos */
-@media (max-width: 768px) {
+/* Em modo hambúrguer (≤1440px), o theme-switch perde o separador de border
+   esquerda (que faz sentido só ao lado da busca expansível do desktop) */
+@media (max-width: 1440px) {
   .theme-switch-wrapper {
-    margin-left: auto;
     border-left: none;
     padding-left: 0;
   }
@@ -1130,7 +1123,7 @@ a:hover {
 .header-search-container .search-form:hover, .header-search-container .search-form:focus-within {
   width: 230px;
   padding: 0 0 0 20px;
-  background: var(--rd-surface); /* Substituiu o #1a1a1a */
+  background: rgba(255, 255, 255, 0.05);
   border-color: #00A8FF;
 }
 .header-search-container .search-form .search-field {
@@ -1140,25 +1133,26 @@ a:hover {
   background: transparent;
   border: none;
   outline: none;
-  /**/
+  color: #fff;
   font-size: 1rem;
   width: 100%;
   height: 100%;
+  color-scheme: dark;
 }
 .header-search-container .search-form .search-field::-webkit-input-placeholder {
-  color: var(--rd-text-dimmed); /* Substituiu o #666 */
+  color: rgba(255, 255, 255, 0.5);
 }
 .header-search-container .search-form .search-field::-moz-placeholder {
-  color: var(--rd-text-dimmed); /* Substituiu o #666 */
+  color: rgba(255, 255, 255, 0.5);
 }
 .header-search-container .search-form .search-field:-ms-input-placeholder {
-  color: var(--rd-text-dimmed); /* Substituiu o #666 */
+  color: rgba(255, 255, 255, 0.5);
 }
 .header-search-container .search-form .search-field::-ms-input-placeholder {
-  color: var(--rd-text-dimmed); /* Substituiu o #666 */
+  color: rgba(255, 255, 255, 0.5);
 }
 .header-search-container .search-form .search-field::placeholder {
-  color: var(--rd-text-dimmed); /* Substituiu o #666 */
+  color: rgba(255, 255, 255, 0.5);
 }
 .header-search-container .search-form .search-submit {
   background: none;
@@ -1184,12 +1178,16 @@ a:hover {
   transition: color 0.3s ease;
 }
 .header-search-container .search-form .search-submit:hover {
-  color: var(--rd-text);
+  color: #fff;
 }
 
-@media (max-width: 768px) {
-  .rd-top-bar,
+@media (max-width: 1440px) {
   .header-search-container {
+    display: none;
+  }
+}
+@media (max-width: 768px) {
+  .rd-top-bar {
     display: none;
   }
 }
@@ -1391,76 +1389,146 @@ a:hover {
             transform: translateY(0);
   }
 }
-/* Estilos para telas pequenas (Mobile) */
-@media (max-width: 768px) {
-  .top-branding {
+/* ==========================================================================
+   MODO HAMBÚRGUER (tablet + mobile, ≤1440px)
+
+   Em ≤1440px o tema entra em modo hambúrguer:
+   - O logo do topo (.top-branding .site-branding) some, o banner centraliza
+   - O menu desktop inline vira um painel deslizante (.menu-panel)
+   - Aparecem os botões: .menu-search-toggle, .menu-toggle
+   - A busca expansível do header é substituída por uma busca interna
+     dentro do painel (.menu-search-form)
+   - Específico ≤768px (mobile real) esconde também o .rd-top-bar
+   ========================================================================== */
+@media (max-width: 1440px) {
+  .top-branding .site-branding {
     display: none;
   }
-  .main-navigation {
-    display: -webkit-box;
-    display: -ms-flexbox;
-    display: flex;
-    width: 100%;
+  .top-branding .container {
+    -webkit-box-pack: center;
+        -ms-flex-pack: center;
+            justify-content: center;
   }
-  .main-navigation .site-branding-toggle {
+  .menu-bar-fixed .main-navigation .site-branding-toggle {
     display: -webkit-box;
     display: -ms-flexbox;
     display: flex;
-    padding: 5px 0;
-    position: relative;
+    position: absolute;
     left: 50%;
-    -webkit-transform: translateX(-50%);
-            transform: translateX(-50%);
+    top: 50%;
+    -webkit-transform: translate(-50%, -50%);
+            transform: translate(-50%, -50%);
     width: 8.66rem;
+    padding: 5px 0;
   }
-  .main-navigation .menu-toggle {
-    background: transparent;
-    border: none;
-    display: block !important;
-    position: relative;
-    color: #00A8FF;
-    font-size: 1.7rem;
-    margin-left: auto;
-    padding: 6px;
-    z-index: 10000;
-  }
-  .main-navigation > ul {
-    display: block !important;
+  .menu-bar-fixed .main-navigation .menu-panel {
+    display: block;
     position: fixed;
     top: 0;
     left: 0;
     width: 55%;
     height: 100dvh;
-    background: rgba(var(--rd-bg), 0.96);
+    background-color: rgba(33, 33, 33, 0.96);
     z-index: 9999;
-    -webkit-box-orient: vertical;
-    -webkit-box-direction: normal;
-        -ms-flex-direction: column;
-            flex-direction: column;
-    -webkit-box-pack: center;
-        -ms-flex-pack: center;
-            justify-content: center;
-    list-style: none;
     -webkit-transform: translateX(-100%);
             transform: translateX(-100%);
     -webkit-transition: -webkit-transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     transition: -webkit-transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), -webkit-transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    padding-top: 60px;
+    overflow-y: auto;
   }
-  .main-navigation > ul > li {
+  .menu-bar-fixed .main-navigation .menu-panel.toggled {
+    -webkit-transform: translateX(0);
+            transform: translateX(0);
+    -webkit-box-shadow: 5px 0 25px rgba(0, 0, 0, 0.5);
+            box-shadow: 5px 0 25px rgba(0, 0, 0, 0.5);
+  }
+  .menu-bar-fixed .main-navigation .menu-panel .menu-search-form {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center;
+    margin: 20px;
+    padding: 0 12px;
+    height: 40px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 5px;
+  }
+  .menu-bar-fixed .main-navigation .menu-panel .menu-search-form .menu-search-field {
+    -webkit-box-flex: 1;
+        -ms-flex: 1;
+            flex: 1;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: #fff;
+    font-size: 0.95rem;
+    height: 100%;
+    min-width: 0;
+    color-scheme: dark;
+  }
+  .menu-bar-fixed .main-navigation .menu-panel .menu-search-form .menu-search-field::-webkit-input-placeholder {
+    color: rgba(255, 255, 255, 0.5);
+  }
+  .menu-bar-fixed .main-navigation .menu-panel .menu-search-form .menu-search-field::-moz-placeholder {
+    color: rgba(255, 255, 255, 0.5);
+  }
+  .menu-bar-fixed .main-navigation .menu-panel .menu-search-form .menu-search-field:-ms-input-placeholder {
+    color: rgba(255, 255, 255, 0.5);
+  }
+  .menu-bar-fixed .main-navigation .menu-panel .menu-search-form .menu-search-field::-ms-input-placeholder {
+    color: rgba(255, 255, 255, 0.5);
+  }
+  .menu-bar-fixed .main-navigation .menu-panel .menu-search-form .menu-search-field::placeholder {
+    color: rgba(255, 255, 255, 0.5);
+  }
+  .menu-bar-fixed .main-navigation .menu-panel .menu-search-form .menu-search-submit {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #00A8FF;
+    padding: 4px;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center;
+    -ms-flex-negative: 0;
+        flex-shrink: 0;
+    -webkit-transition: color 0.3s ease;
+    transition: color 0.3s ease;
+  }
+  .menu-bar-fixed .main-navigation .menu-panel .menu-search-form .menu-search-submit:hover {
+    color: #fff;
+  }
+  .menu-bar-fixed .main-navigation .menu-panel > ul {
+    display: block;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .menu-bar-fixed .main-navigation .menu-panel > ul > li {
     width: 100%;
-    text-align: center;
+    text-align: left;
   }
-  .main-navigation > ul > li > a {
-    color: #fff !important;
+  .menu-bar-fixed .main-navigation .menu-panel > ul > li > a {
+    color: #fff;
     text-decoration: none;
     display: block;
-    padding: 10px;
+    padding: 10px 20px;
     border-bottom: 1px solid var(--rd-glass-border);
+    -webkit-transition: background-color 0.3s ease;
+    transition: background-color 0.3s ease;
   }
-  .main-navigation > ul .sub-menu {
+  .menu-bar-fixed .main-navigation .menu-panel > ul > li:hover > a {
+    background-color: rgba(255, 255, 255, 0.1);
+  }
+  .menu-bar-fixed .main-navigation .menu-panel > ul .sub-menu {
     position: static !important;
     display: block !important;
     opacity: 1 !important;
@@ -1475,29 +1543,62 @@ a:hover {
     padding: 0 !important;
     margin: 0 !important;
   }
-  .main-navigation > ul .sub-menu::before {
+  .menu-bar-fixed .main-navigation .menu-panel > ul .sub-menu::before {
     display: none !important;
   }
-  .main-navigation > ul .sub-menu li {
+  .menu-bar-fixed .main-navigation .menu-panel > ul .sub-menu li {
     width: 100%;
   }
-  .main-navigation > ul .sub-menu li a {
+  .menu-bar-fixed .main-navigation .menu-panel > ul .sub-menu li a {
     width: 100%;
     text-transform: none;
     border-bottom: 1px solid rgba(255, 255, 255, 0.05);
     text-align: left;
   }
-  .main-navigation > ul.toggled {
-    -webkit-transform: translateX(0);
-            transform: translateX(0);
-    -webkit-box-shadow: 5px 0 25px rgba(0, 0, 0, 0.5);
-            box-shadow: 5px 0 25px rgba(0, 0, 0, 0.5);
+  .menu-bar-fixed .menu-search-toggle {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center;
+    -webkit-box-pack: center;
+        -ms-flex-pack: center;
+            justify-content: center;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    color: #00A8FF;
+    padding: 6px;
+    margin-left: auto;
   }
-  .main-navigation ul.toggled {
-    -webkit-transform: translateX(0);
-            transform: translateX(0);
-    -webkit-box-shadow: 5px 0 25px rgba(0, 0, 0, 0.5);
-            box-shadow: 5px 0 25px rgba(0, 0, 0, 0.5);
+  .menu-bar-fixed .menu-toggle {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center;
+    -webkit-box-pack: center;
+        -ms-flex-pack: center;
+            justify-content: center;
+    background: transparent;
+    border: none;
+    color: #00A8FF;
+    font-size: 1.7rem;
+    padding: 6px;
+    z-index: 10000;
+  }
+}
+/* ==========================================================================
+   MOBILE REAL (≤768px) — extras
+   ========================================================================== */
+@media (max-width: 768px) {
+  .rd-top-bar {
+    display: none;
+  }
+  .top-branding {
+    display: none;
   }
 }
 .post-thumbnail img {

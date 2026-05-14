@@ -1,117 +1,207 @@
 // sass/layout/_media.scss
 @use '../base/variables' as *;
 
-/* Estilos para telas pequenas (Mobile) */
-@media (max-width: 768px) {
+/* ==========================================================================
+   MODO HAMBÚRGUER (tablet + mobile, ≤1440px)
+
+   Em ≤1440px o tema entra em modo hambúrguer:
+   - O logo do topo (.top-branding .site-branding) some, o banner centraliza
+   - O menu desktop inline vira um painel deslizante (.menu-panel)
+   - Aparecem os botões: .menu-search-toggle, .menu-toggle
+   - A busca expansível do header é substituída por uma busca interna
+     dentro do painel (.menu-search-form)
+   - Específico ≤768px (mobile real) esconde também o .rd-top-bar
+   ========================================================================== */
+@media (max-width: 1440px) {
+	// Esconde só o LOGO do top-branding; banner continua e centraliza sozinho.
 	.top-branding {
-		display: none;
+		.site-branding {
+			display: none;
+		}
+		.container {
+			justify-content: center;
+		}
 	}
 
-	.main-navigation {
-		display: flex;
-		width: 100%;
-
+	// IMPORTANTE: precisamos prefixar com .menu-bar-fixed pra empatar a
+	// especificidade da regra desktop `.menu-bar-fixed .main-navigation .menu-panel`.
+	// Sem isso, `display: contents` do desktop venceria por ter mais peso.
+	.menu-bar-fixed .main-navigation {
 		.site-branding-toggle {
 			display: flex;
-			padding: 5px 0;
-			position: relative;
+			position: absolute;
 			left: 50%;
-			transform: translateX(-50%); // Puxa de volta exatamente para o meio
+			top: 50%;
+			transform: translate(-50%, -50%); // Centro absoluto no menu bar
 			width: 8.66rem;
+			padding: 5px 0;
 		}
 
-		.menu-toggle {
-			background: transparent;
-			border: none;
-			display: block !important;
-			position: relative;
-			color: $brand-blue-light; // O seu azul vibrante oficial
-			font-size: 1.7rem;
-			margin-left: auto;
-			padding: 6px;
-			z-index: 10000;
-		}
-
-		// MENU PRINCIPAL (O painel lateral)
-		// O sinal de ">" garante que isso SÓ afeta a lista principal
-		> ul { 
-			display: block !important;
+		// Painel deslizante (substitui o ul direto do menu mobile antigo).
+		// Hospeda a busca interna + os itens do menu.
+		.menu-panel {
+			display: block;
 			position: fixed;
 			top: 0;
 			left: 0;
 			width: 55%;
 			height: 100dvh;
-			background: rgba($dark-bg, 0.96);
+			// Mesma identidade do menu-bar desktop: dark em qualquer tema.
+			// Painel é parte do menu — não acompanha o switcher dark/light.
+			background-color: rgba($color-menu-bg, 0.96);
 			z-index: 9999;
-			flex-direction: column;
-			justify-content: center;
-			list-style: none;
 			transform: translateX(-100%);
 			transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-			padding-top: 60px; // Espaço para não encostar no topo
+			overflow-y: auto;
 
-			> li { // Aplica os estilos só aos links pais (HOME, NOTÍCIAS, GAMES)
-				width: 100%;
-				text-align: center;
+			&.toggled {
+				transform: translateX(0);
+				box-shadow: 5px 0 25px rgba(0, 0, 0, 0.5);
+			}
 
-				> a {
-					color: #fff !important;
-					text-decoration: none;
-					display: block;
-					padding: 10px;
-					border-bottom: 1px solid $glass-border;
+			// Busca interna no topo do painel (cores fixas dark — consistente com o menu)
+			.menu-search-form {
+				display: flex;
+				align-items: center;
+				margin: 20px;
+				padding: 0 12px;
+				height: 40px;
+				background: rgba(255, 255, 255, 0.05);
+				border: 1px solid rgba(255, 255, 255, 0.15);
+				border-radius: 5px;
+
+				.menu-search-field {
+					flex: 1;
+					background: transparent;
+					border: none;
+					outline: none;
+					color: #fff;
+					font-size: 0.95rem;
+					height: 100%;
+					min-width: 0;
+					// Força o X de cancelar e outros widgets nativos no estilo dark
+					color-scheme: dark;
+
+					&::placeholder {
+						color: rgba(255, 255, 255, 0.5);
+					}
+				}
+
+				.menu-search-submit {
+					background: none;
+					border: none;
+					cursor: pointer;
+					color: $brand-blue-light;
+					padding: 4px;
+					display: flex;
+					align-items: center;
+					flex-shrink: 0;
+					transition: color 0.3s ease;
+
+					&:hover {
+						color: #fff;
+					}
 				}
 			}
 
-			// ==========================================
-			// SUBMENU MOBILE (Item 1 resolvido aqui!)
-			// ==========================================
-			.sub-menu {
-				// 1. Mata a flutuação! Volta ao fluxo normal do HTML
-				position: static !important; 
-				
-				// 2. Vem sempre aberto!
-				display: block !important; 
-				opacity: 1 !important;
-				visibility: visible !important;
-				transform: none !important;
+			// Itens do menu (o ul gerado pelo wp_nav_menu) — vira lista vertical
+			> ul {
+				display: block;
+				list-style: none;
+				margin: 0;
+				padding: 0;
 
-				// 3. Limpa estilos de caixa do Desktop para não "vazar"
-				min-width: auto !important; 
-				width: 100% !important;
-				background: transparent !important; 
-				border: none !important;
-				border-radius: 0 !important;
-				padding: 0 !important;
-				margin: 0 !important;
-
-				// Limpa as pseudo-classes (bordinha azul) do desktop
-				&::before { display: none !important; }
-
-				li {
+				> li {
 					width: 100%;
+					text-align: left;
 
-					a {
+					> a {
+						color: #fff;
+						text-decoration: none;
+						display: block;
+						padding: 10px 20px;
+						border-bottom: 1px solid $glass-border;
+						transition: background-color 0.3s ease;
+					}
+
+					// Hover branco transparente — mesmo padrão do menu desktop ($color-menu-hover)
+					&:hover > a {
+						background-color: $color-menu-hover;
+					}
+				}
+
+				// SUBMENU dentro do painel — vem sempre expandido
+				.sub-menu {
+					position: static !important;
+					display: block !important;
+					opacity: 1 !important;
+					visibility: visible !important;
+					transform: none !important;
+
+					min-width: auto !important;
+					width: 100% !important;
+					background: transparent !important;
+					border: none !important;
+					border-radius: 0 !important;
+					padding: 0 !important;
+					margin: 0 !important;
+
+					&::before { display: none !important; }
+
+					li {
 						width: 100%;
-						text-transform: none; // Sem gritarias nos submenus
-						border-bottom: 1px solid rgba(255, 255, 255, 0.05); // Linha super fraca
-						text-align: left; // Fica alinhado na esquerda para mostrar a hierarquia
+
+						a {
+							width: 100%;
+							text-transform: none;
+							border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+							text-align: left;
+						}
 					}
 				}
 			}
 		}
+	}
 
-		// Quando o botão é clicado, o JS adiciona a classe 'toggled'
-		> ul.toggled {
-			transform: translateX(0);
-			box-shadow: 5px 0 25px rgba(0, 0, 0, 0.5);
-		}
+	// Botões do grupo direito (ordem visual: busca → switcher → hambúrguer).
+	// .menu-search-toggle com margin-left: auto empurra todo o grupo pra direita.
+	.menu-bar-fixed .menu-search-toggle {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		background: transparent;
+		border: none;
+		cursor: pointer;
+		color: $brand-blue-light;
+		padding: 6px;
+		margin-left: auto;
+	}
 
-		// Quando o botão é clicado, o JS adiciona a classe 'toggled'
-		ul.toggled {
-			// Trazemos o menu de volta para a posição original (0)
-			transform: translateX(0);
-			box-shadow: 5px 0 25px rgba(0, 0, 0, 0.5); // Sombra para separar do conteúdo de fundo
-		}
+	.menu-bar-fixed .menu-toggle {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		background: transparent;
+		border: none;
+		color: $brand-blue-light;
+		font-size: 1.7rem;
+		padding: 6px;
+		z-index: 10000;
+	}
+}
+
+/* ==========================================================================
+   MOBILE REAL (≤768px) — extras
+   ========================================================================== */
+@media (max-width: 768px) {
+	// Top bar com data/ticker/sociais só aparece em tela maior
+	.rd-top-bar {
+		display: none;
+	}
+
+	// Top branding inteiro some no mobile (banner 728x90 desktop não cabe na
+	// viewport mobile; em telas pequenas usamos o .rd-ad-mobile anchor)
+	.top-branding {
+		display: none;
 	}
 }

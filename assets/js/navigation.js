@@ -22,25 +22,68 @@ document.addEventListener('DOMContentLoaded', function () {
 		});
 	}
 
-	/* MENU (HAMBÚRGUER) */
-	const ul = document.getElementById('primary-menu');
-	const button = document.querySelector('.menu-toggle');
+	/* MENU (HAMBÚRGUER) + BUSCA INTEGRADA NO PAINEL */
+	const menuPanel       = document.getElementById('primary-menu-panel');
+	const menuToggleBtn   = document.querySelector('.menu-toggle');
+	const searchToggleBtn = document.querySelector('.menu-search-toggle');
+	const menuSearchInput = document.querySelector('.menu-search-field');
 
-	if (ul && button) {
-		button.onclick = function () {
-			if (ul.classList.contains('toggled')) {
-				ul.classList.remove('toggled');
-				button.innerHTML = '<span class="hamburger-icon" aria-hidden="true">&#9776;</span>';
-				button.setAttribute('aria-expanded', 'false');
-				button.setAttribute('aria-label', 'Abrir menu de navegação');
+	function openMenuPanel(focusSearch) {
+		if (!menuPanel) return;
+		menuPanel.classList.add('toggled');
+		if (menuToggleBtn) {
+			menuToggleBtn.innerHTML = '<span class="hamburger-icon" aria-hidden="true">&#10006;</span>';
+			menuToggleBtn.setAttribute('aria-expanded', 'true');
+			menuToggleBtn.setAttribute('aria-label', 'Fechar menu de navegação');
+		}
+		if (focusSearch && menuSearchInput) {
+			// Pequeno delay pra esperar a transição do painel terminar
+			setTimeout(function () { menuSearchInput.focus(); }, 250);
+		}
+	}
+
+	function closeMenuPanel() {
+		if (!menuPanel) return;
+		menuPanel.classList.remove('toggled');
+		if (menuToggleBtn) {
+			menuToggleBtn.innerHTML = '<span class="hamburger-icon" aria-hidden="true">&#9776;</span>';
+			menuToggleBtn.setAttribute('aria-expanded', 'false');
+			menuToggleBtn.setAttribute('aria-label', 'Abrir menu de navegação');
+		}
+	}
+
+	// Expor pra outros handlers (ex.: o trigger do 404)
+	window.rdOpenMenuPanel  = openMenuPanel;
+	window.rdCloseMenuPanel = closeMenuPanel;
+
+	if (menuPanel && menuToggleBtn) {
+		menuToggleBtn.onclick = function () {
+			if (menuPanel.classList.contains('toggled')) {
+				closeMenuPanel();
 			} else {
-				ul.classList.add('toggled');
-				button.innerHTML = '<span class="hamburger-icon" aria-hidden="true">&#10006;</span>';
-				button.setAttribute('aria-expanded', 'true');
-				button.setAttribute('aria-label', 'Fechar menu de navegação');
+				openMenuPanel(false);
 			}
 		};
 	}
+
+	if (searchToggleBtn) {
+		searchToggleBtn.addEventListener('click', function () {
+			openMenuPanel(true);
+		});
+	}
+
+	// Resize → fecha o painel se passar pra desktop (>1440px),
+	// evitando que ele apareça aberto se o usuário voltar pro tablet/mobile.
+	// Debounce simples pra não rodar centenas de vezes.
+	let resizeTimer;
+	window.addEventListener('resize', function () {
+		clearTimeout(resizeTimer);
+		resizeTimer = setTimeout(function () {
+			if (window.innerWidth > 1440 && menuPanel && menuPanel.classList.contains('toggled')) {
+				closeMenuPanel();
+			}
+		}, 150);
+	});
 
 	/* FACHADAS(Facades) (YOUTUBE, DISCORD, ETC.) - OTIMIZADO */
 	const facades = document.querySelectorAll('.rd-facade');
@@ -302,17 +345,26 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 });
 
-/* 404 PAGE — focar campo de busca do header ao clicar "Buscar conteúdo" */
+/* 404 PAGE — "Buscar conteúdo" foca a busca apropriada do breakpoint atual */
 document.addEventListener('DOMContentLoaded', function () {
     const trigger = document.getElementById('rd-404-search-trigger');
-    const searchField = document.querySelector('.search-field');
+    if (!trigger) return;
 
-    if (trigger && searchField) {
-        trigger.addEventListener('click', function () {
-            searchField.focus();
-            searchField.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        });
-    }
+    trigger.addEventListener('click', function () {
+        const desktopSearch = document.querySelector('.header-search-container .search-field');
+
+        // ≥1441px: busca expansível do header visível → foca direto
+        if (desktopSearch && desktopSearch.offsetParent !== null) {
+            desktopSearch.focus();
+            desktopSearch.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            return;
+        }
+
+        // ≤1440px: abre o painel do hambúrguer e foca a busca interna
+        if (typeof window.rdOpenMenuPanel === 'function') {
+            window.rdOpenMenuPanel(true);
+        }
+    });
 });
 
 /* DARK/LIGHT MODE TOGGLE */

@@ -70,6 +70,7 @@
 		display: flex;
 		justify-content: space-between; // Links na esquerda, busca na direita
 		align-items: center;
+		position: relative; // ancora o .site-branding-toggle absolute em modo hambúrguer
 	}
 
 	// Estilo dos Links do Menu
@@ -81,8 +82,20 @@
 			padding: 0;
 		}
 
+		// Wrapper do painel: em desktop é "transparente" (display: contents),
+		// fazendo o <ul> aparecer como filho direto da nav pra herdar layout.
+		// Em ≤1440px o display vira `block` e position: fixed (vira painel deslizante).
+		.menu-panel {
+			display: contents;
+		}
+
+		// Busca interna do painel só aparece em modo hambúrguer (≤1440px)
+		.menu-search-form {
+			display: none;
+		}
+
 		/* Nível 1: Menu Principal */
-		>ul {
+		.menu-panel >ul {
 			display: flex;
 			align-items: center;
 
@@ -149,8 +162,8 @@
 			position: absolute;
 			top: 100%;
 			left: 0;
-			/*background-color: rgba($dark-bg, 0.96); /* Substituiu o #151515 */
-            background-color: color-mix(in srgb, var(--rd-bg) 90%, transparent);
+			// Mesma identidade do menu (sempre dark, não acompanha o switcher dark/light)
+			background-color: rgba($color-menu-bg, 0.96);
 			min-width: 200px;
 			border-radius: 0 0 5px 5px; /* A NOVA REGRA DE OURO AQUI! */
 			overflow: hidden;
@@ -180,9 +193,9 @@
 					padding: 12px 20px 12px 30px;
 					text-decoration: none;
 					transition: all 0.3s ease;
+					color: #fff;
 
 					&:hover {
-						color: #fff;
 						padding-left: 40px;
 						background-color: $color-menu-hover;
 					}
@@ -224,11 +237,10 @@
 	}
 }
 
-/* Esconde o botão hamburguer no Desktop */
-@media (min-width: 769px) {
-	.menu-toggle {
-		display: none;
-	}
+/* Por padrão, esconde botões da versão hambúrguer (visíveis em ≤1440px via _media.scss) */
+.menu-toggle,
+.menu-search-toggle {
+	display: none;
 }
 
 /* ==========================================================================
@@ -241,10 +253,6 @@
 	padding-left: 15px;
 	border-left: 1px solid rgba(255, 255, 255, 0.1);
 	transition: border-color 0.3s ease;
-}
-
-[data-theme="light"] .theme-switch-wrapper {
-	border-left-color: rgba(0, 0, 0, 0.1);
 }
 
 .theme-toggle-btn {
@@ -285,31 +293,22 @@
 	}
 }
 
-/* Lógica de exibição dos ícones baseada no tema */
-[data-theme="light"] {
-	.theme-toggle-btn {
-		/* Branco para manter visibilidade no menu escuro ($color-menu-bg: #212121) */
-		color: #fff;
+/* Lógica de exibição dos ícones baseada no tema — em light mostra moon, em dark mostra sun.
+   Cores do botão NÃO mudam: como o menu é sempre dark, herdam o padrão (#fff). */
+[data-theme="light"] .theme-toggle-btn {
+	.sun-icon {
+		display: none;
+	}
 
-		&:hover {
-			color: $brand-blue-light;
-		}
-
-		/* Light mode: mostra moon, esconde sun — clicar vai pro dark */
-		.sun-icon {
-			display: none;
-		}
-
-		.moon-icon {
-			display: block;
-		}
+	.moon-icon {
+		display: block;
 	}
 }
 
-/* No mobile, ajustamos o posicionamento ou escondemos */
-@media (max-width: 768px) {
+/* Em modo hambúrguer (≤1440px), o theme-switch perde o separador de border
+   esquerda (que faz sentido só ao lado da busca expansível do desktop) */
+@media (max-width: 1440px) {
 	.theme-switch-wrapper {
-		margin-left: auto;
 		border-left: none;
 		padding-left: 0;
 	}
@@ -339,12 +338,13 @@
 		position: relative;
 		border: 1px solid transparent; // Prepara a borda para a transição
 
-		// Efeito de expansão ao passar o mouse ou clicar no campo
+		// Efeito de expansão ao passar o mouse ou clicar no campo.
+		// Cores fixas dark: o menu é sempre escuro, não acompanha o switcher.
 		&:hover,
 		&:focus-within {
 			width: 230px;
 			padding: 0 0 0 20px;
-			background: $dark-surface; /* Substituiu o #1a1a1a */
+			background: rgba(255, 255, 255, 0.05);
 			border-color: $brand-blue-light;
 		}
 
@@ -353,13 +353,16 @@
 			background: transparent;
 			border: none;
 			outline: none;
-			/**/
+			color: #fff;
 			font-size: 1rem;
 			width: 100%;
 			height: 100%;
+			// Força o navegador a renderizar widgets nativos (X do cancelar, etc.)
+			// no estilo dark — necessário pq o menu é sempre dark independente do tema.
+			color-scheme: dark;
 
 			&::placeholder {
-				color: $text-muted-dark; /* Substituiu o #666 */
+				color: rgba(255, 255, 255, 0.5);
 			}
 		}
 
@@ -379,16 +382,23 @@
 			transition: color 0.3s ease;
 
 			&:hover {
-				color: var(--rd-text); // adapta dark/light
+				color: #fff;
 			}
 		}
 	}
 }
 
-// Esconder no mobile por enquanto para não quebrar o layout do hambúrguer
-@media (max-width: 768px) {
-	.rd-top-bar,
+// Esconder a busca expansível assim que entra em modo hambúrguer.
+// (A busca acessível no hambúrguer fica no painel deslizante — _media.scss)
+@media (max-width: 1440px) {
 	.header-search-container {
+		display: none;
+	}
+}
+
+// Top bar segue específico de mobile real (≤768px); em 769-1440px continua visível
+@media (max-width: 768px) {
+	.rd-top-bar {
 		display: none;
 	}
 }
