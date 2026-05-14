@@ -7,6 +7,51 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 <br>
 
 
+## [0.2.0-beta.1](https://github.com/Finallf/theme-reloaded/compare/v0.1.0...v0.2.0-beta.1) (2026-05-14)
+
+### ✨ Features
+
+* **pagination:** add styled pagination across listing pages ([d7e2a73](https://github.com/Finallf/theme-reloaded/commit/d7e2a735485b071f5f4d9748c76750f51c434907))
+* **search:** add multi-layout search results page ([914e138](https://github.com/Finallf/theme-reloaded/commit/914e13876470af6da290038fe458a310a2cfbea4))
+* **search:** distribute results across active layouts ([7bcc415](https://github.com/Finallf/theme-reloaded/commit/7bcc415e6ab1b292b80eb84fa6b485c2f9f542d7))
+* **security:** add HTTP security headers module ([ac440f3](https://github.com/Finallf/theme-reloaded/commit/ac440f396a89b41a8bd727d70ca9a30a09d052b7))
+* **templates:** add author and archive templates ([dae69b4](https://github.com/Finallf/theme-reloaded/commit/dae69b452e7ca9f7801f3b6b0bab2e294da6a9ce))
+* **ui:** embed layout switches inside search header card ([a6ce638](https://github.com/Finallf/theme-reloaded/commit/a6ce6388e6a2983c4cc0e4d1db44d84730dd0628))
+* **views:** display view count in home grid and single post meta ([aedd91f](https://github.com/Finallf/theme-reloaded/commit/aedd91fdf4951e4d3fa61817a9163bc9f3e0d16c))
+
+### 🐛 Bug Fixes
+
+* **header:** corrigir SVG do toggle Dark/Light Mode ([738bb6a](https://github.com/Finallf/theme-reloaded/commit/738bb6a827078c4bfb42c9eacd12f94927ea183c)), closes [#212121](https://github.com/Finallf/theme-reloaded/issues/212121)
+* **i18n:** correct privacy URL helper and complete pt-BR coverage ([d2f17e2](https://github.com/Finallf/theme-reloaded/commit/d2f17e28a923346bd2a168ce961b0d1287cc8224))
+* **i18n:** correct source string for "Recommended Levels" and regenerate translation files ([e5a4089](https://github.com/Finallf/theme-reloaded/commit/e5a408944c5eec0fe00c46d86700db7680d33e07))
+* **search:** aplicar cor $brand-blue-light no ícone de views do card-meta ([05b6621](https://github.com/Finallf/theme-reloaded/commit/05b66214f54715f62dd4ede52a37a981452a334a)), closes [#00A8](https://github.com/Finallf/theme-reloaded/issues/00A8)
+* **search:** padronizar cor do contador de views em search e author ([bead210](https://github.com/Finallf/theme-reloaded/commit/bead210b6f0c8fdf79c6667ab3ee5a5d67e96124)), closes [#00A8](https://github.com/Finallf/theme-reloaded/issues/00A8)
+* **seo:** validate og:image source and stop declaring fake dimensions ([e09cf82](https://github.com/Finallf/theme-reloaded/commit/e09cf8276e71660f13807261147b0912510e4f83))
+* **theme:** polish dark/light mode (prefers-color-scheme, panel default, anti-FOUC, markdown vars) ([01c9721](https://github.com/Finallf/theme-reloaded/commit/01c97213fe785069cdc7c59dd27f52aed40822e3))
+* **ui:** align views icon to right in search and author cards ([4f643a3](https://github.com/Finallf/theme-reloaded/commit/4f643a3ccb39e55cbd8ba0872c01907ed1a49df4))
+
+### ♻️ Code Refactoring
+
+* **i18n:** migrate root templates to en-US source language ([caa6d5a](https://github.com/Finallf/theme-reloaded/commit/caa6d5a05a824ffc858e53c0f275894bab623070))
+* implement comprehensive theme internationalization (i18n) across all modules and admin panel ([f824040](https://github.com/Finallf/theme-reloaded/commit/f824040c5a97c787f66fd3fb8b9b69acf9c8b955))
+* **panel:** standardize boolean option storage and consumption ([0a5f1dc](https://github.com/Finallf/theme-reloaded/commit/0a5f1dc00659f199cfed10b93f67fe561d3dd945))
+* **php:** add type hints to internal helper signatures ([3af81eb](https://github.com/Finallf/theme-reloaded/commit/3af81eb254eb309705c5ad03da6eaf61941f5fc5))
+* **scss:** consolidate brand gradient variables ([ba0f503](https://github.com/Finallf/theme-reloaded/commit/ba0f503c538e5c381123fc15372ac55918a65751)), closes [#031](https://github.com/Finallf/theme-reloaded/issues/031) [CFF/#00A8](https://github.com/CFF/theme-reloaded/issues/00A8)
+* **search:** extract generic post card renderer ([263f1e9](https://github.com/Finallf/theme-reloaded/commit/263f1e9b393c39dbbaf335c0ac3a1f21bbc6be17))
+
+### 📝 Documentation
+
+* add contributing guidelines ([52a48d8](https://github.com/Finallf/theme-reloaded/commit/52a48d8bb2f2a52ffb2d12cd28e275f47a88da54))
+* add donation qr codes ([a72289b](https://github.com/Finallf/theme-reloaded/commit/a72289b4ea5886a3d17195324d4806dd7e0eeca8))
+* add readme banner asset ([cba83fb](https://github.com/Finallf/theme-reloaded/commit/cba83fb7bf507e1f95d16727bc8f97e4583bca78))
+* **contributor:** contrib-readme-action has updated readme ([4aecc30](https://github.com/Finallf/theme-reloaded/commit/4aecc30ccd3ad7937ef43fa84184fe2e38b1eeff))
+* **contributor:** contrib-readme-action has updated readme ([ed39d44](https://github.com/Finallf/theme-reloaded/commit/ed39d44fab6c978806fa6799845816f1616ea8ea))
+* rewrite readme for public release readiness ([b3cb542](https://github.com/Finallf/theme-reloaded/commit/b3cb542a0a395ecdd207d17fa67b34ffca01f6fb))
+
+<br>
+
+---
+
 <<<<<<< beta
 ## [0.1.0-beta.12](https://github.com/Finallf/theme-reloaded/compare/v0.1.0-beta.11...v0.1.0-beta.12) (2026-05-14)
 
