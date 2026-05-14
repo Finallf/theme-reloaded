@@ -7,6 +7,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 <br>
 
 
+<<<<<<< beta
 ## [0.1.0-beta.12](https://github.com/Finallf/theme-reloaded/compare/v0.1.0-beta.11...v0.1.0-beta.12) (2026-05-14)
 
 ### ✨ Features
@@ -106,10 +107,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 ---
 
 # [0.1.0-beta.4](https://github.com/Finallf/theme-reloaded/compare/v0.1.0-beta.3...v0.1.0-beta.4) (2026-05-08)
+=======
+# [0.1.0](https://github.com/Finallf/theme-reloaded/compare/v0.0.0...v0.1.0) (2026-05-06)
+>>>>>>> master
 
 
 ### Features
 
+<<<<<<< beta
 * **pagination:** add styled pagination across listing pages ([d7e2a73](https://github.com/Finallf/theme-reloaded/commit/d7e2a735485b071f5f4d9748c76750f51c434907))
 
 
@@ -139,6 +144,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 <br>
 
 ---
+=======
+* expand WordPress compatibility up to 6.9.4 ([3c9ca1b](https://github.com/Finallf/theme-reloaded/commit/3c9ca1bd451100dfe3a3f1d515faa8bf9ae1b90d))
+>>>>>>> master
 
 # [0.1.0-beta.1](https://github.com/Finallf/theme-reloaded/compare/v0.0.0...v0.1.0-beta.1) (2026-05-06)
 
