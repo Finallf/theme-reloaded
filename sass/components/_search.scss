@@ -157,6 +157,7 @@ mark.rd-highlight {
         border: 1px solid $glass-border;
         border-radius: 5px;
         overflow: hidden;
+        box-shadow: 0 8px 20px var(--rd-glass-shadow); // Adapta dark/light (uniforme com os outros layouts)
         transition: all 250ms ease;
 
         &:hover {
@@ -218,6 +219,7 @@ mark.rd-highlight {
         border: 1px solid $glass-border;
         border-radius: 5px;
         overflow: hidden;
+        box-shadow: 0 8px 20px var(--rd-glass-shadow); // Adapta dark/light (uniforme com os outros layouts)
         transition: all 250ms ease;
 
         &:hover {
@@ -318,7 +320,7 @@ mark.rd-highlight {
         padding: 12px 15px;
         border-radius: 5px;
         border: 1px solid $glass-border;
-        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+        box-shadow: 0 8px 20px var(--rd-glass-shadow); // Adapta dark/light (plana no light)
         text-decoration: none;
         color: inherit;
         transition: all 0.25s ease;
@@ -326,6 +328,7 @@ mark.rd-highlight {
         &:hover {
             border-color: $brand-blue-light;
             transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 168, 255, 0.2); // Hover azul uniforme com os outros layouts
         }
     }
 }

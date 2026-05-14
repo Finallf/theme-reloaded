@@ -24,7 +24,8 @@ function rd_render_ad_mobile_anchor() {
 
         // Botão de fechar sobreposto (Usa opacidade e movimento para sumir)
         echo '<div class="rd-ad-close-wrap">';
-        echo '<button class="rd-ad-close" onclick="this.closest(\'.rd-ad-mobile\').style.opacity=\'0\'; setTimeout(() => { this.closest(\'.rd-ad-mobile\').style.display=\'none\'; }, 300);" aria-label="' . esc_attr__( 'Close ad', 'reloaded' ) . '">&times;</button>';
+        // Comportamento de fechar (fade + remove) está em assets/js/navigation.js
+        echo '<button class="rd-ad-close" aria-label="' . esc_attr__( 'Close ad', 'reloaded' ) . '">&times;</button>';
         echo '</div>';
 
         echo $ad_mobile;
@@ -37,7 +38,9 @@ add_action('wp_footer', 'rd_render_ad_mobile_anchor');
 function rd_render_ad_sidebar_top() {   // Renderiza o banner da Sidebar (Topo)
     $ad_sidebar_top = rd_get_option('ad_sidebar_top');
     if ( ! empty( $ad_sidebar_top ) ) {
-        echo '<div class="rd-ad-container rd-ad-sidebar-top" style="margin-bottom: 20px; text-align: center;">' . $ad_sidebar_top . '</div>';
+        // text-align center já vem do .rd-ad-container; margin-bottom específico
+        // do sidebar-top está em sass/base/_globals.scss
+        echo '<div class="rd-ad-container rd-ad-sidebar-top">' . $ad_sidebar_top . '</div>';
     }
 }
 

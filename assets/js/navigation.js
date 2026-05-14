@@ -288,6 +288,33 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
+/* AD CLOSE BUTTON (Mobile anchor ad) */
+document.addEventListener('DOMContentLoaded', function () {
+    const adCloseButtons = document.querySelectorAll('.rd-ad-close');
+
+    adCloseButtons.forEach(function (btn) {
+        btn.addEventListener('click', function () {
+            const ad = this.closest('.rd-ad-mobile');
+            if (!ad) return;
+            ad.style.opacity = '0';
+            setTimeout(function () { ad.style.display = 'none'; }, 300);
+        });
+    });
+});
+
+/* 404 PAGE — focar campo de busca do header ao clicar "Buscar conteúdo" */
+document.addEventListener('DOMContentLoaded', function () {
+    const trigger = document.getElementById('rd-404-search-trigger');
+    const searchField = document.querySelector('.search-field');
+
+    if (trigger && searchField) {
+        trigger.addEventListener('click', function () {
+            searchField.focus();
+            searchField.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        });
+    }
+});
+
 /* DARK/LIGHT MODE TOGGLE */
 document.addEventListener('DOMContentLoaded', function() {
     const themeToggle = document.getElementById('rd-theme-toggle');

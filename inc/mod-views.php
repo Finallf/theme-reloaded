@@ -35,23 +35,23 @@ function rd_views_enqueue_tracker() {
     }
 
     $post_id = get_the_ID();
-    $nonce   = wp_create_nonce( 'rd_track_view_' . $post_id );
 
-    // Inline minúsculo, sem dependência de jQuery
-    $script = sprintf(
-        'window.addEventListener("DOMContentLoaded",function(){' .
-        'setTimeout(function(){' .
-        'fetch("%s",{method:"POST",headers:{"Content-Type":"application/x-www-form-urlencoded"},body:"action=rd_track_view&post_id=%d&nonce=%s",keepalive:true});' .
-        '},1500);' .
-        '});',
-        esc_url( admin_url('admin-ajax.php') ),
-        $post_id,
-        $nonce
+    // SoC: JS estático em assets/js/views-tracker.js, dados dinâmicos
+    // (post_id, nonce, ajaxurl) injetados via wp_localize_script. Browser
+    // cacheia o .js entre requests; só os dados de localize são únicos por page.
+    wp_enqueue_script(
+        'rd-views-tracker',
+        get_template_directory_uri() . '/assets/js/views-tracker.js',
+        array(),
+        rd_asset_version( '/assets/js/views-tracker.js' ),
+        true
     );
 
-    wp_register_script( 'rd-views-tracker', '', array(), null, true );
-    wp_enqueue_script( 'rd-views-tracker' );
-    wp_add_inline_script( 'rd-views-tracker', $script );
+    wp_localize_script( 'rd-views-tracker', 'rd_views_data', array(
+        'ajaxurl' => admin_url( 'admin-ajax.php' ),
+        'post_id' => $post_id,
+        'nonce'   => wp_create_nonce( 'rd_track_view_' . $post_id ),
+    ) );
 }
 add_action( 'wp_enqueue_scripts', 'rd_views_enqueue_tracker' );
 

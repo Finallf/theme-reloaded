@@ -13,7 +13,7 @@
 		border-radius: 5px; // Regra de ouro mantida
 		border: 1px solid $glass-border; // Usando a variável
 		margin-bottom: 20px;
-		box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4); // Sombra visível do dark mode
+		box-shadow: 0 8px 20px var(--rd-glass-shadow); // Adapta dark/light (plana no light)
 
 		.discord-placeholder {
 			align-items: stretch;
@@ -38,7 +38,7 @@
 		border-radius: 5px; // Regra de ouro
 		border: 1px solid $glass-border;
 		margin-bottom: 20px;
-		box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4); // Sombra visível do dark mode
+		box-shadow: 0 8px 20px var(--rd-glass-shadow); // Adapta dark/light (plana no light)
 
 		// O novo seletor para os títulos de blocos do WP
 		h2.wp-block-heading {
