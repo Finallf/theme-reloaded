@@ -117,7 +117,7 @@
 			font-size: 1.25rem;
 
 			a {
-				color: #fff;
+				color: var(--rd-text);
 				text-decoration: none;
 
 				/* O "MÁGICO": esse after cobre o card todo */
@@ -139,6 +139,25 @@
 			font-size: 0.9rem;
 			line-height: 1.5;
 		}
+
+		.entry-meta {
+			margin-top: 12px;
+			display: flex;
+			justify-content: flex-end;
+			font-size: 0.8rem;
+			color: $text-muted-dark;
+
+			.rd-card-views {
+				display: inline-flex;
+				align-items: center;
+				gap: 5px;
+
+				svg {
+					color: $brand-blue-light;
+					opacity: 0.85;
+				}
+			}
+		}
 	}
 }
 
@@ -150,7 +169,7 @@
 	flex-shrink: 0;
 
 	.wp-block-latest-comments {
-		
+
 		.wp-block-latest-comments__comment-link:hover {
 			padding-left: 8px;
 		}
@@ -176,7 +195,7 @@
 	}
 }
 
-#secondary > div, 
+#secondary > div,
 #secondary > section {
     break-inside: avoid;
 }

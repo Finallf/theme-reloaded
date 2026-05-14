@@ -33,7 +33,7 @@ add_action('wp_head', function() {
  *******************************************************************************/
 function rd_render_discord_widget() {
     // 1. Verificação Mestre: O widget está ativado no painel?
-    $show_discord = rd_get_option('discord_widget') == 1;
+    $show_discord = rd_get_option_bool('discord_widget');
 
     // Se estiver desligado, a função morre aqui e não renderiza nada
     if ( ! $show_discord ) {
@@ -44,7 +44,7 @@ function rd_render_discord_widget() {
     $id_discord = rd_get_option('discord_id') ? rd_get_option('discord_id') : '408089552759029788';
     
     // 3. Verifica o modo de performance (Fachada ou Iframe)
-    $use_facade = rd_get_option('facades_enabled') == 1;
+    $use_facade = rd_get_option_bool('facades_enabled');
 
     if ( $use_facade ) : ?>
         <div class="rd-facade discord-style" data-type="discord" data-id="<?php echo esc_attr($id_discord); ?>">

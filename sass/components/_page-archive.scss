@@ -1,0 +1,62 @@
+// ==========================================================
+// PÁGINA DE ARCHIVE
+// Cobre os fallbacks do template hierarchy: category, tag, date
+// O title e a description vêm do WordPress via the_archive_title() e the_archive_description()
+// ==========================================================
+@use '../base/variables' as *;
+
+.rd-archive-header {
+    position: relative;
+    overflow: hidden;
+    background: $glass-bg;
+    border: 1px solid $glass-border;
+    border-radius: 5px;
+    padding: 25px 30px;
+    margin-bottom: 25px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+
+    // Borda superior com gradiente da marca
+    &::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 3px;
+        background: $brand-gradient;
+    }
+
+    .rd-archive-title {
+        font-family: $font-heading;
+        font-size: 1.6rem;
+        font-weight: 700;
+        color: $dark-text;
+        letter-spacing: 0.5px;
+
+        // O the_archive_title() do WP envolve a parte dinâmica
+        // (nome da categoria/tag/data) em um <span>
+        span {
+            background: $brand-gradient;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+    }
+
+    .rd-archive-description {
+        color: $text-light;
+        font-size: 0.95rem;
+        line-height: 1.6;
+
+        p { margin: 0; }
+        p + p { margin-top: 0.5em; }
+    }
+
+    @media (max-width: 600px) {
+        padding: 20px 18px;
+
+        .rd-archive-title {
+            font-size: 1.3rem;
+        }
+    }
+}

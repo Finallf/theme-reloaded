@@ -21,13 +21,15 @@
                                     <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
                                     <?php the_author_posts_link(); ?>
                                 </span>
+								<span class="meta-separator">•</span>
+								<?php echo rd_get_formatted_views( get_the_ID() ); ?>
 							</div>
 						</header>
 
-						<?php 
+						<?php
 							// Verifica se o usuário pediu para esconder a imagem neste post específico
 							$hide_thumb = get_post_meta( get_the_ID(), '_rd_hide_thumbnail', true );
-							
+
 							// Se tem imagem e NÃO foi marcada para esconder, renderiza a thumb
 							if ( has_post_thumbnail() && $hide_thumb !== 'yes' ) : ?>
 								<div class="post-thumbnail">
@@ -41,7 +43,7 @@
 
 							wp_link_pages(
 								array(
-									'before' => '<div class="page-links">' . esc_html__( 'Páginas:', 'reloaded' ),
+									'before' => '<div class="page-links">' . esc_html__( 'Pages:', 'reloaded' ),
 									'after'  => '</div>',
 								)
 							);

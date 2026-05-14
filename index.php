@@ -34,15 +34,24 @@
 									<div class="entry-content">
 										<?php echo wp_trim_words( get_the_excerpt(), 15 ); ?>
 									</div>
+
+									<div class="entry-meta">
+										<?php echo rd_get_formatted_views( get_the_ID() ); ?>
+									</div>
 								</div>
 							</article>
 						<?php endwhile; ?>
 					</div>
 
-					<?php the_posts_navigation(); ?>
+					<?php
+					the_posts_pagination( array(
+                        'prev_text' => __( '&larr; Previous', 'reloaded' ),
+                        'next_text' => __( 'Next &rarr;', 'reloaded' ),
+					) );
+					?>
 
 				<?php else : ?>
-					<p><?php esc_html_e( 'Nenhuma notícia encontrada.', 'reloaded' ); ?></p>
+					<p><?php esc_html_e( 'No news found.', 'reloaded' ); ?></p>
 				<?php endif; ?>
 			</div>
 			<?php get_sidebar(); ?>

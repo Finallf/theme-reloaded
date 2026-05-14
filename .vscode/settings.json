@@ -1,0 +1,59 @@
+{
+  // ============================================================
+  // EDITOR — Auto-format OFF (trava de segurança)
+  // ============================================================
+  "editor.formatOnSave": false,
+  "editor.formatOnPaste": false,
+  "editor.formatOnType": false,
+
+  // ============================================================
+  // PHP — Intelephense
+  // ============================================================
+  "intelephense.stubs": [
+    "wordpress",
+    "standard",
+    "date",
+    "Core",
+    "json",
+    "Phar",
+    "Reflection"
+  ],
+
+  // ============================================================
+  // Emmet em PHP (templates de tema)
+  // ============================================================
+  "emmet.includeLanguages": {
+    "php": "html"
+  },
+
+  // ============================================================
+  // SCSS — Live Sass Compiler
+  // ============================================================
+  "liveSassCompile.settings.formats": [
+    {
+      "format": "expanded",
+      "extensionName": ".css",
+      "savePath": "/assets/css"
+    }
+  ],
+  "liveSassCompile.settings.excludeList": [
+    "/node_modules/**",
+    "/.vscode/**"
+  ],
+  "liveSassCompile.settings.generateMap": true,
+  "liveSassCompile.settings.autoprefix": [
+    "> 1%",
+    "last 2 versions"
+  ],
+  "liveSassCompile.settings.watchOnLaunch": true,
+
+  // ============================================================
+  // SEARCH — Exclusões da busca global
+  // ============================================================
+  "search.exclude": {
+    "**/.git": true,
+    "**/node_modules": true,
+    "**/.github": true,
+    "style.css": true
+  }
+}

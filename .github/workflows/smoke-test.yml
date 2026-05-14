@@ -1,0 +1,39 @@
+name: Smoke Test
+
+on:
+  push:
+    branches: [master, beta]
+  pull_request:
+    branches: [master, beta]
+
+jobs:
+  php-syntax:
+    name: PHP Syntax Check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup PHP 8.2
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          tools: none
+
+      - name: Lint all PHP files
+        run: |
+          ERRORS=0
+          while IFS= read -r file; do
+            if ! php -l "$file" > /dev/null 2>&1; then
+              echo "::error file=$file::Syntax error"
+              php -l "$file"
+              ERRORS=$((ERRORS + 1))
+            fi
+          done < <(find . -type f -name '*.php' -not -path './node_modules/*')
+
+          if [ "$ERRORS" -gt 0 ]; then
+            echo "::error::Found $ERRORS file(s) with syntax errors"
+            exit 1
+          else
+            echo "✅ All PHP files passed syntax check"
+          fi

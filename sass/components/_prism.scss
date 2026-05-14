@@ -7,7 +7,7 @@
 	// 1. O Bloco de Código Principal (A "Caixa" Escura)
 	// ==========================================================
 	pre[class*="language-"] {
-		background: $dark-deeper !important; // Puxa nossa variável (Mesmo #0d1117 intacto)
+		background: $dark-deeper; // Puxa nossa variável (Mesmo #0d1117 intacto)
 		border: 1px solid $border-subtle !important; // Puxa nossa variável (Mesmo #30363d intacto)
 		border-radius: 5px !important; // ALERTA: Unificado de 6px para os seus 5px!
 		padding: 1.5rem;
@@ -19,6 +19,8 @@
 
 		code[class*="language-"] {
 			color: #c9d1d9 !important;
+			// Transição suave pro light mode
+			transition: color 0.3s ease, background-color 0.3s ease;
 			font-family: 'Consolas', 'Monaco', 'Courier New', monospace !important;
 			text-shadow: none !important;
 			font-size: 0.9rem !important;
@@ -125,7 +127,7 @@
 					}
 
 					&:hover {
-						background: $border-subtle !important; // Puxa nossa variável (Mesmo #30363d intacto)
+						background: $border-subtle; // Puxa nossa variável (Mesmo #30363d intacto)
 						border-color: #8b949e !important;
 						color: #ffffff !important;
 					}
@@ -201,5 +203,25 @@
 	pre[class*="language-yml"] code[class*="language-"],
 	pre[class*="language-yaml"] code[class*="language-"] {
 		color: #a5d6ff !important;
+	}
+
+	// ==========================================================
+	// 6. DARK/LIGHT MODE — Light Mode Overrides
+	// Segue padrão GitHub: #f6f8fa background, #1f2328 text
+	// ==========================================================
+	[data-theme="light"] pre[class*="language-"] {
+		background: #e8eaed !important;
+	}
+
+	[data-theme="light"] pre[class*="language-"] code[class*="language-"] {
+		color: #1f2328 !important;
+	}
+
+	[data-theme="light"] div.code-toolbar > .toolbar > .toolbar-item > button.copy-to-clipboard-button {
+		background: #e8eaed !important;
+
+		&:hover {
+			background: #d0d7de !important;
+		}
 	}
 }

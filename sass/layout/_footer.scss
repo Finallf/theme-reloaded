@@ -3,7 +3,7 @@
 
 .site-footer {
 	background-color: $dark-deep; // #111 ancorado na variável
-	color: $text-muted-dark; 
+	color: $text-muted-dark;
 	padding-bottom: 0.5rem;
 	font-family: $font-primary; // Inter
 
@@ -12,7 +12,7 @@
 		display: block;
 		width: 100%;
 		height: 5px; // Espessura do risco
-		background: $header-gradient; // Usa o degradê que definimos
+		background: $brand-gradient; // Usa o degradê que definimos
 	}
 
 	.footer-grid {
@@ -23,7 +23,7 @@
 	}
 
 	.footer-heading {
-		color: #fff; // Títulos brancos para máximo contraste no fundo escuro
+		color: var(--rd-text); // Títulos brancos para máximo contraste no fundo escuro
 		font-family: $font-heading; // Poppins
 		font-size: 1.2rem;
 		margin-bottom: 1.5rem;
@@ -33,7 +33,7 @@
 			content: '';
 			display: block;
 			height: 2px;
-			background: $header-gradient;
+			background: $brand-gradient;
 			margin-top: 8px;
 		}
 	}
@@ -109,7 +109,7 @@
 				height: 60px;
 				object-fit: cover;
 				border-radius: 5px; // O SEU NOVO PADRÃO DE 5PX!
-				background-color: $dark-surface; 
+				background-color: $dark-surface;
 			}
 
 			// O link do título do post

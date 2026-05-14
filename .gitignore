@@ -4,11 +4,14 @@ node_modules/
 
 # === Editor / IDE ===
 .claude/
-.vscode/
+.vscode/*
 .gemini/
 *.code-workspace
 .idea/
 
+# Re-inclui apenas os arquivos que devem ser versionados
+!.vscode/settings.json
+!.vscode/extensions.json
 
 # === Sistema operacional ===
 Thumbs.db

@@ -23,11 +23,17 @@ function rd_set_default_options() {
             'comment_a11y'          => 1,
             'excerpt_text'          => '',
             'comments_separator'    => '',
-            'date_format'           => '',
             'enable_views_tracking' => 1,
+            'enable_theme_switch'   => 1,
+            'default_theme_mode'    => 'system',
+
+            'search_layout_grid'     => 1,
+            'search_layout_vertical' => 0,
+            'search_layout_compact'  => 1,
+            'search_layout_google'   => 0,
 
             'enable_lgpd'           => 1,
-            'lgpd_text'             => 'Nós usamos cookies e tecnologias semelhantes para melhorar a sua experiência. Ao continuar navegando, você concorda com a nossa <a href="/politica-de-privacidade">Política de Privacidade</a>.',
+            'lgpd_text'             => '',
 
             'ga_id'                 => '',
             'discord_widget'        => 1,
@@ -39,6 +45,7 @@ function rd_set_default_options() {
             'hide_wp_ver'           => 1,
             'facades_enabled'       => 1,
             'disable_gutenberg_css' => 1,
+            'enable_security_headers' => 1,
 
             'social_discord'        => '',
             'social_telegram'       => '',
@@ -78,7 +85,7 @@ add_action('after_switch_theme', 'rd_set_default_options');
 /***********************************************************************************
  * Busca uma opção do painel de forma segura (Defensive Programming) - (Hardcoded) *
  ***********************************************************************************/
-function rd_get_option( $key, $default = false ) {
+function rd_get_option( string $key, $default = false ) {
     $opt = get_option('rd_settings');
 
     if ( ! isset( $opt ) || ! isset( $opt[$key] ) ) {
@@ -88,12 +95,21 @@ function rd_get_option( $key, $default = false ) {
     return $opt[$key];
 }
 
+/***********************************************************************************
+ * Versão booleana — devolve true/false aceitando qualquer formato histórico       *
+ * de armazenamento (1, '1', 0, '0', false, null, ausente).                        *
+ * Use em todos os call sites de toggles do tipo checkbox.                         *
+ ***********************************************************************************/
+function rd_get_option_bool( string $key ): bool {
+    return (int) rd_get_option( $key ) === 1;
+}
+
 /*******************************************************************************
  * Cria o Menu no Painel
  *******************************************************************************/
 function rd_add_admin_menu() {
     add_menu_page(
-        'ReloadeD Opções',
+        __('ReloadeD Options', 'reloaded'),
         'ReloadeD',
         'manage_options',
         'rd_options',
@@ -118,20 +134,20 @@ function rd_options_render() {
 
     // Lista mestre de abas para o loop
     $tabs = [
-        'geral'       => 'Recursos Gerais',
-        'privacidade' => 'Privacidade (LGPD)',
-        'integracoes' => 'Integrações',
-        'performance' => 'Performance',
-        'redes'       => 'Redes Sociais',
-        'seo'         => 'SEO',
-        'interface'   => 'Doações',
-        'ads'         => 'ADS',
-        'manutencao'  => 'Manutenção'
+        'geral'       => __( 'General Features', 'reloaded' ),
+        'privacidade' => __( 'Privacy (LGPD)', 'reloaded' ),
+        'integracoes' => __( 'Integrations', 'reloaded' ),
+        'performance' => __( 'Performance', 'reloaded' ),
+        'redes'       => __( 'Social Networks', 'reloaded' ),
+        'seo'         => __( 'SEO', 'reloaded' ),
+        'interface'   => __( 'Donations', 'reloaded' ),
+        'ads'         => __( 'Ads', 'reloaded' ),
+        'manutencao'  => __( 'Maintenance', 'reloaded' )
     ];
     ?>
     <div class="wrap">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px solid #ccd0d4;">
-            <h1 style="margin: 0; padding: 0;">Painel de Controle - ReloadeD</h1>
+            <h1 style="margin: 0; padding: 0;"><?php esc_html_e( 'ReloadeD - Control Panel', 'reloaded' ); ?></h1>
             <img src="<?php echo esc_url($theme_dir); ?>/assets/img/logo-reloaded-painel.webp" alt="ReloadeD Logo" style="max-height: 50px; width: auto;">
         </div>
 
@@ -151,7 +167,7 @@ function rd_options_render() {
             settings_fields('rd_options_group');
 
             foreach ($tabs as $id => $name) {
-                $display = ($active_tab == $id) ? '' : 'display:none;';
+                $display = ($active_tab === $id) ? '' : 'display:none;';
                 echo '<div class="rd-tab-content" id="tab-' . esc_attr( $id ) . '" style="' . esc_attr( $display ) . '">';
                 do_settings_sections('rd_options_' . $id);
                 echo '</div>';
@@ -171,83 +187,101 @@ function rd_settings_init() {
     register_setting('rd_options_group', 'rd_settings', 'rd_options_sanitize');
 
     // --- GERAL ---
-    add_settings_section('sec_geral', 'Recursos do Tema', '__return_false', 'rd_options_geral');
-    add_settings_field('back_to_top', 'Botão Voltar ao Topo', 'rd_master_field_cb', 'rd_options_geral', 'sec_geral', ['id' => 'back_to_top', 'type' => 'checkbox', 'desc' => 'Ativa a exibição de um botão flutuante no canto inferior direito para o usuário retornar rapidamente ao topo da página.']);
-    add_settings_field('enable_top_bar', 'Ativar Barra de Topo', 'rd_master_field_cb', 'rd_options_geral', 'sec_geral', ['id' => 'enable_top_bar', 'type' => 'checkbox', 'desc' => 'Exibe uma pequena barra no topo com data, últimas notícias e redes sociais.']);
-    add_settings_field('image_resizing', 'Redimensionar Imagens', 'rd_master_field_cb', 'rd_options_geral', 'sec_geral', ['id' => 'image_resizing', 'type' => 'checkbox', 'desc' => 'Ativa a criação de recortes exatos (Hard Crop) das imagens enviadas para garantir que banners e cards fiquem sempre alinhados.']);
-    add_settings_field('enable_thumb_control', 'Imagem Destacada', 'rd_master_field_cb', 'rd_options_geral', 'sec_geral', ['id' => 'enable_thumb_control', 'type' => 'checkbox', 'desc' => 'Adiciona uma opção na barra lateral do editor de postagens para ocultar a imagem destacada na leitura do artigo (ideal para posts com vídeos no topo).']);
-    add_settings_field('jpeg_quality', 'Qualidade das Imagens (%)', 'rd_master_field_cb', 'rd_options_geral', 'sec_geral', ['id' => 'jpeg_quality', 'type' => 'number', 'default' => '90', 'desc' => 'Altera a qualidade das imagens O padrão do WP é 82. Valores menores deixam o site mais rápido, mas reduzem a qualidade visual.']);
-    add_settings_field('comment_a11y', 'Acessibilidade dos Comentários', 'rd_master_field_cb', 'rd_options_geral', 'sec_geral', ['id' => 'comment_a11y', 'type' => 'checkbox', 'desc' => 'Adiciona labels e atributos de preenchimento automático (autocomplete) ao formulário de comentários.']);
-    add_settings_field('excerpt_text', 'Texto do botão "Leia Mais"', 'rd_master_field_cb', 'rd_options_geral', 'sec_geral', ['id' => 'excerpt_text', 'type' => 'text', 'placeholder' => 'Ex: Continuar Lendo →', 'desc' => 'Personaliza o texto do botão de resumo. Deixe em branco para usar o padrão do tema.']);
-    add_settings_field('comments_separator', 'Separador de Comentários', 'rd_master_field_cb', 'rd_options_geral', 'sec_geral', ['id' => 'comments_separator', 'type' => 'text', 'desc' => 'Texto entre o Autor e o Post (ex: "comentou no post:").<br>Deixe <strong>vazio</strong> para o padrão do WP ou digite <strong>&amp;nbsp;</strong> para ocultar.']);
-    add_settings_field('date_format', 'Formato da Data', 'rd_master_field_cb', 'rd_options_geral', 'sec_geral', ['id' => 'date_format', 'type' => 'text', 'default' => 'l, j \d\e F \d\e Y', 'desc' => 'Ex: l, j \d\e F \d\e Y (Retorna: Segunda-feira, 29 de Abril de 2026). <a href="https://wordpress.org/documentation/article/customize-date-and-time-format/" target="_blank">Ver documentação do WP</a>.']);
-    add_settings_field('enable_views_tracking', 'Contador de Visualizações', 'rd_master_field_cb', 'rd_options_geral', 'sec_geral', ['id' => 'enable_views_tracking', 'type' => 'checkbox', 'desc' => 'Ativa o sistema de contagem de visualizações por post. Um único IP conta apenas uma vez a cada 30 minutos. Bots conhecidos são ignorados automaticamente.']);
+    add_settings_section('sec_geral', __( 'Theme Features', 'reloaded' ), '__return_false', 'rd_options_geral');
+    add_settings_field('back_to_top', __( 'Back to Top Button', 'reloaded' ), 'rd_master_field_cb', 'rd_options_geral', 'sec_geral', ['id' => 'back_to_top', 'type' => 'checkbox', 'desc' => __( 'Enables a floating button in the bottom right corner for the user to quickly return to the top of the page.', 'reloaded' )]);
+    add_settings_field('enable_top_bar', __( 'Enable Top Bar', 'reloaded' ), 'rd_master_field_cb', 'rd_options_geral', 'sec_geral', ['id' => 'enable_top_bar', 'type' => 'checkbox', 'desc' => __( 'Displays a small bar at the top with date, latest news, and social networks.', 'reloaded' )]);
+    add_settings_field('image_resizing', __( 'Resize Images', 'reloaded' ), 'rd_master_field_cb', 'rd_options_geral', 'sec_geral', ['id' => 'image_resizing', 'type' => 'checkbox', 'desc' => __( 'Enables exact cropping (Hard Crop) of uploaded images to ensure banners and cards are always aligned.', 'reloaded' )]);
+    add_settings_field('enable_thumb_control', __( 'Featured Image', 'reloaded' ), 'rd_master_field_cb', 'rd_options_geral', 'sec_geral', ['id' => 'enable_thumb_control', 'type' => 'checkbox', 'desc' => __( 'Adds an option in the post editor sidebar to hide the featured image when reading the article (ideal for posts with videos at the top).', 'reloaded' )]);
+    add_settings_field('jpeg_quality', __( 'Image Quality (%)', 'reloaded' ), 'rd_master_field_cb', 'rd_options_geral', 'sec_geral', ['id' => 'jpeg_quality', 'type' => 'number', 'default' => '90', 'desc' => __( 'Changes image quality. WP default is 82. Lower values make the site faster but reduce visual quality.', 'reloaded' )]);
+    add_settings_field('comment_a11y', __( 'Comment Accessibility', 'reloaded' ), 'rd_master_field_cb', 'rd_options_geral', 'sec_geral', ['id' => 'comment_a11y', 'type' => 'checkbox', 'desc' => __( 'Adds labels and autocomplete attributes to the comment form.', 'reloaded' )]);
+    add_settings_field('excerpt_text', __( 'Read More Button Text', 'reloaded' ), 'rd_master_field_cb', 'rd_options_geral', 'sec_geral', ['id' => 'excerpt_text', 'type' => 'text', 'placeholder' => __( 'Ex: Continue Reading &rarr;', 'reloaded' ), 'desc' => __( 'Customizes the excerpt button text. Leave blank to use the theme default.', 'reloaded' )]);
+    add_settings_field('comments_separator', __( 'Comments Separator', 'reloaded' ), 'rd_master_field_cb', 'rd_options_geral', 'sec_geral', ['id' => 'comments_separator', 'type' => 'text', 'desc' => __( 'Text between Author and Post (e.g., "commented on post:"). Leave <strong>empty</strong> for WP default or type <strong>&amp;nbsp;</strong> to hide.', 'reloaded' )]);
+    add_settings_field('enable_views_tracking', __( 'Views Counter', 'reloaded' ), 'rd_master_field_cb', 'rd_options_geral', 'sec_geral', ['id' => 'enable_views_tracking', 'type' => 'checkbox', 'desc' => __( 'Enables the post views counting system. A single IP counts only once every 30 minutes. Known bots are automatically ignored.', 'reloaded' )]);
+    add_settings_field('enable_theme_switch', __( 'Dark/Light Switcher', 'reloaded' ), 'rd_master_field_cb', 'rd_options_geral', 'sec_geral', ['id' => 'enable_theme_switch', 'type' => 'checkbox', 'desc' => __( 'Enables the theme mode switcher (Dark/Light) in the header.', 'reloaded' )]);
+    add_settings_field('default_theme_mode', __( 'Default Theme Mode', 'reloaded' ), 'rd_master_field_cb', 'rd_options_geral', 'sec_geral', [
+        'id' => 'default_theme_mode',
+        'type' => 'select',
+        'options' => [
+            'system' => __( 'System (follow OS)', 'reloaded' ),
+            'dark'   => __( 'Dark', 'reloaded' ),
+            'light'  => __( 'Light', 'reloaded' ),
+        ],
+        'desc' => __( 'Initial theme mode for first-time visitors. Visitors who clicked the switcher keep their choice in localStorage.', 'reloaded' )
+    ]);
+
+    // --- PÁGINA DE BUSCA (Sub-seção dentro da aba Recursos Gerais) ---
+    add_settings_section('sec_geral_search', __( 'Search Page', 'reloaded' ), '__return_false', 'rd_options_geral');
+    add_settings_field('search_layout_grid', __( 'Grid Layout', 'reloaded' ), 'rd_master_field_cb', 'rd_options_geral', 'sec_geral_search', ['id' => 'search_layout_grid', 'type' => 'checkbox', 'desc' => __( 'Enables Grid layout (Cards side by side).', 'reloaded' )]);
+    add_settings_field('search_layout_vertical', __( 'Vertical List', 'reloaded' ), 'rd_master_field_cb', 'rd_options_geral', 'sec_geral_search', ['id' => 'search_layout_vertical', 'type' => 'checkbox', 'desc' => __( 'Enables Vertical List layout (Large image + excerpt).', 'reloaded' )]);
+    add_settings_field('search_layout_compact', __( 'Compact List', 'reloaded' ), 'rd_master_field_cb', 'rd_options_geral', 'sec_geral_search', ['id' => 'search_layout_compact', 'type' => 'checkbox', 'desc' => __( 'Enables Compact layout (Thumbnail + title inline). <strong>Note:</strong> Compact also acts as a safety net — if the visitor disables every chip on the frontend, all results fall back here regardless of this setting.', 'reloaded' )]);
+    add_settings_field('search_layout_google', __( 'Google Style', 'reloaded' ), 'rd_master_field_cb', 'rd_options_geral', 'sec_geral_search', ['id' => 'search_layout_google', 'type' => 'checkbox', 'desc' => __( 'Enables minimalist text-focused layout, similar to search engines.', 'reloaded' )]);
 
     // --- PRIVACIDADE ---
-    add_settings_section('sec_priv', 'LGPD e Cookies', '__return_false', 'rd_options_privacidade');
-    add_settings_field('enable_lgpd', 'LGPD - Banner de Cookies', 'rd_master_field_cb', 'rd_options_privacidade', 'sec_priv', ['id' => 'enable_lgpd', 'type' => 'checkbox', 'desc' => 'Ativa o banner de consentimento de cookies no rodapé do site para conformidade com a lei.']);
-    add_settings_field('lgpd_text', 'Texto do Banner de Cookies', 'rd_master_field_cb', 'rd_options_privacidade', 'sec_priv', ['id' => 'lgpd_text', 'type' => 'textarea', 'desc' => 'Personalize a mensagem que aparece para o usuário. Você pode usar tags HTML como &lt;a&gt; para links.', 'rows' => 4]);
+    add_settings_section('sec_priv', __( 'LGPD and Cookies', 'reloaded' ), '__return_false', 'rd_options_privacidade');
+    add_settings_field('enable_lgpd', __( 'LGPD - Cookie Banner', 'reloaded' ), 'rd_master_field_cb', 'rd_options_privacidade', 'sec_priv', ['id' => 'enable_lgpd', 'type' => 'checkbox', 'desc' => __( 'Enables the cookie consent banner in the site footer for legal compliance.', 'reloaded' )]);
+    add_settings_field('lgpd_text', __( 'Cookie Banner Text', 'reloaded' ), 'rd_master_field_cb', 'rd_options_privacidade', 'sec_priv', ['id' => 'lgpd_text', 'type' => 'textarea', 'desc' => __( 'Customize the cookie banner message. Use <strong>%s</strong> where you want the Privacy Policy link to appear — the URL comes from <em>Settings → Privacy → Privacy Policy Page</em>. Leave empty to use the default translatable text.', 'reloaded' )]);
 
     // --- INTEGRAÇÕES ---
-    add_settings_section('sec_int', 'Scripts e IDs', '__return_false', 'rd_options_integracoes');
-    add_settings_field('ga_id', 'ID Google Analytics', 'rd_master_field_cb', 'rd_options_integracoes', 'sec_int', ['id' => 'ga_id', 'type' => 'text', 'placeholder' => 'G-XXXXXXX', 'desc' => 'Insira apenas o código de rastreamento (Tag ID). Deixe vazio para desativar.']);
-    add_settings_field('discord_widget', 'Ativar Widget do Discord', 'rd_master_field_cb', 'rd_options_integracoes', 'sec_int', ['id' => 'discord_widget', 'type' => 'checkbox', 'desc' => 'Habilita a exibição do servidor do Discord na barra lateral.']);
-    add_settings_field('discord_id', 'ID do Discord', 'rd_master_field_cb', 'rd_options_integracoes', 'sec_int', ['id' => 'discord_id', 'type' => 'text', 'desc' => 'ID do servidor (Server ID) para ativar a comunicação com o widget oficial na barra lateral.']);
+    add_settings_section('sec_int', __( 'Scripts and IDs', 'reloaded' ), '__return_false', 'rd_options_integracoes');
+    add_settings_field('ga_id', __( 'Google Analytics ID', 'reloaded' ), 'rd_master_field_cb', 'rd_options_integracoes', 'sec_int', ['id' => 'ga_id', 'type' => 'text', 'placeholder' => 'G-XXXXXXX', 'desc' => __( 'Insert only the tracking code (Tag ID). Leave empty to disable.', 'reloaded' )]);
+    add_settings_field('discord_widget', __( 'Enable Discord Widget', 'reloaded' ), 'rd_master_field_cb', 'rd_options_integracoes', 'sec_int', ['id' => 'discord_widget', 'type' => 'checkbox', 'desc' => __( 'Enables displaying the Discord server in the sidebar.', 'reloaded' )]);
+    add_settings_field('discord_id', __( 'Discord ID', 'reloaded' ), 'rd_master_field_cb', 'rd_options_integracoes', 'sec_int', ['id' => 'discord_id', 'type' => 'text', 'desc' => __( 'Server ID to activate communication with the official widget in the sidebar.', 'reloaded' )]);
 
     // --- PERFORMANCE ---
-    add_settings_section('sec_perf', 'Otimização Técnica', '__return_false', 'rd_options_performance');
-    add_settings_field('markdown_enabled', 'Markdown', 'rd_master_field_cb', 'rd_options_performance', 'sec_perf', ['id' => 'markdown_enabled', 'type' => 'checkbox', 'desc' => 'Ativa o suporte a sintaxe Markdown, permitindo escrever artigos (como no GitHub ou Docker Hub) nativamente.']);
-    add_settings_field('prism_js', 'Destaque de Código', 'rd_master_field_cb', 'rd_options_performance', 'sec_perf', ['id' => 'prism_js', 'type' => 'checkbox', 'desc' => 'Ativa o suporte a Syntax Highlight, que colore códigos de programação. É carregado apenas em posts para performance.']);
-    add_settings_field('disable_emojis', 'Desativar Emojis Nativos', 'rd_master_field_cb', 'rd_options_performance', 'sec_perf', ['id' => 'disable_emojis', 'type' => 'checkbox', 'desc' => 'Remove o script de emojis do WP. Navegadores modernos já renderizam emojis nativamente, ative isso para poupar requisições.']);
-    add_settings_field('hide_wp_ver', 'Ocultar Versão do WP', 'rd_master_field_cb', 'rd_options_performance', 'sec_perf', ['id' => 'hide_wp_ver', 'type' => 'checkbox', 'desc' => 'Remove a meta tag geradora do WordPress do código-fonte. Uma boa prática de segurança básica.']);
-    add_settings_field('facades_enabled', 'Sistema de Fachadas', 'rd_master_field_cb', 'rd_options_performance', 'sec_perf', ['id' => 'facades_enabled', 'type' => 'checkbox', 'desc' => 'Substitui iframes pesados (ex: YouTube) por uma imagem leve, carregando o player apenas quando o usuário clica.']);
-    add_settings_field('disable_gutenberg_css', 'Desativa o CSS do WP (Bloat)', 'rd_master_field_cb', 'rd_options_performance', 'sec_perf', ['id' => 'disable_gutenberg_css', 'type' => 'checkbox', 'desc' => 'Remove o CSS global e de blocos do Gutenberg. Deixa o site mais leve, ideal para quem usa Markdown.']);
+    add_settings_section('sec_perf', __( 'Technical Optimization', 'reloaded' ), '__return_false', 'rd_options_performance');
+    add_settings_field('markdown_enabled', __( 'Markdown', 'reloaded' ), 'rd_master_field_cb', 'rd_options_performance', 'sec_perf', ['id' => 'markdown_enabled', 'type' => 'checkbox', 'desc' => __( 'Enables support for Markdown syntax, allowing you to write articles natively (like GitHub or Docker Hub).', 'reloaded' )]);
+    add_settings_field('prism_js', __( 'Code Highlight', 'reloaded' ), 'rd_master_field_cb', 'rd_options_performance', 'sec_perf', ['id' => 'prism_js', 'type' => 'checkbox', 'desc' => __( 'Enables Syntax Highlight support, which colors programming codes. It is only loaded on posts for performance.', 'reloaded' )]);
+    add_settings_field('disable_emojis', __( 'Disable Native Emojis', 'reloaded' ), 'rd_master_field_cb', 'rd_options_performance', 'sec_perf', ['id' => 'disable_emojis', 'type' => 'checkbox', 'desc' => __( 'Removes the WP emojis script. Modern browsers already render emojis natively, enable this to save requests.', 'reloaded' )]);
+    add_settings_field('hide_wp_ver', __( 'Hide WP Version', 'reloaded' ), 'rd_master_field_cb', 'rd_options_performance', 'sec_perf', ['id' => 'hide_wp_ver', 'type' => 'checkbox', 'desc' => __( 'Removes the WordPress generator meta tag from the source code. A basic security best practice.', 'reloaded' )]);
+    add_settings_field('enable_security_headers', __( 'Security Headers', 'reloaded' ), 'rd_master_field_cb', 'rd_options_performance', 'sec_perf', ['id' => 'enable_security_headers', 'type' => 'checkbox', 'desc' => __( 'Sends defensive HTTP headers on the frontend (X-Frame-Options, X-Content-Type-Options, Referrer-Policy, Permissions-Policy) to mitigate clickjacking and MIME sniffing. Does not affect the admin panel.', 'reloaded' )]);
+    add_settings_field('facades_enabled', __( 'Facades System', 'reloaded' ), 'rd_master_field_cb', 'rd_options_performance', 'sec_perf', ['id' => 'facades_enabled', 'type' => 'checkbox', 'desc' => __( 'Replaces heavy iframes (e.g. YouTube) with a lightweight image, loading the player only when the user clicks.', 'reloaded' )]);
+    add_settings_field('disable_gutenberg_css', __( 'Disable WP CSS (Bloat)', 'reloaded' ), 'rd_master_field_cb', 'rd_options_performance', 'sec_perf', ['id' => 'disable_gutenberg_css', 'type' => 'checkbox', 'desc' => __( 'Removes global and block CSS from Gutenberg. Makes the site lighter, ideal for those using Markdown.', 'reloaded' )]);
 
     // --- REDES SOCIAIS ---
-    add_settings_section('sec_redes', 'Links das suas Redes Sociais', '__return_false', 'rd_options_redes');
-    add_settings_field('social_discord', 'Discord', 'rd_master_field_cb', 'rd_options_redes', 'sec_redes', ['id' => 'social_discord', 'type' => 'text', 'placeholder' => 'https://discord.gg/...', 'desc' => 'Link do seu servidor ou convite permanente para a comunidade.']);
-    add_settings_field('social_telegram', 'Telegram', 'rd_master_field_cb', 'rd_options_redes', 'sec_redes', ['id' => 'social_telegram', 'type' => 'text', 'placeholder' => 'https://t.me/...', 'desc' => 'Link do seu canal ou grupo oficial.']);
-    add_settings_field('social_youtube', 'YouTube', 'rd_master_field_cb', 'rd_options_redes', 'sec_redes', ['id' => 'social_youtube', 'type' => 'text', 'placeholder' => 'https://youtube.com/@...', 'desc' => 'URL do seu canal para exibição de vídeos e transmissões.']);
-    add_settings_field('social_instagram', 'Instagram', 'rd_master_field_cb', 'rd_options_redes', 'sec_redes', ['id' => 'social_instagram', 'type' => 'text', 'placeholder' => 'https://instagram.com/...', 'desc' => 'Link do seu perfil para fotos e atualizações visuais.']);
-    add_settings_field('social_steam', 'Steam', 'rd_master_field_cb', 'rd_options_redes', 'sec_redes', ['id' => 'social_steam', 'type' => 'text', 'placeholder' => 'https://steamcommunity.com/groups/...', 'desc' => 'Link do seu grupo na Steam ou perfil de curador.']);
-    add_settings_field('social_twitter', 'Twitter (X)', 'rd_master_field_cb', 'rd_options_redes', 'sec_redes', ['id' => 'social_twitter', 'type' => 'text', 'placeholder' => 'https://x.com/...', 'desc' => 'Link do seu perfil oficial no X.']);
-    add_settings_field('social_facebook', 'Facebook', 'rd_master_field_cb', 'rd_options_redes', 'sec_redes', ['id' => 'social_facebook', 'type' => 'text', 'placeholder' => 'https://facebook.com/...', 'desc' => 'Link da sua página oficial ou comunidade.']);
-    add_settings_field('social_whatsapp', 'WhatsApp', 'rd_master_field_cb', 'rd_options_redes', 'sec_redes', ['id' => 'social_whatsapp', 'type' => 'text', 'placeholder' => 'https://wa.me/5511999999999', 'desc' => 'Link direto para o seu número ou grupo do WhatsApp (use o formato internacional).']);
+    add_settings_section('sec_redes', __( 'Your Social Network Links', 'reloaded' ), '__return_false', 'rd_options_redes');
+    add_settings_field('social_discord', __( 'Discord', 'reloaded' ), 'rd_master_field_cb', 'rd_options_redes', 'sec_redes', ['id' => 'social_discord', 'type' => 'text', 'placeholder' => 'https://discord.gg/...', 'desc' => __( 'Link to your server or permanent invite to the community.', 'reloaded' )]);
+    add_settings_field('social_telegram', __( 'Telegram', 'reloaded' ), 'rd_master_field_cb', 'rd_options_redes', 'sec_redes', ['id' => 'social_telegram', 'type' => 'text', 'placeholder' => 'https://t.me/...', 'desc' => __( 'Link to your official channel or group.', 'reloaded' )]);
+    add_settings_field('social_youtube', __( 'YouTube', 'reloaded' ), 'rd_master_field_cb', 'rd_options_redes', 'sec_redes', ['id' => 'social_youtube', 'type' => 'text', 'placeholder' => 'https://youtube.com/@...', 'desc' => __( 'URL to your channel to display videos and streams.', 'reloaded' )]);
+    add_settings_field('social_instagram', __( 'Instagram', 'reloaded' ), 'rd_master_field_cb', 'rd_options_redes', 'sec_redes', ['id' => 'social_instagram', 'type' => 'text', 'placeholder' => 'https://instagram.com/...', 'desc' => __( 'Link to your profile for photos and visual updates.', 'reloaded' )]);
+    add_settings_field('social_steam', __( 'Steam', 'reloaded' ), 'rd_master_field_cb', 'rd_options_redes', 'sec_redes', ['id' => 'social_steam', 'type' => 'text', 'placeholder' => 'https://steamcommunity.com/groups/...', 'desc' => __( 'Link to your Steam group or curator profile.', 'reloaded' )]);
+    add_settings_field('social_twitter', __( 'Twitter (X)', 'reloaded' ), 'rd_master_field_cb', 'rd_options_redes', 'sec_redes', ['id' => 'social_twitter', 'type' => 'text', 'placeholder' => 'https://x.com/...', 'desc' => __( 'Link to your official profile on X.', 'reloaded' )]);
+    add_settings_field('social_facebook', __( 'Facebook', 'reloaded' ), 'rd_master_field_cb', 'rd_options_redes', 'sec_redes', ['id' => 'social_facebook', 'type' => 'text', 'placeholder' => 'https://facebook.com/...', 'desc' => __( 'Link to your official page or community.', 'reloaded' )]);
+    add_settings_field('social_whatsapp', __( 'WhatsApp', 'reloaded' ), 'rd_master_field_cb', 'rd_options_redes', 'sec_redes', ['id' => 'social_whatsapp', 'type' => 'text', 'placeholder' => 'https://wa.me/5511999999999', 'desc' => __( 'Direct link to your WhatsApp number or group (use international format).', 'reloaded' )]);
 
     // --- SEO ---
-    add_settings_section('sec_seo', 'SEO', '__return_false', 'rd_options_seo');
-    add_settings_field('enable_open_graph', 'Meta Tags Open Graph', 'rd_master_field_cb', 'rd_options_seo', 'sec_seo', ['id' => 'enable_open_graph', 'type' => 'checkbox', 'desc' => 'Ativa o sistema de OG Tags. Gera as tags necessárias para redes sociais (Facebook, Discord, WhatsApp).']);
-    add_settings_field('og_fallback_image', 'Imagem de Fallback (Open Graph)', 'rd_master_field_cb', 'rd_options_seo', 'sec_seo', ['id' => 'og_fallback_image', 'type' => 'media', 'desc' => 'Selecione uma imagem da sua biblioteca para ser o padrão nas redes sociais.']);
+    add_settings_section('sec_seo', __( 'SEO', 'reloaded' ), '__return_false', 'rd_options_seo');
+    add_settings_field('enable_open_graph', __( 'Open Graph Meta Tags', 'reloaded' ), 'rd_master_field_cb', 'rd_options_seo', 'sec_seo', ['id' => 'enable_open_graph', 'type' => 'checkbox', 'desc' => __( 'Enables the OG Tags system. Generates the necessary tags for social networks (Facebook, Discord, WhatsApp).', 'reloaded' )]);
+    add_settings_field('og_fallback_image', __( 'Fallback Image (Open Graph)', 'reloaded' ), 'rd_master_field_cb', 'rd_options_seo', 'sec_seo', ['id' => 'og_fallback_image', 'type' => 'media', 'desc' => __( 'Select an image from your library to be the default on social networks.', 'reloaded' )]);
 
     // --- DOAÇÕES ---
-    add_settings_section('sec_inter', 'Sistema de Doações', '__return_false', 'rd_options_interface');
-    add_settings_field('github_sponsors', 'GitHub Sponsors', 'rd_master_field_cb', 'rd_options_interface', 'sec_inter', ['id' => 'github_sponsors', 'type' => 'text', 'placeholder' => 'https://github.com/sponsors/seu-usuario', 'desc' => 'Link para a sua página oficial de patrocínio no GitHub para apoiadores globais.']);
-    add_settings_field('paypal_url', 'Link de Doação PayPal', 'rd_master_field_cb', 'rd_options_interface', 'sec_inter', ['id' => 'paypal_url', 'type' => 'text', 'placeholder' => 'https://www.paypal.com/donate?hosted_button_id=XXXX', 'desc' => 'URL direta da sua página de doação do PayPal.']);
-    add_settings_field('paypal_qrcode', 'QR Code do PayPal', 'rd_master_field_cb', 'rd_options_interface', 'sec_inter', ['id' => 'paypal_qrcode', 'type' => 'media', 'desc' => 'Upload do QR Code do PayPal. Ao ser clicado no site, ele abrirá o link configurado acima.']);
-    add_settings_field('pix_url', 'Link do PIX (Copia e Cola)', 'rd_master_field_cb', 'rd_options_interface', 'sec_inter', ['id' => 'pix_url', 'type' => 'text', 'placeholder' => 'https://nubank.com.br/pagar/xxx', 'desc' => 'URL direta para o pagamento PIX (se o seu banco fornecer link). O QR Code ficará clicável.']);
-    add_settings_field('pix_qrcode', 'QR Code do PIX', 'rd_master_field_cb', 'rd_options_interface', 'sec_inter', ['id' => 'pix_qrcode', 'type' => 'media', 'desc' => 'Faça o upload da imagem do seu QR Code do PIX.']);
-    add_settings_field('pix_chave', 'Chave PIX', 'rd_master_field_cb', 'rd_options_interface', 'sec_inter', ['id' => 'pix_chave', 'type' => 'text', 'placeholder' => 'email@dominio.com.br ou CPF/CNPJ', 'desc' => 'Sua chave PIX direta para apoiadores do Brasil.']);
+    add_settings_section('sec_inter', __( 'Donation System', 'reloaded' ), '__return_false', 'rd_options_interface');
+    add_settings_field('github_sponsors', __( 'GitHub Sponsors', 'reloaded' ), 'rd_master_field_cb', 'rd_options_interface', 'sec_inter', ['id' => 'github_sponsors', 'type' => 'text', 'placeholder' => 'https://github.com/sponsors/seu-usuario', 'desc' => __( 'Link to your official GitHub sponsorship page for global supporters.', 'reloaded' )]);
+    add_settings_field('paypal_url', __( 'PayPal Donation Link', 'reloaded' ), 'rd_master_field_cb', 'rd_options_interface', 'sec_inter', ['id' => 'paypal_url', 'type' => 'text', 'placeholder' => 'https://www.paypal.com/donate?hosted_button_id=XXXX', 'desc' => __( 'Direct URL to your PayPal donation page.', 'reloaded' )]);
+    add_settings_field('paypal_qrcode', __( 'PayPal QR Code', 'reloaded' ), 'rd_master_field_cb', 'rd_options_interface', 'sec_inter', ['id' => 'paypal_qrcode', 'type' => 'media', 'desc' => __( 'Upload the PayPal QR Code. When clicked on the site, it will open the link configured above.', 'reloaded' )]);
+    add_settings_field('pix_url', __( 'PIX Link (Copy and Paste)', 'reloaded' ), 'rd_master_field_cb', 'rd_options_interface', 'sec_inter', ['id' => 'pix_url', 'type' => 'text', 'placeholder' => 'https://nubank.com.br/pagar/xxx', 'desc' => __( 'Direct URL for PIX payment (if your bank provides a link). The QR Code will be clickable.', 'reloaded' )]);
+    add_settings_field('pix_qrcode', __( 'PIX QR Code', 'reloaded' ), 'rd_master_field_cb', 'rd_options_interface', 'sec_inter', ['id' => 'pix_qrcode', 'type' => 'media', 'desc' => __( 'Upload your PIX QR Code image.', 'reloaded' )]);
+    add_settings_field('pix_chave', __( 'PIX Key', 'reloaded' ), 'rd_master_field_cb', 'rd_options_interface', 'sec_inter', ['id' => 'pix_chave', 'type' => 'text', 'placeholder' => __( 'email@domain.com or CPF/CNPJ', 'reloaded' ), 'desc' => __( 'Your direct PIX key for supporters from Brazil.', 'reloaded' )]);
 
     // --- ADS ---
-    add_settings_section('sec_ads', 'Zonas de Publicidade', '__return_false', 'rd_options_ads');
-    add_settings_field('ad_global', 'Script Global de Anúncios', 'rd_master_field_cb', 'rd_options_ads', 'sec_ads', ['id' => 'ad_global', 'type' => 'textarea', 'desc' => 'Cole aqui a tag <head> global (ex: Auto Ads do AdSense).']);
-    add_settings_field('ad_topo_desktop', 'Banner Topo - Desktop (728x90)', 'rd_master_field_cb', 'rd_options_ads', 'sec_ads', ['id' => 'ad_topo_desktop', 'type' => 'textarea', 'desc' => 'Renderizado no cabeçalho apenas em telas grandes (PCs e Notebooks).']);
-    add_settings_field('ad_topo_mobile', 'Banner Topo - Mobile (320x100)', 'rd_master_field_cb', 'rd_options_ads', 'sec_ads', ['id' => 'ad_topo_mobile', 'type' => 'textarea', 'desc' => 'Renderizado no cabeçalho apenas em telas de smartphones.']);
-    add_settings_field('ad_sidebar_top', 'Banner Sidebar - Topo (300x250)', 'rd_master_field_cb', 'rd_options_ads', 'sec_ads', ['id' => 'ad_sidebar_top', 'type' => 'textarea', 'desc' => 'Renderizado na barra lateral, logo abaixo das integrações (ex: Discord).']);
-    add_settings_field('ad_sidebar_sticky', 'Banner Sidebar - Sticky (300x600)', 'rd_master_field_cb', 'rd_options_ads', 'sec_ads', ['id' => 'ad_sidebar_sticky', 'type' => 'textarea', 'desc' => 'Renderizado no final da barra lateral. Acompanha a rolagem da tela.']);
+    add_settings_section('sec_ads', __( 'Advertising Zones', 'reloaded' ), '__return_false', 'rd_options_ads');
+    add_settings_field('ad_global', __( 'Global Ad Script', 'reloaded' ), 'rd_master_field_cb', 'rd_options_ads', 'sec_ads', ['id' => 'ad_global', 'type' => 'textarea', 'desc' => __( 'Paste here the global &lt;head&gt; tag (e.g. AdSense Auto Ads).', 'reloaded' )]);
+    add_settings_field('ad_topo_desktop', __( 'Top Banner - Desktop (728x90)', 'reloaded' ), 'rd_master_field_cb', 'rd_options_ads', 'sec_ads', ['id' => 'ad_topo_desktop', 'type' => 'textarea', 'desc' => __( 'Rendered in the header only on large screens (PCs and Laptops).', 'reloaded' )]);
+    add_settings_field('ad_topo_mobile', __( 'Top Banner - Mobile (320x100)', 'reloaded' ), 'rd_master_field_cb', 'rd_options_ads', 'sec_ads', ['id' => 'ad_topo_mobile', 'type' => 'textarea', 'desc' => __( 'Rendered in the header only on smartphone screens.', 'reloaded' )]);
+    add_settings_field('ad_sidebar_top', __( 'Sidebar Banner - Top (300x250)', 'reloaded' ), 'rd_master_field_cb', 'rd_options_ads', 'sec_ads', ['id' => 'ad_sidebar_top', 'type' => 'textarea', 'desc' => __( 'Rendered in the sidebar, right below integrations (e.g. Discord).', 'reloaded' )]);
+    add_settings_field('ad_sidebar_sticky', __( 'Sidebar Banner - Sticky (300x600)', 'reloaded' ), 'rd_master_field_cb', 'rd_options_ads', 'sec_ads', ['id' => 'ad_sidebar_sticky', 'type' => 'textarea', 'desc' => __( 'Rendered at the bottom of the sidebar. Follows the screen scroll.', 'reloaded' )]);
 
     // --- MANUTENÇÃO ---
-    add_settings_section('sec_manut', 'Controle de Acesso', '__return_false', 'rd_options_manutencao');
-    add_settings_field('maintenance_mode', 'Ativar Manutenção', 'rd_master_field_cb', 'rd_options_manutencao', 'sec_manut', ['id' => 'maintenance_mode', 'type' => 'checkbox', 'desc' => 'Bloqueia o acesso de visitantes comuns e exibe uma tela de "Voltamos logo" (Retorna HTTP 503 para o Google).']);
-    add_settings_field('maintenance_pass', 'Senha de Dev', 'rd_master_field_cb', 'rd_options_manutencao', 'sec_manut', ['id' => 'maintenance_pass', 'type' => 'password', 'desc' => 'Senha para desenvolvedores contornarem a manutenção. Acesse: <strong>seudominio.com.br/?rd-dev-login</strong> e digite a senha no formulário (não passe pela URL). A senha é armazenada como hash criptográfico — após salvar, este campo aparecerá vazio (isso é normal e seguro).']);
-    add_settings_field('maintenance_text', 'Texto de Manutenção', 'rd_master_field_cb', 'rd_options_manutencao', 'sec_manut', ['id' => 'maintenance_text', 'type' => 'textarea', 'desc' => 'Personalize a mensagem que os visitantes verão na tela de bloqueio. Aceita HTML básico (ex: &lt;strong&gt;, &lt;br&gt;).']);
+    add_settings_section('sec_manut', __( 'Access Control', 'reloaded' ), '__return_false', 'rd_options_manutencao');
+    add_settings_field('maintenance_mode', __( 'Enable Maintenance', 'reloaded' ), 'rd_master_field_cb', 'rd_options_manutencao', 'sec_manut', ['id' => 'maintenance_mode', 'type' => 'checkbox', 'desc' => __( 'Blocks access from regular visitors and displays a "We\'ll be right back" screen (Returns HTTP 503 to Google).', 'reloaded' )]);
+    add_settings_field('maintenance_pass', __( 'Dev Password', 'reloaded' ), 'rd_master_field_cb', 'rd_options_manutencao', 'sec_manut', ['id' => 'maintenance_pass', 'type' => 'password', 'desc' => __( 'Password for developers to bypass maintenance. Access: <strong>yourdomain.com/?rd-dev-login</strong> and enter the password in the form (do not pass it through the URL). The password is stored as a cryptographic hash — after saving, this field will appear empty (this is normal and secure).', 'reloaded' )]);
+    add_settings_field('maintenance_text', __( 'Maintenance Text', 'reloaded' ), 'rd_master_field_cb', 'rd_options_manutencao', 'sec_manut', ['id' => 'maintenance_text', 'type' => 'textarea', 'desc' => __( 'Customize the message visitors will see on the block screen. Accepts basic HTML (e.g. &lt;strong&gt;, &lt;br&gt;).', 'reloaded' )]);
 }
 add_action('admin_init', 'rd_settings_init');
 
 /*******************************************************************************
  * Funções de renderização dos campos (Reutilizáveis)
  *******************************************************************************/
-function rd_master_field_cb($args) {
+function rd_master_field_cb( array $args ) {
     // 1. Puxa as opções do banco de dados apenas uma vez
     $opt = get_option('rd_settings');
 
@@ -276,15 +310,19 @@ function rd_master_field_cb($args) {
             echo '</div>';
 
             // Os botões de controle
-            echo '<button type="button" class="button rd-upload-button" data-input-id="' . esc_attr( $args['id'] ) . '">Selecionar Imagem</button> ';
+            echo '<button type="button" class="button rd-upload-button" data-input-id="' . esc_attr( $args['id'] ) . '">' . esc_html__( 'Select Image', 'reloaded' ) . '</button> ';
 
             $display = $val ? '' : 'display:none;';
-            echo '<button type="button" class="button rd-remove-button" data-input-id="' . esc_attr( $args['id'] ) . '" style="' . $display . '">Remover</button>';
+            echo '<button type="button" class="button rd-remove-button" data-input-id="' . esc_attr( $args['id'] ) . '" style="' . $display . '">' . esc_html__( 'Remove', 'reloaded' ) . '</button>';
             echo '</div>';
         break;
 
         case 'checkbox':
             $val = isset( $opt[$args['id']] ) ? $opt[$args['id']] : 0;
+
+            // Hidden de fallback: garante que checkbox DESMARCADO envie '0' explícito em vez
+            // de omitir a key do POST. Sem isso, desmarcar não viaja pro sanitizer.
+            echo '<input type="hidden" name="' . $name . '" value="0">';
 
             // Envolvemos tudo em uma tag <label> para que o texto fique na mesma linha e seja clicável
             echo '<label for="' . esc_attr( $args['id'] ) . '">';
@@ -352,7 +390,7 @@ function rd_master_field_cb($args) {
 /*******************************************************************************
  * SANITIZAÇÃO DOS DADOS (Segurança)
  *******************************************************************************/
-function rd_options_sanitize( $input ) {
+function rd_options_sanitize( array $input ) {
     $new_input = array();
     foreach($input as $key => $value) {
 
@@ -364,7 +402,12 @@ function rd_options_sanitize( $input ) {
         elseif ( $key === 'lgpd_text' ) {
             $new_input[$key] = wp_kses_post($value);
         }
-        // 3. Demais campos: Limpeza rigorosa, destrói qualquer HTML e script
+        // 3. Checkboxes: chegam como '0' ou '1' (graças ao hidden de fallback no form).
+        //    Coage pra int pra padronizar o storage e habilitar comparações strict (=== 1).
+        elseif ( $value === '0' || $value === '1' ) {
+            $new_input[$key] = (int) $value;
+        }
+        // 4. Demais campos: Limpeza rigorosa, destrói qualquer HTML e script
         else {
             $new_input[$key] = sanitize_text_field($value);
         }
