@@ -6,20 +6,10 @@
 
 get_header();
 
-// Puxa as opções do painel (Fallback para '1' caso seja a primeira instalação)
-$layouts = [
-    'grid'     => rd_get_option('search_layout_grid', 1),
-    'vertical' => rd_get_option('search_layout_vertical', 0),
-    'compact'  => rd_get_option('search_layout_compact', 0),
-    'google'   => rd_get_option('search_layout_google', 0)
-];
-
-// Filtra apenas os layouts habilitados pelo admin
-$active_layouts = array_keys( array_filter( $layouts ) );
-// Se nenhum estiver habilitado, força o grid como segurança
-if ( empty( $active_layouts ) ) $active_layouts = ['grid'];
-
-$show_toggles = count( $active_layouts ) > 1;
+// Layouts ativos vêm do helper único (também usado pelo pre_get_posts hook
+// e pelo AJAX handler). Fallback é 'compact' quando admin desligou tudo.
+$active_layouts = rd_search_get_admin_active_layouts();
+$show_toggles   = count( $active_layouts ) > 1;
 ?>
 
 <main id="primary" class="site-main rd-page rd-search-page">
@@ -53,18 +43,14 @@ $show_toggles = count( $active_layouts ) > 1;
 
                 <div class="rd-search-results-containers">
                     <?php
-                    // Renderiza os wrappers de cada layout ativo
-                    foreach ( $active_layouts as $layout ) {
-                        echo '<div id="rd-wrap-' . esc_attr($layout) . '" class="rd-search-wrapper rd-wrapper-' . esc_attr($layout) . '">';
-
-                        while ( have_posts() ) {
-                            the_post();
-                            rd_render_post_card( $layout );
-                        }
-                        rewind_posts(); // Reseta o loop para o próximo layout
-
-                        echo '</div>';
-                    }
+                    // Distribui os posts entre os layouts ativos.
+                    // Server-side usa os layouts do admin como base — se o
+                    // visitor tiver toggles diferentes em localStorage, o JS
+                    // dispara AJAX (rd_ajax_search_redistribute) depois pra
+                    // re-renderizar.
+                    global $wp_query;
+                    $distribution = rd_search_distribute_posts( $wp_query->posts, $active_layouts );
+                    rd_render_distribution( $distribution );
                     ?>
                 </div>
 

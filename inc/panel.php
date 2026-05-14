@@ -213,7 +213,7 @@ function rd_settings_init() {
     add_settings_section('sec_geral_search', __( 'Search Page', 'reloaded' ), '__return_false', 'rd_options_geral');
     add_settings_field('search_layout_grid', __( 'Grid Layout', 'reloaded' ), 'rd_master_field_cb', 'rd_options_geral', 'sec_geral_search', ['id' => 'search_layout_grid', 'type' => 'checkbox', 'desc' => __( 'Enables Grid layout (Cards side by side).', 'reloaded' )]);
     add_settings_field('search_layout_vertical', __( 'Vertical List', 'reloaded' ), 'rd_master_field_cb', 'rd_options_geral', 'sec_geral_search', ['id' => 'search_layout_vertical', 'type' => 'checkbox', 'desc' => __( 'Enables Vertical List layout (Large image + excerpt).', 'reloaded' )]);
-    add_settings_field('search_layout_compact', __( 'Compact List', 'reloaded' ), 'rd_master_field_cb', 'rd_options_geral', 'sec_geral_search', ['id' => 'search_layout_compact', 'type' => 'checkbox', 'desc' => __( 'Enables Compact layout (Thumbnail + title inline).', 'reloaded' )]);
+    add_settings_field('search_layout_compact', __( 'Compact List', 'reloaded' ), 'rd_master_field_cb', 'rd_options_geral', 'sec_geral_search', ['id' => 'search_layout_compact', 'type' => 'checkbox', 'desc' => __( 'Enables Compact layout (Thumbnail + title inline). <strong>Note:</strong> Compact also acts as a safety net — if the visitor disables every chip on the frontend, all results fall back here regardless of this setting.', 'reloaded' )]);
     add_settings_field('search_layout_google', __( 'Google Style', 'reloaded' ), 'rd_master_field_cb', 'rd_options_geral', 'sec_geral_search', ['id' => 'search_layout_google', 'type' => 'checkbox', 'desc' => __( 'Enables minimalist text-focused layout, similar to search engines.', 'reloaded' )]);
 
     // --- PRIVACIDADE ---

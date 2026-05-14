@@ -126,46 +126,166 @@ document.addEventListener("DOMContentLoaded", function() {
 	}
 });
 
-/* CONTROLE DE LAYOUT DA BUSCA (Chips & LocalStorage) */
+/* CONTROLE DE LAYOUT DA BUSCA — AJAX Redistribuição (Fase 5.5)
+ *
+ * Em vez de só esconder seções, dispara AJAX pra redistribuir os
+ * resultados da página atual entre os layouts ativos. Compact funciona
+ * como bucket de overflow + safety net (lógica no backend).
+ *
+ * Quando visitor está em página > 1 e clica chip, navega via full
+ * reload pra page 1 (evita pagination dessincronizada). Quando já
+ * está em page 1, AJAX puro.
+ */
 document.addEventListener('DOMContentLoaded', function() {
     const togglesContainer = document.getElementById('rd-search-toggles');
+    const resultsContainer = document.querySelector('.rd-search-results-containers');
 
-    if (togglesContainer) {
-        const chips = togglesContainer.querySelectorAll('.rd-chip');
+    // Sai cedo se: fora da página de busca, sem chips, ou sem dados localizados
+    if (!togglesContainer || !resultsContainer || typeof rd_search_data === 'undefined') return;
 
-        // Carrega as preferências salvas
-        const savedPrefs = JSON.parse(localStorage.getItem('rd_search_prefs')) || {};
+    const chips = togglesContainer.querySelectorAll('.rd-chip');
+    const STORAGE_KEY = 'rd_search_prefs';
 
-        chips.forEach(chip => {
-            const targetId = chip.getAttribute('data-target');
-            const wrapper = document.getElementById(targetId);
-
-            // Aplica estado inicial baseado no LocalStorage
-            if (savedPrefs[targetId] === false) {
-                chip.classList.remove('active');
-                if (wrapper) wrapper.style.display = 'none';
-            }
-
-            // Lida com o clique
-            chip.addEventListener('click', function() {
-                const isActive = this.classList.contains('active');
-
-                if (isActive) {
-                    this.classList.remove('active');
-                    if (wrapper) wrapper.style.display = 'none';
-                    savedPrefs[targetId] = false;
+    function loadPrefs() {
+        try {
+            const raw = JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
+            // Migração: formato antigo 'rd-wrap-{layout}' → '{layout}' puro
+            const migrated = {};
+            let needsSave = false;
+            for (const k in raw) {
+                if (k.indexOf('rd-wrap-') === 0) {
+                    migrated[k.replace('rd-wrap-', '')] = raw[k];
+                    needsSave = true;
                 } else {
-                    this.classList.add('active');
-                    // Remove o inline style e deixa o CSS decidir o display correto
-                    // (grid pro layout-grid, flex pros demais)
-                    if (wrapper) wrapper.style.removeProperty('display');
-                    savedPrefs[targetId] = true;
+                    migrated[k] = raw[k];
                 }
+            }
+            if (needsSave) savePrefs(migrated);
+            return migrated;
+        } catch (e) {
+            return {};
+        }
+    }
 
-                localStorage.setItem('rd_search_prefs', JSON.stringify(savedPrefs));
-            });
+    function savePrefs(prefs) {
+        try {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(prefs));
+        } catch (e) { /* cheio ou bloqueado — silencia */ }
+    }
+
+    function getLayoutFromChip(chip) {
+        // data-target="rd-wrap-{layout}" — extrai só o nome do layout
+        return chip.getAttribute('data-target').replace('rd-wrap-', '');
+    }
+
+    function getActiveLayouts() {
+        const active = [];
+        chips.forEach(chip => {
+            if (chip.classList.contains('active')) {
+                active.push(getLayoutFromChip(chip));
+            }
+        });
+        return active;
+    }
+
+    function applyChipState(prefs) {
+        chips.forEach(chip => {
+            const layout = getLayoutFromChip(chip);
+            if (prefs[layout] === false) {
+                chip.classList.remove('active');
+            } else {
+                chip.classList.add('active');
+            }
         });
     }
+
+    function setLoading(isLoading) {
+        resultsContainer.classList.toggle('rd-loading', isLoading);
+    }
+
+    function redistribute(paged) {
+        const active = getActiveLayouts();
+        const body = new URLSearchParams({
+            action: 'rd_search_redistribute',
+            nonce: rd_search_data.nonce,
+            search_query: rd_search_data.query,
+            active_layouts: active.join(','),
+            paged: paged || 1
+        });
+
+        setLoading(true);
+
+        return fetch(rd_search_data.ajaxurl, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: body.toString(),
+            credentials: 'same-origin'
+        })
+        .then(r => r.json())
+        .then(data => {
+            if (data && data.success && data.data) {
+                resultsContainer.innerHTML = data.data.html;
+            } else {
+                console.error('rd_search_redistribute failed:', data);
+            }
+        })
+        .catch(err => {
+            console.error('rd_search_redistribute error:', err);
+        })
+        .finally(() => {
+            setLoading(false);
+        });
+    }
+
+    // Detecta página atual considerando AMBOS formatos do WP:
+    //   - Pretty permalink: /page/N/ no path
+    //   - Query string:     ?paged=N
+    function getCurrentPaged() {
+        const url = new URL(window.location);
+        const pathMatch = url.pathname.match(/\/page\/(\d+)\/?$/);
+        if (pathMatch) return parseInt(pathMatch[1], 10);
+        const q = parseInt(url.searchParams.get('paged'), 10);
+        return q > 0 ? q : 1;
+    }
+
+    // Constrói URL pra page 1 removendo /page/N/ E ?paged=
+    function urlForPage1() {
+        const url = new URL(window.location);
+        url.pathname = url.pathname.replace(/\/page\/\d+\/?$/, '/');
+        url.searchParams.delete('paged');
+        return url.toString();
+    }
+
+    // INITIAL: aplica estado dos chips + redistribui se visitor tem prefs
+    // diferentes do default (preservando paged atual)
+    const savedPrefs = loadPrefs();
+    if (Object.keys(savedPrefs).length > 0) {
+        applyChipState(savedPrefs);
+        const hasInactive = Array.from(chips).some(c => !c.classList.contains('active'));
+        if (hasInactive) {
+            redistribute(getCurrentPaged());
+        }
+    }
+
+    // CLICK: toggle visual → salva prefs → redistribui (AJAX ou full reload)
+    chips.forEach(chip => {
+        chip.addEventListener('click', function() {
+            this.classList.toggle('active');
+
+            const prefs = loadPrefs();
+            prefs[getLayoutFromChip(this)] = this.classList.contains('active');
+            savePrefs(prefs);
+
+            if (getCurrentPaged() > 1) {
+                // Página > 1 → full reload pra page 1 (pagination sincroniza naturalmente)
+                // Próxima carga: JS lê prefs e aplica via initial AJAX
+                window.location.href = urlForPage1();
+            } else {
+                // Já em page 1 → AJAX puro
+                redistribute(1);
+            }
+        });
+    });
 });
 
 /* DARK/LIGHT MODE TOGGLE */

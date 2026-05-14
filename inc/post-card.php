@@ -33,6 +33,36 @@ function rd_get_formatted_views( $post_id ) {
 }
 
 /**
+ * Renderiza um bloco de distribuição da busca (wrappers internas).
+ * Consumido por search.php (initial load) e pelo AJAX handler
+ * (rd_ajax_search_redistribute) — ambos geram o mesmo HTML.
+ *
+ * Não envolve com .rd-search-results-containers — quem chama é responsável
+ * por esse outer (pra AJAX poder fazer swap só do innerHTML).
+ *
+ * @param array<string, array<int, \WP_Post>> $distribution Output de rd_search_distribute_posts()
+ */
+function rd_render_distribution( array $distribution ) {
+    global $post;
+
+    foreach ( $distribution as $layout => $posts ) {
+        if ( empty( $posts ) ) continue;
+
+        echo '<div id="rd-wrap-' . esc_attr( $layout ) . '" class="rd-search-wrapper rd-wrapper-' . esc_attr( $layout ) . '">';
+
+        foreach ( $posts as $p ) {
+            $post = $p; // phpcs:ignore WordPress.WP.GlobalVariablesOverride
+            setup_postdata( $post );
+            rd_render_post_card( $layout );
+        }
+
+        echo '</div>';
+    }
+
+    wp_reset_postdata();
+}
+
+/**
  * Renderiza um card de post no layout escolhido. Funciona dentro do loop do
  * WordPress (depende de get_the_ID(), get_the_title(), etc.).
  *

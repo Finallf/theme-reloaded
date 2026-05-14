@@ -109,6 +109,41 @@ mark.rd-highlight {
     }
 }
 
+// ==========================================================
+// Container de Resultados + Loading State (AJAX redistribuição)
+// ==========================================================
+.rd-search-results-containers {
+    position: relative;
+    min-height: 200px; // espaço pro spinner durante AJAX em resultado vazio
+    transition: opacity 0.2s ease;
+
+    &.rd-loading {
+        opacity: 0.4;
+        pointer-events: none;
+
+        // Spinner centralizado no topo do container
+        &::after {
+            content: '';
+            position: absolute;
+            top: 40px;
+            left: 50%;
+            margin-left: -18px;
+            width: 36px;
+            height: 36px;
+            border: 3px solid var(--rd-glass-border);
+            border-top-color: var(--rd-blue-light);
+            border-radius: 50%;
+            animation: rd-search-spinner 0.8s linear infinite;
+            z-index: 10;
+            pointer-events: none;
+        }
+    }
+}
+
+@keyframes rd-search-spinner {
+    to { transform: rotate(360deg); }
+}
+
 // Estruturas dos 4 Layouts (Garantir escalabilidade em telas diferentes)
 
 // ----- GRID: efeito clonado dos cards "Níveis Recomendados" da página 404 -----
