@@ -19,6 +19,7 @@
 	/* max-width: calc(100% - 370px); */
 
 	@media (max-width: 1024px) {
+		width: 100%; // align-items: flex-start do pai impede stretch automático em flex column
 		max-width: 100%;
 	}
 }

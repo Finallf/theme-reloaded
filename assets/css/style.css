@@ -572,6 +572,7 @@ a:hover {
 }
 @media (max-width: 1024px) {
   .content-area {
+    width: 100%;
     max-width: 100%;
   }
 }
