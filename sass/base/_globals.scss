@@ -33,7 +33,7 @@ img {
 
 body {
 	background-color: var(--rd-bg);
-	color: var(--rd-text);
+	color: var(--rd-text-light); // Tom suave por padrão; --rd-text é reservado pra destaques
 	font-family: $font-primary;
 	font-size: 16px;
 	line-height: 1.5;
@@ -52,7 +52,7 @@ h6 {
 	font-family: $font-heading;
 	font-weight: 500;
 	line-height: 1.4; // Títulos precisam de menos espaço entre linhas que o texto
-	color: var(--rd-text);
+	color: var(--rd-text-light); // Tom suave por padrão; sobrescrever com --rd-text quando precisar de destaque
 }
 
 a {
@@ -174,13 +174,12 @@ a {
     border-radius: 5px;
     text-align: center;
     margin-bottom: 20px;
-    color: var(--rd-text);
+    color: var(--rd-text-light);
 }
 
 .rd-support-title {
     margin-top: 0;
     font-size: 1.1rem;
-    color: var(--rd-text);
     margin-bottom: 20px;
 }
 
