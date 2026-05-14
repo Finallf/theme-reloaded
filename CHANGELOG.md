@@ -7,11 +7,29 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 <br>
 
 
+## [0.2.1](https://github.com/Finallf/theme-reloaded/compare/v0.2.0...v0.2.1) (2026-05-14)
+
+### 🐛 Bug Fixes
+
+* **header:** align search field to the right of the menu bar ([2ddcd1f](https://github.com/Finallf/theme-reloaded/commit/2ddcd1f4b8a13ca110b50165d19d88f68608f14a))
+
+<br>
+
+---
+
 ## [0.2.0-beta.2](https://github.com/Finallf/theme-reloaded/compare/v0.2.0-beta.1...v0.2.0-beta.2) (2026-05-14)
 
 ### 🐛 Bug Fixes
 
 * **header:** align search field to the right of the menu bar ([2ddcd1f](https://github.com/Finallf/theme-reloaded/commit/2ddcd1f4b8a13ca110b50165d19d88f68608f14a))
+
+<br>
+
+---
+
+## [0.2.0](https://github.com/Finallf/theme-reloaded/compare/v0.1.0...v0.2.0) (2026-05-14)
+
+* **release:** v0.2.0-beta.1 to v0.2.0
 
 <br>
 
