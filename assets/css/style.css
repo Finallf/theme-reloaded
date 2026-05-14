@@ -235,6 +235,10 @@ a:hover {
   width: 100%;
 }
 
+.rd-ad-sidebar-top {
+  margin-bottom: 20px;
+}
+
 /* --- Lógica Topo: Desktop vs Mobile (Anúncio Âncora no Topo) --- */
 .rd-ad-mobile {
   display: none;

@@ -105,19 +105,9 @@ get_header(); ?>
     </div>
 </main>
 
-<script>
-// Foca no campo de busca quando o botão "Buscar conteúdo" for clicado
-document.addEventListener('DOMContentLoaded', function() {
-    var trigger = document.getElementById('rd-404-search-trigger');
-    var searchField = document.querySelector('.search-field');
-
-    if (trigger && searchField) {
-        trigger.addEventListener('click', function() {
-            searchField.focus();
-            searchField.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        });
-    }
-});
-</script>
+<?php
+// Comportamento de focar o search-field ao clicar no botão "Buscar conteúdo"
+// vive em assets/js/navigation.js (SoC: zero JS em template PHP).
+?>
 
 <?php get_footer(); ?>

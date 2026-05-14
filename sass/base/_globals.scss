@@ -96,6 +96,11 @@ a {
     width: 100%;
 }
 
+// Banner topo da sidebar — espaço extra abaixo pra separar de blocos seguintes
+.rd-ad-sidebar-top {
+    margin-bottom: 20px;
+}
+
 /* --- Lógica Topo: Desktop vs Mobile (Anúncio Âncora no Topo) --- */
 .rd-ad-mobile {
     display: none;
