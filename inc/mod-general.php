@@ -8,37 +8,78 @@ defined('ABSPATH') || exit;
  * Controle de Exibição da Imagem Destacada (Single)       - (Interface) - (Geral) *
  ***********************************************************************************/
 
-// 1. Cria a caixinha (Meta Box) APENAS se a opção global estiver ativa no painel
+// 1. Cria a caixinha (Meta Box) só se PELO MENOS uma das opções gate estiver
+//    ativa no painel. Hoje: enable_thumb_control OU enable_primary_category.
+//    Se ambas desligadas, a caixinha some por inteiro (não fica vazia).
 add_action( 'add_meta_boxes', 'rd_add_post_options_meta_box' );
 function rd_add_post_options_meta_box() {
-    if ( rd_get_option_bool('enable_thumb_control') ) {
-        add_meta_box(
-            'rd_post_options',
-            __( 'Post Options (ReloadeD)', 'reloaded' ),
-            'rd_post_options_callback',
-            'post',
-            'side',
-            'default'
-        );
+    if ( ! rd_get_option_bool('enable_thumb_control') && ! rd_get_option_bool('enable_primary_category') ) {
+        return;
     }
+    add_meta_box(
+        'rd_post_options',
+        __( 'Post Options (ReloadeD)', 'reloaded' ),
+        'rd_post_options_callback',
+        'post',
+        'side',
+        'default'
+    );
 }
 
-// 2. Desenha o HTML do Checkbox dentro da caixinha
+// 2. Desenha o HTML dos controles dentro da caixinha
 function rd_post_options_callback( $post ) {
     wp_nonce_field( 'rd_save_post_options', 'rd_post_options_nonce' );
-    $is_hidden = get_post_meta( $post->ID, '_rd_hide_thumbnail', true );
-    ?>
+
+    // --- Hide Featured Image (se a opção global estiver ativa) ---
+    if ( rd_get_option_bool('enable_thumb_control') ) :
+        $is_hidden = get_post_meta( $post->ID, '_rd_hide_thumbnail', true );
+        ?>
+        <p>
+            <label>
+                <input type="checkbox" name="rd_hide_thumbnail" value="yes" <?php checked( $is_hidden, 'yes' ); ?> />
+                <?php esc_html_e( 'Hide Featured Image at the top of the post', 'reloaded' ); ?>
+            </label>
+        </p>
+        <p class="description"><?php esc_html_e( 'Check to prevent the thumbnail from duplicating with videos inserted at the beginning of the text.', 'reloaded' ); ?></p>
+        <hr style="margin: 12px 0;">
+    <?php endif; ?>
+
+    <?php // --- Primary Category (se a opção global estiver ativa) --- ?>
+    <?php if ( rd_get_option_bool('enable_primary_category') ) : ?>
     <p>
-        <label>
-        <input type="checkbox" name="rd_hide_thumbnail" value="yes" <?php checked( $is_hidden, 'yes' ); ?> />
-        <?php esc_html_e( 'Hide Featured Image at the top of the post', 'reloaded' ); ?>
-    </label>
+        <label for="rd_primary_category" style="display:block; margin-bottom:5px;">
+            <strong><?php esc_html_e( 'Primary Category', 'reloaded' ); ?></strong>
+        </label>
+        <?php
+        $primary_id = (int) get_post_meta( $post->ID, '_rd_primary_category', true );
+        $post_cats  = get_the_category( $post->ID );
+
+        if ( empty( $post_cats ) ) :
+            ?>
+            <span class="description"><?php esc_html_e( 'Save the post with categories assigned to choose a primary one.', 'reloaded' ); ?></span>
+            <?php
+        else :
+            ?>
+            <select id="rd_primary_category" name="rd_primary_category" style="width:100%;">
+                <option value="0"><?php esc_html_e( 'Auto (first category)', 'reloaded' ); ?></option>
+                <?php foreach ( $post_cats as $cat ) : ?>
+                    <option value="<?php echo esc_attr( $cat->term_id ); ?>" <?php selected( $primary_id, $cat->term_id ); ?>>
+                        <?php echo esc_html( $cat->name ); ?>
+                    </option>
+                <?php endforeach; ?>
+            </select>
+            <?php
+        endif;
+        ?>
     </p>
-    <p class="description"><?php esc_html_e( 'Check to prevent the thumbnail from duplicating with videos inserted at the beginning of the text.', 'reloaded' ); ?></p>
+    <p class="description">
+        <?php esc_html_e( 'When the post belongs to multiple categories, only the primary one will highlight in the menu.', 'reloaded' ); ?>
+    </p>
+    <?php endif; // enable_primary_category ?>
     <?php
 }
 
-// 3. Salva a preferência individual no banco de dados
+// 3. Salva as preferências individuais no banco de dados
 add_action( 'save_post', 'rd_save_post_options' );
 function rd_save_post_options( $post_id ) {
     if ( ! isset( $_POST['rd_post_options_nonce'] ) ||
@@ -53,10 +94,29 @@ function rd_save_post_options( $post_id ) {
         return;
     }
 
+    // Hide Featured Image
     if ( isset( $_POST['rd_hide_thumbnail'] ) ) {
         update_post_meta( $post_id, '_rd_hide_thumbnail', 'yes' );
     } else {
         delete_post_meta( $post_id, '_rd_hide_thumbnail' );
+    }
+
+    // Primary Category — só salva se a opção global estiver ativa E o ID for
+    // de uma categoria realmente atribuída ao post
+    if ( rd_get_option_bool('enable_primary_category') && isset( $_POST['rd_primary_category'] ) ) {
+        $chosen_id = absint( $_POST['rd_primary_category'] );
+        if ( $chosen_id === 0 ) {
+            // "Auto" → limpa o meta pra usar o fallback da primeira categoria
+            delete_post_meta( $post_id, '_rd_primary_category' );
+        } else {
+            $post_cat_ids = wp_get_post_categories( $post_id );
+            if ( in_array( $chosen_id, $post_cat_ids, true ) ) {
+                update_post_meta( $post_id, '_rd_primary_category', $chosen_id );
+            } else {
+                // Categoria escolhida não pertence mais ao post — limpa
+                delete_post_meta( $post_id, '_rd_primary_category' );
+            }
+        }
     }
 }
 

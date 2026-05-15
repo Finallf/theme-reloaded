@@ -19,6 +19,7 @@ function rd_set_default_options() {
             'enable_top_bar'        => 1,
             'image_resizing'        => 1,
             'enable_thumb_control'  => 1,
+            'enable_primary_category' => 1,
             'jpeg_quality'          => 90, // Valor padrão
             'comment_a11y'          => 1,
             'excerpt_text'          => '',
@@ -192,6 +193,7 @@ function rd_settings_init() {
     add_settings_field('enable_top_bar', __( 'Enable Top Bar', 'reloaded' ), 'rd_master_field_cb', 'rd_options_geral', 'sec_geral', ['id' => 'enable_top_bar', 'type' => 'checkbox', 'desc' => __( 'Displays a small bar at the top with date, latest news, and social networks.', 'reloaded' )]);
     add_settings_field('image_resizing', __( 'Resize Images', 'reloaded' ), 'rd_master_field_cb', 'rd_options_geral', 'sec_geral', ['id' => 'image_resizing', 'type' => 'checkbox', 'desc' => __( 'Enables exact cropping (Hard Crop) of uploaded images to ensure banners and cards are always aligned.', 'reloaded' )]);
     add_settings_field('enable_thumb_control', __( 'Featured Image', 'reloaded' ), 'rd_master_field_cb', 'rd_options_geral', 'sec_geral', ['id' => 'enable_thumb_control', 'type' => 'checkbox', 'desc' => __( 'Adds an option in the post editor sidebar to hide the featured image when reading the article (ideal for posts with videos at the top).', 'reloaded' )]);
+    add_settings_field('enable_primary_category', __( 'Primary Category', 'reloaded' ), 'rd_master_field_cb', 'rd_options_geral', 'sec_geral', ['id' => 'enable_primary_category', 'type' => 'checkbox', 'desc' => __( 'Adds a dropdown in the post editor to choose which category highlights in the menu when the post belongs to multiple categories. Without this, all matching menu items light up at once.', 'reloaded' )]);
     add_settings_field('jpeg_quality', __( 'Image Quality (%)', 'reloaded' ), 'rd_master_field_cb', 'rd_options_geral', 'sec_geral', ['id' => 'jpeg_quality', 'type' => 'number', 'default' => '90', 'desc' => __( 'Changes image quality. WP default is 82. Lower values make the site faster but reduce visual quality.', 'reloaded' )]);
     add_settings_field('comment_a11y', __( 'Comment Accessibility', 'reloaded' ), 'rd_master_field_cb', 'rd_options_geral', 'sec_geral', ['id' => 'comment_a11y', 'type' => 'checkbox', 'desc' => __( 'Adds labels and autocomplete attributes to the comment form.', 'reloaded' )]);
     add_settings_field('excerpt_text', __( 'Read More Button Text', 'reloaded' ), 'rd_master_field_cb', 'rd_options_geral', 'sec_geral', ['id' => 'excerpt_text', 'type' => 'text', 'placeholder' => __( 'Ex: Continue Reading &rarr;', 'reloaded' ), 'desc' => __( 'Customizes the excerpt button text. Leave blank to use the theme default.', 'reloaded' )]);
