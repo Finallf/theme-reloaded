@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ReloadeD 0.1.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/theme/reloaded\n"
-"POT-Creation-Date: 2026-05-14T14:51:00-03:00\n"
-"PO-Revision-Date: 2026-05-14 15:18-0300\n"
+"POT-Creation-Date: 2026-05-14T21:24:37-03:00\n"
+"PO-Revision-Date: 2026-05-14 21:36-0300\n"
 "Last-Translator: Regis Vieira Delgado (Finallf) <finallf2@gmail.com>\n"
 "Language-Team: Brazilian Portuguese\n"
 "Language: pt_BR\n"
@@ -145,7 +145,7 @@ msgstr "Apoie o Projeto"
 msgid "Community Discord"
 msgstr "Discord da Comunidade"
 
-#: footer.php:42 inc/panel.php:258
+#: footer.php:42 inc/panel.php:260
 msgid "GitHub Sponsors"
 msgstr "GitHub Sponsors"
 
@@ -172,25 +172,29 @@ msgstr "Voltar ao topo"
 msgid "Latest:"
 msgstr "Últimas:"
 
-#: header.php:94
-msgid "Open navigation menu"
-msgstr "Abrir menu de navegação"
-
-#: header.php:111
+#: header.php:100 header.php:129
 msgid "Search..."
 msgstr "Pesquisar..."
 
-#: header.php:114
+#: header.php:103 header.php:132
 msgid "Search the site"
 msgstr "Pesquisar no site"
 
-#: header.php:116
+#: header.php:105 header.php:134
 msgid "Search"
 msgstr "Buscar"
 
-#: header.php:127
+#: header.php:144
+msgid "Open search"
+msgstr "Abrir Pesquisa"
+
+#: header.php:153
 msgid "Toggle dark/light mode"
 msgstr "Alternar modo claro/escuro"
+
+#: header.php:161
+msgid "Open navigation menu"
+msgstr "Abrir menu de navegação"
 
 #: inc/core.php:39
 msgid "Primary Menu"
@@ -240,15 +244,15 @@ msgstr "Clique para copiar"
 msgid "Donate via PayPal"
 msgstr "Doar via PayPal"
 
-#: inc/mod-general.php:17
+#: inc/mod-general.php:21
 msgid "Post Options (ReloadeD)"
 msgstr "Opções do Artigo (ReloadeD)"
 
-#: inc/mod-general.php:34
+#: inc/mod-general.php:40
 msgid "Hide Featured Image at the top of the post"
 msgstr "Ocultar Imagem Destacada no topo da leitura"
 
-#: inc/mod-general.php:37
+#: inc/mod-general.php:43
 msgid ""
 "Check to prevent the thumbnail from duplicating with videos inserted at the "
 "beginning of the text."
@@ -256,19 +260,41 @@ msgstr ""
 "Marque para impedir que a miniatura duplique com vídeos inseridos no início "
 "do texto."
 
-#: inc/mod-general.php:92
+#: inc/mod-general.php:51 inc/panel.php:196
+msgid "Primary Category"
+msgstr "Categoria principal"
+
+#: inc/mod-general.php:59
+msgid "Save the post with categories assigned to choose a primary one."
+msgstr ""
+"Salve a publicação com as categorias atribuídas para selecionar uma "
+"principal."
+
+#: inc/mod-general.php:64
+msgid "Auto (first category)"
+msgstr "Auto (primeira categoria)"
+
+#: inc/mod-general.php:76
+msgid ""
+"When the post belongs to multiple categories, only the primary one will "
+"highlight in the menu."
+msgstr ""
+"Quando uma publicação pertence a várias categorias, apenas a principal será "
+"destacada no menu."
+
+#: inc/mod-general.php:152
 msgid "Name"
 msgstr "Nome"
 
-#: inc/mod-general.php:98
+#: inc/mod-general.php:158
 msgid "Email"
 msgstr "E-mail"
 
-#: inc/mod-general.php:104
+#: inc/mod-general.php:164
 msgid "Website"
 msgstr "Site"
 
-#: inc/mod-general.php:112
+#: inc/mod-general.php:172
 msgid ""
 "Save my name, email, and website in this browser for the next time I comment."
 msgstr "Salvar meus dados neste navegador para a próxima vez que eu comentar."
@@ -352,60 +378,60 @@ msgstr "Entendi e Aceito"
 msgid "👁️ Views"
 msgstr "👁️ Visualizações"
 
-#: inc/panel.php:112
+#: inc/panel.php:113
 msgid "ReloadeD Options"
 msgstr "ReloadeD Opções"
 
-#: inc/panel.php:137
+#: inc/panel.php:138
 msgid "General Features"
 msgstr "Recursos Gerais"
 
-#: inc/panel.php:138
+#: inc/panel.php:139
 msgid "Privacy (LGPD)"
 msgstr "Privacidade (LGPD)"
 
-#: inc/panel.php:139
+#: inc/panel.php:140
 msgid "Integrations"
 msgstr "Integrações"
 
-#: inc/panel.php:140
+#: inc/panel.php:141
 msgid "Performance"
 msgstr "Performance"
 
-#: inc/panel.php:141
+#: inc/panel.php:142
 msgid "Social Networks"
 msgstr "Redes Sociais"
 
-#: inc/panel.php:142 inc/panel.php:252
+#: inc/panel.php:143 inc/panel.php:254
 msgid "SEO"
 msgstr "SEO"
 
-#: inc/panel.php:143
+#: inc/panel.php:144
 msgid "Donations"
 msgstr "Doações"
 
-#: inc/panel.php:144
+#: inc/panel.php:145
 msgid "Ads"
 msgstr "ADS"
 
-#: inc/panel.php:145
+#: inc/panel.php:146
 msgid "Maintenance"
 msgstr "Manutenção"
 
-#: inc/panel.php:150
+#: inc/panel.php:151
 msgid "ReloadeD - Control Panel"
 msgstr "Painel de Controle - ReloadeD"
 
 # --- Seção Geral ---
-#: inc/panel.php:190
+#: inc/panel.php:191
 msgid "Theme Features"
 msgstr "Recursos do Tema"
 
-#: inc/panel.php:191
+#: inc/panel.php:192
 msgid "Back to Top Button"
 msgstr "Botão Voltar ao Topo"
 
-#: inc/panel.php:191
+#: inc/panel.php:192
 msgid ""
 "Enables a floating button in the bottom right corner for the user to quickly "
 "return to the top of the page."
@@ -413,21 +439,21 @@ msgstr ""
 "Ativa a exibição de um botão flutuante no canto inferior direito para o "
 "usuário retornar rapidamente ao topo da página."
 
-#: inc/panel.php:192
+#: inc/panel.php:193
 msgid "Enable Top Bar"
 msgstr "Ativar Barra de Topo"
 
-#: inc/panel.php:192
+#: inc/panel.php:193
 msgid ""
 "Displays a small bar at the top with date, latest news, and social networks."
 msgstr ""
 "Exibe uma pequena barra no topo com data, últimas notícias e redes sociais."
 
-#: inc/panel.php:193
+#: inc/panel.php:194
 msgid "Resize Images"
 msgstr "Redimensionar Imagens"
 
-#: inc/panel.php:193
+#: inc/panel.php:194
 msgid ""
 "Enables exact cropping (Hard Crop) of uploaded images to ensure banners and "
 "cards are always aligned."
@@ -435,11 +461,11 @@ msgstr ""
 "Ativa a criação de recortes exatos (Hard Crop) das imagens enviadas para "
 "garantir que banners e cards fiquem sempre alinhados."
 
-#: inc/panel.php:194
+#: inc/panel.php:195
 msgid "Featured Image"
 msgstr "Imagem Destacada"
 
-#: inc/panel.php:194
+#: inc/panel.php:195
 msgid ""
 "Adds an option in the post editor sidebar to hide the featured image when "
 "reading the article (ideal for posts with videos at the top)."
@@ -447,11 +473,21 @@ msgstr ""
 "Adiciona uma opção na barra lateral do editor de postagens para ocultar a "
 "imagem destacada na leitura do artigo (ideal para posts com vídeos no topo)."
 
-#: inc/panel.php:195
+#: inc/panel.php:196
+msgid ""
+"Adds a dropdown in the post editor to choose which category highlights in "
+"the menu when the post belongs to multiple categories. Without this, all "
+"matching menu items light up at once."
+msgstr ""
+"Adiciona um dropdown no editor para escolher qual categoria destaca no menu "
+"quando o post pertence a várias categorias. Sem isso, todos os itens do menu "
+"correspondentes acendem ao mesmo tempo."
+
+#: inc/panel.php:197
 msgid "Image Quality (%)"
 msgstr "Qualidade das Imagens (%)"
 
-#: inc/panel.php:195
+#: inc/panel.php:197
 msgid ""
 "Changes image quality. WP default is 82. Lower values make the site faster "
 "but reduce visual quality."
@@ -459,36 +495,36 @@ msgstr ""
 "Altera a qualidade das imagens. O padrão do WP é 82. Valores menores deixam "
 "o site mais rápido, mas reduzem a qualidade visual."
 
-#: inc/panel.php:196
+#: inc/panel.php:198
 msgid "Comment Accessibility"
 msgstr "Acessibilidade dos Comentários"
 
-#: inc/panel.php:196
+#: inc/panel.php:198
 msgid "Adds labels and autocomplete attributes to the comment form."
 msgstr ""
 "Adiciona labels e atributos de preenchimento automático ao formulário de "
 "comentários."
 
-#: inc/panel.php:197
+#: inc/panel.php:199
 msgid "Read More Button Text"
 msgstr "Texto do botão \"Leia Mais\""
 
-#: inc/panel.php:197
+#: inc/panel.php:199
 msgid "Ex: Continue Reading &rarr;"
 msgstr "Ex: Continuar Lendo &rarr;"
 
-#: inc/panel.php:197
+#: inc/panel.php:199
 msgid ""
 "Customizes the excerpt button text. Leave blank to use the theme default."
 msgstr ""
 "Personaliza o texto do botão de resumo. Deixe em branco para usar o padrão "
 "do tema."
 
-#: inc/panel.php:198
+#: inc/panel.php:200
 msgid "Comments Separator"
 msgstr "Separador de Comentários"
 
-#: inc/panel.php:198
+#: inc/panel.php:200
 msgid ""
 "Text between Author and Post (e.g., \"commented on post:\"). Leave "
 "<strong>empty</strong> for WP default or type <strong>&amp;nbsp;</strong> to "
@@ -498,11 +534,11 @@ msgstr ""
 "<strong>vazio</strong> para o padrão do WP ou digite <strong>&amp;nbsp;</"
 "strong> para ocultar."
 
-#: inc/panel.php:199
+#: inc/panel.php:201
 msgid "Views Counter"
 msgstr "Contador de Visualizações"
 
-#: inc/panel.php:199
+#: inc/panel.php:201
 msgid ""
 "Enables the post views counting system. A single IP counts only once every "
 "30 minutes. Known bots are automatically ignored."
@@ -511,31 +547,31 @@ msgstr ""
 "apenas uma vez a cada 30 minutos. Bots conhecidos são ignorados "
 "automaticamente."
 
-#: inc/panel.php:200
+#: inc/panel.php:202
 msgid "Dark/Light Switcher"
 msgstr "Alternar Claro/Escuro"
 
-#: inc/panel.php:200
+#: inc/panel.php:202
 msgid "Enables the theme mode switcher (Dark/Light) in the header."
 msgstr "Habilita a alternância de modo do tema (Claro/Escuro) no cabeçalho."
 
-#: inc/panel.php:201
+#: inc/panel.php:203
 msgid "Default Theme Mode"
 msgstr "Modo Padrão do Tema"
 
-#: inc/panel.php:205
+#: inc/panel.php:207
 msgid "System (follow OS)"
 msgstr "Sistema (seguir SO)"
 
-#: inc/panel.php:206
+#: inc/panel.php:208
 msgid "Dark"
 msgstr "Escuro"
 
-#: inc/panel.php:207
+#: inc/panel.php:209
 msgid "Light"
 msgstr "Claro"
 
-#: inc/panel.php:209
+#: inc/panel.php:211
 msgid ""
 "Initial theme mode for first-time visitors. Visitors who clicked the "
 "switcher keep their choice in localStorage."
@@ -544,31 +580,31 @@ msgstr ""
 "clicaram no switcher mantêm a escolha no localStorage."
 
 # --- Busca ---
-#: inc/panel.php:213
+#: inc/panel.php:215
 msgid "Search Page"
 msgstr "Página de Busca"
 
-#: inc/panel.php:214
+#: inc/panel.php:216
 msgid "Grid Layout"
 msgstr "Layout Grid"
 
-#: inc/panel.php:214
+#: inc/panel.php:216
 msgid "Enables Grid layout (Cards side by side)."
 msgstr "Habilita o layout de Grid (Cards lado a lado)."
 
-#: inc/panel.php:215
+#: inc/panel.php:217
 msgid "Vertical List"
 msgstr "Lista Vertical"
 
-#: inc/panel.php:215
+#: inc/panel.php:217
 msgid "Enables Vertical List layout (Large image + excerpt)."
 msgstr "Habilita o layout de Lista Vertical (Imagem grande + resumo)."
 
-#: inc/panel.php:216
+#: inc/panel.php:218
 msgid "Compact List"
 msgstr "Lista Compacta"
 
-#: inc/panel.php:216
+#: inc/panel.php:218
 msgid ""
 "Enables Compact layout (Thumbnail + title inline). <strong>Note:</strong> "
 "Compact also acts as a safety net — if the visitor disables every chip on "
@@ -579,36 +615,36 @@ msgstr ""
 "desativar todos os chips no frontend, todos os resultados caem aqui "
 "independente desta configuração."
 
-#: inc/panel.php:217
+#: inc/panel.php:219
 msgid "Google Style"
 msgstr "Estilo Google"
 
-#: inc/panel.php:217
+#: inc/panel.php:219
 msgid "Enables minimalist text-focused layout, similar to search engines."
 msgstr ""
 "Habilita o layout minimalista focado em texto, similar a motores de busca."
 
 # --- Privacidade ---
-#: inc/panel.php:220
+#: inc/panel.php:222
 msgid "LGPD and Cookies"
 msgstr "LGPD e Cookies"
 
-#: inc/panel.php:221
+#: inc/panel.php:223
 msgid "LGPD - Cookie Banner"
 msgstr "LGPD - Banner de Cookies"
 
-#: inc/panel.php:221
+#: inc/panel.php:223
 msgid ""
 "Enables the cookie consent banner in the site footer for legal compliance."
 msgstr ""
 "Ativa o banner de consentimento de cookies no rodapé do site para "
 "conformidade com a lei."
 
-#: inc/panel.php:222
+#: inc/panel.php:224
 msgid "Cookie Banner Text"
 msgstr "Texto do Banner de Cookies"
 
-#: inc/panel.php:222
+#: inc/panel.php:224
 #, php-format
 msgid ""
 "Customize the cookie banner message. Use <strong>%s</strong> where you want "
@@ -622,32 +658,32 @@ msgstr ""
 "Deixe vazio para usar o texto traduzível padrão."
 
 # --- Integrações ---
-#: inc/panel.php:225
+#: inc/panel.php:227
 msgid "Scripts and IDs"
 msgstr "Scripts e IDs"
 
-#: inc/panel.php:226
+#: inc/panel.php:228
 msgid "Google Analytics ID"
 msgstr "ID Google Analytics"
 
-#: inc/panel.php:226
+#: inc/panel.php:228
 msgid "Insert only the tracking code (Tag ID). Leave empty to disable."
 msgstr ""
 "Insira apenas o código de rastreamento (Tag ID). Deixe vazio para desativar."
 
-#: inc/panel.php:227
+#: inc/panel.php:229
 msgid "Enable Discord Widget"
 msgstr "Ativar Widget do Discord"
 
-#: inc/panel.php:227
+#: inc/panel.php:229
 msgid "Enables displaying the Discord server in the sidebar."
 msgstr "Habilita a exibição do servidor do Discord na barra lateral."
 
-#: inc/panel.php:228
+#: inc/panel.php:230
 msgid "Discord ID"
 msgstr "ID do Discord"
 
-#: inc/panel.php:228
+#: inc/panel.php:230
 msgid ""
 "Server ID to activate communication with the official widget in the sidebar."
 msgstr ""
@@ -655,15 +691,15 @@ msgstr ""
 "barra lateral."
 
 # --- Performance ---
-#: inc/panel.php:231
+#: inc/panel.php:233
 msgid "Technical Optimization"
 msgstr "Otimização Técnica"
 
-#: inc/panel.php:232
+#: inc/panel.php:234
 msgid "Markdown"
 msgstr "Markdown"
 
-#: inc/panel.php:232
+#: inc/panel.php:234
 msgid ""
 "Enables support for Markdown syntax, allowing you to write articles natively "
 "(like GitHub or Docker Hub)."
@@ -671,11 +707,11 @@ msgstr ""
 "Ativa o suporte a sintaxe Markdown, permitindo escrever artigos (como no "
 "GitHub ou Docker Hub) nativamente."
 
-#: inc/panel.php:233
+#: inc/panel.php:235
 msgid "Code Highlight"
 msgstr "Destaque de Código"
 
-#: inc/panel.php:233
+#: inc/panel.php:235
 msgid ""
 "Enables Syntax Highlight support, which colors programming codes. It is only "
 "loaded on posts for performance."
@@ -683,11 +719,11 @@ msgstr ""
 "Ativa o suporte a Syntax Highlight, que colore códigos de programação. É "
 "carregado apenas em posts para performance."
 
-#: inc/panel.php:234
+#: inc/panel.php:236
 msgid "Disable Native Emojis"
 msgstr "Desativar Emojis Nativos"
 
-#: inc/panel.php:234
+#: inc/panel.php:236
 msgid ""
 "Removes the WP emojis script. Modern browsers already render emojis "
 "natively, enable this to save requests."
@@ -695,11 +731,11 @@ msgstr ""
 "Remove o script de emojis do WP. Navegadores modernos já renderizam emojis "
 "nativamente, ative isso para poupar requisições."
 
-#: inc/panel.php:235
+#: inc/panel.php:237
 msgid "Hide WP Version"
 msgstr "Ocultar Versão do WP"
 
-#: inc/panel.php:235
+#: inc/panel.php:237
 msgid ""
 "Removes the WordPress generator meta tag from the source code. A basic "
 "security best practice."
@@ -707,11 +743,11 @@ msgstr ""
 "Remove a meta tag geradora do WordPress do código-fonte. Uma boa prática de "
 "segurança básica."
 
-#: inc/panel.php:236
+#: inc/panel.php:238
 msgid "Security Headers"
 msgstr "Headers de Segurança"
 
-#: inc/panel.php:236
+#: inc/panel.php:238
 msgid ""
 "Sends defensive HTTP headers on the frontend (X-Frame-Options, X-Content-"
 "Type-Options, Referrer-Policy, Permissions-Policy) to mitigate clickjacking "
@@ -721,11 +757,11 @@ msgstr ""
 "Options, Referrer-Policy, Permissions-Policy) pra mitigar clickjacking e "
 "MIME sniffing. Não afeta o painel admin."
 
-#: inc/panel.php:237
+#: inc/panel.php:239
 msgid "Facades System"
 msgstr "Sistema de Fachadas"
 
-#: inc/panel.php:237
+#: inc/panel.php:239
 msgid ""
 "Replaces heavy iframes (e.g. YouTube) with a lightweight image, loading the "
 "player only when the user clicks."
@@ -733,11 +769,11 @@ msgstr ""
 "Substitui iframes pesados (ex: YouTube) por uma imagem leve, carregando o "
 "player apenas quando o usuário clica."
 
-#: inc/panel.php:238
+#: inc/panel.php:240
 msgid "Disable WP CSS (Bloat)"
 msgstr "Desativa o CSS do WP (Bloat)"
 
-#: inc/panel.php:238
+#: inc/panel.php:240
 msgid ""
 "Removes global and block CSS from Gutenberg. Makes the site lighter, ideal "
 "for those using Markdown."
@@ -746,71 +782,71 @@ msgstr ""
 "para quem usa Markdown."
 
 # --- Redes Sociais ---
-#: inc/panel.php:241
+#: inc/panel.php:243
 msgid "Your Social Network Links"
 msgstr "Links das suas Redes Sociais"
 
-#: inc/panel.php:242
+#: inc/panel.php:244
 msgid "Discord"
 msgstr "Discord"
 
-#: inc/panel.php:242
+#: inc/panel.php:244
 msgid "Link to your server or permanent invite to the community."
 msgstr "Link do seu servidor ou convite permanente para a comunidade."
 
-#: inc/panel.php:243
+#: inc/panel.php:245
 msgid "Telegram"
 msgstr "Telegram"
 
-#: inc/panel.php:243
+#: inc/panel.php:245
 msgid "Link to your official channel or group."
 msgstr "Link do seu canal ou grupo oficial."
 
-#: inc/panel.php:244
+#: inc/panel.php:246
 msgid "YouTube"
 msgstr "YouTube"
 
-#: inc/panel.php:244
+#: inc/panel.php:246
 msgid "URL to your channel to display videos and streams."
 msgstr "URL do seu canal para exibição de vídeos e transmissões."
 
-#: inc/panel.php:245
+#: inc/panel.php:247
 msgid "Instagram"
 msgstr "Instagram"
 
-#: inc/panel.php:245
+#: inc/panel.php:247
 msgid "Link to your profile for photos and visual updates."
 msgstr "Link do seu perfil para fotos e atualizações visuais."
 
-#: inc/panel.php:246
+#: inc/panel.php:248
 msgid "Steam"
 msgstr "Steam"
 
-#: inc/panel.php:246
+#: inc/panel.php:248
 msgid "Link to your Steam group or curator profile."
 msgstr "Link do seu grupo na Steam ou perfil de curador."
 
-#: inc/panel.php:247
+#: inc/panel.php:249
 msgid "Twitter (X)"
 msgstr "Twitter (X)"
 
-#: inc/panel.php:247
+#: inc/panel.php:249
 msgid "Link to your official profile on X."
 msgstr "Link do seu perfil oficial no X."
 
-#: inc/panel.php:248
+#: inc/panel.php:250
 msgid "Facebook"
 msgstr "Facebook"
 
-#: inc/panel.php:248
+#: inc/panel.php:250
 msgid "Link to your official page or community."
 msgstr "Link da sua página oficial ou comunidade."
 
-#: inc/panel.php:249
+#: inc/panel.php:251
 msgid "WhatsApp"
 msgstr "WhatsApp"
 
-#: inc/panel.php:249
+#: inc/panel.php:251
 msgid ""
 "Direct link to your WhatsApp number or group (use international format)."
 msgstr ""
@@ -818,11 +854,11 @@ msgstr ""
 "internacional)."
 
 # --- SEO ---
-#: inc/panel.php:253
+#: inc/panel.php:255
 msgid "Open Graph Meta Tags"
 msgstr "Meta Tags Open Graph"
 
-#: inc/panel.php:253
+#: inc/panel.php:255
 msgid ""
 "Enables the OG Tags system. Generates the necessary tags for social networks "
 "(Facebook, Discord, WhatsApp)."
@@ -830,39 +866,39 @@ msgstr ""
 "Ativa o sistema de OG Tags. Gera as tags necessárias para redes sociais "
 "(Facebook, Discord, WhatsApp)."
 
-#: inc/panel.php:254
+#: inc/panel.php:256
 msgid "Fallback Image (Open Graph)"
 msgstr "Imagem de Fallback (Open Graph)"
 
-#: inc/panel.php:254
+#: inc/panel.php:256
 msgid "Select an image from your library to be the default on social networks."
 msgstr ""
 "Selecione uma imagem da sua biblioteca para ser o padrão nas redes sociais."
 
 # --- Doações ---
-#: inc/panel.php:257
+#: inc/panel.php:259
 msgid "Donation System"
 msgstr "Sistema de Doações"
 
-#: inc/panel.php:258
+#: inc/panel.php:260
 msgid "Link to your official GitHub sponsorship page for global supporters."
 msgstr ""
 "Link para a sua página oficial de patrocínio no GitHub para apoiadores "
 "globais."
 
-#: inc/panel.php:259
+#: inc/panel.php:261
 msgid "PayPal Donation Link"
 msgstr "Link de Doação PayPal"
 
-#: inc/panel.php:259
+#: inc/panel.php:261
 msgid "Direct URL to your PayPal donation page."
 msgstr "URL direta da sua página de doação do PayPal."
 
-#: inc/panel.php:260
+#: inc/panel.php:262
 msgid "PayPal QR Code"
 msgstr "QR Code do PayPal"
 
-#: inc/panel.php:260
+#: inc/panel.php:262
 msgid ""
 "Upload the PayPal QR Code. When clicked on the site, it will open the link "
 "configured above."
@@ -870,11 +906,11 @@ msgstr ""
 "Upload do QR Code do PayPal. Ao ser clicado no site, ele abrirá o link "
 "configurado acima."
 
-#: inc/panel.php:261
+#: inc/panel.php:263
 msgid "PIX Link (Copy and Paste)"
 msgstr "Link do PIX (Copia e Cola)"
 
-#: inc/panel.php:261
+#: inc/panel.php:263
 msgid ""
 "Direct URL for PIX payment (if your bank provides a link). The QR Code will "
 "be clickable."
@@ -882,82 +918,82 @@ msgstr ""
 "URL direta para o pagamento PIX (se o seu banco fornecer link). O QR Code "
 "ficará clicável."
 
-#: inc/panel.php:262
+#: inc/panel.php:264
 msgid "PIX QR Code"
 msgstr "QR Code do PIX"
 
-#: inc/panel.php:262
+#: inc/panel.php:264
 msgid "Upload your PIX QR Code image."
 msgstr "Faça o upload da imagem do seu QR Code do PIX."
 
-#: inc/panel.php:263
+#: inc/panel.php:265
 msgid "PIX Key"
 msgstr "Chave PIX"
 
-#: inc/panel.php:263
+#: inc/panel.php:265
 msgid "email@domain.com or CPF/CNPJ"
 msgstr "email@dominio.com.br ou CPF/CNPJ"
 
-#: inc/panel.php:263
+#: inc/panel.php:265
 msgid "Your direct PIX key for supporters from Brazil."
 msgstr "Sua chave PIX direta para apoiadores do Brasil."
 
 # --- ADS ---
-#: inc/panel.php:266
+#: inc/panel.php:268
 msgid "Advertising Zones"
 msgstr "Zonas de Publicidade"
 
-#: inc/panel.php:267
+#: inc/panel.php:269
 msgid "Global Ad Script"
 msgstr "Script Global de Anúncios"
 
-#: inc/panel.php:267
+#: inc/panel.php:269
 msgid "Paste here the global &lt;head&gt; tag (e.g. AdSense Auto Ads)."
 msgstr "Cole aqui a tag &lt;head&gt; global (ex: Auto Ads do AdSense)."
 
-#: inc/panel.php:268
+#: inc/panel.php:270
 msgid "Top Banner - Desktop (728x90)"
 msgstr "Banner Topo - Desktop (728x90)"
 
-#: inc/panel.php:268
+#: inc/panel.php:270
 msgid "Rendered in the header only on large screens (PCs and Laptops)."
 msgstr "Renderizado no cabeçalho apenas em telas grandes (PCs e Notebooks)."
 
-#: inc/panel.php:269
+#: inc/panel.php:271
 msgid "Top Banner - Mobile (320x100)"
 msgstr "Banner Topo - Mobile (320x100)"
 
-#: inc/panel.php:269
+#: inc/panel.php:271
 msgid "Rendered in the header only on smartphone screens."
 msgstr "Renderizado no cabeçalho apenas em telas de smartphones."
 
-#: inc/panel.php:270
+#: inc/panel.php:272
 msgid "Sidebar Banner - Top (300x250)"
 msgstr "Banner Sidebar - Topo (300x250)"
 
-#: inc/panel.php:270
+#: inc/panel.php:272
 msgid "Rendered in the sidebar, right below integrations (e.g. Discord)."
 msgstr ""
 "Renderizado na barra lateral, logo abaixo das integrações (ex: Discord)."
 
-#: inc/panel.php:271
+#: inc/panel.php:273
 msgid "Sidebar Banner - Sticky (300x600)"
 msgstr "Banner Sidebar - Sticky (300x600)"
 
-#: inc/panel.php:271
+#: inc/panel.php:273
 msgid "Rendered at the bottom of the sidebar. Follows the screen scroll."
 msgstr "Renderizado no final da barra lateral. Acompanha a rolagem da tela."
 
 # --- Manutenção ---
-#: inc/panel.php:274
+#: inc/panel.php:276
 msgid "Access Control"
 msgstr "Controle de Acesso"
 
-#: inc/panel.php:275
+#: inc/panel.php:277
 msgid "Enable Maintenance"
 msgstr "Ativar Manutenção"
 
-#: inc/panel.php:275
+#: inc/panel.php:277
 msgid ""
 "Blocks access from regular visitors and displays a \"We'll be right back\" "
 "screen (Returns HTTP 503 to Google)."
@@ -965,11 +1001,11 @@ msgstr ""
 "Bloqueia o acesso de visitantes comuns e exibe uma tela de \"Voltamos logo\" "
 "(Retorna HTTP 503 para o Google)."
 
-#: inc/panel.php:276
+#: inc/panel.php:278
 msgid "Dev Password"
 msgstr "Senha de Dev"
 
-#: inc/panel.php:276
+#: inc/panel.php:278
 msgid ""
 "Password for developers to bypass maintenance. Access: "
 "<strong>yourdomain.com/?rd-dev-login</strong> and enter the password in the "
@@ -983,11 +1019,11 @@ msgstr ""
 "criptográfico — após salvar, este campo aparecerá vazio (isso é normal e "
 "seguro)."
 
-#: inc/panel.php:277
+#: inc/panel.php:279
 msgid "Maintenance Text"
 msgstr "Texto de Manutenção"
 
-#: inc/panel.php:277
+#: inc/panel.php:279
 msgid ""
 "Customize the message visitors will see on the block screen. Accepts basic "
 "HTML (e.g. &lt;strong&gt;, &lt;br&gt;)."
@@ -996,11 +1032,11 @@ msgstr ""
 "HTML básico (ex: &lt;strong&gt;, &lt;br&gt;)."
 
 # --- Botões e Componentes Reutilizáveis ---
-#: inc/panel.php:313
+#: inc/panel.php:315
 msgid "Select Image"
 msgstr "Selecionar Imagem"
 
-#: inc/panel.php:316
+#: inc/panel.php:318
 msgid "Remove"
 msgstr "Remover"
 
