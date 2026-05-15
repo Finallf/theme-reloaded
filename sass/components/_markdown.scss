@@ -12,6 +12,7 @@
 	}
 
 	code {
+		font-family: $font-mono;
 		overflow-wrap: anywhere; /* Força a quebra em navegadores modernos */
 		word-wrap: break-word;
 		word-break: break-word; /* Quebra a palavra ao meio se bater na borda */

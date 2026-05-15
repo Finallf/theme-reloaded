@@ -21,7 +21,7 @@
 			color: #c9d1d9 !important;
 			// Transição suave pro light mode
 			transition: color 0.3s ease, background-color 0.3s ease;
-			font-family: 'Consolas', 'Monaco', 'Courier New', monospace !important;
+			font-family: $font-mono !important;
 			text-shadow: none !important;
 			font-size: 0.9rem !important;
 			background: none !important;
@@ -37,7 +37,7 @@
 		background-color: rgba(110, 118, 129, 0.4) !important; // Mantido hardcoded do GitHub
 		padding: 0.2em 0.4em !important;
 		border-radius: 5px !important; // ALERTA: Unificado de 6px para os seus 5px!
-		font-family: 'Consolas', 'Monaco', monospace !important;
+		font-family: $font-mono !important;
 		font-size: 85% !important;
 		color: #e6edf3 !important;
 	}

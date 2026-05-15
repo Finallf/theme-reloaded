@@ -27,10 +27,38 @@
    ========================================================================== */
 @font-face {
   font-family: "Inter";
-  font-style: normal;
-  font-weight: 400;
-  font-display: swap;
   src: url("../fonts/inter-regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Inter";
+  src: url("../fonts/inter-italic.woff2") format("woff2");
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Inter";
+  src: url("../fonts/inter-500.woff2") format("woff2");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Inter";
+  src: url("../fonts/inter-600.woff2") format("woff2");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Inter";
+  src: url("../fonts/inter-700.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
 }
 @font-face {
   font-family: "Poppins";
@@ -48,21 +76,63 @@
 }
 @font-face {
   font-family: "Poppins";
-  src: url("../fonts/poppins-medium.woff2") format("woff2");
+  src: url("../fonts/poppins-500.woff2") format("woff2");
   font-weight: 500;
   font-style: normal;
   font-display: swap;
 }
 @font-face {
   font-family: "Poppins";
-  src: url("../fonts/poppins-semibold.woff2") format("woff2");
+  src: url("../fonts/poppins-600.woff2") format("woff2");
   font-weight: 600;
   font-style: normal;
   font-display: swap;
 }
 @font-face {
   font-family: "Poppins";
-  src: url("../fonts/poppins-bold.woff2") format("woff2");
+  src: url("../fonts/poppins-700.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Poppins";
+  src: url("../fonts/poppins-800.woff2") format("woff2");
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Poppins";
+  src: url("../fonts/poppins-900.woff2") format("woff2");
+  font-weight: 900;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "JetBrains Mono";
+  src: url("../fonts/jetbrains-mono-regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "JetBrains Mono";
+  src: url("../fonts/jetbrains-mono-italic.woff2") format("woff2");
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+@font-face {
+  font-family: "JetBrains Mono";
+  src: url("../fonts/jetbrains-mono-600.woff2") format("woff2");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "JetBrains Mono";
+  src: url("../fonts/jetbrains-mono-700.woff2") format("woff2");
   font-weight: 700;
   font-style: normal;
   font-display: swap;
@@ -376,7 +446,7 @@ a:hover {
   border: 1px solid rgba(0, 191, 165, 0.3);
   padding: 12px 15px;
   border-radius: 6px;
-  font-family: monospace;
+  font-family: "JetBrains Mono", ui-monospace, "Cascadia Mono", "Source Code Pro", Menlo, Consolas, monospace;
   font-size: 0.9rem;
   cursor: pointer;
   width: 100%;
@@ -2085,7 +2155,7 @@ a:hover {
   color: #c9d1d9 !important;
   -webkit-transition: color 0.3s ease, background-color 0.3s ease;
   transition: color 0.3s ease, background-color 0.3s ease;
-  font-family: "Consolas", "Monaco", "Courier New", monospace !important;
+  font-family: "JetBrains Mono", ui-monospace, "Cascadia Mono", "Source Code Pro", Menlo, Consolas, monospace !important;
   text-shadow: none !important;
   font-size: 0.9rem !important;
   background: none !important;
@@ -2096,7 +2166,7 @@ a:hover {
   background-color: rgba(110, 118, 129, 0.4) !important;
   padding: 0.2em 0.4em !important;
   border-radius: 5px !important;
-  font-family: "Consolas", "Monaco", monospace !important;
+  font-family: "JetBrains Mono", ui-monospace, "Cascadia Mono", "Source Code Pro", Menlo, Consolas, monospace !important;
   font-size: 85% !important;
   color: #e6edf3 !important;
 }
@@ -2461,6 +2531,7 @@ a:hover {
   font-weight: 500;
 }
 .entry-content code {
+  font-family: "JetBrains Mono", ui-monospace, "Cascadia Mono", "Source Code Pro", Menlo, Consolas, monospace;
   overflow-wrap: anywhere; /* Força a quebra em navegadores modernos */
   word-wrap: break-word;
   word-break: break-word; /* Quebra a palavra ao meio se bater na borda */
@@ -3222,7 +3293,7 @@ a:hover {
   background: rgba(255, 255, 255, 0.05);
   padding: 2px 8px;
   border-radius: 3px;
-  font-family: monospace;
+  font-family: "JetBrains Mono", ui-monospace, "Cascadia Mono", "Source Code Pro", Menlo, Consolas, monospace;
   font-size: 0.9em;
 }
 
