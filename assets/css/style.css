@@ -2764,6 +2764,12 @@ a:hover {
   padding-top: 0 !important;
 }
 .entry-content .wp-block-embed iframe {
+  width: -webkit-fill-available;
+  width: -moz-available;
+  width: stretch;
+  height: -webkit-fill-available;
+  height: -moz-available;
+  height: stretch;
   border-radius: 5px;
   -webkit-box-shadow: 0 8px 20px var(--rd-media-shadow);
           box-shadow: 0 8px 20px var(--rd-media-shadow);

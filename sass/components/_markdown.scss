@@ -421,6 +421,12 @@
 		}
 
 		iframe {
+			// `stretch` faz o iframe preencher o espaço disponível do
+			// .wp-block-embed__wrapper (que tem aspect-ratio: 16/9). Sem isso,
+			// o iframe usa os atributos width/height do HTML (tipicamente fixos
+			// em px) e renderiza pequeno quando o facade do YouTube está off.
+			width: stretch;
+			height: stretch;
 			border-radius: 5px; // Arredondamento padronizado
 			box-shadow: 0 8px 20px var(--rd-media-shadow); // Adapta entre dark/light
 			border: none; // Remove a borda padrão feia de alguns iframes
