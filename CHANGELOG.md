@@ -7,6 +7,22 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 <br>
 
 
+## [0.3.0-beta.2](https://github.com/Finallf/theme-reloaded/compare/v0.3.0-beta.1...v0.3.0-beta.2) (2026-05-15)
+
+### ✨ Features
+
+* **menu:** add primary-category meta box to disambiguate multi-category highlight ([09f6157](https://github.com/Finallf/theme-reloaded/commit/09f6157eb3c8ca4ab5d0de66f690194c5792cb25))
+* **typography:** expand Inter/Poppins weights, add JetBrains Mono for code ([0a8de6f](https://github.com/Finallf/theme-reloaded/commit/0a8de6f29723bddf9baa1bcea6d7dbbc8b5fb023))
+
+### 🐛 Bug Fixes
+
+* **markdown:** make embed iframes fill the wrapper when facade is off ([e60f034](https://github.com/Finallf/theme-reloaded/commit/e60f03435b876189c071fa0b3667188a9cb88283))
+* **sidebar:** clean white-corner artifacts on Discord iframe + drop dead margin hack ([93f93a6](https://github.com/Finallf/theme-reloaded/commit/93f93a6febee76e30bf760ba998ee8250a7650f5))
+
+<br>
+
+---
+
 ## [0.3.0-beta.1](https://github.com/Finallf/theme-reloaded/compare/v0.2.2...v0.3.0-beta.1) (2026-05-14)
 
 ### ✨ Features
