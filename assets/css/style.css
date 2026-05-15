@@ -1715,8 +1715,9 @@ a:hover {
   color: #00A8FF;
 }
 
-#secondary iframe {
-  margin-bottom: -6px;
+#secondary iframe[src*="discord.com/widget"] {
+  border-radius: 5px;
+  color-scheme: normal;
 }
 #secondary .discord-style {
   background-color: var(--rd-glass-bg);

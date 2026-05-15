@@ -4,8 +4,20 @@
 // Barra lateral (Sidebar)
 #secondary {
 
-	iframe {
-		margin-bottom: -6px;
+	// Iframe do widget Discord (quando facade está desativado).
+	//
+	// `color-scheme: normal` quebra a herança de `:root { color-scheme: dark }`.
+	// Sem essa quebra, o Chrome aplica uma "camada de fallback" dark no iframe
+	// (otimização pra evitar flash em conteúdo cross-origin). Como o Discord
+	// não responde à dica de scheme do mesmo jeito que o Chrome espera, o
+	// composiramento entre a camada de fallback e o conteúdo do Discord deixa
+	// pixels brancos visíveis nos cantos arredondados internos. Setando
+	// `normal`, o iframe renderiza sem essa otimização e os cantos ficam limpos.
+	//
+	// Com isso, o border-radius padrão do tema (5px) funciona perfeitamente.
+	iframe[src*="discord.com/widget"] {
+		border-radius: 5px;
+		color-scheme: normal;
 	}
 
 	.discord-style {
