@@ -9,8 +9,8 @@ defined( 'ABSPATH' ) || exit;
 
 get_header();
 
-// Layouts ativos vêm do helper único (também usado pelo pre_get_posts hook
-// e pelo AJAX handler). Fallback é 'compact' quando admin desligou tudo.
+// Active layouts come from the single helper (also used by the pre_get_posts
+// hook and the AJAX handler). Fallback is 'compact' when the admin disabled all.
 $active_layouts = rd_search_get_admin_active_layouts();
 $show_toggles   = count( $active_layouts ) > 1;
 ?>
@@ -52,11 +52,11 @@ $show_toggles   = count( $active_layouts ) > 1;
 
 				<div class="rd-search-results-containers">
 					<?php
-					// Distribui os posts entre os layouts ativos.
-					// Server-side usa os layouts do admin como base — se o
-					// visitor tiver toggles diferentes em localStorage, o JS
-					// dispara AJAX (rd_ajax_search_redistribute) depois pra
-					// re-renderizar.
+					// Distributes posts across the active layouts.
+					// Server-side uses the admin layouts as the baseline — if the
+					// visitor has different toggles in localStorage, the JS
+					// triggers AJAX (rd_ajax_search_redistribute) afterwards to
+					// re-render.
 					global $wp_query;
 					$distribution = rd_search_distribute_posts( $wp_query->posts, $active_layouts );
 					rd_render_distribution( $distribution );

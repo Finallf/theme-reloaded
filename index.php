@@ -16,11 +16,11 @@ get_header();
 								<div class="post-thumbnail">
 									<?php
 									if ( has_post_thumbnail() ) :
-										// Os 2 primeiros posts do loop são candidatos a LCP — em
-										// layout grid 2-colunas (.post-grid) ficam lado a lado
-										// above-the-fold no desktop. Marcar só o primeiro deixaria
-										// o outro lento e o Lighthouse pode escolher qualquer um
-										// dos dois como métrica de LCP.
+										// The first 2 posts in the loop are LCP candidates — in the
+										// 2-column grid layout (.post-grid) they sit side-by-side
+										// above-the-fold on desktop. Marking only the first one
+										// would make the other slow, and Lighthouse may pick
+										// either one as the LCP metric.
 										$is_lcp_candidate = ( $wp_query->current_post < 2 );
 										$thumb_attrs      = $is_lcp_candidate
 											? array(
