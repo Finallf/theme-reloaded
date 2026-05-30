@@ -1,0 +1,78 @@
+// sass/base/_tokens.scss
+// Design Tokens - Sistema de tokens para o tema Reloaded
+// Centraliza valores mágicos e padrões repetidos
+
+// ============================================
+// CORE SPOON - Cores da Marca
+// ============================================
+$token-color-brand-dark: #031CFF;
+$token-color-brand-light: #00A8FF;
+$token-color-success: #2ea043;
+$token-color-warning: #f39c12;
+$token-color-danger: #e74c3c;
+
+// ============================================
+// GRADIENTES
+// ============================================
+$token-gradient-brand: linear-gradient(135deg, $token-color-brand-dark 0%, $token-color-brand-light 100%);
+
+// ============================================
+// RADIUS - Border Radius
+// ============================================
+$token-radius-sm: 5px;
+$token-radius-md: 8px;
+$token-radius-lg: 12px;
+$token-radius-full: 50%;
+
+// ============================================
+// SPACE - Espaçamentos
+// ============================================
+$token-space-xs: 0.25rem;  // 4px
+$token-space-sm: 0.5rem;   // 8px
+$token-space-md: 1rem;      // 16px
+$token-space-lg: 1.5rem;    // 24px
+$token-space-xl: 2rem;      // 32px
+$token-space-xxl: 3rem;     // 48px
+
+// ============================================
+// TYPOGRAPHY
+// ============================================
+$token-font-primary: 'Inter', sans-serif;
+$token-font-heading: 'Poppins', sans-serif;
+$token-font-mono: 'Consolas', 'Monaco', 'Courier New', monospace;
+
+// ============================================
+// SHADOWS
+// ============================================
+$token-shadow-glass: 0 8px 20px rgba(0, 0, 0, 0.4);
+$token-shadow-card: 0 8px 30px rgba(0, 0, 0, 0.4);
+$token-shadow-elevated: 0 10px 40px rgba(0, 0, 0, 0.3);
+
+// ============================================
+// TRANSITIONS
+// ============================================
+$token-ease-standard: 0.3s ease;
+$token-ease-slow: 0.5s ease;
+$token-ease-quick: 0.2s ease;
+
+// ============================================
+// CONTAINERS
+// ============================================
+$token-container-max: 1440px;
+$token-container-narrow: 900px;
+
+// ============================================
+// BREAKPOINTS
+// ============================================
+$token-breakpoint-sm: 480px;
+$token-breakpoint-md: 768px;
+$token-breakpoint-lg: 1024px;
+$token-breakpoint-xl: 1440px;
+
+// ============================================
+// Z-INDEX SCAFFOLD
+// ============================================
+$z-dropdown: 1000;
+$z-modal: 9999;
+$z-fixed: 10000;
+$z-tooltip: 10001;

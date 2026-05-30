@@ -1,0 +1,81 @@
+<?php defined( 'ABSPATH' ) || exit; ?>
+			<footer id="colophon" class="site-footer">
+				<div class="container">
+
+					<div class="footer-grid">
+
+						<div class="footer-column about-rd">
+							<?php if ( has_custom_logo() ) : ?>
+								<div class="footer-logo"><?php the_custom_logo(); ?></div>
+							<?php else : ?>
+								<h2 class="footer-title"><?php echo esc_html( get_bloginfo( 'name' ) ); ?></h2>
+							<?php endif; ?>
+							<p><?php esc_html_e( 'News, technology, games and the best of the open-source world. Where information is reloaded daily.', 'reloaded' ); ?></p>
+						</div>
+
+						<div class="footer-column">
+							<h3 class="footer-heading"><?php esc_html_e( 'Navigation', 'reloaded' ); ?></h3>
+							<?php
+							wp_nav_menu(
+								array(
+									'theme_location' => 'menu-footer',
+									'container'      => false,
+									'menu_class'     => 'footer-links',
+									'fallback_cb'    => false,
+								)
+							);
+							?>
+						</div>
+
+						<div class="footer-column">
+							<?php if ( is_active_sidebar( 'footer-widget-area' ) ) : ?>
+								<?php dynamic_sidebar( 'footer-widget-area' ); ?>
+							<?php else : ?>
+								<h3 class="footer-heading"><?php esc_html_e( 'Featured', 'reloaded' ); ?></h3>
+								<p class="footer-widget-empty"><?php esc_html_e( 'Add a widget in Appearance > Widgets.', 'reloaded' ); ?></p>
+							<?php endif; ?>
+						</div>
+
+					</div>
+
+					<div class="footer-bottom">
+						<div class="footer-bottom-info">
+							<p>&copy; <?php echo esc_html( wp_date( 'Y' ) ); ?> <?php echo esc_html( get_bloginfo( 'name' ) ); ?>. <?php esc_html_e( 'All rights reserved.', 'reloaded' ); ?>
+								<?php
+								// Link pra reabrir o banner LGPD — só renderiza se o sistema estiver ativo.
+								// Quando enable_lgpd está OFF, sistema dormente: nenhum banner, nenhum link.
+								if ( rd_get_option_bool( 'enable_lgpd' ) ) :
+									?>
+									&middot; <button type="button" id="rd-lgpd-reopen" class="rd-lgpd-reopen"><?php esc_html_e( 'Cookie Preferences', 'reloaded' ); ?></button>
+								<?php endif; ?>
+							</p>
+							<?php
+							// Subline opt-in via painel (Geral > Footer Subline).
+							// Se o admin não preencher, a linha simplesmente não renderiza.
+							$footer_subline = rd_get_option( 'footer_subline' );
+							if ( ! empty( $footer_subline ) ) :
+								?>
+								<p class="hosting-info"><?php echo wp_kses_post( $footer_subline ); ?></p>
+							<?php endif; ?>
+						</div>
+						<?php
+						if ( function_exists( 'rd_render_social_icons' ) ) {
+							rd_render_social_icons(); }
+						?>
+					</div>
+				</div>
+			</footer>
+
+		</div>
+
+		<?php if ( rd_get_option_bool( 'back_to_top' ) ) : ?>
+			<button id="back-to-top" class="back-to-top" aria-label="<?php esc_attr_e( 'Back to top', 'reloaded' ); ?>">
+				<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+					<polyline points="18 15 12 9 6 15"></polyline>
+				</svg>
+			</button>
+		<?php endif; ?>
+
+		<?php wp_footer(); ?>
+	</body>
+</html>

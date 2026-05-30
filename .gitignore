@@ -1,0 +1,64 @@
+# === Dependências e cache ===
+node_modules/
+.sass-cache/
+
+# vendor/ é exclusivamente Composer (PHPCS/WPCS dev). Runtime libs (Parsedown,
+# Prism, Chart.js, plugin-update-checker) vivem em lib/ e são versionadas
+# normalmente — separação intencional dev vs runtime, ver docs/pt-BR/04-modulos-php.md.
+vendor/
+
+# === Editor / IDE ===
+.claude/
+.vscode/*
+.gemini/
+*.code-workspace
+.idea/
+CLAUDE.md
+
+# Re-inclui apenas os arquivos que devem ser versionados
+!.vscode/settings.json
+!.vscode/extensions.json
+
+# === Sistema operacional ===
+Thumbs.db
+ehthumbs.db
+desktop.ini
+.DS_Store
+
+# === Sensível ===
+.env
+.env.*
+*.pem
+*.key
+
+# === Backup / temporário ===
+*.bak
+*.swp
+*~
+*.log
+
+# === Logs WP/PHP ===
+debug.log
+error_log
+
+# === Sourcemaps (decisão tua, ver nota) ===
+*.css.map
+
+# === Tooling local (não distribuído) ===
+# WP-CLI binary opcional pra rodar `wp i18n make-pot`, etc. localmente.
+# Setup documentado em tools/README.md (download em 1 comando).
+tools/wp-cli.phar
+
+# === Working files (scratch local) ===
+tmp/
+
+# === Docs e tools internos (não distribuídos) ===
+# Arquivos pessoais de desenvolvimento — mantidos local pra contexto, não vão pro repo público.
+# - BACKLOG.md: registro de decisões + waves (diário de bordo)
+# - tools/README.md: setup de WP-CLI portable + escape hatches operacionais
+# - 12-operacional-deploy-migracao.md: runbook de deploy (paths absolutos do servidor)
+# - 11-security-comparativo-colormag.md: comparativo CVE — playbook de exploit + tom competitivo
+docs/pt-BR/BACKLOG.md
+docs/pt-BR/12-operacional-deploy-migracao.md
+docs/pt-BR/11-security-comparativo-colormag.md
+tools/README.md

@@ -1,0 +1,122 @@
+<?xml version="1.0"?>
+<ruleset name="ReloadeD Theme">
+    <description>
+        Coding standards do tema ReloadeD — base WordPress (Core + Extra + Docs) +
+        PHPCompatibilityWP. Rodado localmente via `composer phpcs` e no CI via
+        `.github/workflows/smoke-test.yml` (job "PHPCS + WPCS Lint").
+    </description>
+
+    <!-- ============================================================
+         Escopo: o que entra na análise
+         ============================================================ -->
+
+    <!-- Inclui todo o diretório do tema -->
+    <file>.</file>
+
+    <!-- Só arquivos PHP -->
+    <arg name="extensions" value="php"/>
+
+    <!-- Exclusões -->
+    <exclude-pattern>*/vendor/*</exclude-pattern>
+    <exclude-pattern>*/node_modules/*</exclude-pattern>
+    <exclude-pattern>*/assets/*</exclude-pattern>
+    <exclude-pattern>*/languages/*</exclude-pattern>
+    <exclude-pattern>*/docs/*</exclude-pattern>
+    <exclude-pattern>*/staging/*</exclude-pattern>
+    <!-- Vendored 3rd-party em /lib (Parsedown, Prism, Chart.js) — não auditamos código de terceiros -->
+    <exclude-pattern>*/lib/*</exclude-pattern>
+
+    <!-- ============================================================
+         Configuração de execução
+         ============================================================ -->
+
+    <arg name="basepath" value="."/>
+    <arg name="colors"/>
+    <arg name="parallel" value="8"/>
+    <!-- s = mostra sniff codes (útil pra silenciar com phpcs:ignore específico)
+         p = mostra progress dot enquanto roda -->
+    <arg value="sp"/>
+
+    <!-- ============================================================
+         Standards aplicados
+         ============================================================ -->
+
+    <rule ref="WordPress">
+        <!--
+            Yoda conditions (1 === $x). Estilo legacy do WP — código moderno PHP
+            raramente usa. Leitura "inversa" cansa. Strict comparison universal
+            via `===` já cumpre o objetivo de segurança da regra (evitar
+            atribuição acidental). Decisão consciente.
+        -->
+        <exclude name="WordPress.PHP.YodaConditions.NotYoda"/>
+
+        <!--
+            Prefixo "rd" considerado curto pelo WPCS (quer 4+ chars). Mas é o
+            prefixo oficial do tema, presente em ~500 funções/constantes.
+            Mudar pra 4 chars seria refactor gigante sem ganho real.
+        -->
+        <exclude name="WordPress.NamingConventions.PrefixAllGlobals.ShortPrefixPassed"/>
+
+        <!--
+            Docblocks "manuais" (escrita de @param tipo $nome descrição) adiados
+            pra Wave 10 — pré-submissão wp.org. Reviewer humano espera docblocks
+            completos, então essas 3 regras voltam a ser ativas quando chegar
+            a hora. Anotado em BACKLOG → Wave 10.
+        -->
+        <exclude name="Squiz.Commenting.FunctionComment.Missing"/>
+        <exclude name="Squiz.Commenting.FunctionComment.MissingParamTag"/>
+        <exclude name="Squiz.Commenting.FunctionComment.MissingParamComment"/>
+
+        <!--
+            Pedantismo de pontuação em comentários — cosmético puro. Comentário
+            funciona igual com ou sem ponto final, bloco `/* foo */` em uma
+            linha é mais legível pra comentário curto. Reviewers humanos do
+            wp.org costumam ser flexíveis nesses 3 — mas caso queira reativar
+            pra "code style polish" pré-submissão, anotado na Wave 10.
+        -->
+        <exclude name="Squiz.Commenting.InlineComment.InvalidEndChar"/>
+        <exclude name="Squiz.Commenting.BlockComment.CloserSameLine"/>
+        <exclude name="Squiz.Commenting.FunctionComment.ParamCommentFullStop"/>
+
+        <!--
+            File comments (docblock no topo de cada arquivo com @package). Reviewer
+            humano do wp.org exige, mas Wave 10 (pré-submissão) vai reescrever
+            TODOS os docblocks de funções de qualquer forma — adicionar @package
+            no header acontece naturalmente na mesma passada. Adiar agora evita
+            fix-em-cima-de-fix em ~30 arquivos. Anotado em BACKLOG → Wave 10.
+        -->
+        <exclude name="Squiz.Commenting.FileComment"/>
+    </rule>
+
+    <!-- Compatibilidade PHP — checa se features usadas batem com Requires PHP do style.css -->
+    <rule ref="PHPCompatibilityWP"/>
+
+    <!-- ============================================================
+         Configurações específicas do tema
+         ============================================================ -->
+
+    <!-- Versão mínima do WP que o tema suporta (style.css → "Requires at least") -->
+    <config name="minimum_supported_wp_version" value="6.0"/>
+
+    <!-- Versão mínima do PHP (style.css → "Requires PHP") — testVersion checa pra cima -->
+    <config name="testVersion" value="8.0-"/>
+
+    <!-- Text domain único do tema -->
+    <rule ref="WordPress.WP.I18n">
+        <properties>
+            <property name="text_domain" type="array">
+                <element value="reloaded"/>
+            </property>
+        </properties>
+    </rule>
+
+    <!-- Prefixos válidos pra funções/classes/constantes globais do tema -->
+    <rule ref="WordPress.NamingConventions.PrefixAllGlobals">
+        <properties>
+            <property name="prefixes" type="array">
+                <element value="rd"/>
+                <element value="RD"/>
+            </property>
+        </properties>
+    </rule>
+</ruleset>

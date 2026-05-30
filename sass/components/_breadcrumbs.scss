@@ -1,0 +1,68 @@
+// sass/components/_breadcrumbs.scss
+@use '../base/variables' as *;
+
+// ==========================================================
+// Breadcrumbs (Trilha de navegação contextual)
+// Renderizado abaixo do <header>, dentro do .container principal.
+// Não aparece na front page. Estilo discreto pra não competir
+// visualmente com o conteúdo principal.
+// ==========================================================
+.rd-breadcrumbs {
+    padding: 12px 0 4px;
+    font-size: 0.875rem;
+    color: $text-muted-dark;
+    line-height: 1.5;
+
+    .rd-breadcrumbs-list {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .rd-breadcrumbs-item {
+        display: inline-flex;
+        align-items: center;
+        min-width: 0; // permite truncamento
+
+        // Separador antes de cada item exceto o primeiro
+        &:not(:first-child)::before {
+            content: '/';
+            margin-right: 6px;
+            color: $text-muted-dark;
+            opacity: 0.5;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+            transition: color 0.2s ease;
+
+            &:hover,
+            &:focus {
+                color: $text-light;
+                text-decoration: underline;
+            }
+        }
+
+        // Item atual (página atual) — destaque sutil sem virar link
+        span[aria-current="page"] {
+            color: $text-light;
+            font-weight: 500;
+            // Trunca títulos longos pra não quebrar o layout em mobile
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            max-width: 100%;
+        }
+    }
+
+    // Mobile: fonte um pouco menor, menos padding
+    @media (max-width: 768px) {
+        padding: 8px 0 2px;
+        font-size: 0.8125rem;
+    }
+}

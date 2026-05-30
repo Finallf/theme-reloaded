@@ -1,0 +1,93 @@
+name: Release & Package
+
+on:
+  push:
+    branches:
+      - master
+      - beta
+
+# Resolves Node.js version 24 warnings for the entire workflow.
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+jobs:
+  # JOB 1: Update the contributors list in the README
+  contrib-readme-job:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GH_PAT }}
+      - uses: akhilmhdh/contributors-readme-action@v2.3.11
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_PAT }}
+        with:
+          image_size: 80
+          use_username: true
+          collaborators: all
+
+  # JOB 2: Release & Package
+  release:
+    needs: contrib-readme-job
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      issues: write
+      pull-requests: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GH_PAT }}
+
+      - name: Semantic Release
+        id: semantic
+        uses: cycjimmy/semantic-release-action@v4
+        with:
+          extra_plugins: |
+            @semantic-release/exec
+            @semantic-release/changelog
+            @semantic-release/git
+            conventional-changelog-conventionalcommits
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_PAT }}
+
+      - name: Build theme zip
+        if: steps.semantic.outputs.new_release_published == 'true'
+        run: |
+          mkdir -p staging/reloaded
+          rsync -a \
+            --exclude='.git' \
+            --exclude='.github' \
+            --exclude='sass' \
+            --exclude='node_modules' \
+            --exclude='.vscode' \
+            --exclude='.gitignore' \
+            --exclude='.gitattributes' \
+            --exclude='.editorconfig' \
+            --exclude='.releaserc' \
+            --exclude='staging' \
+            --exclude='docs' \
+            --exclude='CLAUDE.md' \
+            --exclude='tmp' \
+            --exclude='tools' \
+            --exclude='vendor' \
+            --exclude='phpcs.xml.dist' \
+            --exclude='composer.json' \
+            --exclude='composer.lock' \
+            --exclude='package.json' \
+            --exclude='package-lock.json' \
+            --exclude='CONTRIBUTING.md' \
+            ./ staging/reloaded/
+          (cd staging && zip -r ../reloaded.zip reloaded)
+
+      - name: Upload theme zip to release
+        if: steps.semantic.outputs.new_release_published == 'true'
+        uses: softprops/action-gh-release@v2
+        with:
+          files: reloaded.zip
+          tag_name: v${{ steps.semantic.outputs.new_release_version }}
+          token: ${{ secrets.GH_PAT }}

@@ -1,0 +1,218 @@
+// sass/layout/_single.scss
+@use '../base/variables' as *;
+
+// ESTRUTURA GLOBAL DO POST (SINGLE E HOME)
+
+// Garante que todas as imagens do post (no card e no single) sejam responsivas e preencham o container sem deformar
+.post-thumbnail img {
+	width: 100%;
+	height: auto;
+	display: block; // Remove espaços vazios indesejados abaixo da imagem
+	object-fit: cover; // Preenche mantendo a proporção
+}
+
+// ==========================================================
+// 2. Estilo para o conteúdo dentro do single.php (não afetado)
+// ==========================================================
+.single-post-content {
+	// CSS custom property compartilhada com o TOC anchor (em _toc.scss).
+	// O `right` do .rd-toc-anchor lê essa variável e fica auto-sincronizado:
+	// muda o padding aqui → o FAB segue o novo content-edge sem mexer no TOC.
+	// Override em media queries: redeclara `--rd-single-padding` dentro do
+	// breakpoint pra trocar ambos juntos.
+	--rd-single-padding: 1.25rem;
+
+	@media (max-width: 600px) {
+		--rd-single-padding: 0.5rem;
+	}
+
+	background-color: $glass-bg;
+	padding: var(--rd-single-padding);
+	border-radius: 5px; // A sua regra de ouro (era 8px)!
+	border: 1px solid $glass-border; // Unificando a borda com a sidebar e grid
+	position: relative; // containing block pro .rd-toc-anchor (position: absolute)
+
+	.entry-header {
+		margin-bottom: 20px;
+
+		// Linha que agrupa [overline + título] à esquerda e kicker (chip de
+		// categoria) à direita. O kicker fica fixo no topo do row mesmo quando
+		// o overline empurra o título pra baixo, porque ambos os blocos
+		// (text-block e kicker) alinham por flex-start.
+		// Mantém row em todas as larguras — `min-width: 0` no text-block
+		// permite o título quebrar texto sem espremer o kicker.
+		.entry-title-row {
+			display: flex;
+			justify-content: space-between;
+			align-items: flex-start;
+			gap: 16px;
+			position: relative; // âncora pro kicker absoluto no mobile
+
+			.entry-title-block {
+				flex: 1;
+				min-width: 0; // permite truncamento de títulos longos sem quebrar o flex
+
+				.entry-title {
+					margin: 0;
+				}
+			}
+
+			// Mobile: kicker "flutua" sobre o canto superior direito do row,
+			// permitindo o título usar a largura toda (texto pode passar por
+			// baixo do chip se for muito longo)
+			@media (max-width: 600px) {
+				gap: 0;
+
+				.entry-kicker {
+					position: absolute;
+					top: 0;
+					right: 0;
+				}
+
+				// Quando NÃO há overline acima, a primeira linha do título
+				// poderia passar por baixo do chip. Inserimos um spacer
+				// invisível com float-right no início do title-block pra
+				// forçar a primeira linha a se acomodar ao lado do chip.
+				// Linhas seguintes voltam a usar a largura total naturalmente
+				// (vantagem do float sobre padding-right). Quando HÁ overline,
+				// ele já ocupa a primeira linha e o título começa na segunda,
+				// então o spacer não é necessário.
+				.entry-title-block:not(:has(.entry-overline))::before {
+					content: '';
+					float: right;
+					width: 110px;
+					height: 28px;
+				}
+			}
+		}
+
+		// Kicker — chip da categoria primária ao lado do título.
+		// Usa a classe `.post-tag.tag-{slug}` então herda automaticamente
+		// a cor configurada no admin (via mod-category-colors.php).
+		.entry-kicker {
+			flex-shrink: 0;
+			align-self: flex-start;
+			padding: 4px 12px;
+			border-radius: 4px;
+			font-size: 0.75rem;
+			font-weight: 600;
+			text-transform: uppercase;
+			letter-spacing: 0.5px;
+			text-decoration: none;
+			transition: opacity 0.2s ease;
+
+			&:hover,
+			&:focus {
+				opacity: 0.85;
+				text-decoration: none;
+			}
+		}
+
+		.entry-title {
+			color: $brand-blue-light;
+
+		}
+
+		.entry-meta {
+			display: flex;
+			flex-wrap: wrap;
+			align-items: center;
+			gap: 12px; /* Espaçamento uniforme entre os elementos */
+			color: $dark-text-muted; // #999 substituído
+			font-size: 0.85rem;
+
+			span {
+				display: inline-flex;
+				align-items: center;
+				gap: 6px; /* Espaço entre o ícone SVG e o texto */
+				margin-right: 0; /* Limpa a margem antiga */
+			}
+
+			svg {
+				color: $brand-blue-light; /* Aplica o azul do portal nos ícones */
+				opacity: 0.9;
+			}
+
+			.meta-separator {
+				color: $border-light; // #444 alinhado para a variável
+				font-size: 1.2rem; /* Deixa a bolinha um pouco mais evidente */
+				line-height: 0; // Evita que o bullet mude a altura da linha
+			}
+
+			// Reading time empurrado pra direita da linha .entry-meta. No mobile
+			// (quando flex-wrap quebra os items), continua right-aligned no novo
+			// row — visual aceitável (clock no canto direito da última linha).
+			.reading-time {
+				margin-left: auto;
+			}
+
+			.byline a {
+				text-decoration: none;
+				transition: color 0.2s ease;
+				font-weight: 500;
+
+				&:hover {
+					color: $brand-blue-light; /* Acende o nome do autor ao passar o mouse */
+				}
+			}
+		}
+	}
+
+	.post-thumbnail {
+		margin-bottom: 1rem;
+		border-radius: 5px; // A sua regra de ouro (era 8px)!
+		overflow: hidden;
+		background-color: $dark-bg; // #151515 substituído
+
+		img {
+			width: 100%;
+			height: auto;
+			aspect-ratio: 16 / 9; /* Trava a proporção exata dos recortes do portal */
+			display: block;
+
+			/* Serve como trava de segurança apenas se alguma imagem for "subida" fora do tamanho padrão */
+			object-fit: cover;
+		}
+	}
+
+	// ==========================================================
+	// Rodapé do Artigo (Tags)
+	// ==========================================================
+	.entry-footer {
+		margin-top: 3rem;
+		padding-top: 1.5rem;
+		border-top: 1px solid $border-dark; // #222 substituído
+
+		.post-tags {
+			display: flex;
+			flex-wrap: wrap;
+			gap: 10px;
+			align-items: center;
+			justify-content: flex-end;
+
+			// Visual idêntico aos chips da busca (.rd-chip em _search.scss).
+			// line-height: normal força o mesmo comportamento do <button> nativo
+			// (que ignora o line-height: 1.5 herdado do body); sem isso, o <a>
+			// fica ~4px mais alto que o chip.
+			a {
+				background: $glass-bg;
+				border: 1px solid $glass-border;
+				color: $dark-text-muted;
+				padding: 1px 8px;
+				border-radius: 20px;
+				font-family: $font-primary;
+				font-size: 0.85rem;
+				line-height: normal;
+				text-decoration: none;
+				transition: all 0.3s ease;
+
+				// Hover replica o estado .active dos chips (azul transparente)
+				&:hover {
+					background: rgba(0, 168, 255, 0.15);
+					border-color: $brand-blue-light;
+					color: $brand-blue-light;
+				}
+			}
+		}
+	}
+}

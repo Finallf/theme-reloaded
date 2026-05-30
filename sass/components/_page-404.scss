@@ -1,0 +1,265 @@
+// sass/components/_page-404.scss
+@use '../base/variables' as *;
+
+/* ==========================================================================
+   404 - Página não encontrada
+   ========================================================================== */
+
+.rd-404-page {
+    padding: 60px 0 80px;
+    min-height: 60vh;
+}
+
+/* ===== CARD PRINCIPAL ===== */
+
+.rd-404-card {
+    position: relative;
+    overflow: hidden;
+    background: $glass-bg;
+    border: 1px solid $glass-border;
+    border-radius: 5px;
+    box-shadow: 0 8px 20px var(--rd-glass-shadow); // Adapta dark/light (plana no light)
+    padding: 60px 40px;
+    text-align: center;
+    box-sizing: border-box;
+    margin-bottom: 50px;
+
+    // Borda superior com gradiente da marca (igual manutenção)
+    &::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 3px;
+        background: $brand-gradient;
+    }
+
+    // Animação de entrada suave
+    animation: rd404FadeUp 600ms ease-out;
+}
+
+@keyframes rd404FadeUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ===== HEADER (404 + Título) ===== */
+
+.rd-404-header {
+    margin-bottom: 30px;
+}
+
+.rd-404-code {
+    display: block;
+    font-family: $font-heading;
+    font-size: 6rem;
+    font-weight: 700;
+    line-height: 1;
+    color: $brand-blue-light;
+    letter-spacing: -2px;
+    margin-bottom: 10px;
+
+    // Glow sutil azul
+    text-shadow: 0 0 30px rgba(0, 168, 255, 0.4);
+
+    @media (max-width: 768px) {
+        font-size: 4.5rem;
+    }
+}
+
+.rd-404-title {
+    font-family: $font-heading;
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: $dark-text;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    margin: 0;
+
+    @media (max-width: 768px) {
+        font-size: 1.1rem;
+        letter-spacing: 2px;
+    }
+}
+
+/* ===== BODY (Mensagem + Botões) ===== */
+
+.rd-404-body {
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.rd-404-message {
+    font-family: $font-primary;
+    font-size: 1.05rem;
+    line-height: 1.7;
+    margin: 0 0 35px;
+
+    @media (max-width: 768px) {
+        font-size: 0.95rem;
+    }
+}
+
+.rd-404-actions {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.rd-404-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 28px;
+    border-radius: 5px;
+    font-family: $font-heading;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: none;
+    border: none;
+    transition: all 200ms ease;
+    box-sizing: border-box;
+    line-height: 1;
+
+    .rd-404-btn-icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+}
+
+.rd-404-btn-primary {
+    background: $brand-gradient;
+    // Branco constante sobre o gradient azul. Antes usava $dark-bg (var dinâmica)
+    // que produzia preto sobre azul em dark (visualmente estranho) e branco-quase
+    // sobre azul claro em light (falha WCAG AA, ~2.5:1). Branco bate ~3.2:1 contra
+    // o lado claro do gradient e ~8.6:1 contra o lado escuro — AA para large bold.
+    color: #fff;
+
+    &:hover {
+        opacity: 0.9;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(0, 168, 255, 0.3);
+        color: #fff;
+    }
+}
+
+.rd-404-btn-secondary {
+    background: transparent;
+    color: $brand-blue-light;
+    border: 1px solid $brand-blue-light;
+
+    &:hover {
+        background: rgba(0, 168, 255, 0.1);
+        transform: translateY(-2px);
+    }
+}
+
+/* ===== NÍVEIS RECOMENDADOS ===== */
+
+.rd-404-recommended {
+    animation: rd404FadeUp 800ms ease-out;
+}
+
+.rd-404-recommended-title {
+    font-family: $font-heading;
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: $dark-text;
+    text-align: center;
+    margin: 0 0 30px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+
+    .rd-404-recommended-icon {
+        margin-right: 10px;
+        font-size: 1.4rem;
+    }
+}
+
+.rd-404-recommended-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+
+    @media (max-width: 768px) {
+        grid-template-columns: 1fr;
+    }
+}
+
+.rd-404-recommended-item {
+    background: $glass-bg;
+    border: 1px solid $glass-border;
+    border-radius: 5px;
+    overflow: hidden;
+    box-shadow: 0 8px 20px var(--rd-glass-shadow); // Sombra base unificada com os outros cards interativos
+    transition: all 250ms ease;
+
+    &:hover {
+        transform: translateY(-4px);
+        border-color: $brand-blue-light;
+        box-shadow: 0 8px 25px rgba(0, 168, 255, 0.2);
+    }
+}
+
+.rd-404-recommended-link {
+    display: block;
+    color: inherit;
+    text-decoration: none;
+}
+
+.rd-404-recommended-thumb {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+    background: $dark-deep;
+
+    img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+        transition: transform 400ms ease;
+    }
+}
+
+.rd-404-recommended-item:hover .rd-404-recommended-thumb img {
+    transform: scale(1.05);
+}
+
+.rd-404-recommended-thumb-empty {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 3rem;
+    opacity: 0.3;
+}
+
+.rd-404-recommended-content {
+    padding: 18px 20px 20px;
+}
+
+.rd-404-recommended-item-title {
+    font-family: $font-heading;
+    font-size: 1rem;
+    font-weight: 600;
+    color: $dark-text;
+    margin: 0;
+    line-height: 1.4;
+
+    // Limita a 2 linhas com ellipsis
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+	line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}

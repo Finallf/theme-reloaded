@@ -1,0 +1,55 @@
+// sass/layout/_backtotop.scss
+@use '../base/variables' as *;
+
+// ==========================================================
+// Botão Voltar ao Topo
+// ==========================================================
+.back-to-top {
+    position: fixed;
+    bottom: 20px;
+    // Trava o botão a 30px da borda direita de um "container virtual" de 1660px.
+    // - Em telas =<1660px: max() retorna 30px (igual antes)
+    // - Em telas >1660px (ultra-wide): trava na posição do container, evitando
+    //   que o botão se afaste do conteúdo e fique "perdido" no canto
+    right: max(20px, calc((100vw - 1600px) / 2 + 20px));
+    width: 40px;
+    height: 40px;
+    background-color: $dark-surface; // Trazendo para a paleta do tema
+    color: $text-muted-dark;
+    border: 1px solid $glass-border; // Usando a nossa transparência elegante
+    border-radius: 5px; // Um arredondamento sutil, moderno
+    box-shadow: 0 2px 10px rgba(0, 0, 0, .5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 9999;
+
+    // Escondido por padrão
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(15px); // Começa um pouco mais baixo
+
+    // Transições suaves para todos os estados (adicionei cor e borda na transição)
+    transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease, background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+
+    // Classe que o Javascript vai adicionar quando a tela rolar
+    &.show {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0); // Sobe para a posição original
+    }
+
+    // Efeito Hover
+    &:hover {
+        background-color: $dark-bg;
+        color: $text-light;
+        border-color: $border-light; // Um toque da marca no hover!
+    }
+
+    svg {
+        pointer-events: none; // Evita bugs de clique no ícone em vez do botão
+        width: 20px;
+        height: 20px;
+    }
+}

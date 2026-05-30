@@ -1,0 +1,94 @@
+// ==========================================================
+// PAGINAÇÃO (the_posts_pagination)
+// Aplicada em index.php (home), search.php, archive.php, author.php
+// ==========================================================
+@use '../base/variables' as *;
+
+.navigation.pagination {
+    margin: 40px 0 20px;
+
+    .nav-links {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 6px;
+    }
+
+    // Estado base de cada item (a, span)
+    .page-numbers {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 40px;
+        height: 40px;
+        padding: 0 12px;
+        background: $glass-bg;
+        border: 1px solid $glass-border;
+        border-radius: 5px;
+        font-family: $font-primary;
+        font-size: 0.95rem;
+        font-weight: 500;
+        text-decoration: none;
+        transition: all 0.2s ease;
+    }
+
+    // Hover só em links (não em current/dots)
+    a.page-numbers:hover {
+        background: rgba(0, 168, 255, 0.1);
+        border-color: $brand-blue-light;
+        color: $brand-blue-light;
+    }
+
+    // Página atual: gradient diagonal padrão da marca (sem artefato de borda)
+    .page-numbers.current {
+        background: $brand-gradient;
+        border-color: transparent;
+        color: #fff;
+        font-weight: 700;
+        cursor: default;
+    }
+
+    // Reticências entre páginas
+    .page-numbers.dots {
+        background: transparent;
+        border-color: transparent;
+        color: $text-muted-dark;
+        cursor: default;
+        min-width: auto;
+        padding: 0 4px;
+
+        &:hover {
+            background: transparent;
+            border-color: transparent;
+            color: $text-muted-dark;
+        }
+    }
+
+    // Anterior/Próxima — leve destaque tipográfico
+    .page-numbers.prev,
+    .page-numbers.next {
+        font-weight: 600;
+        padding: 0 16px;
+    }
+
+    @media (max-width: 600px) {
+        margin: 30px 0 10px;
+
+        .nav-links {
+            gap: 4px;
+        }
+
+        .page-numbers {
+            min-width: 36px;
+            height: 36px;
+            padding: 0 10px;
+            font-size: 0.85rem;
+        }
+
+        .page-numbers.prev,
+        .page-numbers.next {
+            padding: 0 12px;
+        }
+    }
+}

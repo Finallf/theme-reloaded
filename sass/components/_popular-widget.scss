@@ -1,0 +1,127 @@
+// ==========================================================
+// WIDGET "Mais Lidos" (ReloadeD: Popular Posts)
+// ----------------------------------------------------------
+// Estilo do widget customizado registrado em
+// inc/mod-popular-widget.php. Renderiza dentro do .widget_block
+// padrão da sidebar, então herda o card glass + padding +
+// h2.wp-block-heading automaticamente (sass/layout/_sidebar.scss).
+// ==========================================================
+@use '../base/variables' as *;
+
+.rd-popular-posts {
+    list-style: none;
+    // margin-top: respiro após o título do widget (linha ::after do h2 colava
+    // no primeiro item sem isso — equivale ao padding: 12px 0 que os widgets
+    // Gutenberg ganham via .widget_block ul li).
+    margin: 12px 0 0;
+    padding: 0;
+}
+
+.rd-popular-item {
+    margin-bottom: 12px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid $glass-border; // Mesma var do "Apoie o Projeto" — visível em dark
+
+    &:last-child {
+        border-bottom: none;
+        margin-bottom: 0;
+        padding-bottom: 0;
+    }
+}
+
+.rd-popular-link {
+    position: relative; // ancora pro .rd-popular-views absolute
+    display: flex;
+    gap: 12px;
+    align-items: stretch;
+    text-decoration: none;
+    color: inherit;
+
+    &:hover {
+        // Título acompanha o padrão de hover dos outros links da sidebar
+        .rd-popular-title {
+            color: $brand-blue-light;
+        }
+        // Thumb ganha leve zoom (mesma sensação dos cards principais)
+        .rd-popular-thumb-img {
+            transform: scale(1.05);
+        }
+    }
+}
+
+.rd-popular-thumb-wrap {
+    flex-shrink: 0;
+    width: 100px;
+    aspect-ratio: 16 / 9; // Coerente com cards do tema (grid + search + facade)
+    overflow: hidden;
+    border-radius: 5px;
+    background: $dark-deep;
+
+    .rd-popular-thumb-img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+        transition: transform 400ms ease;
+    }
+}
+
+// Fallback visual quando post não tem featured image — gradient sutil
+// no lugar de fundo chapado, fica menos "vazio".
+.rd-popular-thumb-empty {
+    background: linear-gradient(135deg, $glass-bg, $glass-border);
+}
+
+.rd-popular-meta {
+    flex: 1;
+    min-width: 0; // permite ellipsis dentro do flex
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding-right: 45px; // reserva espaço pro .rd-popular-views absolute (evita
+                        // colisão se o título for 2 linhas longas)
+}
+
+.rd-popular-title {
+    font-family: $font-heading;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: $dark-text;
+    line-height: 1.3;
+    transition: color 0.2s ease;
+
+    // Limita a 2 linhas com ellipsis
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+// Views "flutuam" no canto inferior direito do item — mesmo padrão dos
+// cards (.entry-meta no _grid.scss e .rd-card-meta no _search.scss).
+// Sem a palavra "views" pra ficar compacto na sidebar.
+.rd-popular-views {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 0.75rem;
+    color: $text-muted-dark;
+    z-index: 3;
+    pointer-events: none; // não bloqueia o link do item
+
+    svg {
+        color: $brand-blue-light;
+        opacity: 0.85;
+    }
+}
+
+.rd-popular-empty {
+    color: $text-muted-dark;
+    font-size: 0.9rem;
+    font-style: italic;
+    margin: 0;
+}

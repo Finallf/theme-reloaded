@@ -1,0 +1,339 @@
+// sass/base/_globals.scss
+@use 'variables' as *;
+
+// RESET PROFISSIONAL
+* {
+	box-sizing: border-box;
+	margin: 0;
+	padding: 0;
+}
+
+// Smooth scroll global — habilita scroll suave em navegação por hash
+// (links #section). Usado pelo TOC e qualquer outro anchor link.
+html {
+	scroll-behavior: smooth;
+}
+
+// Respeita prefers-reduced-motion: usuário com sensibilidade volta pro instant
+@media (prefers-reduced-motion: reduce) {
+	html {
+		scroll-behavior: auto;
+	}
+}
+
+// Durante o resize da janela, mata todas as transitions globalmente.
+// Sem isso, elementos que trocam de `display` entre breakpoints (ex: o
+// .menu-panel que vira `display: contents` ↔ `display: block`) podem
+// disparar a transição visualmente e "piscar". A classe é adicionada/
+// removida via debounced handler em assets/js/navigation.js — só fica
+// ativa durante os ~150ms de uma sessão de resize.
+.rd-resizing,
+.rd-resizing *,
+.rd-resizing *::before,
+.rd-resizing *::after {
+    transition: none !important;
+}
+
+// A11y: convenção do WordPress pra texto visível só pra leitores de tela
+// (usado em the_posts_pagination, get_search_form, comentários etc.)
+.screen-reader-text {
+	border: 0;
+	clip: rect(1px, 1px, 1px, 1px);
+	clip-path: inset(50%);
+	height: 1px;
+	width: 1px;
+	margin: -1px;
+	overflow: hidden;
+	padding: 0;
+	position: absolute !important;
+	white-space: nowrap;
+	word-wrap: normal !important;
+}
+
+// A11y: skip-to-content link — primeiro elemento focável da página.
+// Invisível até receber foco (Tab a partir da URL bar), aí aparece com alto
+// contraste no canto superior esquerdo. Pula o header inteiro (top bar, logo,
+// nav, search) direto pro <main id="primary"> — economia massiva pra usuários
+// de teclado e screen readers.
+.skip-link {
+	position: absolute;
+	left: -9999px;
+	top: 0;
+	z-index: 100000;
+	font-weight: 600;
+	text-decoration: none;
+
+	&:focus {
+		left: 6px;
+		top: 7px;
+		padding: 12px 20px;
+		background: $brand-blue-dark;
+		color: #fff;
+		border-radius: 4px;
+		box-shadow: 0 0 0 3px $brand-blue-light;
+		outline: none;
+	}
+}
+
+// RESET GLOBAL DE IMAGENS - SEGURANÇA MÁXIMA
+img {
+	max-width: 100%;
+	height: auto;
+	display: block;
+}
+
+body {
+	background-color: var(--rd-bg);
+	color: var(--rd-text-light); // Tom suave por padrão; --rd-text é reservado pra destaques
+	font-family: $font-primary;
+	font-size: 16px;
+	line-height: 1.5;
+	// Permite browsers sintetizarem italic e bold quando a variante específica
+	// não está disponível. Crítico aqui: Inter Italic foi REMOVIDA do tema
+	// (todos os usos eram decorativos secundários — blockquotes, captions,
+	// hosting-info, etc.). Sem este `font-synthesis`, Safari iOS antigo
+	// renderizaria texto italic como Regular (perda do efeito). Browsers
+	// modernos (>= 2022) ativam síntese por default, mas explicitar é defensivo.
+	font-synthesis: style weight;
+	// `overflow-x: clip` em vez de `hidden`: mesmo efeito visual (sem scroll
+	// horizontal) mas NÃO cria um scroll context — preserva `position: sticky`
+	// no sidebar. `hidden` quebrava o sticky transformando o body num scroll
+	// container malformado.
+	overflow-x: clip; // Previne o scroll horizontal acidental
+	// Transição suave entre dark/light mode
+	transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+// Aplicando a Poppins em todos os cabeçalhos
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+	font-family: $font-heading;
+	font-weight: 500;
+	line-height: 1.4; // Títulos precisam de menos espaço entre linhas que o texto
+	color: var(--rd-text-light); // Tom suave por padrão; sobrescrever com --rd-text quando precisar de destaque
+}
+
+a {
+	color: inherit;
+	text-decoration: none;
+	transition: 0.3s ease;
+
+	&:hover {
+		color: var(--rd-blue-light);
+	}
+}
+
+// Elementos que mudam cor no dark/light mode
+// (backgrounds, borders, etc.) — transição suave
+* {
+	transition-property: background-color, border-color, color, box-shadow;
+	transition-duration: 0.3s;
+	transition-timing-function: ease;
+}
+
+.container {
+	max-width: $container-max;
+	margin: 0 auto;
+	padding: 0 10px;
+}
+
+// Ajuste fino para os botões e categorias
+.post-tag,
+.search-submit {
+	font-family: $font-heading;
+	text-transform: uppercase;
+	font-size: 12px;
+	letter-spacing: 0.5px; // Letras maiúsculas pedem um leve espaçamento
+}
+
+/* ==========================================================================
+   SISTEMA DE ADS (PUBLICIDADE)
+   ========================================================================== */
+.rd-ad-container {
+    text-align: center;
+    width: 100%;
+}
+
+// Banner topo da sidebar — espaço extra abaixo pra separar de blocos seguintes
+.rd-ad-sidebar-top {
+    margin-bottom: 20px;
+}
+
+/* --- Lógica Topo: Desktop vs Mobile (Anúncio Âncora no Topo) --- */
+.rd-ad-mobile {
+    display: none;
+}
+
+@media (max-width: 768px) {
+    .rd-ad-desktop {
+        display: none !important;
+    }
+
+    .rd-ad-mobile {
+        display: block;
+        position: fixed;
+        top: 5px; /* Deixa um pequeno respiro do topo da tela */
+        left: 50%;
+        transform: translateX(-50%); /* Centraliza horizontalmente */
+        width: auto; /* Deixa a largura automática baseada no banner */
+        max-width: 90%; /* Garante que não estoure em telas muito pequenas */
+        z-index: 9999;
+        text-align: center;
+        /* Sombreado para baixo e para os lados */
+        box-shadow: 0 8px 20px rgba(0,0,0,0.5);
+        transition: transform 0.4s ease-in-out, opacity 0.3s ease;
+        background-color: transparent; /* Remove o fundo escuro */
+		border-radius: 4px;
+        overflow: hidden;
+    }
+
+    /* Posicionamento do X sobreposto no canto inferior direito */
+    .rd-ad-close-wrap {
+        position: absolute;
+        bottom: 3px; /* Distância da borda inferior do banner */
+        right: 3px;  /* Distância da borda direita do banner */
+        z-index: 10000;
+    }
+
+    .rd-ad-close {
+        background-color: rgba(0, 0, 0, 0.6); /* Fundo semi-transparente para leitura */
+        color: #fff;
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        font-size: 18px;
+        line-height: 1;
+        padding: 5px 8px;
+        border-radius: 4px; /* Um leve arredondado */
+        cursor: pointer;
+        backdrop-filter: blur(2px); /* Efeito de desfoque atrás do botão (opcional) */
+    }
+
+    .rd-ad-close:hover {
+        background-color: $brand-blue-light;
+        color: #000;
+    }
+}
+
+/* --- Lógica Sidebar: Sticky (Flutuante) --- */
+.rd-ad-sticky {
+    position: sticky;
+    top: 20px; /* Distância que o banner vai manter do topo da tela ao rolar */
+    z-index: 10;
+}
+
+/* ==========================================================================
+   Módulo de Apoio                                                (INTERFACE)
+   ========================================================================== */
+/* Container Principal (Dark Mode) */
+.rd-support-block {
+    background: var(--rd-glass-bg);
+    border: 1px solid var(--rd-glass-border);
+    box-shadow: 0 8px 20px var(--rd-glass-shadow);
+    padding: 20px;
+    border-radius: 5px;
+    text-align: center;
+    margin-bottom: 20px;
+    color: var(--rd-text-light);
+}
+
+.rd-support-title {
+    margin-top: 0;
+    font-size: 1.1rem;
+    margin-bottom: 20px;
+}
+
+/* Sub-itens (Separação entre PIX e PayPal) */
+.rd-support-subitem {
+    margin-top: 25px; /* Mais respiro entre os blocos */
+    border-top: 1px solid var(--rd-glass-border);
+}
+
+/* Imagens e QR Codes */
+.rd-qr-link {
+    display: block;
+    text-decoration: none;
+    transition: transform 0.2s ease;
+    margin-top: 10px;
+}
+.rd-qr-link:hover {
+    transform: scale(1.04); /* Apenas o efeito de zoom */
+}
+.rd-qr-link img,
+.rd-qr-img {
+    max-width: 160px; /* Reduzimos um pouco para ficar mais elegante */
+    height: auto;
+    margin: 0 auto;
+    display: block;
+    padding: 5px 0;
+}
+.rd-qr-link small {
+    display: block;
+    color: var(--rd-text-dimmed);
+    font-size: 0.8rem;
+    margin-top: 5px;
+}
+
+/* Área Mágica do Copia e Cola do PIX */
+.rd-pix-copy-area {
+    margin-top: 15px;
+    $pix-color: #00bfa5; // Variável de marca de terceiros contida apenas neste escopo
+
+    .rd-key-label {
+        display: block;
+        font-size: 0.85rem;
+        color: var(--rd-text-dimmed);
+        margin-bottom: 8px;
+    }
+
+    .rd-copy-btn {
+        background: var(--rd-deep);
+        color: $pix-color;
+        border: 1px solid rgba($pix-color, 0.3);
+        padding: 12px 15px;
+        border-radius: 6px;
+        // Usa $font-system-mono (sem JetBrains Mono) — elemento de UI, não código.
+        // Evita preload da JetBrains Mono em toda página com sidebar+doações ativas.
+        font-family: $font-system-mono;
+        font-size: 0.9rem;
+        cursor: pointer;
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        transition: all 0.2s ease;
+        word-break: break-all;
+
+        &:hover {
+            background: rgba($pix-color, 0.1);
+            border-color: $pix-color;
+            color: #fff;
+        }
+
+        &.copied {
+            background: $pix-color;
+            color: #fff;
+            border-color: $pix-color;
+        }
+
+        i {
+            margin-left: 10px;
+        }
+    }
+}
+
+/*==========================================================================
+   Containers utilitários
+  ========================================================================== */
+.container-narrow {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 20px;
+    box-sizing: border-box;
+
+    @media (max-width: 480px) {
+        padding: 0 10px;
+    }
+}

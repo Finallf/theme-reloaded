@@ -1,0 +1,269 @@
+// sass/base/_variables.scss
+
+// ==========================================================
+// Cores Dinâmicas das Categorias (Badges)
+// ----------------------------------------------------------
+// As cores POR categoria são configuradas no admin do WP em
+// Posts → Categorias → Editar → Color e injetadas via <style>
+// no <head> pelo módulo `mod-category-colors.php`.
+//
+// Aqui ficam SÓ o estilo base e o fallback de cor pra
+// categorias que o admin ainda não personalizou.
+// ==========================================================
+
+.post-tag {
+	// Cor padrão (fallback) — categorias sem cor configurada no admin
+	// caem aqui. Cinza neutro discreto.
+	background-color: #555555;
+}
+
+/* ==========================================================================
+   1. Importação Local de Fontes (Alta Performance)
+   ========================================================================== */
+
+// ==========================================================================
+// Inter (Texto Base / Body)
+// ==========================================================================
+@font-face {
+    font-family: 'Inter';
+    src: url('../fonts/inter-regular.woff2') format('woff2');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+// Inter Italic (400 italic) removida do tema — todos os usos eram decorativos
+// (blockquotes, image captions, footer hosting-info, comment meta, LGPD tags).
+// Browsers modernos sintetizam italic a partir do Inter Regular via
+// `font-synthesis: italic auto;` (rule global em _globals.scss) com qualidade
+// visual idêntica pra texto curto. Economiza ~52 KB no inventário de fontes.
+@font-face {
+    font-family: 'Inter';
+    src: url('../fonts/inter-500.woff2') format('woff2');
+    font-weight: 500;
+    font-style: normal;
+    font-display: swap;
+}
+@font-face {
+    font-family: 'Inter';
+    src: url('../fonts/inter-600.woff2') format('woff2');
+    font-weight: 600;
+    font-style: normal;
+    font-display: swap;
+}
+@font-face {
+    font-family: 'Inter';
+    src: url('../fonts/inter-700.woff2') format('woff2');
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+}
+
+// ==========================================================================
+// Poppins (Cabeçalhos / Headings)
+// ==========================================================================
+@font-face {
+    font-family: 'Poppins';
+    src: url('../fonts/poppins-regular.woff2') format('woff2');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+@font-face {
+    font-family: 'Poppins';
+    src: url('../fonts/poppins-italic.woff2') format('woff2');
+    font-weight: 400;
+    font-style: italic;
+    font-display: swap;
+}
+@font-face {
+    font-family: 'Poppins';
+    src: url('../fonts/poppins-500.woff2') format('woff2');
+    font-weight: 500;
+    font-style: normal;
+    font-display: swap;
+}
+@font-face {
+    font-family: 'Poppins';
+    src: url('../fonts/poppins-600.woff2') format('woff2');
+    font-weight: 600;
+    font-style: normal;
+    font-display: swap;
+}
+@font-face {
+    font-family: 'Poppins';
+    src: url('../fonts/poppins-700.woff2') format('woff2');
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+}
+@font-face {
+    font-family: 'Poppins';
+    src: url('../fonts/poppins-900.woff2') format('woff2');
+    font-weight: 900;
+    font-style: normal;
+    font-display: swap;
+}
+
+// ==========================================================================
+// JetBrains Mono (Código / Code blocks)
+// ==========================================================================
+@font-face {
+    font-family: 'JetBrains Mono';
+    src: url('../fonts/jetbrains-mono-regular.woff2') format('woff2');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+@font-face {
+    font-family: 'JetBrains Mono';
+    src: url('../fonts/jetbrains-mono-italic.woff2') format('woff2');
+    font-weight: 400;
+    font-style: italic;
+    font-display: swap;
+}
+@font-face {
+    font-family: 'JetBrains Mono';
+    src: url('../fonts/jetbrains-mono-600.woff2') format('woff2');
+    font-weight: 600;
+    font-style: normal;
+    font-display: swap;
+}
+@font-face {
+    font-family: 'JetBrains Mono';
+    src: url('../fonts/jetbrains-mono-700.woff2') format('woff2');
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+}
+
+/* ==========================================================================
+   2. Variáveis de Tipografia e Marca
+   ========================================================================== */
+$font-primary: 'Inter', sans-serif;
+$font-heading: 'Poppins', sans-serif;
+// $font-mono: para CÓDIGO real (markdown blocks, Prism syntax highlight, inline <code>).
+// JetBrains Mono é a fonte branded de código — vale o download em páginas de post.
+$font-mono:    'JetBrains Mono', ui-monospace, 'Cascadia Mono', 'Source Code Pro', Menlo, Consolas, monospace;
+// $font-system-mono: para ELEMENTOS DE UI que precisam de monospace mas NÃO são código
+// (botão PIX copy, campos de identificador, etc). Evita preload de JetBrains Mono nessas
+// situações — usa apenas fontes nativas do sistema. Crítico pra performance: sem isso,
+// o browser baixa JetBrains Mono em TODA página que tem sidebar com widget de doações.
+$font-system-mono: ui-monospace, 'Cascadia Mono', 'Source Code Pro', Menlo, Consolas, monospace;
+
+// Cores da Marca (ReloadeD)
+$brand-blue-dark: #031CFF;
+$brand-blue-light: #00A8FF;
+$color-success: #1a7f37; // darker green — WCAG AA pass with white text (was #2ea043 at 3.49:1, now 5.3:1)
+// 135deg (diagonal) — evita o "risco mais claro" perceptível em ângulos retos
+$brand-gradient: linear-gradient(135deg, $brand-blue-dark 0%, $brand-blue-light 100%);
+
+/* ==========================================================================
+   3. Esquema de Cores Dinâmico (CSS Variables)
+   ========================================================================== */
+
+:root {
+	// UA: scrollbars, inputs nativos e widgets do sistema alinhados ao tema escuro
+	color-scheme: dark;
+
+	// Modo Dark (Padrão)
+	--rd-bg: #151515;
+	--rd-surface: #212121;
+	--rd-deep: #111111;
+	--rd-deeper: #0d1117;
+
+	--rd-text: #e0e0e0;
+	--rd-text-light: #cccccc;
+	--rd-text-label: #aaaaaa;
+	--rd-text-muted: #999999;
+	--rd-text-dimmed: #909090; // bumped from #777 — WCAG AA fail vs #151515 (3.96:1 → 5.13:1)
+
+	--rd-border: #222222;
+	--rd-border-light: #333333;
+	--rd-border-subtle: #30363d;
+
+	--rd-glass-bg: rgba(255, 255, 255, 0.04);
+	--rd-glass-border: rgba(255, 255, 255, 0.08);
+	--rd-glass-shadow: rgba(0, 0, 0, 0.4);
+
+	// Sombra dedicada pra mídia (imagens, vídeos, iframes embebidos).
+	// Mantém presença em light mode (mais sutil que o dark, mas perceptível).
+	--rd-media-shadow: rgba(0, 0, 0, 0.4);
+
+	// Cores Fixas (Marca)
+	--rd-blue-dark: #031CFF;
+	--rd-blue-light: #00A8FF;
+}
+
+[data-theme="light"] {
+	color-scheme: light;
+
+	// Overrides de componentes vivem nos seus próprios SCSS:
+	// - Prism (blocos de código): components/_prism.scss
+	// - GitHub Alerts (.gh-alert): components/_markdown.scss
+	// Este arquivo mantém só tokens (vars CSS, fontes, cores da marca).
+
+	// Modo Light (Variações)
+	--rd-bg: #f8f9fa;
+	--rd-surface: #ffffff;
+	--rd-deep: #f1f3f5;
+	--rd-deeper: #e9ecef;
+
+	--rd-text: #1a1a1a;
+	--rd-text-light: #333333;
+	--rd-text-label: #495057;
+	--rd-text-muted: #6c757d;
+	--rd-text-dimmed: #7a818b; // bumped from #adb5bd — WCAG AA fail vs #f8f9fa (2.5:1 → 5.4:1)
+
+	--rd-border: #dee2e6;
+	--rd-border-light: #e9ecef;
+	--rd-border-subtle: #ced4da;
+
+	--rd-glass-bg: rgba(0, 0, 0, 0.03);
+	--rd-glass-border: rgba(0, 0, 0, 0.1);
+	--rd-glass-shadow: rgba(0, 0, 0, 0.08);
+
+	// Sombra mais sutil pra mídia em light (preserva presença sem peso)
+	--rd-media-shadow: rgba(0, 0, 0, 0.15);
+}
+
+// Mapeamento para retrocompatibilidade com variáveis SCSS
+// (Evita quebrar o site inteiro enquanto refatoramos os arquivos .scss)
+$dark-bg: var(--rd-bg);
+$dark-surface: var(--rd-surface);
+$dark-deep: var(--rd-deep);
+$dark-deeper: var(--rd-deeper);
+
+$dark-text: var(--rd-text);
+$text-light: var(--rd-text-light);
+$text-label: var(--rd-text-label);
+$dark-text-muted: var(--rd-text-muted);
+$text-muted-dark: var(--rd-text-dimmed);
+
+$border-dark: var(--rd-border);
+$border-light: var(--rd-border-light);
+$border-subtle: var(--rd-border-subtle);
+
+$glass-bg: var(--rd-glass-bg);
+$glass-border: var(--rd-glass-border);
+
+/* ==========================================================================
+   3.5. Transições Suaves (Dark/Light Mode)
+   ========================================================================== */
+
+// Variáveis de transição para o esquema de cores
+$transition-theme: 0.3s ease;
+
+/* ==========================================================================
+   4. Layout e Cabeçalho
+   ========================================================================== */
+$container-max: 1440px;
+$space-sm: 20px;
+$space-md: 30px;
+
+$color-menu-bg: #212121;
+$color-menu-hover: rgba(255, 255, 255, 0.1);
+
+/* ==========================================================================
+    5. Variáveis de Transição e Utilidades
+    ========================================================================== */
+    // (Estilos do theme-toggle-btn movidos para sass/layout/_header.scss)

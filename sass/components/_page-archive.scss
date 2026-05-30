@@ -1,0 +1,138 @@
+// ==========================================================
+// PÁGINA DE ARCHIVE
+// Cobre os fallbacks do template hierarchy: category, tag, date.
+//
+// Markup montado por rd_render_archive_header() em mod-archive-header.php.
+// O title e a description seguem vindos do WordPress via the_archive_title()
+// e the_archive_description(); o helper adiciona ícone contextual,
+// contador de posts e a borda esquerda colorida (acento da categoria).
+// ==========================================================
+@use '../base/variables' as *;
+
+.rd-archive-header {
+    position: relative;
+    overflow: hidden;
+    background: $glass-bg;
+    border: 1px solid $glass-border;
+    border-radius: 5px;
+    padding: 25px 30px;
+    margin-bottom: 25px;
+    box-shadow: 0 8px 20px var(--rd-glass-shadow); // Adapta dark/light (plana no light)
+
+    // Ícone à esquerda + bloco de texto à direita
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 20px;
+    align-items: center;
+
+    // Borda superior com gradiente da marca (preservada do design original)
+    &::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 3px;
+        background: $brand-gradient;
+    }
+
+    // Borda esquerda como acento — usa CSS var injetada inline pelo helper
+    // (cor da categoria do mod-category-colors). Fallback pro brand-blue.
+    &::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        width: 4px;
+        background: var(--rd-archive-accent, #{$brand-blue-light});
+    }
+
+    .rd-archive-icon {
+        width: 40px;
+        height: 40px;
+        color: var(--rd-archive-accent, $brand-blue-light);
+        flex-shrink: 0;
+
+        svg {
+            width: 100%;
+            height: 100%;
+        }
+    }
+
+    .rd-archive-text {
+        min-width: 0; // permite truncamento se o título for muito longo
+    }
+
+    .rd-archive-title {
+        font-family: $font-heading;
+        font-size: 1.6rem;
+        font-weight: 700;
+        color: $dark-text;
+        letter-spacing: 0.5px;
+        margin: 0;
+
+        // O the_archive_title() do WP envolve a parte dinâmica
+        // (nome da categoria/tag/data) em um <span>
+        span {
+            background: $brand-gradient;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+    }
+
+    .rd-archive-description {
+        font-size: 0.95rem;
+        line-height: 1.6;
+        margin-top: 6px;
+
+        p { margin: 0; }
+        p + p { margin-top: 0.5em; }
+    }
+
+    // Contador de posts — flutua no canto direito do header (mesmo padrão
+    // dos views nos cards). Sai do flow do .rd-archive-text, ancorando direto
+    // no .rd-archive-header que já é position: relative pelos pseudo-elements.
+    .rd-archive-count {
+        position: absolute;
+        top: 50%;
+        right: 30px;
+        transform: translateY(-50%);
+        font-size: 0.85rem;
+        color: $dark-text-muted;
+        z-index: 3;
+
+        strong {
+            color: $dark-text;
+            font-weight: 700;
+        }
+    }
+
+    // Mobile: ícone menor, padding reduzido, gap mais apertado
+    @media (max-width: 600px) {
+        padding: 18px 20px 18px 22px; // padding-left maior pra compensar a borda de 4px
+        gap: 14px;
+
+        .rd-archive-icon {
+            width: 28px;
+            height: 28px;
+        }
+
+        .rd-archive-title {
+            font-size: 1.3rem;
+        }
+
+        .rd-archive-description {
+            font-size: 0.9rem;
+        }
+
+        // Count volta pro flow em mobile — ancorado à direita absoluto colidiria
+        // com título/descrição em telas estreitas
+        .rd-archive-count {
+            position: static;
+            transform: none;
+            margin-top: 8px;
+        }
+    }
+}

@@ -1,0 +1,144 @@
+// sass/components/_print.scss
+@use '../base/variables' as *;
+
+// ==========================================================
+// Print Stylesheet
+//   Otimiza o output em papel / "Salvar como PDF":
+//   - Esconde elementos UI/navegação que não fazem sentido impressos
+//   - Força fundo branco + texto preto (economia de tinta + legibilidade)
+//   - Mostra URL após links externos pra contexto offline
+//   - Tipografia print-friendly (serif, contraste alto)
+// ==========================================================
+
+@media print {
+
+    // --- Fundo + tipografia base ---
+    html,
+    body {
+        background: #fff !important;
+        color: #000 !important;
+        font-family: Georgia, 'Times New Roman', serif;
+        font-size: 12pt;
+        line-height: 1.5;
+    }
+
+    // Evita quebrar gradientes/sombras impressos
+    * {
+        background: transparent !important;
+        color: #000 !important;
+        box-shadow: none !important;
+        text-shadow: none !important;
+    }
+
+    // --- Esconder UI / navegação ---
+    .site-header,
+    .site-footer,
+    .rd-top-bar,
+    .menu-bar-fixed,
+    .main-navigation,
+    .navigation,
+    .menu-toggle,
+    .menu-search-toggle,
+    .header-search-container,
+    .theme-switch-wrapper,
+    .theme-toggle-btn,
+    .site-branding-toggle,
+    aside,
+    .footer-widget,
+    .rd-breadcrumbs,
+    .back-to-top,
+    .rd-cookie-banner,
+    .rd-lgpd-reopen,
+    .rd-toc,
+    .rd-toc__fab,
+    .rd-toc__panel,
+    .rd-toc-anchor,
+    .rd-sugg,
+    .rd-search-suggestions,
+    .rd-related-posts,
+    .rd-popular-posts,
+    .rd-social-icons,
+    .rd-social-link,
+    .rd-ticker-viewport,
+    .rd-ticker-list,
+    .rd-ticker-label,
+    .rd-ad-container,
+    .rd-ad-close,
+    .rd-ad-close-wrap,
+    .rd-support-block,
+    .rd-copy-btn,
+    .comments-area,
+    .comment-list,
+    #respond,
+    .pagination,
+    .reading-time {
+        display: none !important;
+    }
+
+    // --- Layout: força conteúdo full-width sem sidebar ---
+    .site-main,
+    .content-area,
+    .single-post-content,
+    .post-grid,
+    .grid-item {
+        width: 100% !important;
+        max-width: 100% !important;
+        float: none !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    // --- Links: mostra URL ao lado pra contexto offline ---
+    // Só pra links externos absolutos; relativos/internos viram ruído.
+    a[href^="http"]:after {
+        content: " (" attr(href) ")";
+        font-size: 90%;
+        word-break: break-all;
+    }
+
+    // Skip URL de âncoras e mailto
+    a[href^="#"]:after,
+    a[href^="mailto:"]:after {
+        content: "";
+    }
+
+    // --- Imagens: não cortar entre páginas, max-width 100% ---
+    img,
+    picture {
+        max-width: 100% !important;
+        height: auto !important;
+        page-break-inside: avoid;
+    }
+
+    // --- Quebra de página: títulos não terminam página sozinhos ---
+    h1, h2, h3, h4, h5, h6 {
+        page-break-after: avoid;
+        page-break-inside: avoid;
+    }
+
+    // Parágrafos / listas / blockquotes: evita quebrar no meio
+    p,
+    blockquote,
+    ul,
+    ol,
+    pre,
+    table {
+        page-break-inside: avoid;
+        orphans: 3;
+        widows: 3;
+    }
+
+    // --- Code blocks: borda visível pra distinguir do texto ---
+    pre,
+    code {
+        border: 1px solid #999 !important;
+        font-family: 'Courier New', monospace;
+        font-size: 10pt;
+    }
+
+    pre {
+        padding: 8pt;
+        white-space: pre-wrap;
+        word-wrap: break-word;
+    }
+}

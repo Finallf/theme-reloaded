@@ -1,0 +1,216 @@
+// sass/components/_toc.scss
+// Table of Contents — FAB sticky + painel collapsible.
+// Renderizado por rd_toc_render_html() em inc/mod-table-of-contents.php.
+// JS em assets/js/toc.js gerencia toggle, click-outside, ESC.
+//
+// Posição: PREPEND no .entry-content + float:right + position:sticky.
+//   Resultado: FAB ancorado horizontalmente ao canto direito do post,
+//   movimenta SÓ na vertical (acompanha scroll), some quando o conteúdo acaba.
+//
+// Visual:
+//   - FAB: estilo discreto seguindo .back-to-top (background sutil, sem azul
+//     agressivo) — não rouba atenção do conteúdo
+//   - Panel: glass sólido seguindo pattern do hamburger menu
+//     (rgba($color-menu-bg, 0.96)) — alta legibilidade SOBRE qualquer fundo
+
+@use '../base/variables' as *;
+
+// ==========================================================
+// Anchor + sticky-inside-anchor
+//
+// O float:right deslocava o kicker do .entry-title-row (flex space-between).
+// Voltamos pro anchor wrapper (position: absolute, escopa sticky pro article
+// inteiro mas SEM alterar o fluxo do conteúdo).
+//
+// Padding auto-tracking:
+//   --rd-single-padding é definida em .single-post-content (_single.scss).
+//   O anchor lê a variável no `right`, então muda padding lá → muda right aqui
+//   automaticamente. Override em media query (mobile, etc.) precisa SÓ
+//   redeclarar `--rd-single-padding` dentro do breakpoint do .single-post-content.
+// ==========================================================
+.rd-toc-anchor {
+    position: absolute;
+    top: 52px;
+    right: var(--rd-single-padding, 1.25rem); // fallback: valor desktop atual
+    height: 100%;
+    width: 40px;
+    pointer-events: none; // anchor é só "trilha" — não bloqueia cliques
+    z-index: 100;
+}
+
+.rd-toc {
+    // Sticky dentro do anchor. top:20px = distância do topo da viewport quando
+    // sticky kicks in. Inicial position (sem scroll) = top do anchor.
+    position: sticky;
+    top: 20px;
+    width: 40px;
+    height: 40px;
+    margin-left: auto; // alinha à direita dentro do anchor de 40px (no-op mas defensivo)
+    pointer-events: auto; // FAB clica normalmente
+}
+
+// Sentinel invisível pra detectar o estado "sticky ativo" via IntersectionObserver.
+// Posicionado no top do anchor (= natural position do FAB antes do sticky kickar).
+// Quando o sentinel passa do top da viewport, o JS adiciona .is-stuck no .rd-toc.
+.rd-toc__sentinel {
+    position: absolute;
+    top: 0;
+    width: 1px;
+    height: 1px;
+    pointer-events: none;
+}
+
+// ==========================================================
+// FAB — pattern visual do .back-to-top (discreto, neutro)
+// ==========================================================
+.rd-toc__fab {
+    width: 100%;
+    height: 100%;
+    background-color: $dark-surface;
+    color: $text-muted-dark;
+    border: 1px solid $glass-border;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    padding: 0;
+    transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease, box-shadow 0.3s ease;
+
+    // Box-shadow só quando sticky ativou (.is-stuck adicionado pelo JS via
+    // IntersectionObserver). Visual de "lifted off the page" quando o FAB
+    // se descola da posição natural pra acompanhar o scroll.
+    .rd-toc.is-stuck & {
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+    }
+
+    &:hover {
+        background-color: $dark-bg;
+        color: $text-light;
+        border-color: $border-light;
+    }
+
+    &:focus-visible {
+        outline: 2px solid $brand-blue-light;
+        outline-offset: 2px;
+    }
+
+    svg {
+        pointer-events: none;
+        width: 18px;
+        height: 18px;
+    }
+}
+
+// ==========================================================
+// Panel — pattern visual do hamburger menu (#212121 @ 96%, sólido)
+// ==========================================================
+.rd-toc__panel {
+    position: absolute;
+    // Anchored no canto superior DIREITO do FAB. Panel cresce pra ESQUERDA
+    // (right: 100% + gap) e pra BAIXO (top: 0).
+    top: 0;
+    right: calc(100% + 12px);
+    width: 320px;
+    max-height: 70vh;
+    overflow-y: auto;
+
+    // Glass sólido como o hamburger — alta legibilidade sobre qualquer fundo
+    background-color: rgba($color-menu-bg, 0.96);
+    border: 1px solid $glass-border;
+    border-radius: 5px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
+
+    padding: 18px 22px;
+
+    // Estado inicial: escondido, escala 0 ancorado no canto superior direito
+    transform: scale(0);
+    transform-origin: top right;
+    opacity: 0;
+    pointer-events: none;
+    transition:
+        transform 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+        opacity 0.2s ease;
+
+    // Mobile (Decisão 3-B): card quase fullscreen, mas abrindo A PARTIR DO FAB
+    // (não do canto inferior — antes ficava esquisito, parecia que saía do
+    // back-to-top).
+    //
+    // FAB tá sticky em top:20px da viewport (height:40px → bottom em y=60).
+    // Painel position:fixed em top:70px (10px abaixo do FAB), right alinhado
+    // com a borda do FAB, transform-origin:top right → cresce do canto
+    // superior direito (onde o FAB está) pra baixo+esquerda.
+    @media (max-width: 600px) {
+        position: fixed;
+        top: 70px;
+        right: 20px;
+        width: calc(100vw - 40px); // 20px de margem em cada lado
+        max-height: calc(100vh - 90px); // resto da tela disponível
+        transform-origin: top right;
+    }
+
+    // Quando aberto (.is-open no .rd-toc parent)
+    .rd-toc.is-open & {
+        transform: scale(1);
+        opacity: 1;
+        pointer-events: auto;
+    }
+}
+
+// ==========================================================
+// Conteúdo do panel — cores HARDCODED dark (panel sempre tem bg #212121,
+// não pode usar variáveis theme-adaptive que mudam em light mode e ficam
+// ilegíveis sobre o fundo escuro). Mesmo pattern do hamburger menu.
+// ==========================================================
+.rd-toc__title {
+    margin: 0 0 14px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: $brand-blue-light;
+}
+
+.rd-toc__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    font-size: 0.9rem;
+    line-height: 1.5;
+}
+
+.rd-toc__sublist {
+    list-style: none;
+    margin: 6px 0 6px 14px;
+    padding: 0 0 0 12px;
+    border-left: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.rd-toc__item {
+    margin: 6px 0;
+
+    a {
+        color: #fff;
+        text-decoration: none;
+        transition: color 0.15s ease;
+        display: inline-block;
+
+        &:hover,
+        &:focus-visible {
+            color: $brand-blue-light;
+        }
+    }
+
+    &--h3 {
+        font-size: 0.85rem;
+
+        a {
+            color: rgba(255, 255, 255, 0.65);
+
+            &:hover,
+            &:focus-visible {
+                color: $brand-blue-light;
+            }
+        }
+    }
+}

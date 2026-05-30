@@ -1,0 +1,24 @@
+{
+  "name": "reloaded-theme",
+  "version": "0.0.0",
+  "description": "Build tooling for the ReloadeD WordPress theme. NOT shipped to production — only used locally for SCSS compilation and Critical CSS extraction. The theme itself runs entirely on PHP/CSS/JS with no Node runtime dependency.",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "sass:build": "sass sass/style.scss assets/css/style.css --style=compressed --no-source-map",
+    "sass:watch": "sass --watch sass/style.scss:assets/css/style.css --style=compressed",
+    "critical:home": "node tools/critical/extract.js home",
+    "critical:single": "node tools/critical/extract.js single",
+    "critical:page": "node tools/critical/extract.js page",
+    "critical:archive": "node tools/critical/extract.js archive",
+    "critical:search": "node tools/critical/extract.js search",
+    "critical:all": "npm run critical:home && npm run critical:single && npm run critical:page && npm run critical:archive && npm run critical:search"
+  },
+  "devDependencies": {
+    "critical": "^8.0.0",
+    "sass": "^1.77.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

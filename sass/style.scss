@@ -1,0 +1,36 @@
+// sass/style.scss
+
+// 1. Variáveis e Configurações Base
+@use 'base/variables' as *;
+@use 'base/globals';
+@use 'base/tokens'; // Design Tokens (sistema de tokens global)
+
+// 2. Layout (A Estrutura)
+@use 'layout/footer';
+@use 'layout/grid';
+@use 'layout/header';
+@use 'layout/media';
+@use 'layout/single';
+@use 'layout/sidebar';
+
+// 3. Componentes (Os Pedacinhos)
+@use 'components/buttons';
+@use 'components/comments';
+@use 'components/prism';
+@use 'components/backtotop';
+@use 'components/breadcrumbs';
+@use 'components/facades';
+@use 'components/lgpd';
+@use 'components/markdown';
+@use 'components/overline';
+@use 'components/page-404';
+@use 'components/page-static';
+@use 'components/page-author';
+@use 'components/page-archive';
+@use 'components/pagination';
+@use 'components/popular-widget';
+@use 'components/search';
+@use 'components/related-posts'; // depois de search — herda .rd-wrapper-grid e overrideia o grid-template-columns
+@use 'components/toc';
+@use 'components/search-suggestions';
+@use 'components/print'; // @media print — por último pra garantir override

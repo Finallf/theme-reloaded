@@ -1,0 +1,25 @@
+// sass/components/_buttons.scss
+@use '../base/variables' as *;
+
+.submit,
+.wp-block-button__link {
+	background: $brand-gradient; // Puxando a variável oficial!
+	color: #fff;
+	border: none;
+	padding: 12px 30px;
+	border-radius: 5px;
+	font-weight: 700;
+	cursor: pointer;
+	text-transform: uppercase;
+	transition: 0.3s ease;
+	display: inline-block;
+
+	&:hover {
+		opacity: 0.8;
+		transform: translateY(-2px); // Dá aquele pulinho charmoso
+	}
+
+	&:active {
+		transform: translateY(0);
+	}
+}

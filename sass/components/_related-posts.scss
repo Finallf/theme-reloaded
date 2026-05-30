@@ -1,0 +1,54 @@
+// sass/components/_related-posts.scss
+// Estilos do bloco de related posts no final do single (renderizado por
+// rd_render_related_posts em inc/mod-related-posts.php).
+//
+// Os cards reusam .rd-search-card.layout-grid de _search.scss (background
+// glass, border, aspect-ratio 16/9, hover, ellipsis). Pra ativar esses
+// estilos o wrapper TEM que ter classe .rd-wrapper-grid (descendant
+// selector em _search.scss).
+//
+// Este arquivo só estiliza o wrapper externo + override do grid-template-columns
+// (default do .rd-wrapper-grid é auto-fill minmax — pra apenas 3 cards num
+// container largo deixaria células vazias). IMPORTANTE: este componente deve
+// ser carregado APÓS _search.scss no style.scss pra o override ganhar cascata.
+
+@use '../base/variables' as *;
+
+.rd-related-posts {
+    margin: 48px 0 24px;
+    padding-top: 32px;
+    border-top: 1px solid var(--rd-border);
+
+    &__title {
+        margin: 0 0 24px;
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--rd-text);
+    }
+
+    // Override do grid-template-columns herdado de .rd-wrapper-grid
+    // Mobile (default): 1 col • Tablet: 2 cols • Desktop: 3 cols
+    &__grid {
+        grid-template-columns: 1fr;
+
+        @media (min-width: 768px) {
+            grid-template-columns: 1fr 1fr;
+
+            // Tablet (2 cols): esconde o 3º card pra não ficar sozinho na
+            // segunda linha com espaço vazio ao lado. Mobile (1 col) e desktop
+            // (3 cols) mostram os 3 normalmente.
+            > :nth-child(3) {
+                display: none;
+            }
+        }
+
+        @media (min-width: 1024px) {
+            grid-template-columns: 1fr 1fr 1fr;
+
+            // Restaura visibilidade do 3º card no desktop
+            > :nth-child(3) {
+                display: block;
+            }
+        }
+    }
+}

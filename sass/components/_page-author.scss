@@ -1,0 +1,196 @@
+// ==========================================================
+// PÁGINA DE AUTOR (Fase 4)
+// Header com avatar, nome, bio e meta; lista de posts logo abaixo
+// usando o card .layout-vertical compartilhado de _search.scss
+// ==========================================================
+@use '../base/variables' as *;
+
+.rd-author-header {
+    display: flex;
+    align-items: center;
+    gap: 25px;
+    background: $glass-bg;
+    border: 1px solid $glass-border;
+    border-radius: 5px;
+    padding: 30px;
+    margin-bottom: 40px;
+    box-shadow: 0 8px 20px var(--rd-glass-shadow); // Adapta dark/light (plana no light)
+
+    // Borda superior com gradiente da marca (mesmo padrão do card 404)
+    position: relative;
+    overflow: hidden;
+
+    &::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 3px;
+        background: $brand-gradient;
+    }
+
+    .rd-author-avatar {
+        flex-shrink: 0;
+
+        img {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            border: 3px solid $brand-blue-light;
+            display: block;
+            box-shadow: 0 4px 12px rgba(0, 168, 255, 0.25);
+        }
+    }
+
+    .rd-author-info {
+        flex: 1;
+        min-width: 0;
+    }
+
+    // Linha do título: H1 à esquerda + ícones sociais à direita (mesmo padrão
+    // do .rd-about-info-header da page-sobre).
+    .rd-author-info-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 20px;
+        margin-bottom: 10px;
+
+        @media (max-width: 600px) {
+            flex-direction: column;
+            gap: 12px;
+        }
+    }
+
+    .rd-author-name {
+        font-family: $font-heading;
+        font-size: 1.8rem;
+        font-weight: 700;
+        margin: 0; // espaçamento gerenciado pelo .rd-author-info-header
+        letter-spacing: 0.5px;
+        background: $brand-gradient;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        width: fit-content;
+    }
+
+    .rd-author-bio {
+        font-size: 0.95rem;
+        line-height: 1.6;
+        margin: 0 0 14px;
+    }
+
+    // Ícones sociais do autor (vem do rd_render_social_icons($author_id))
+    // — só renderiza se o user preencheu URLs em Usuários → Perfil.
+    // Posicionado ao lado direito do nome via .rd-author-info-header (flex).
+    .rd-author-socials {
+        // Reset do margin-left:15px do primeiro ícone quando centralizado em mobile
+        // (mesmo fix usado no footer-bottom + page-sobre)
+        @media (max-width: 600px) {
+            .rd-social-icons {
+                justify-content: center;
+            }
+            .rd-social-link:first-child {
+                margin-left: 0;
+            }
+        }
+    }
+
+    .rd-author-meta {
+        display: flex;
+        gap: 20px;
+        flex-wrap: wrap;
+        font-size: 0.85rem;
+        color: $text-muted-dark;
+
+        .rd-author-meta-item {
+            display: inline-flex;
+            align-items: center;
+
+            // separador entre os items
+            & + .rd-author-meta-item::before {
+                content: "•";
+                margin-right: 20px;
+                margin-left: -10px;
+                color: $border-light;
+            }
+        }
+    }
+
+    // mobile: empilha avatar acima das infos e centraliza
+    @media (max-width: 600px) {
+        flex-direction: column;
+        text-align: center;
+        gap: 18px;
+        padding: 25px 20px;
+
+        .rd-author-meta {
+            justify-content: center;
+        }
+    }
+}
+
+.rd-no-posts {
+    font-size: 1rem;
+    text-align: center;
+    padding: 40px 20px;
+    background: $glass-bg;
+    border: 1px solid $glass-border;
+    border-radius: 5px;
+}
+
+// ==========================================================
+// AUTHOR BIO BOX no final do single (Wave 13)
+// Renderizado por rd_render_author_bio_box() em mod-author-bio.php.
+// Reusa .rd-author-header + sub-classes (avatar, info, name, bio, socials).
+// Modifier --single ajusta espaçamento + adiciona link "View all posts".
+// ==========================================================
+
+.rd-author-header--single {
+    // Espaçamento próprio pro contexto single (margin-bottom 40px do archive
+    // não faz sentido aqui — depois vem o bloco de related posts).
+    margin-top: 48px;
+    margin-bottom: 0;
+
+    // Nome vira link no single (no archive é h1 puro). Garante que o gradient
+    // text-fill funciona dentro de <a>.
+    .rd-author-name a {
+        background: $brand-gradient;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        text-decoration: none;
+
+        &:hover {
+            opacity: 0.85;
+        }
+    }
+}
+
+// Link "View all posts by X →" no rodapé do box
+.rd-author-archive-link {
+    display: inline-block;
+    margin-top: 4px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: $brand-blue-light;
+    text-decoration: none;
+    transition: color 200ms ease;
+
+    span {
+        display: inline-block;
+        margin-left: 4px;
+        transition: transform 200ms ease;
+    }
+
+    &:hover {
+        color: $brand-blue-dark;
+        text-decoration: underline;
+
+        span {
+            transform: translateX(3px);
+        }
+    }
+}

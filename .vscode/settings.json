@@ -1,0 +1,64 @@
+{
+  // ============================================================
+  // EDITOR — Auto-format OFF (trava de segurança)
+  // ============================================================
+  "editor.formatOnSave": false,
+  "editor.formatOnPaste": false,
+  "editor.formatOnType": false,
+
+  // ============================================================
+  // PHP — Intelephense
+  // ============================================================
+  "intelephense.stubs": [
+    "wordpress",
+    "standard",
+    "date",
+    "Core",
+    "json",
+    "Phar",
+    "Reflection"
+  ],
+
+  // ============================================================
+  // Emmet em PHP (templates de tema)
+  // ============================================================
+  "emmet.includeLanguages": {
+    "php": "html"
+  },
+
+  // ============================================================
+  // SCSS — Live Sass Compiler
+  // ============================================================
+  "liveSassCompile.settings.formats": [
+    {
+      // "compressed" remove whitespace e comentários — gera o style.css
+      // pronto pra produção. Source maps continuam ligados (generateMap),
+      // então DevTools mostra o SCSS original ao inspecionar elementos
+      // — debugging não fica prejudicado.
+      "format": "compressed",
+      "extensionName": ".css",
+      "savePath": "/assets/css"
+    }
+  ],
+  "liveSassCompile.settings.excludeList": [
+    "/node_modules/**",
+    "/.vscode/**",
+    "/vendor/**"
+  ],
+  "liveSassCompile.settings.generateMap": true,
+  "liveSassCompile.settings.autoprefix": [
+    "> 1%",
+    "last 2 versions"
+  ],
+  "liveSassCompile.settings.watchOnLaunch": true,
+
+  // ============================================================
+  // SEARCH — Exclusões da busca global
+  // ============================================================
+  "search.exclude": {
+    "**/.git": true,
+    "**/node_modules": true,
+    "**/.github": true,
+    "style.css": true
+  }
+}

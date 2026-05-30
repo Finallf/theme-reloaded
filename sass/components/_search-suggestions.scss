@@ -1,0 +1,138 @@
+// sass/components/_search-suggestions.scss
+// Dropdown de autocomplete que aparece abaixo dos search inputs (.search-field
+// no header desktop + .menu-search-field no painel hambúrguer).
+//
+// Renderizado por assets/js/search-suggestions.js, conectado ao AJAX endpoint
+// rd_search_suggestions em inc/mod-search-suggestions.php.
+//
+// Visual: glass dark sólido (mesmo pattern do hamburger menu + TOC panel) —
+// alta legibilidade sobre qualquer fundo, consistente com outros componentes
+// do tema. Cores hardcoded dark (panel sempre tem bg #212121).
+
+@use '../base/variables' as *;
+
+.rd-sugg {
+    // position:fixed + coords calculadas pelo JS (positionDropdown) — escapa
+    // de containers com overflow:hidden (search-form do header desktop tem
+    // overflow:hidden pra animação de expansão hover/focus do width).
+    // Top/left/width são setados inline pelo JS a partir do input.getBoundingClientRect().
+    position: fixed;
+    z-index: 10000;
+
+    // Glass sólido como o hamburger
+    background-color: rgba($color-menu-bg, 0.96);
+    border: 1px solid $glass-border;
+    border-radius: 5px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
+
+    max-height: 70vh;
+    overflow-y: auto;
+    padding: 6px 0;
+
+    // Fade in suave
+    animation: rdSuggFadeIn 200ms ease-out;
+
+    &[hidden] {
+        display: none;
+    }
+}
+
+@keyframes rdSuggFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-4px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+// ==========================================================
+// Item (link com thumb + título)
+// ==========================================================
+.rd-sugg__item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 14px;
+    text-decoration: none;
+    color: #fff;
+    transition: background-color 0.15s ease;
+
+    &:hover,
+    &.is-active {
+        background-color: rgba(255, 255, 255, 0.06);
+        color: $brand-blue-light;
+    }
+
+    &:focus-visible {
+        outline: 2px solid $brand-blue-light;
+        outline-offset: -2px;
+    }
+}
+
+// Thumb 71x40 (16:9 hard-crop via rd-micro 150x84 source = DPR 2x retina)
+.rd-sugg__thumb {
+    width: 71px;
+    height: 40px;
+    flex-shrink: 0;
+    object-fit: cover;
+    border-radius: 4px;
+    display: block;
+    background-color: rgba(255, 255, 255, 0.05); // fallback bg enquanto lazy carrega
+}
+
+// Fallback quando post não tem featured image — só um quadrado vazio
+// com o mesmo footprint pra não desalinhar título dos outros items.
+.rd-sugg__thumb--fallback {
+    background: linear-gradient(
+        135deg,
+        rgba($brand-blue-dark, 0.3) 0%,
+        rgba($brand-blue-light, 0.2) 100%
+    );
+}
+
+.rd-sugg__title {
+    font-size: 0.9rem;
+    line-height: 1.4;
+    color: inherit;
+
+    // Limita a 2 linhas com ellipsis pra evitar items gigantes em títulos longos
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+// ==========================================================
+// Empty state ("No matches for X")
+// ==========================================================
+.rd-sugg__empty {
+    padding: 14px 16px;
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.6);
+    font-style: italic;
+}
+
+// ==========================================================
+// Footer "See all results for X →"
+// ==========================================================
+.rd-sugg__see-all {
+    display: block;
+    padding: 10px 14px;
+    margin-top: 4px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: $brand-blue-light;
+    text-decoration: none;
+    transition: background-color 0.15s ease;
+
+    &:hover,
+    &:focus-visible {
+        background-color: rgba(255, 255, 255, 0.06);
+        color: #fff;
+    }
+}

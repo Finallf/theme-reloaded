@@ -1,0 +1,36 @@
+// sass/components/_overline.scss
+@use '../base/variables' as *;
+
+// ==========================================================
+// Overline (Chapéu / Sobretítulo)
+// ----------------------------------------------------------
+// Texto livre que o autor escreve por post, renderizado acima
+// do título (ENTREVISTA, EXCLUSIVO, ANÁLISE, etc.).
+//
+// Markup gerado por rd_render_post_overline() em mod-general.php.
+// Dois contextos: 'single' (cabeçalho do post) e 'card' (cards do
+// grid). Mesma classe base + sufixo de contexto pra ajustes finos.
+// ==========================================================
+.entry-overline {
+    display: inline-block;
+    font-family: $font-heading;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 700;
+    color: $brand-blue-light;
+    line-height: 1.2;
+
+    // Single — proeminente no cabeçalho do post
+    &.entry-overline-single {
+        font-size: 0.875rem;
+        margin-bottom: 8px;
+    }
+
+    // Card — menor, mais discreto, lembra que tem chapéu sem competir
+    // com o título do card
+    &.entry-overline-card {
+        font-size: 0.7rem;
+        margin-bottom: 4px;
+        opacity: 0.9;
+    }
+}
