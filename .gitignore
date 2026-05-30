@@ -52,13 +52,11 @@ tools/wp-cli.phar
 # === Working files (scratch local) ===
 tmp/
 
-# === Docs e tools internos (não distribuídos) ===
+# === Docs internos (não distribuídos) ===
 # Arquivos pessoais de desenvolvimento — mantidos local pra contexto, não vão pro repo público.
 # - BACKLOG.md: registro de decisões + waves (diário de bordo)
-# - tools/README.md: setup de WP-CLI portable + escape hatches operacionais
 # - 12-operacional-deploy-migracao.md: runbook de deploy (paths absolutos do servidor)
 # - 11-security-comparativo-colormag.md: comparativo CVE — playbook de exploit + tom competitivo
 docs/pt-BR/BACKLOG.md
 docs/pt-BR/12-operacional-deploy-migracao.md
 docs/pt-BR/11-security-comparativo-colormag.md
-tools/README.md

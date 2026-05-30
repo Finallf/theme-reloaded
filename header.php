@@ -103,7 +103,6 @@
 								?>
 							</div>
 
-							<!-- Painel deslizante (hambúrguer ≤1440px): busca interna + itens do menu -->
 							<div class="menu-panel" id="primary-menu-panel">
 								<form role="search" method="get" class="menu-search-form" action="<?php echo esc_url( home_url( '/' ) ); ?>">
 									<input
@@ -134,7 +133,6 @@
 							</div>
 						</nav>
 
-						<!-- Busca expansível (desktop ≥1441px) -->
 						<div class="header-search-container">
 							<form role="search" method="get" class="search-form" action="<?php echo esc_url( home_url( '/' ) ); ?>">
 								<input
@@ -154,7 +152,6 @@
 							</form>
 						</div>
 
-						<!-- Ícone de busca (hambúrguer ≤1440px): abre o painel + foca a busca interna -->
 						<button class="menu-search-toggle" aria-controls="primary-menu-panel" aria-label="<?php esc_attr_e( 'Open search', 'reloaded' ); ?>">
 							<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
 								<circle cx="11" cy="11" r="8"></circle>
@@ -171,7 +168,6 @@
 							</div>
 						<?php endif; ?>
 
-						<!-- Hambúrguer (≤1440px) — movido pro fim do grupo direito -->
 						<button class="menu-toggle" aria-controls="primary-menu-panel" aria-expanded="false" aria-label="<?php esc_attr_e( 'Open navigation menu', 'reloaded' ); ?>">
 							<span class="hamburger-icon" aria-hidden="true">&#9776;</span>
 						</button>
