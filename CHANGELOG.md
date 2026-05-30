@@ -7,6 +7,19 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 <br>
 
 
+## 1.0.0 (2026-05-30)
+
+### ✨ Features
+
+* public release v1.0.0 ([410c970](https://github.com/Finallf/theme-reloaded/commit/410c97013da69816d8d786a3a86d5f9450e11b5b))
+
+### 📝 Documentation
+
+* **contributor:** contrib-readme-action has updated readme ([c38bc24](https://github.com/Finallf/theme-reloaded/commit/c38bc249544cfb6fbf45bc80ca9cd4869a4dad9b))
+
+<br>
+
+---
 
 # 🗓️ Legacy History (Pre-Opening Repository)
 
