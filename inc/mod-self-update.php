@@ -4,36 +4,36 @@ defined( 'ABSPATH' ) || exit;
 /*******************************************************************************
  * Module: Self-Update — Auto-update via GitHub Releases (custom)              *
  *                                                                             *
- * Conecta o tema às releases publicadas no GitHub do projeto pra que o WP    *
- * detecte novas versões e ofereça update 1-clique no admin, igual qualquer  *
- * tema do wp.org. Sem deps externas — reusa o Parsedown já vendored pra      *
- * renderizar release notes no modal "View Details".                          *
+ * Connects the theme to the releases published on the project's GitHub so WP  *
+ * detects new versions and offers a 1-click update in admin, like any         *
+ * wp.org theme. No external deps — reuses the already-vendored Parsedown to   *
+ * render release notes in the "View Details" modal.                           *
  *                                                                             *
- * Fluxo end-to-end:                                                          *
- *   1. Push commits convencionais (`feat:`, `fix:`) pra `master`             *
- *   2. Workflow CI roda → semantic-release calcula nova versão `v0.5.0`     *
- *   3. CI gera `reloaded.zip` (estrutura interna `reloaded/...`)             *
- *   4. Asset binário anexado ao GitHub Release                               *
- *   5. WP do usuário fetcha `/releases/latest` (cache 24h) → encontra v0.5.0 *
- *   6. Compara semver vs `Version:` local → injeta no transient WP           *
- *   7. Admin vê "Update available" + clica → WP baixa o ZIP e descompacta    *
+ * End-to-end flow:                                                            *
+ *   1. Push conventional commits (`feat:`, `fix:`) to `master`                *
+ *   2. CI workflow runs → semantic-release computes new version `v0.5.0`      *
+ *   3. CI builds `reloaded.zip` (internal structure `reloaded/...`)           *
+ *   4. Binary asset attached to the GitHub Release                            *
+ *   5. User's WP fetches `/releases/latest` (24h cache) → finds v0.5.0        *
+ *   6. Compares semver vs local `Version:` → injects into the WP transient    *
+ *   7. Admin sees "Update available", clicks → WP downloads & unpacks the ZIP *
  *                                                                             *
- * APIs WordPress usadas (estáveis desde WP 2.8+):                            *
- *   - pre_set_site_transient_update_themes  → injetar update no transient    *
- *   - themes_api                            → alimentar modal "View Details" *
- *   - upgrader_source_selection             → defense in depth pro nome de   *
- *                                              pasta do ZIP extraído         *
- *   - wp_ajax_rd_check_update                → endpoint do botão "Check now" *
+ * WordPress APIs used (stable since WP 2.8+):                                 *
+ *   - pre_set_site_transient_update_themes  → inject the update into transient*
+ *   - themes_api                            → feed the "View Details" modal   *
+ *   - upgrader_source_selection             → defense in depth for the        *
+ *                                              extracted ZIP's folder name    *
+ *   - wp_ajax_rd_check_update                → endpoint for "Check now" button*
  *                                                                             *
- * Tracked: 1 transient (`rd_self_update_release`) com TTL 24h (1h em erro).  *
+ * Tracked: 1 transient (`rd_self_update_release`) with 24h TTL (1h on error). *
  *                                                                             *
- * Filosofia:                                                                  *
- *   - Sem deps externas (PUC foi descartado — bloated + duplicava Parsedown) *
- *   - Reusa lib/Parsedown.php pra renderizar release notes                   *
- *   - APIs WP estáveis há ~15 anos                                            *
- *   - Repo público (sem token auth) — releases acessíveis anônimas           *
- *   - Branch `beta` gera `prerelease: true` → API ignora por construção      *
- *******************************************************************************/
+ * Philosophy:                                                                 *
+ *   - No external deps (PUC was dropped — bloated + duplicated Parsedown)     *
+ *   - Reuses lib/Parsedown.php to render release notes                        *
+ *   - WP APIs stable for ~15 years                                            *
+ *   - Public repo (no token auth) — releases accessible anonymously           *
+ *   - `beta` branch produces `prerelease: true` → API ignores by design       *
+ ******************************************************************************/
 
 const RD_SELF_UPDATE_REPO        = 'Finallf/theme-reloaded';
 const RD_SELF_UPDATE_SLUG        = 'reloaded';
@@ -43,14 +43,14 @@ const RD_SELF_UPDATE_API_TIMEOUT = 8;
 
 /*
 =============================================================================
- *  FETCH — GitHub /releases/latest com cache de 24h
+ *  FETCH — GitHub /releases/latest with 24h cache
  * ============================================================================= */
 
 /**
- * Busca o latest release do GitHub. Cache em transient 24h (1h em erro pra
- * não martelar GitHub em caso de outage). Retorna array normalizado ou null.
+ * Fetches the latest release from GitHub. Cached in a transient for 24h (1h on
+ * error to avoid hammering GitHub during an outage). Returns a normalized array or null.
  *
- * Estrutura retornada:
+ * Returned structure:
  *   [
  *     'version'      => '0.5.0',
  *     'download_url' => 'https://.../reloaded.zip',
@@ -60,7 +60,7 @@ const RD_SELF_UPDATE_API_TIMEOUT = 8;
  *     'checked_at'   => 1748534400,
  *   ]
  *
- * @param bool $force_refresh Invalida cache e re-fetcha imediato (botão "Check now").
+ * @param bool $force_refresh Invalidates cache and re-fetches immediately ("Check now" button).
  */
 function rd_self_update_fetch_release( bool $force_refresh = false ): ?array {
 	if ( ! $force_refresh ) {
@@ -80,7 +80,7 @@ function rd_self_update_fetch_release( bool $force_refresh = false ): ?array {
 	);
 
 	if ( is_wp_error( $response ) || wp_remote_retrieve_response_code( $response ) !== 200 ) {
-		// Cache curto de "vazio" em erro pra não bombardear GitHub em outage.
+		// Short "empty" cache on error to avoid bombarding GitHub during an outage.
 		set_transient( RD_SELF_UPDATE_TRANSIENT, array(), HOUR_IN_SECONDS );
 		return null;
 	}
@@ -90,8 +90,8 @@ function rd_self_update_fetch_release( bool $force_refresh = false ): ?array {
 		return null;
 	}
 
-	// Procura o asset .zip (nosso CI sobe `reloaded.zip`). Se não encontrar,
-	// release não é instalável — retorna null.
+	// Look for the .zip asset (our CI uploads `reloaded.zip`). If not found,
+	// the release isn't installable — return null.
 	$zip_url = '';
 	foreach ( (array) ( $data['assets'] ?? array() ) as $asset ) {
 		$name = $asset['name'] ?? '';
@@ -119,7 +119,7 @@ function rd_self_update_fetch_release( bool $force_refresh = false ): ?array {
 }
 
 /**
- * Retorna a versão local lida do `style.css`.
+ * Returns the local version read from `style.css`.
  */
 function rd_self_update_get_local_version(): string {
 	return (string) wp_get_theme( RD_SELF_UPDATE_SLUG )->get( 'Version' );
@@ -131,8 +131,8 @@ function rd_self_update_get_local_version(): string {
  * ============================================================================= */
 
 /**
- * Hook em pre_set_site_transient_update_themes — quando WP guarda o transient
- * que lista quais updates estão disponíveis, injetamos o nosso se houver.
+ * Hook on pre_set_site_transient_update_themes — when WP stores the transient
+ * listing which updates are available, we inject ours if any.
  */
 function rd_self_update_inject( $transient ) {
 	if ( empty( $transient ) || ! is_object( $transient ) ) {
@@ -160,14 +160,14 @@ add_filter( 'pre_set_site_transient_update_themes', 'rd_self_update_inject' );
 
 /*
 =============================================================================
- *  "VIEW DETAILS" MODAL (themes_api) — render via nosso Parsedown
+ *  "VIEW DETAILS" MODAL (themes_api) — render via our Parsedown
  * ============================================================================= */
 
 /**
- * Hook em themes_api — quando admin clica "View version details" no card
- * do tema (modal popup), WP chama esse filter pra montar o conteúdo.
+ * Hook on themes_api — when the admin clicks "View version details" on the
+ * theme card (modal popup), WP calls this filter to build the content.
  *
- * Render do markdown via NOSSO Parsedown — zero dep externa.
+ * Markdown rendering via OUR Parsedown — zero external dep.
  */
 function rd_self_update_themes_api( $result, $action, $args ) {
 	if ( 'theme_information' !== $action || empty( $args->slug ) || RD_SELF_UPDATE_SLUG !== $args->slug ) {
@@ -183,7 +183,7 @@ function rd_self_update_themes_api( $result, $action, $args ) {
 		require_once get_template_directory() . '/lib/Parsedown.php';
 	}
 	$parsedown = new Parsedown();
-	$parsedown->setSafeMode( true ); // strip HTML perigoso do markdown do release.
+	$parsedown->setSafeMode( true ); // strip dangerous HTML from the release markdown.
 
 	$theme = wp_get_theme( RD_SELF_UPDATE_SLUG );
 
@@ -203,18 +203,18 @@ add_filter( 'themes_api', 'rd_self_update_themes_api', 10, 3 );
 
 /*
 =============================================================================
- *  DEFENSE IN DEPTH — força pasta extraída pro slug certo
+ *  DEFENSE IN DEPTH — force extracted folder to the right slug
  * ============================================================================= */
 
 /**
- * Hook em upgrader_source_selection — depois do WP descompactar o ZIP, esse
- * filter recebe o path da pasta extraída. Se vier com nome diferente de
- * 'reloaded/' (ex.: alguém anexou source tarball auto do GitHub em vez do
- * nosso `reloaded.zip`), renomeia.
+ * Hook on upgrader_source_selection — after WP unpacks the ZIP, this
+ * filter receives the extracted folder's path. If it has a name other than
+ * 'reloaded/' (e.g. someone attached GitHub's auto source tarball instead of
+ * our `reloaded.zip`), it renames it.
  *
- * Nosso CI já gera estrutura `reloaded/...` interna ao ZIP — então esse hook
- * raramente atua na prática. Mas garante que mesmo se um release manual for
- * feito errado, o usuário não fica brickado.
+ * Our CI already generates a `reloaded/...` structure inside the ZIP — so this
+ * hook rarely acts in practice. But it guarantees that even if a manual release
+ * is done wrong, the user doesn't get bricked.
  */
 function rd_self_update_fix_source( $source, $remote_source, $upgrader, $hook_extra ) {
 	if ( empty( $hook_extra['theme'] ) || RD_SELF_UPDATE_SLUG !== $hook_extra['theme'] ) {
@@ -223,7 +223,7 @@ function rd_self_update_fix_source( $source, $remote_source, $upgrader, $hook_ex
 
 	$expected = trailingslashit( $remote_source ) . RD_SELF_UPDATE_SLUG;
 	if ( untrailingslashit( $source ) === $expected ) {
-		return $source; // já tá certo.
+		return $source; // already correct.
 	}
 
 	global $wp_filesystem;
@@ -241,14 +241,14 @@ add_filter( 'upgrader_source_selection', 'rd_self_update_fix_source', 10, 4 );
 
 /*
 =============================================================================
- *  AJAX — botão "Check for updates" no Dashboard
+ *  AJAX — "Check for updates" button on the Dashboard
  * ============================================================================= */
 
 /**
- * Handler AJAX do botão "Check for updates" no card do Dashboard.
+ * AJAX handler for the "Check for updates" button on the Dashboard card.
  *
- * Invalida o transient, re-fetcha imediato, devolve JSON com status atualizado.
- * Capability + nonce checks defensive.
+ * Invalidates the transient, re-fetches immediately, returns JSON with updated status.
+ * Defensive capability + nonce checks.
  *
  * Response shape:
  *   { ok: bool, current: string, latest: string, status: string,
@@ -262,8 +262,8 @@ function rd_self_update_handle_ajax() {
 		wp_send_json_error( array( 'message' => 'bad_nonce' ), 403 );
 	}
 
-	// Invalida transient do WP também — pra que o card do tema em Appearance →
-	// Themes reflita o update na próxima carga, sem esperar 12h do cron WP.
+	// Invalidate the WP transient too — so the theme card in Appearance →
+	// Themes reflects the update on next load, without waiting for WP's 12h cron.
 	delete_site_transient( 'update_themes' );
 
 	$release = rd_self_update_fetch_release( true );

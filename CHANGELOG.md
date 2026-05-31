@@ -7,6 +7,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 <br>
 
 
+## [1.0.1-beta.1](https://github.com/Finallf/theme-reloaded/compare/v1.0.0...v1.0.1-beta.1) (2026-05-30)
+
+### 🐛 Bug Fixes
+
+* **i18n:** complete and polish pt_BR translation ([9129b7a](https://github.com/Finallf/theme-reloaded/commit/9129b7a47c4d557bf74d7f551080b1b5e26d32b0))
+
+<br>
+
+---
+
 ## 1.0.0 (2026-05-30)
 
 ### ✨ Features

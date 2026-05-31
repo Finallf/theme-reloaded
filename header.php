@@ -8,17 +8,17 @@
 
 		<script<?php echo rd_csp_nonce_attr(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- nonce attribute already escaped by rd_csp_nonce_attr() internally via esc_attr(). ?>>
 			/**
-			 * Script Anti-Flash (ReloadeD)
-			 * Roda no <head> ANTES do CSS, evitando qualquer flash de tema errado.
-			 * Cascata de decisão:
-			 *   1. Escolha explícita do user (localStorage 'rd-theme')
-			 *   2. Admin escolheu 'dark' ou 'light' como default → respeita
-			 *   3. Admin escolheu 'system' → segue prefers-color-scheme
-			 *   4. Fallback: dark (também usado quando navegador não suporta matchMedia)
+			 * Anti-Flash Script (ReloadeD)
+			 * Runs in <head> BEFORE the CSS, preventing any flash of the wrong theme.
+			 * Decision cascade:
+			 *   1. User's explicit choice (localStorage 'rd-theme')
+			 *   2. Admin selected 'dark' or 'light' as default → honor it
+			 *   3. Admin selected 'system' → follow prefers-color-scheme
+			 *   4. Fallback: dark (also used when the browser does not support matchMedia)
 			 *
-			 * Atributo no <html> (document.documentElement) porque <body> ainda não
-			 * existe nesse momento de execução. Seletores CSS [data-theme="light"]
-			 * funcionam igual em qualquer elemento.
+			 * Attribute set on <html> (document.documentElement) because <body> does
+			 * not yet exist at this execution moment. CSS selectors [data-theme="light"]
+			 * work the same on any element.
 			 */
 			(function() {
 				const adminDefault = '<?php echo esc_js( rd_get_option( 'default_theme_mode', 'system' ) ); ?>';
@@ -30,7 +30,7 @@
 				} else if (adminDefault === 'dark' || adminDefault === 'light') {
 					theme = adminDefault;
 				} else {
-					// system mode — segue preferência do SO
+					// system mode — follows the OS preference
 					let systemPrefersLight = false;
 					if (window.matchMedia) {
 						systemPrefersLight = window.matchMedia('(prefers-color-scheme: light)').matches;

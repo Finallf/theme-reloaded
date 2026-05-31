@@ -2,20 +2,20 @@
 /**
  * Template: 403 - Forbidden / Restricted Access
  *
- * Template passivo — WordPress não roteia automaticamente pra 403 no fluxo
- * normal (usa redirects pro login, retorna 401, etc). Esse arquivo fica
- * disponível pra ser servido por código futuro que precise emitir 403:
+ * Passive template — WordPress does not automatically route to 403 in the
+ * normal flow (uses redirects to login, returns 401, etc). This file is
+ * available to be served by future code that needs to emit a 403:
  *
  *   status_header( 403 );
  *   include get_template_directory() . '/403.php';
  *   exit;
  *
- * Cenários previstos: bloqueio manual de IPs, tentativa de acesso a área
- * restrita por user sem permissão, plugins de segurança que queiram uma
- * tela visual em vez do `wp_die` cinza padrão.
+ * Expected scenarios: manual IP blocking, attempted access to a restricted
+ * area by a user without permission, security plugins that want a visual
+ * screen instead of the default grey `wp_die`.
  *
- * Reusa o mesmo card visual do 404 (.rd-404-card) — uma única SCSS componente
- * cobre os dois templates. O conteúdo é específico ao contexto 403.
+ * Reuses the same visual card as the 404 (.rd-404-card) — a single SCSS
+ * component covers both templates. The content is specific to the 403 context.
  *
  * @package ReloadeD
  */
@@ -61,11 +61,11 @@ get_header(); ?>
 		</section>
 
 		<?php
-		// Posts populares (mais vistos all-time) — mesma lógica do 404
+		// Popular posts (most viewed all-time) — same logic as the 404 template.
 		$popular = function_exists( 'rd_get_popular_posts' ) ? rd_get_popular_posts( 3 ) : null;
 
-		// Fallback: se módulo de views não existir ou não tiver posts ainda,
-		// mostra os 3 mais recentes
+		// Fallback: if the views module is unavailable or has no posts yet,
+		// show the 3 most recent ones.
 		if ( ! $popular || ! $popular->have_posts() ) {
 			$popular = new WP_Query(
 				array(

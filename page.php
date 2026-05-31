@@ -1,9 +1,9 @@
 <?php
 /**
- * Template: Page (Páginas estáticas — Sobre, Contato, Política, etc.)
+ * Template: Page (static pages — About, Contact, Privacy Policy, etc.)
  *
- * Diferente de single.php (post de blog), este é otimizado para conteúdo
- * estrutural/atemporal. Sem categorias, data ou autor visíveis.
+ * Unlike single.php (blog post), this one is optimized for structural,
+ * time-agnostic content. No visible categories, date, or author.
  *
  * @package ReloadeD
  */
@@ -28,7 +28,7 @@ get_header(); ?>
 					</header>
 
 					<?php
-					// Respeita a opção do meta box "Ocultar Imagem Destacada"
+					// Respects the "Hide Featured Image" meta box option.
 					$hide_thumbnail = get_post_meta( get_the_ID(), '_rd_hide_thumbnail', true );
 
 					if ( has_post_thumbnail() && $hide_thumbnail !== 'yes' ) :
@@ -62,7 +62,7 @@ get_header(); ?>
 				</article>
 
 				<?php
-				// Comentários (apenas se admin habilitou pra esta página)
+				// Comments (only if the admin enabled them for this page).
 				if ( comments_open() || get_comments_number() ) :
 					comments_template();
 				endif;

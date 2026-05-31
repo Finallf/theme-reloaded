@@ -42,16 +42,16 @@
 						<div class="footer-bottom-info">
 							<p>&copy; <?php echo esc_html( wp_date( 'Y' ) ); ?> <?php echo esc_html( get_bloginfo( 'name' ) ); ?>. <?php esc_html_e( 'All rights reserved.', 'reloaded' ); ?>
 								<?php
-								// Link pra reabrir o banner LGPD — só renderiza se o sistema estiver ativo.
-								// Quando enable_lgpd está OFF, sistema dormente: nenhum banner, nenhum link.
+								// Link to reopen the LGPD banner — only rendered if the system is active.
+								// When enable_lgpd is OFF, the system is dormant: no banner, no link.
 								if ( rd_get_option_bool( 'enable_lgpd' ) ) :
 									?>
 									&middot; <button type="button" id="rd-lgpd-reopen" class="rd-lgpd-reopen"><?php esc_html_e( 'Cookie Preferences', 'reloaded' ); ?></button>
 								<?php endif; ?>
 							</p>
 							<?php
-							// Subline opt-in via painel (Geral > Footer Subline).
-							// Se o admin não preencher, a linha simplesmente não renderiza.
+							// Opt-in subline via the panel (General > Footer Subline).
+							// If the admin leaves it empty, the line simply does not render.
 							$footer_subline = rd_get_option( 'footer_subline' );
 							if ( ! empty( $footer_subline ) ) :
 								?>

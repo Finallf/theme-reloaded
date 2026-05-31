@@ -1,11 +1,11 @@
 <?php
 /**
- * O template para exibir comentários.
+ * The template for displaying comments.
  */
 
 defined( 'ABSPATH' ) || exit;
 
-// Se o post for protegido por senha e o visitante não a tiver inserido, aborta.
+// If the post is password protected and the visitor has not entered the password, abort.
 if ( post_password_required() ) {
 	return;
 }
@@ -31,7 +31,7 @@ if ( post_password_required() ) {
 				array(
 					'style'       => 'ol',
 					'short_ping'  => true,
-					'avatar_size' => 50, // Tamanho da foto de perfil
+					'avatar_size' => 50, // Profile photo size.
 				)
 			);
 			?>
@@ -39,17 +39,17 @@ if ( post_password_required() ) {
 
 		<?php the_comments_navigation(); ?>
 
-	<?php endif; // Fim da checagem de have_comments() ?>
+	<?php endif; // End of have_comments() check. ?>
 
 	<?php
-	// Se os comentários estiverem fechados, exibe um aviso amigável
+	// If comments are closed, display a friendly notice.
 	if ( ! comments_open() && get_comments_number() && post_type_supports( get_post_type(), 'comments' ) ) :
 		?>
 		<p class="no-comments"><?php esc_html_e( 'Comments are closed.', 'reloaded' ); ?></p>
 	<?php endif; ?>
 
 	<?php
-	// Gera o Formulário de "Deixe um Comentário"
+	// Render the "Leave a Comment" form.
 	comment_form();
 	?>
 

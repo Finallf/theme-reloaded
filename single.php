@@ -13,11 +13,11 @@ get_header();
 					<article id="post-<?php the_ID(); ?>" <?php post_class( 'single-post-content' ); ?>>
 
 						<?php
-						// Table of contents — renderiza o anchor + FAB sticky como
-						// PRIMEIRO filho de <article>. Anchor é position:absolute relativo
-						// a .single-post-content (que tem position:relative), o que dá
-						// pro sticky um scope = altura inteira do artigo (FAB segue o
-						// scroll durante todo o reading do post).
+						// Table of contents — renders the anchor + sticky FAB as the
+						// FIRST child of <article>. The anchor is position:absolute relative
+						// to .single-post-content (which is position:relative), giving the
+						// sticky a scope = the full article height (FAB follows the scroll
+						// throughout the entire post reading).
 						if ( function_exists( 'rd_render_table_of_contents' ) ) {
 							rd_render_table_of_contents();
 						}
@@ -51,8 +51,8 @@ get_header();
 								<span class="meta-separator">•</span>
 								<?php echo rd_get_formatted_views( get_the_ID() ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- helper returns already-escaped HTML (esc_html + esc_attr in inc/post-card.php) ?>
 								<?php
-								// Reading time — alinhado à direita via margin-left: auto no .reading-time
-								// (não precisa de meta-separator antes — fica no outro lado da linha).
+								// Reading time — right-aligned via margin-left: auto on .reading-time
+								// (no meta-separator needed before it — sits on the other side of the line).
 								if ( function_exists( 'rd_render_reading_time' ) ) {
 									rd_render_reading_time( get_the_ID() );
 								}
@@ -61,10 +61,10 @@ get_header();
 						</header>
 
 						<?php
-							// Verifica se o usuário pediu para esconder a imagem neste post específico
+							// Checks whether the user asked to hide the image on this specific post.
 							$hide_thumb = get_post_meta( get_the_ID(), '_rd_hide_thumbnail', true );
 
-							// Se tem imagem e NÃO foi marcada para esconder, renderiza a thumb
+							// If there is an image and it was NOT marked to hide, render the thumb.
 						if ( has_post_thumbnail() && $hide_thumb !== 'yes' ) :
 							?>
 								<div class="post-thumbnail">
@@ -102,19 +102,19 @@ get_header();
 					</article>
 
 					<?php
-					// Author bio box — avatar + nome + bio + redes sociais do autor.
-					// Auto-hide se bio + socials estiverem todos vazios (anti-ruído).
+					// Author bio box — avatar + name + bio + author's social networks.
+					// Auto-hides if bio + socials are all empty (anti-noise).
 					if ( function_exists( 'rd_render_author_bio_box' ) ) {
 						rd_render_author_bio_box( get_the_ID() );
 					}
 
-					// Related posts — bloco de 3 posts da mesma categoria primária,
-					// ordenados por overlap de tags. Cacheado por 1h via transient.
+					// Related posts — block of 3 posts from the same primary category,
+					// ordered by tag overlap. Cached for 1h via transient.
 					if ( function_exists( 'rd_render_related_posts' ) ) {
 						rd_render_related_posts( get_the_ID() );
 					}
 
-					// Se houver comentários, carrega o template de comentários
+					// If there are comments, load the comments template.
 					if ( comments_open() || get_comments_number() ) :
 						comments_template();
 					endif;
