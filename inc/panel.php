@@ -17,7 +17,7 @@ defined( 'ABSPATH' ) || exit;
  */
 function rd_get_default_options(): array {
 	return array(
-		'back_to_top'                 => 1, // Ligado
+		'back_to_top'                 => 1, // ON
 		'enable_top_bar'              => 1,
 		'enable_breadcrumbs'          => 1,
 		'sidebar_position'            => 'right',
@@ -25,7 +25,7 @@ function rd_get_default_options(): array {
 		'enable_thumb_control'        => 1,
 		'enable_primary_category'     => 1,
 		'enable_post_kicker'          => 1,
-		'jpeg_quality'                => 80, // Valor padrão — equilíbrio entre tamanho de arquivo e qualidade visual (WP core default é 82)
+		'jpeg_quality'                => 80, // Default value — balance between file size and visual quality (WP core default is 82).
 		'enable_comments_globally'    => 1,
 		'comment_a11y'                => 1,
 		'excerpt_length'              => 55,
@@ -33,8 +33,8 @@ function rd_get_default_options(): array {
 		'comments_separator'          => '',
 		'footer_subline'              => '',
 		'enable_views_tracking'       => 1,
-		'views_number_format'         => 'full', // 'full' (1.234) ou 'compact' (1.2k) no frontend
-		'stats_top_limit'             => '5', // 5/10/15/20/25/30 — usado em K1 e K3
+		'views_number_format'         => 'full', // 'full' (1,234) or 'compact' (1.2k) on the frontend.
+		'stats_top_limit'             => '5', // 5/10/15/20/25/30 — used in K1 and K3.
 		'enable_theme_switch'         => 1,
 		'default_theme_mode'          => 'system',
 
@@ -47,17 +47,17 @@ function rd_get_default_options(): array {
 		'lgpd_text'                   => '',
 
 		'disable_xmlrpc'              => 1,
-		'trusted_proxy_ips'           => '', // CIDR um por linha — admin preenche se usa proxy/CDN além do Cloudflare (que já é default)
-		'enable_login_protection'     => 1, // flag mestra do Login Protection — quando OFF, slug é preservado mas ignorado + rate limit desativado
-		'login_secret_slug'           => '', // vazio = feature dormente (/wp-login.php funciona normal)
+		'trusted_proxy_ips'           => '', // CIDR one per line — admin fills this if using a proxy/CDN other than Cloudflare (which is already the default).
+		'enable_login_protection'     => 1, // Master flag for Login Protection — when OFF, slug is preserved but ignored + rate limit disabled.
+		'login_secret_slug'           => '', // empty = dormant feature (/wp-login.php works normally).
 		'login_rate_limit_max'        => 5,
-		'login_rate_limit_window'     => 15, // minutos
-		'login_hide_user_enumeration' => 1,  // default ON — esconde mensagens "user não existe" vs "senha errada"
-		'enable_csp_report_only'      => 0, // CSP OFF por padrão (opt-in, requer monitoramento ativo)
-		'csp_enforce_mode'            => 0, // enforce mode OFF — promover só após 30+ dias em report-only
-		'csp_custom_scripts'          => '', // origens extras pra script-src + connect-src (1/linha)
-		'csp_custom_frames'           => '', // origens extras pra frame-src (1/linha)
-		'csp_custom_styles'           => '', // origens extras pra style-src + font-src (1/linha)
+		'login_rate_limit_window'     => 15, // minutes
+		'login_hide_user_enumeration' => 1,  // default ON — hides "user does not exist" vs "wrong password" messages.
+		'enable_csp_report_only'      => 0, // CSP OFF by default (opt-in, requires active monitoring).
+		'csp_enforce_mode'            => 0, // enforce mode OFF — only promote after 30+ days in report-only.
+		'csp_custom_scripts'          => '', // extra origins for script-src + connect-src (1 per line)
+		'csp_custom_frames'           => '', // extra origins for frame-src (1 per line)
+		'csp_custom_styles'           => '', // extra origins for style-src + font-src (1 per line)
 
 		'ga_id'                       => '',
 		'google_site_verification'    => '',
@@ -71,7 +71,7 @@ function rd_get_default_options(): array {
 		'umami_script_url'            => '',
 		'discord_widget'              => 1,
 		'discord_id'                  => '',
-		'discord_facade_logo'         => '', // URL do logo dedicado pro facade Discord; vazio = fallback Custom Logo → logo hardcoded do tema
+		'discord_facade_logo'         => '', // URL of the dedicated logo for the Discord facade; empty = fallback Custom Logo → theme's hardcoded logo.
 
 		'markdown_enabled'            => 1,
 		'prism_js'                    => 1,
@@ -89,9 +89,9 @@ function rd_get_default_options(): array {
 		'post_revisions_limit'        => 5,
 		'optimize_heartbeat'          => 0,
 		'preload_critical_fonts'      => 1,
-		'inline_critical_css'         => 1, // ON por default — 5 arquivos critical-{template}.css shipados no repo (regenerar via npm run critical:all após mudança grande de SCSS above-the-fold). Graceful degradation: se arquivo do template não existe, cai pra carga síncrona sem FOUC.
-		'enable_next_gen_images'      => 1, // gera WebP/AVIF on-upload + envolve <img> em <picture>
-		'image_format_mode'           => 'avif', // valores aceitos: avif (default, melhor compressão), webp ou both
+		'inline_critical_css'         => 1, // ON by default — 5 critical-{template}.css files shipped in the repo (regenerate via npm run critical:all after major above-the-fold SCSS changes). Graceful degradation: if the template's file doesn't exist, falls back to synchronous load with no FOUC.
+		'enable_next_gen_images'      => 1, // generates WebP/AVIF on upload + wraps <img> in <picture>
+		'image_format_mode'           => 'avif', // accepted values: avif (default, best compression), webp, or both
 
 		'social_discord'              => '',
 		'social_telegram'             => '',
@@ -168,16 +168,16 @@ function rd_migrate_missing_options() {
 	$missing  = array_diff_key( $defaults, $current );
 
 	if ( empty( $missing ) ) {
-		return; // fast path — nada faltando
+		return; // fast path — nothing missing
 	}
 
-	// Merge preserva valores existentes; só adiciona as keys ausentes
+	// Merge keeps existing values; only adds the missing keys.
 	update_option( 'rd_settings', array_merge( $current, $missing ) );
 }
 add_action( 'admin_init', 'rd_migrate_missing_options' );
 
 /***********************************************************************************
- * Busca uma opção do painel de forma segura (Defensive Programming) - (Hardcoded) *
+ * Safely fetches an option from the panel (Defensive Programming)    - (Hardcoded) *
  ***********************************************************************************/
 function rd_get_option( string $key, $fallback = false ) {
 	$opt = get_option( 'rd_settings' );
@@ -190,25 +190,25 @@ function rd_get_option( string $key, $fallback = false ) {
 }
 
 /***********************************************************************************
- * Versão booleana — devolve true/false aceitando qualquer formato histórico       *
- * de armazenamento (1, '1', 0, '0', false, null, ausente).                        *
- * Use em todos os call sites de toggles do tipo checkbox.                         *
+ * Boolean variant — returns true/false accepting any historical storage format    *
+ * (1, '1', 0, '0', false, null, missing).                                         *
+ * Use at every call site for checkbox-style toggles.                              *
  ***********************************************************************************/
 function rd_get_option_bool( string $key ): bool {
 	return (int) rd_get_option( $key ) === 1;
 }
 
 /*******************************************************************************
- * Cria o Menu no Painel
+ * Creates the Panel Menu
  *
- * O painel fica acessível por DOIS caminhos no admin:
- *   1. Item top-level "ReloadeD" na sidebar (logo abaixo do Dashboard, posição 3)
- *   2. Submenu "ReloadeD" dentro de "Aparência" (convenção do WP pra opções de tema)
+ * The panel is reachable via TWO paths in the admin:
+ *   1. Top-level "ReloadeD" item in the sidebar (right below Dashboard, position 3)
+ *   2. "ReloadeD" submenu inside "Appearance" (WP convention for theme options)
  *
- * Ambos abrem a mesma página (`?page=rd_options`).
+ * Both open the same page (`?page=rd_options`).
  *******************************************************************************/
 function rd_add_admin_menu() {
-	// Item top-level — mais visível, com o ícone do logo
+	// Top-level item — more visible, with the logo icon.
 	add_menu_page(
 		__( 'ReloadeD Options', 'reloaded' ),
 		'ReloadeD',
@@ -219,9 +219,9 @@ function rd_add_admin_menu() {
 		3
 	);
 
-	// Submenu em "Aparência" — segue a convenção do WordPress de hospedar
-	// opções de tema sob Themes/Appearance. Usa o mesmo slug pra apontar pra
-	// mesma página renderizada pelo callback acima.
+	// "Appearance" submenu — follows the WordPress convention of hosting theme
+	// options under Themes/Appearance. Uses the same slug to point to the same
+	// page rendered by the callback above.
 	add_theme_page(
 		__( 'ReloadeD Options', 'reloaded' ),
 		__( 'ReloadeD', 'reloaded' ),
@@ -233,23 +233,23 @@ function rd_add_admin_menu() {
 add_action( 'admin_menu', 'rd_add_admin_menu' );
 
 /*******************************************************************************
- * Renderiza a Interface Visual (HTML)
+ * Renders the Visual Interface (HTML)
  *******************************************************************************/
 function rd_options_render() {
 	if ( ! current_user_can( 'manage_options' ) ) {
 		return;
 	}
 
-	// Define a aba ativa (padrão é 'dashboard' — Wave 11 Fase F).
-	// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only UI render: $active_tab só decide qual tab destacar e qual conteúdo mostrar; o save de fato passa pelo Settings API (options.php) com nonce próprio.
+	// Defines the active tab (default is 'dashboard' — Wave 11 Phase F).
+	// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only UI render: $active_tab only decides which tab to highlight and which content to show; the actual save goes through Settings API (options.php) with its own nonce.
 	$active_tab = isset( $_GET['tab'] ) ? sanitize_key( wp_unslash( $_GET['tab'] ) ) : 'dashboard';
 
-	// Pega o caminho absoluto da pasta do seu tema para buscar a imagem.
+	// Gets the absolute path of the theme folder to fetch the image.
 	$theme_dir = get_template_directory_uri();
 
-	// Lista mestre de abas para o loop (Wave 11 — taxonomia reorganizada).
-	// Dashboard é a primeira (default landing); demais ordenadas por frequência
-	// esperada de uso, com operacionais (Maintenance/Backup) ao final.
+	// Master list of tabs for the loop (Wave 11 — reorganized taxonomy).
+	// Dashboard is the first (default landing); the rest ordered by expected
+	// frequency of use, with operational ones (Maintenance/Backup) at the end.
 	$tabs = array(
 		'dashboard'    => __( 'Dashboard', 'reloaded' ),
 		'general'      => __( 'General', 'reloaded' ),
@@ -264,8 +264,8 @@ function rd_options_render() {
 		'backup'       => __( 'Backup', 'reloaded' ),
 	);
 
-	// Defensive: slug inválido (digitado errado, bookmark de tab removida, etc.)
-	// cai pro Dashboard em vez de renderizar página em branco.
+	// Defensive: invalid slug (typo, bookmark to a removed tab, etc.) falls
+	// back to Dashboard instead of rendering a blank page.
 	if ( ! isset( $tabs[ $active_tab ] ) ) {
 		$active_tab = 'dashboard';
 	}
@@ -311,18 +311,18 @@ function rd_options_render() {
 function rd_settings_init() {
 	register_setting( 'rd_options_group', 'rd_settings', 'rd_options_sanitize' );
 
-	// --- DASHBOARD --- (Wave 11 Fase F).
-	// Aba read-only (sem fields editáveis). Section única com callback custom
-	// em mod-dashboard.php que renderiza status/métricas/ações.
+	// --- DASHBOARD --- (Wave 11 Phase F).
+	// Read-only tab (no editable fields). Single section with a custom callback
+	// in mod-dashboard.php that renders status/metrics/actions.
 	add_settings_section( 'sec_dashboard', '', 'rd_dashboard_render', 'rd_options_dashboard' );
 
 	/*
-	 * --- GERAL --- (Wave 11: sub-dividida em 5 sections por contexto.
-	 * Recebeu markdown_enabled + prism_js de Performance. Perdeu image_resizing,
-	 * jpeg_quality, enable_views_tracking, views_number_format pra outras abas.)
+	 * --- GENERAL --- (Wave 11: sub-divided into 5 sections by context.
+	 * Received markdown_enabled + prism_js from Performance. Lost image_resizing,
+	 * jpeg_quality, enable_views_tracking, views_number_format to other tabs.)
 	 */
 
-	// Section A: Shell Visual — layout visual do site (não conteúdo).
+	// Section A: Visual Shell — site's visual layout (not content).
 	rd_panel_register_section( 'sec_geral_shell', __( 'Visual Shell', 'reloaded' ), 'admin-appearance', 'rd_options_general' );
 	add_settings_field(
 		'enable_top_bar',
@@ -419,7 +419,7 @@ function rd_settings_init() {
 		)
 	);
 
-	// Section B: Conteúdo — editor + renderização de posts
+	// Section B: Content — editor + post rendering.
 	rd_panel_register_section( 'sec_geral_content', __( 'Content', 'reloaded' ), 'editor-paragraph', 'rd_options_general' );
 	add_settings_field(
 		'enable_thumb_control',
@@ -558,7 +558,7 @@ function rd_settings_init() {
 		)
 	);
 
-	// Section C: Comentários — agrupamento dedicado pros 3 fields de comments
+	// Section C: Comments — dedicated grouping for the 3 comment fields.
 	rd_panel_register_section( 'sec_geral_comments', __( 'Comments', 'reloaded' ), 'admin-comments', 'rd_options_general' );
 	add_settings_field(
 		'enable_comments_globally',
@@ -597,7 +597,7 @@ function rd_settings_init() {
 		)
 	);
 
-	// Section D: Página de Busca (já existia como sub-section)
+	// Section D: Search Page (already existed as a sub-section).
 	rd_panel_register_section( 'sec_geral_search', __( 'Search Page', 'reloaded' ), 'search', 'rd_options_general' );
 	add_settings_field(
 		'search_layout_grid',
@@ -660,17 +660,17 @@ function rd_settings_init() {
 		)
 	);
 
-	// (Section "Feature Flags" removida — único field que tinha (enable_stats)
-	// era redundante: só escondia a aba Statistics, sem efeito em dados ou
-	// frontend. Removido — admin que não quer a aba simplesmente não clica nela.)
+	// (Section "Feature Flags" removed — the only field it had (enable_stats)
+	// was redundant: it only hid the Statistics tab, with no effect on data or
+	// frontend. Removed — admins who don't want the tab simply don't click it.)
 
-	// (Aba "Privacidade" extinta em Wave 11 — fields LGPD migraram pra
-	// Segurança & Privacidade como sec_seg_lgpd.)
+	// ("Privacy" tab discontinued in Wave 11 — LGPD fields migrated to
+	// Security & Privacy as sec_seg_lgpd.)
 
 	/*
-	 * --- SEGURANÇA & PRIVACIDADE --- (Wave 11: aba unificada — LGPD veio da
-	 * aba Privacidade extinta; hardening recebeu hide_wp_ver + enable_security_headers
-	 * que estavam mal-encaixados em Performance.)
+	 * --- SECURITY & PRIVACY --- (Wave 11: unified tab — LGPD came from the
+	 * discontinued Privacy tab; hardening absorbed hide_wp_ver + enable_security_headers
+	 * which were mis-fitted under Performance.)
 	 */
 	rd_panel_register_section( 'sec_seg_lgpd', __( 'Cookie Consent', 'reloaded' ), 'privacy', 'rd_options_security' );
 	add_settings_field(
@@ -750,7 +750,7 @@ function rd_settings_init() {
 		)
 	);
 
-	// Login Protection — slug customizado + rate limit
+	// Login Protection — custom slug + rate limit.
 	rd_panel_register_section( 'sec_seg_login', __( 'Login Protection', 'reloaded' ), 'lock', 'rd_options_security' );
 
 	add_settings_field(
@@ -822,10 +822,10 @@ function rd_settings_init() {
 		)
 	);
 
-	// CSP Report-Only: toggle do feature + visualização dos reports recebidos.
-	// Duas sections em sequência: a primeira tem o field, a segunda renderiza
-	// a tabela via callback custom (precisa ser separado pq callback de section
-	// imprime ANTES dos fields).
+	// CSP Report-Only: feature toggle + view of received reports.
+	// Two sections in sequence: the first holds the field, the second renders
+	// the table via custom callback (must be separated because section callbacks
+	// print BEFORE fields).
 	rd_panel_register_section( 'sec_seg_csp', __( 'Content Security Policy (Report-Only)', 'reloaded' ), 'editor-code', 'rd_options_security' );
 	add_settings_field(
 		'enable_csp_report_only',
@@ -853,10 +853,10 @@ function rd_settings_init() {
 		)
 	);
 
-	// Custom Allowed Origins — 3 textareas pra admin adicionar origens extras
-	// quando uma integração nova aparece e não está no código. Cada campo cobre
-	// um agrupamento típico de directives (decisão de design pra evitar exigir
-	// que admin conheça CSP a fundo).
+	// Custom Allowed Origins — 3 textareas for the admin to add extra origins
+	// when a new integration appears and is not in the code. Each field covers
+	// a typical grouping of directives (design decision to avoid requiring the
+	// admin to know CSP in depth).
 	add_settings_field(
 		'csp_custom_scripts',
 		__( 'Custom Origins — Scripts & APIs', 'reloaded' ),
@@ -896,12 +896,12 @@ function rd_settings_init() {
 		)
 	);
 
-	// Title vazio — callback rd_csp_render_reports_panel emite section_header próprio com ícone.
+	// Empty title — callback rd_csp_render_reports_panel emits its own section_header with icon.
 	add_settings_section( 'sec_seg_csp_reports', '', 'rd_csp_render_reports_panel', 'rd_options_security' );
 
 	/*
-	 * --- INTEGRAÇÕES --- (Wave 11: sub-dividida em 3 contextos. Site verifications
-	 * migraram pra SEO onde fazem mais sentido.)
+	 * --- INTEGRATIONS --- (Wave 11: sub-divided into 3 contexts. Site verifications
+	 * moved to SEO where they fit better.)
 	 */
 	rd_panel_register_section( 'sec_int_analytics', __( 'Analytics', 'reloaded' ), 'chart-line', 'rd_options_integrations' );
 	add_settings_field(
@@ -1700,53 +1700,53 @@ function rd_settings_init() {
 	add_settings_section( 'sec_stats_dashboard', __( 'Dashboard', 'reloaded' ), 'rd_stats_render_dashboard', 'rd_options_statistics' );
 
 	/*
-	 * --- BACKUP & RESTAURAÇÃO --- (Wave 11)
-	 * Promovido de sub-section da Manutenção pra aba própria. Custom renderer
-	 * inteiro intacto — só mudou a página onde é registrado.
+	 * --- BACKUP & RESTORE --- (Wave 11)
+	 * Promoted from a sub-section of Maintenance to its own tab. The custom
+	 * renderer is intact — only the page where it is registered changed.
 	 */
-	// Title vazio — callback rd_backup_render_panel emite section_header próprio com ícone.
+	// Empty title — callback rd_backup_render_panel emits its own section_header with icon.
 	add_settings_section( 'sec_backup', '', 'rd_backup_render_panel', 'rd_options_backup' );
 }
 add_action( 'admin_init', 'rd_settings_init' );
 
 /*******************************************************************************
- * Funções de renderização dos campos (Reutilizáveis)
+ * Field rendering functions (Reusable)
  *******************************************************************************/
 function rd_master_field_cb( array $args ) {
-	// 1. Puxa as opções do banco de dados apenas uma vez
+	// 1. Pulls the options from the database only once.
 	$opt = get_option( 'rd_settings' );
 
-	// 2. Define o valor atual ou um fallback vazio
+	// 2. Sets the current value or an empty fallback.
 	$val = isset( $opt[ $args['id'] ] ) ? $opt[ $args['id'] ] : '';
 
-	// 3. Define o tipo do campo (se não for passado, assume 'text' como padrão)
+	// 3. Sets the field type (if not provided, defaults to 'text').
 	$type = isset( $args['type'] ) ? $args['type'] : 'text';
 
-	// 4. Monta o atributo 'name' dinamicamente
+	// 4. Builds the 'name' attribute dynamically.
 	$name = 'rd_settings[' . esc_attr( $args['id'] ) . ']';
 
-	// 5. O Switch: Renderiza o HTML correto dependendo do 'type' solicitado.
-	// $name, $autocomplete, $placeholder e $display são FRAGMENTOS DE HTML pré-montados
-	// onde os valores dinâmicos já passaram por esc_attr() acima. PHPCS não consegue
-	// rastrear escape através de concatenação prévia, por isso suprimimos a regra
-	// dentro do switch (cada echo é seguro pelo construtor da variável).
+	// 5. The Switch: renders the correct HTML based on the requested 'type'.
+	// $name, $autocomplete, $placeholder and $display are PRE-BUILT HTML fragments
+	// where dynamic values already passed through esc_attr() above. PHPCS cannot
+	// track escaping through prior concatenation, so we suppress the rule inside
+	// the switch (each echo is safe by construction of the variable).
 	// phpcs:disable WordPress.Security.EscapeOutput.OutputNotEscaped
 	switch ( $type ) {
 
 		case 'media':
 			echo '<div class="rd-media-container">';
-			// O input oculto que realmente guarda a URL para o banco de dados
+			// The hidden input that actually stores the URL in the database.
 			echo '<input type="hidden" name="' . $name . '" id="' . esc_attr( $args['id'] ) . '" value="' . esc_attr( $val ) . '">';
 
-			// A div de preview onde a miniatura da imagem vai aparecer
+			// The preview div where the image thumbnail will appear.
 			echo '<div id="' . esc_attr( $args['id'] ) . '_preview" class="rd-media-preview">';
 			if ( $val ) {
 				echo '<img src="' . esc_url( $val ) . '" alt="">';
 			}
 			echo '</div>';
 
-			// Os botões de controle — wrapper inline-flex pra ficarem lado a lado
-			// abaixo do preview (parent container é flex column).
+			// Control buttons — inline-flex wrapper so they sit side-by-side
+			// below the preview (parent container is flex column).
 			echo '<div class="rd-media-actions">';
 			echo '<button type="button" class="button rd-upload-button" data-input-id="' . esc_attr( $args['id'] ) . '">' . esc_html__( 'Select Image', 'reloaded' ) . '</button>';
 
@@ -1759,20 +1759,21 @@ function rd_master_field_cb( array $args ) {
 		case 'checkbox':
 			$val = isset( $opt[ $args['id'] ] ) ? $opt[ $args['id'] ] : 0;
 
-			// Hidden de fallback: garante que checkbox DESMARCADO envie '0' explícito em vez
-			// de omitir a key do POST. Sem isso, desmarcar não viaja pro sanitizer.
+			// Fallback hidden: ensures an UNCHECKED checkbox sends an explicit '0'
+			// instead of omitting the key from POST. Without this, unchecking
+			// does not reach the sanitizer.
 			echo '<input type="hidden" name="' . $name . '" value="0">';
 
-			// Envolvemos tudo em uma tag <label> para que o texto fique na mesma linha e seja clicável
+			// Wraps everything in a <label> tag so the text stays on the same line and is clickable.
 			echo '<label for="' . esc_attr( $args['id'] ) . '">';
 			echo '<input type="checkbox" name="' . $name . '" id="' . esc_attr( $args['id'] ) . '" value="1" ' . checked( 1, $val, false ) . '>';
 
-			// Se houver descrição, imprime ela aqui dentro da label, logo após o quadradinho
+			// If there's a description, print it inside the label, right after the checkbox.
 			if ( isset( $args['desc'] ) ) {
 				echo ' ' . wp_kses_post( $args['desc'] );
 
-				// O pulo do gato: removemos a descrição da variável para que
-				// o código lá no final da função não imprima ela duplicada.
+				// The trick: we drop the description from the variable so the
+				// code at the end of the function does not print it twice.
 				unset( $args['desc'] );
 			}
 			echo '</label>';
@@ -1785,19 +1786,19 @@ function rd_master_field_cb( array $args ) {
 		case 'number':
 			$min = isset( $args['min'] ) ? $args['min'] : 1;
 			$max = isset( $args['max'] ) ? $args['max'] : 100;
-			// IMPORTANTE: comparação estrita com '' em vez de `empty()` —
-			// `empty(0)` retorna true e converteria um zero legítimo (ex:
-			// "0 revisões") em fallback pro default, corrompendo o save.
+			// IMPORTANT: strict comparison with '' instead of `empty()` —
+			// `empty(0)` returns true and would convert a legitimate zero
+			// (e.g. "0 revisions") into a fallback to the default, corrupting the save.
 			$val = ( $val === '' || $val === null ) && isset( $args['default'] ) ? $args['default'] : $val;
 
-			// Renderiza o input com ID e a classe nativa do WP para manter o padrão
+			// Renders the input with ID and the native WP class to keep the standard.
 			echo '<input type="number" name="' . $name . '" id="' . esc_attr( $args['id'] ) . '" value="' . esc_attr( $val ) . '" min="' . esc_attr( $min ) . '" max="' . esc_attr( $max ) . '" class="small-text">';
 
-			// Se houver descrição, imprime logo à frente do campo dentro de uma label
+			// If there's a description, print it right after the field inside a label.
 			if ( isset( $args['desc'] ) ) {
 				echo ' <label for="' . esc_attr( $args['id'] ) . '">' . wp_kses_post( $args['desc'] ) . '</label>';
 
-				// Remove a descrição da memória para não duplicar no final da função
+				// Drops the description so it isn't duplicated at the end of the function.
 				unset( $args['desc'] );
 			}
 			break;
@@ -1811,18 +1812,18 @@ function rd_master_field_cb( array $args ) {
 			}
 			echo '</select>';
 
-			// Mesmo padrão do tipo number: descrição inline à frente do select
-			// (selects são compactos, descrição embaixo desperdiça espaço).
+			// Same pattern as the number type: inline description after the select
+			// (selects are compact, putting the description below wastes space).
 			if ( isset( $args['desc'] ) ) {
 				echo ' <label for="' . esc_attr( $args['id'] ) . '">' . wp_kses_post( $args['desc'] ) . '</label>';
-				unset( $args['desc'] ); // evita duplicar no bloco genérico abaixo
+				unset( $args['desc'] ); // avoid duplicating in the generic block below
 			}
 			break;
 
 		case 'password':
-			// Mesmo princípio do text: autocomplete="new-password" como default
-			// (padrão pra senhas novas/internas que não devem ser autofillared
-			// com credenciais salvas pelo browser). Pode override se necessário.
+			// Same principle as the text type: autocomplete="new-password" as default
+			// (standard for new/internal passwords that should NOT be autofilled
+			// with browser-saved credentials). Can override if needed.
 			$autocomplete_val = isset( $args['autocomplete'] ) ? $args['autocomplete'] : 'new-password';
 			$autocomplete     = "autocomplete='" . esc_attr( $autocomplete_val ) . "'";
 			echo '<input type="password" name="' . $name . '" id="' . esc_attr( $args['id'] ) . '" value="' . esc_attr( $val ) . '" class="regular-text" ' . $autocomplete . '>';
@@ -1831,11 +1832,11 @@ function rd_master_field_cb( array $args ) {
 		case 'text':
 		default:
 			$placeholder = isset( $args['placeholder'] ) ? "placeholder='" . esc_attr( $args['placeholder'] ) . "'" : '';
-			// Painel admin não é form de cadastro/login — autocomplete="off" como
-			// default evita o Chrome autofillar fields cujo `name` tem "id"/"url"
-			// (heurística do browser confunde com username/URL salvas). Override
-			// via 'autocomplete' => 'on' no add_settings_field se algum dia
-			// algum campo precisar do comportamento padrão.
+			// The admin panel is not a sign-up/login form — autocomplete="off" as
+			// default prevents Chrome from autofilling fields whose `name` contains
+			// "id"/"url" (browser heuristic mistakes them for saved usernames/URLs).
+			// Override via 'autocomplete' => 'on' on add_settings_field if any field
+			// ever needs the default behaviour.
 			$autocomplete_val = isset( $args['autocomplete'] ) ? $args['autocomplete'] : 'off';
 			$autocomplete     = "autocomplete='" . esc_attr( $autocomplete_val ) . "'";
 			echo '<input type="text" name="' . $name . '" id="' . esc_attr( $args['id'] ) . '" value="' . esc_attr( $val ) . '" class="regular-text" ' . $placeholder . ' ' . $autocomplete . '>';
@@ -1843,42 +1844,43 @@ function rd_master_field_cb( array $args ) {
 	}
 	// phpcs:enable WordPress.Security.EscapeOutput.OutputNotEscaped
 
-	// A descrição já é impressa perfeitamente aqui para todos os tipos!
+	// The description is rendered cleanly here for every type.
 	if ( isset( $args['desc'] ) ) {
 		echo '<p class="description">' . wp_kses_post( $args['desc'] ) . '</p>';
 	}
 }
 
 /*******************************************************************************
- * SANITIZAÇÃO DOS DADOS (Segurança)
+ * DATA SANITIZATION (Security)
  *******************************************************************************/
 function rd_options_sanitize( array $input ) {
 	$new_input = array();
 	foreach ( $input as $key => $value ) {
 
 		if ( strpos( $key, 'ad_' ) === 0 ) {
-			// 1. Zonas de Anúncios: Permite HTML e Scripts puros (AdSense, etc)
+			// 1. Ad zones: allows raw HTML and scripts (AdSense, etc).
 			$new_input[ $key ] = $value;
 		} elseif ( in_array( $key, array( 'lgpd_text', 'footer_subline', 'maintenance_text' ), true ) ) {
-			// 2. Campos que permitem HTML básico seguro (Links, negrito, ênfase) — mas bloqueia scripts
+			// 2. Fields that allow safe basic HTML (links, bold, emphasis) — but block scripts.
 			$new_input[ $key ] = wp_kses_post( $value );
 		} elseif ( in_array( $key, array( 'custom_robots_txt', 'trusted_proxy_ips', 'csp_custom_scripts', 'csp_custom_frames', 'csp_custom_styles' ), true ) ) {
-			// 3. Campos textarea de texto puro — strip tags mas PRESERVA quebras de linha.
-			// sanitize_text_field() colapsaria todas as linhas em uma só.
+			// 3. Plain-text textarea fields — strip tags but PRESERVE line breaks.
+			// sanitize_text_field() would collapse all lines into a single one.
 			$new_input[ $key ] = sanitize_textarea_field( $value );
 		} elseif ( 'custom_verification_meta' === $key ) {
 			/*
-			 * 3c. Custom verification meta tags — pipeline em 2 passos:
+			 * 3c. Custom verification meta tags — 2-step pipeline:
 			 *
-			 *   Passo 1: wp_kses() remove TAGS não-permitidas (mantém só <meta>
-			 *   com atributos name/content/property/http-equiv/charset). Mas o
-			 *   wp_kses default PRESERVA o texto INTERNO de tags removidas — se
-			 *   admin colar <script>alert('xss')</script>, sobra "alert('xss')"
-			 *   como texto solto. Sem risco de segurança (texto no <head> não
-			 *   executa), mas suja o output.
+			 *   Step 1: wp_kses() removes disallowed TAGS (keeps only <meta>
+			 *   with name/content/property/http-equiv/charset attributes). But
+			 *   wp_kses default PRESERVES the INNER text of removed tags — if
+			 *   admin pastes <script>alert('xss')</script>, "alert('xss')" is
+			 *   left as loose text. No security risk (text in <head> does not
+			 *   execute), but pollutes the output.
 			 *
-			 *   Passo 2: regex extrai SÓ <meta> tags da saída, descarta orfãs
-			 *   de texto. Resultado final: só meta tags válidas, uma por linha.
+			 *   Step 2: regex extracts ONLY <meta> tags from the output and
+			 *   discards orphan text. Final result: only valid meta tags, one
+			 *   per line.
 			 */
 			$allowed_html = array(
 				'meta' => array(
@@ -1893,18 +1895,18 @@ function rd_options_sanitize( array $input ) {
 			preg_match_all( '/<meta\b[^>]*\/?>/i', $kses_output, $matches );
 			$new_input[ $key ] = isset( $matches[0] ) ? implode( "\n", $matches[0] ) : '';
 		} elseif ( 'login_secret_slug' === $key ) {
-			// 3b. Slug do login: usa o sanitizer dedicado do mod-login-protection
-			// (a-z 0-9 hífen, 3-50 chars, lista de reservados). Inválido = ''.
+			// 3b. Login slug: uses the dedicated sanitizer from mod-login-protection
+			// (a-z 0-9 hyphen, 3-50 chars, list of reserved words). Invalid = ''.
 			$new_input[ $key ] = function_exists( 'rd_login_sanitize_slug' )
 				? rd_login_sanitize_slug( $value )
 				: '';
 		} elseif ( $value === '0' || $value === '1' || $value === 0 || $value === 1 ) {
-			// 4. Checkboxes: chegam como '0'/'1' (string, do form HTML via hidden fallback)
-			// OU 0/1 (int, vindo de JSON do mod-backup após json_decode).
-			// Coage pra int pra padronizar o storage e habilitar comparações strict (=== 1).
+			// 4. Checkboxes: arrive as '0'/'1' (string, from HTML form via hidden fallback)
+			// OR 0/1 (int, coming from JSON in mod-backup after json_decode).
+			// Coerced to int to standardize storage and enable strict comparisons (=== 1).
 			$new_input[ $key ] = (int) $value;
 		} else {
-			// 5. Demais campos: Limpeza rigorosa, destrói qualquer HTML e script
+			// 5. Other fields: strict cleanup, destroys any HTML and scripts.
 			$new_input[ $key ] = sanitize_text_field( $value );
 		}
 	}

@@ -8,18 +8,18 @@
 defined( 'ABSPATH' ) || exit;
 
 /*******************************************************************************
- * Module: Panel UI Component Helpers — Wave 11 Fase C                          *
+ * Module: Panel UI Component Helpers — Wave 11 Phase C                         *
  *                                                                              *
- * Sistema de componentes pra UI do painel admin. Substitui markup ad-hoc das  *
- * 3 sections custom-rendered (Stats, CSP Reports, Backup) por helpers DRY.    *
+ * Component system for the admin panel UI. Replaces ad-hoc markup from the    *
+ * 3 custom-rendered sections (Stats, CSP Reports, Backup) with DRY helpers.   *
  *                                                                              *
- * Namespace CSS: `.rd-p*` (rd-pdash, rd-pcard, rd-pbadge, etc.)               *
- * Definições visuais: `assets/css/admin-style.css` (componentes "rd-p"        *
- * separados em bloco próprio no topo do arquivo).                              *
+ * CSS namespace: `.rd-p*` (rd-pdash, rd-pcard, rd-pbadge, etc.)               *
+ * Visual definitions: `assets/css/admin-style.css` (components "rd-p"         *
+ * grouped in their own block at the top of the file).                          *
  *                                                                              *
- * Uso típico (em callback de section custom):                                  *
+ * Typical usage (inside a custom section callback):                            *
  *                                                                              *
- *   function meu_callback_de_section() {                                       *
+ *   function my_section_callback() {                                           *
  *       rd_panel_dash_open();                                                  *
  *       rd_panel_dash_header( array(                                           *
  *           'info'   => __( 'Status: ', 'reloaded' ) .                         *
@@ -27,27 +27,28 @@ defined( 'ABSPATH' ) || exit;
  *           'action' => '<a href="..." class="button">Action</a>',             *
  *       ) );                                                                   *
  *       rd_panel_card_open( array( 'title' => __( 'My Card', 'reloaded' ) ) ); *
- *       echo '<p>Conteúdo aqui...</p>';                                        *
+ *       echo '<p>Content here...</p>';                                         *
  *       rd_panel_card_close();                                                 *
  *       rd_panel_dash_close();                                                 *
  *   }                                                                          *
  *                                                                              *
  * Status (2026-05-23):                                                         *
- * - Componentes criados e disponíveis pra uso em código novo.                 *
- * - As 3 sections custom-rendered atuais (Stats, CSP Reports, Backup)         *
- *   continuam usando suas classes legacy (`.rd-stats-*`, `.rd-csp-*`,         *
- *   `.rd-backup-*`). Refator pra usar os componentes novos vem na Fase E.    *
+ * - Components created and available for use in new code.                     *
+ * - The 3 current custom-rendered sections (Stats, CSP Reports, Backup)       *
+ *   keep using their legacy classes (`.rd-stats-*`, `.rd-csp-*`,              *
+ *   `.rd-backup-*`). Refactor to the new components comes in Phase E.         *
  *******************************************************************************/
 
 /**
- * Abre o wrapper de um "dashboard" — container típico de section custom-rendered.
+ * Opens the "dashboard" wrapper — typical container of a custom-rendered section.
  *
- * Mais que um div, é o marker semântico de "esta section usa o design system
- * novo do painel". Combina bem com rd_panel_dash_header() + rd_panel_card_open().
+ * More than a div, it is the semantic marker for "this section uses the new
+ * panel design system". Combines well with rd_panel_dash_header() +
+ * rd_panel_card_open().
  *
- * @param array $args Argumentos opcionais.
+ * @param array $args Optional arguments.
  *
- *     @type string $class CSS class extra opcional (concatenada com `rd-pdash`).
+ *     @type string $class Optional extra CSS class (concatenated with `rd-pdash`).
  */
 function rd_panel_dash_open( array $args = array() ): void {
 	$extra_class = isset( $args['class'] ) ? ' ' . sanitize_html_class( $args['class'] ) : '';
@@ -55,22 +56,22 @@ function rd_panel_dash_open( array $args = array() ): void {
 }
 
 /**
- * Fecha o wrapper aberto por rd_panel_dash_open().
+ * Closes the wrapper opened by rd_panel_dash_open().
  */
 function rd_panel_dash_close(): void {
 	echo '</div>';
 }
 
 /**
- * Renderiza o header cinza do dashboard — info à esquerda + ação à direita.
+ * Renders the grey dashboard header — info on the left + action on the right.
  *
- * Pattern usado hoje em Stats Dashboard e CSP Reports: fundo cinza claro,
- * texto descritivo do estado à esquerda, botão de ação à direita (opcional).
+ * Pattern used today in Stats Dashboard and CSP Reports: light grey background,
+ * descriptive state text on the left, action button on the right (optional).
  *
- * @param array $args Argumentos do header.
+ * @param array $args Header arguments.
  *
- *     @type string $info   HTML do lado esquerdo (info textual). PRÉ-ESCAPADO pelo caller.
- *     @type string $action HTML do lado direito (botão/link), opcional. PRÉ-ESCAPADO pelo caller.
+ *     @type string $info   HTML for the left side (textual info). PRE-ESCAPED by the caller.
+ *     @type string $action HTML for the right side (button/link), optional. PRE-ESCAPED by the caller.
  */
 function rd_panel_dash_header( array $args ): void {
 	$info   = $args['info'] ?? '';
@@ -78,36 +79,36 @@ function rd_panel_dash_header( array $args ): void {
 
 	echo '<div class="rd-pdash__header">';
 	if ( '' !== $info ) {
-		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- caller é responsável por escapar; helpers internos (rd_panel_badge) já retornam HTML escapado.
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- caller is responsible for escaping; internal helpers (rd_panel_badge) already return escaped HTML.
 		echo '<span class="rd-pdash__header-info">' . $info . '</span>';
 	}
 	if ( '' !== $action ) {
-		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- caller responsável (geralmente um <a class="button"> com URLs já passados por esc_url).
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- caller responsible (usually an <a class="button"> with URLs already passed through esc_url).
 		echo '<span class="rd-pdash__header-action">' . $action . '</span>';
 	}
 	echo '</div>';
 }
 
 /**
- * Abre um card branco — container principal de conteúdo dentro do dashboard.
+ * Opens a white card — primary content container inside the dashboard.
  *
- * Aceita title/desc/hint opcionais. Quando nenhum desses é passado, o card
- * fica "limpo" — útil pra wrapping de tabelas (CSP Reports) ou listas (Top
- * Posts do Stats).
+ * Accepts optional title/desc/hint. When none of these is passed, the card
+ * stays "clean" — useful for wrapping tables (CSP Reports) or lists (Top
+ * Posts of Stats).
  *
- * Modifiers visuais via `variant`:
- *   - `default`     — card branco normal (padrão)
- *   - `placeholder` — fundo cinza claro + border tracejada (feature pendente)
- *   - `warning`     — left-border amber (ação reversível mas perigosa, ex: Restore)
- *   - `danger`      — left-border vermelha (ação destrutiva)
+ * Visual modifiers via `variant`:
+ *   - `default`     — regular white card (default)
+ *   - `placeholder` — light grey background + dashed border (pending feature)
+ *   - `warning`     — amber left-border (reversible but dangerous action, e.g. Restore)
+ *   - `danger`      — red left-border (destructive action)
  *
- * @param array $args Argumentos do card.
+ * @param array $args Card arguments.
  *
- *     @type string $title   Título uppercase do card, opcional.
- *     @type string $desc    Descrição abaixo do título, opcional (aceita HTML).
- *     @type string $hint    Hint italic discreto no rodapé, opcional (aceita HTML).
- *     @type string $variant Um de: default, placeholder, warning, danger.
- *     @type string $class   CSS class extra opcional.
+ *     @type string $title   Uppercase card title, optional.
+ *     @type string $desc    Description below the title, optional (accepts HTML).
+ *     @type string $hint    Discreet italic hint in the footer, optional (accepts HTML).
+ *     @type string $variant One of: default, placeholder, warning, danger.
+ *     @type string $class   Optional extra CSS class.
  */
 function rd_panel_card_open( array $args = array() ): void {
 	$title   = $args['title'] ?? '';
@@ -128,31 +129,31 @@ function rd_panel_card_open( array $args = array() ): void {
 		echo '<h3 class="rd-pcard__title">' . esc_html( $title ) . '</h3>';
 	}
 	if ( '' !== $desc ) {
-		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- caller passa HTML controlado (texto + <code>/<strong>); usar wp_kses_post seria overhead pra uso interno do painel.
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- caller passes controlled HTML (text + <code>/<strong>); using wp_kses_post would be overhead for internal panel usage.
 		echo '<p class="rd-pcard__desc">' . $desc . '</p>';
 	}
 	echo '<div class="rd-pcard__body">';
 
-	// Se passou hint, fecha o body e injeta o hint depois do close — mas como
-	// o caller vai escrever conteúdo entre open/close, o hint precisa entrar
-	// no close. Stash no static pra rd_panel_card_close() pegar.
+	// If a hint was passed, the body is closed and the hint injected after the
+	// close — but since the caller writes content between open/close, the hint
+	// must be inserted on close. Stashed in $GLOBALS for rd_panel_card_close().
 	if ( '' !== $hint ) {
 		$GLOBALS['_rd_panel_card_hint'] = $hint;
 	}
 }
 
 /**
- * Fecha um card aberto por rd_panel_card_open().
+ * Closes a card opened by rd_panel_card_open().
  *
- * Se rd_panel_card_open() recebeu um `hint`, ele é renderizado aqui (depois
- * do conteúdo do card, antes do fechamento). Usa $GLOBALS pra carregar o hint
- * entre as duas chamadas — feio mas pragmático pra evitar buffers ou closures.
+ * If rd_panel_card_open() received a `hint`, it is rendered here (after the
+ * card content, before the closing tag). Uses $GLOBALS to carry the hint
+ * between the two calls — ugly but pragmatic to avoid buffers or closures.
  */
 function rd_panel_card_close(): void {
 	echo '</div>'; // .rd-pcard__body
 
 	if ( ! empty( $GLOBALS['_rd_panel_card_hint'] ) ) {
-		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- hint é HTML controlado (caller já cuidou do escape).
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- hint is controlled HTML (caller already handled escaping).
 		echo '<p class="rd-pcard__hint">' . $GLOBALS['_rd_panel_card_hint'] . '</p>';
 		unset( $GLOBALS['_rd_panel_card_hint'] );
 	}
@@ -161,21 +162,21 @@ function rd_panel_card_close(): void {
 }
 
 /**
- * Retorna HTML de um badge de status (chip colorido inline).
+ * Returns HTML for a status badge (inline coloured chip).
  *
- * Diferente dos outros helpers, esse RETORNA string em vez de echo —
- * pra que possa ser concatenado em textos (ex: "Status: [BADGE]").
+ * Unlike the other helpers, this one RETURNS a string instead of echoing —
+ * so it can be concatenated inside text (e.g. "Status: [BADGE]").
  *
- * Variantes:
- *   - `info`    — azul WP (#2271b1) — informacional / Report-Only
- *   - `success` — verde (#007a39)  — ON / OK / Enabled
- *   - `warning` — amber (#d29922)  — Atenção / Pending
- *   - `danger`  — vermelho (#d63638) — Enforce / Erro / Disabled
- *   - `neutral` — cinza (#757575)  — Inativo / Padrão
+ * Variants:
+ *   - `info`    — WP blue (#2271b1) — informational / Report-Only
+ *   - `success` — green (#007a39)   — ON / OK / Enabled
+ *   - `warning` — amber (#d29922)   — Attention / Pending
+ *   - `danger`  — red (#d63638)     — Enforce / Error / Disabled
+ *   - `neutral` — grey (#757575)    — Inactive / Default
  *
- * @param string $variant Um de: info, success, warning, danger, neutral.
- * @param string $text    Texto do badge (será uppercased via CSS).
- * @return string HTML escapado pronto pra echo.
+ * @param string $variant One of: info, success, warning, danger, neutral.
+ * @param string $text    Badge text (will be uppercased via CSS).
+ * @return string Escaped HTML ready to echo.
  */
 function rd_panel_badge( string $variant, string $text ): string {
 	$allowed = array( 'info', 'success', 'warning', 'danger', 'neutral' );
@@ -188,56 +189,56 @@ function rd_panel_badge( string $variant, string $text ): string {
 }
 
 /**
- * Renderiza um banner de status (faixa colorida com left-border).
+ * Renders a status banner (coloured stripe with left-border).
  *
- * Maior que o badge — usado pra mensagens de feedback após ações
- * (sucesso de import, erro de upload, info sobre operação em andamento).
+ * Larger than the badge — used for feedback messages after actions
+ * (import success, upload error, info about an operation in progress).
  *
- * Variantes seguem as do badge: info, success, warning, danger.
+ * Variants match the badge: info, success, warning, danger.
  *
- * @param string $variant Um de: info, success, warning, danger.
- * @param string $text    Mensagem (aceita HTML — caller responsável pelo escape).
+ * @param string $variant One of: info, success, warning, danger.
+ * @param string $text    Message (accepts HTML — caller responsible for escaping).
  */
 function rd_panel_status( string $variant, string $text ): void {
 	$allowed = array( 'info', 'success', 'warning', 'danger' );
 	if ( ! in_array( $variant, $allowed, true ) ) {
 		$variant = 'info';
 	}
-	// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- caller é responsável pelo escape de $text (geralmente texto + <code>/<strong>).
+	// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- caller is responsible for escaping $text (usually text + <code>/<strong>).
 	echo '<div class="rd-pstatus rd-pstatus--' . esc_attr( $variant ) . '">' . $text . '</div>';
 }
 
 /**
- * Renderiza um empty state padronizado (texto italic centralizado).
+ * Renders a standardized empty state (centered italic text).
  *
- * Usado quando uma section custom não tem nada pra mostrar — feature OFF,
- * sem dados ainda, etc. Substitui `.rd-csp-empty`, `.rd-backup-empty`, etc.
+ * Used when a custom section has nothing to show — feature OFF, no data yet,
+ * etc. Replaces `.rd-csp-empty`, `.rd-backup-empty`, etc.
  *
- * @param string $message Texto a mostrar (será passado por esc_html()).
+ * @param string $message Text to show (passed through esc_html()).
  */
 function rd_panel_empty( string $message ): void {
 	echo '<p class="rd-pempty">' . esc_html( $message ) . '</p>';
 }
 
 /**
- * Renderiza um header de section — usado em callbacks de add_settings_section().
+ * Renders a section header — used inside add_settings_section() callbacks.
  *
- * Hoje a maioria das sections usa `__return_false` como callback (sem header).
- * Esse helper dá um header consistente: ícone dashicons opcional + título
- * + descrição opcional. Permite que sections "comuns" (Settings API) ganhem
- * o mesmo look das custom-rendered.
+ * Today most sections use `__return_false` as the callback (no header).
+ * This helper provides a consistent header: optional dashicons icon + title +
+ * optional description. Lets "regular" sections (Settings API) get the same
+ * look as the custom-rendered ones.
  *
- * @param array $args Argumentos do header.
+ * @param array $args Header arguments.
  *
- *     @type string $icon  Slug do dashicon (ex: 'admin-appearance') ou '' pra sem ícone.
- *     @type string $title Título da section.
- *     @type string $desc  Descrição (HTML permitido — caller cuida do escape).
+ *     @type string $icon  Dashicon slug (e.g. 'admin-appearance') or '' for no icon.
+ *     @type string $title Section title.
+ *     @type string $desc  Description (HTML allowed — caller handles escaping).
  */
 function rd_panel_section_header( array $args ): void {
 	$icon  = $args['icon'] ?? '';
 	$title = $args['title'] ?? '';
 	$desc  = $args['desc'] ?? '';
-	$id    = $args['id'] ?? ''; // opcional — vira id na div pra hash anchors.
+	$id    = $args['id'] ?? ''; // optional — becomes the div id for hash anchors.
 
 	if ( '' === $title && '' === $desc ) {
 		return;
@@ -250,12 +251,12 @@ function rd_panel_section_header( array $args ): void {
 		echo '<span class="rd-psection-header__icon dashicons dashicons-' . esc_attr( $icon ) . '" aria-hidden="true"></span>';
 	}
 	if ( '' !== $title ) {
-		// h2 (não h3) pra alinhar hierarquia HTML com o que Settings API gera
-		// no `<h2>{title}</h2>` automático das sections padrão.
+		// h2 (not h3) to align HTML hierarchy with what Settings API auto-generates
+		// in the `<h2>{title}</h2>` of default sections.
 		echo '<h2 class="rd-psection-header__title">' . esc_html( $title ) . '</h2>';
 	}
 	if ( '' !== $desc ) {
-		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- caller passa HTML controlado.
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- caller passes controlled HTML.
 		echo '<p class="rd-psection-header__desc">' . $desc . '</p>';
 	}
 
@@ -263,31 +264,31 @@ function rd_panel_section_header( array $args ): void {
 }
 
 /**
- * Wrapper de `add_settings_section()` que registra uma section padrão do WP
- * mas com header custom (ícone dashicons + título) em vez do `<h2>` cru
- * automático do Settings API.
+ * Wrapper around `add_settings_section()` that registers a regular WP section
+ * but with a custom header (dashicons icon + title) instead of the raw `<h2>`
+ * automatically generated by the Settings API.
  *
- * Truque do title vazio: passar `''` em `add_settings_section()` faz o WP
- * NÃO renderizar o `<h2>` automático — o callback emite o header completo
- * via `rd_panel_section_header()` (cobre ícone + título consistente).
+ * Empty-title trick: passing `''` in `add_settings_section()` makes WP NOT
+ * render the automatic `<h2>` — the callback emits the full header via
+ * `rd_panel_section_header()` (covers consistent icon + title).
  *
- * Substitui o padrão `add_settings_section( $id, $title, '__return_false', $page )`
- * — cada chamada vira 1 linha em vez de 6, ganhando ícone de bônus.
+ * Replaces the `add_settings_section( $id, $title, '__return_false', $page )`
+ * pattern — each call turns into 1 line instead of 6, with the icon as a bonus.
  *
- * @param string $id    ID da section (ex: 'sec_geral_shell').
- * @param string $title Título traduzível.
- * @param string $icon  Slug do dashicon (sem prefixo `dashicons-`).
- *                      Ex: 'admin-appearance', 'shield-alt'. '' pra sem ícone.
- * @param string $page  Page slug (ex: 'rd_options_general') — mesma do add_settings_section.
+ * @param string $id    Section ID (e.g. 'sec_geral_shell').
+ * @param string $title Translatable title.
+ * @param string $icon  Dashicon slug (without the `dashicons-` prefix).
+ *                      E.g. 'admin-appearance', 'shield-alt'. '' for no icon.
+ * @param string $page  Page slug (e.g. 'rd_options_general') — same as in add_settings_section.
  */
 function rd_panel_register_section( string $id, string $title, string $icon, string $page ): void {
 	add_settings_section(
 		$id,
-		'', // Title vazio = WP não renderiza <h2> automático; callback emite header.
+		'', // Empty title = WP does not render the automatic <h2>; callback emits the header.
 		static function () use ( $id, $title, $icon ) {
 			rd_panel_section_header(
 				array(
-					'id'    => $id, // id na div pra hash anchors (deep links do Dashboard).
+					'id'    => $id, // div id for hash anchors (Dashboard deep links).
 					'icon'  => $icon,
 					'title' => $title,
 				)
