@@ -1,41 +1,41 @@
 <?php
 defined( 'ABSPATH' ) || exit;
 /*******************************************************************************
- * Módulo Privacidade - Consentimento e LGPD                                    *
+ * Privacy Module - Consent and LGPD                                            *
  *                                                                              *
- * Sistema de consent granular por categoria (LGPD/GDPR-compliant):             *
+ * Granular per-category consent system (LGPD/GDPR-compliant):                  *
  *                                                                              *
- *   - Necessários (sempre on, obrigatórios pro site funcionar)                 *
- *   - Estatísticas (Google Analytics, Clarity, Plausible/Umami)                *
+ *   - Necessary (always on, required for the site to work)                     *
+ *   - Statistics (Google Analytics, Clarity, Plausible/Umami)                  *
  *   - Marketing (Facebook Pixel, TikTok Pixel)                                 *
  *                                                                              *
- * Storage: cookie único `rd_lgpd_consent` em JSON, validade 365 dias.          *
- * Estado consultado via `rd_consent_given('analytics'|'marketing'|'necessary')` *
- * — todos os scripts de tracking checam essa função antes de injetar.          *
+ * Storage: a single `rd_lgpd_consent` cookie in JSON, 365-day validity.        *
+ * State queried via `rd_consent_given('analytics'|'marketing'|'necessary')`    *
+ * — every tracking script checks this function before injecting.               *
  *                                                                              *
- * Quando `enable_lgpd` está OFF, sistema fica adormecido: nenhum banner,       *
- * nenhum link no footer, e `rd_consent_given()` retorna true sempre (admin     *
- * assumiu compliance por fora — sites internos, dev, etc).                     *
+ * When `enable_lgpd` is OFF, the system stays dormant: no banner,              *
+ * no footer link, and `rd_consent_given()` always returns true (admin          *
+ * assumed compliance elsewhere — internal sites, dev, etc).                    *
  *******************************************************************************/
 
 /*******************************************************************************
- * Constantes do módulo                                                         *
+ * Module constants                                                             *
  *******************************************************************************/
 const RD_LGPD_COOKIE_NAME    = 'rd_lgpd_consent';
-const RD_LGPD_LEGACY_COOKIE  = 'rd_lgpd_accepted';   // antigo, pra migração
-const RD_LGPD_COOKIE_VERSION = 1;                    // bump invalida cookies antigos
+const RD_LGPD_LEGACY_COOKIE  = 'rd_lgpd_accepted';   // legacy, for migration
+const RD_LGPD_COOKIE_VERSION = 1;                    // bump invalidates old cookies
 const RD_LGPD_CATEGORIES     = array( 'necessary', 'analytics', 'marketing' );
 
 /*******************************************************************************
- * Lê o estado do consent do cookie (com migração do cookie legado)             *
+ * Reads the consent state from the cookie (with legacy cookie migration)       *
  *                                                                              *
- * Retorna sempre 4 chaves:                                                     *
- *   - necessary (bool — sempre true)                                           *
+ * Always returns 4 keys:                                                       *
+ *   - necessary (bool — always true)                                           *
  *   - analytics (bool)                                                         *
  *   - marketing (bool)                                                         *
- *   - choice_made (bool — true se user já interagiu com o banner)              *
+ *   - choice_made (bool — true if the user already interacted with the banner) *
  *                                                                              *
- * Cache estático na request — leitura do cookie só uma vez.                    *
+ * Static cache per request — the cookie is read only once.                     *
  *******************************************************************************/
 function rd_lgpd_get_consent(): array {
 	static $cached = null;
@@ -50,14 +50,14 @@ function rd_lgpd_get_consent(): array {
 		'choice_made' => false,
 	);
 
-	// 1. Cookie novo (formato JSON v1+)
+	// 1. New cookie (JSON format v1+)
 	if ( isset( $_COOKIE[ RD_LGPD_COOKIE_NAME ] ) ) {
-		// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- JSON content; sanitize_text_field destruiria estrutura. Validação acontece via json_decode + checks `is_array`/`isset(['version'])` abaixo. wp_unslash é o equivalente WP-idiomático de stripslashes.
+		// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- JSON content; sanitize_text_field would destroy the structure. Validation happens via json_decode + `is_array`/`isset(['version'])` checks below. wp_unslash is the WP-idiomatic equivalent of stripslashes.
 		$raw  = wp_unslash( $_COOKIE[ RD_LGPD_COOKIE_NAME ] );
 		$data = json_decode( $raw, true );
 		if ( is_array( $data ) && isset( $data['version'] ) && (int) $data['version'] === RD_LGPD_COOKIE_VERSION ) {
 			$cached = array(
-				'necessary'   => true, // sempre on, independe do cookie
+				'necessary'   => true, // always on, regardless of the cookie
 				'analytics'   => ! empty( $data['analytics'] ),
 				'marketing'   => ! empty( $data['marketing'] ),
 				'choice_made' => true,
@@ -66,11 +66,11 @@ function rd_lgpd_get_consent(): array {
 		}
 	}
 
-	// 2. Cookie legado (`rd_lgpd_accepted=true`) — migração in-memory
-	// O cookie legado significava "aceitou tudo" no banner antigo (1 botão só).
-	// Tratamos como tudo aceito pra não re-prompt usuário existente. A limpeza
-	// do cookie legado é feita pelo JS (não dá pra setcookie aqui — headers
-	// podem já ter sido enviados).
+	// 2. Legacy cookie (`rd_lgpd_accepted=true`) — in-memory migration
+	// The legacy cookie meant "accepted everything" in the old banner (single button).
+	// We treat it as all-accepted to avoid re-prompting an existing user. Clearing
+	// the legacy cookie is done by the JS (can't setcookie here — headers
+	// may have already been sent).
 	if ( isset( $_COOKIE[ RD_LGPD_LEGACY_COOKIE ] ) ) {
 		$cached = array(
 			'necessary'   => true,
@@ -81,31 +81,31 @@ function rd_lgpd_get_consent(): array {
 		return $cached;
 	}
 
-	// 3. Sem cookie — escolha pendente
+	// 3. No cookie — choice pending
 	$cached = $default;
 	return $cached;
 }
 
 /*******************************************************************************
- * Helper público: verifica se o user consentiu com uma categoria              *
+ * Public helper: checks whether the user consented to a category               *
  *                                                                              *
- * Todos os scripts de tracking devem chamar essa função antes de injetar:     *
- *   if ( ! rd_consent_given('analytics') ) return;                            *
+ * Every tracking script must call this function before injecting:              *
+ *   if ( ! rd_consent_given('analytics') ) return;                             *
  *                                                                              *
- * Quando banner desligado no painel, retorna true sempre (sistema dormante).  *
+ * When the banner is off in the panel, always returns true (dormant system).   *
  *******************************************************************************/
 function rd_consent_given( string $category ): bool {
-	// Banner desligado pelo admin → sistema adormecido, tudo passa
+	// Banner turned off by the admin → dormant system, everything passes
 	if ( ! rd_get_option_bool( 'enable_lgpd' ) ) {
 		return true;
 	}
 
-	// Necessários sempre on
+	// Necessary always on
 	if ( $category === 'necessary' ) {
 		return true;
 	}
 
-	// Categoria desconhecida → false defensivo
+	// Unknown category → defensive false
 	if ( ! in_array( $category, RD_LGPD_CATEGORIES, true ) ) {
 		return false;
 	}
@@ -115,24 +115,24 @@ function rd_consent_given( string $category ): bool {
 }
 
 /*******************************************************************************
- * Renderiza o banner de consent LGPD                          - (Privacidade) *
+ * Renders the LGPD consent banner                                - (Privacy)   *
  *                                                                              *
- * Markup tem 2 modos visuais controlados via CSS/JS:                          *
- *   - Compacto (default): texto + 3 botões                                    *
- *   - Expandido: + 3 toggles de categoria (mostrado ao clicar "Personalizar") *
+ * Markup has 2 visual modes controlled via CSS/JS:                             *
+ *   - Compact (default): text + 3 buttons                                      *
+ *   - Expanded: + 3 category toggles (shown when clicking "Customize")         *
  *                                                                              *
- * Estado é serializado em data-attributes pra o JS consumir. CSS faz a       *
- * transição via max-height + opacity.                                          *
+ * State is serialized in data-attributes for the JS to consume. CSS handles    *
+ * the transition via max-height + opacity.                                     *
  *******************************************************************************/
 function rd_render_lgpd_banner() {
 	if ( ! rd_get_option_bool( 'enable_lgpd' ) ) {
 		return;
 	}
 
-	// Sempre renderiza o banner no DOM (com estado inicial baseado no cookie).
-	// Quando o user já escolheu, o banner começa escondido via classe — mas
-	// continua disponível pro link "Cookie Preferences" do footer revelar
-	// sem precisar de reload + sem perder os valores atuais dos toggles.
+	// Always render the banner in the DOM (with initial state based on the cookie).
+	// When the user already chose, the banner starts hidden via a class — but
+	// stays available for the footer "Cookie Preferences" link to reveal
+	// without a reload + without losing the current toggle values.
 	$consent      = rd_lgpd_get_consent();
 	$hidden_class = $consent['choice_made'] ? ' rd-lgpd-hidden' : '';
 	$analytics_on = ! empty( $consent['analytics'] );
