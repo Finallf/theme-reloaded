@@ -2,23 +2,23 @@
 defined( 'ABSPATH' ) || exit;
 
 /*******************************************************************************
- * Module: Views - Sistema de contagem de visualizações por post               *
+ * Module: Views - Per-post view counting system                               *
  *                                                                             *
- * Recursos:                                                                   *
- * - Tracking via AJAX (escapa de cache de página)                             *
- * - Deduplicação por IP (1 view a cada 30min por IP)                          *
- * - Filtro de bots conhecidos via User-Agent                                  *
- * - Janelas temporais: all-time, mês, semana, dia                             *
- * - API pública: rd_get_post_views() / rd_get_popular_posts()                 *
+ * Features:                                                                   *
+ * - Tracking via AJAX (escapes page caching)                                  *
+ * - Per-IP deduplication (1 view every 30min per IP)                          *
+ * - Known-bot filtering via User-Agent                                        *
+ * - Time windows: all-time, month, week, day                                  *
+ * - Public API: rd_get_post_views() / rd_get_popular_posts()                  *
  *******************************************************************************/
 
 const RD_VIEWS_META_KEY      = '_rd_post_views';
 const RD_VIEWS_META_KEY_LOG  = '_rd_post_views_log';
-const RD_VIEWS_DEDUP_WINDOW  = 1800;  // 30 minutos
-const RD_VIEWS_LOG_RETENTION = 31536000; // 1 ano (limpa entries antigas)
+const RD_VIEWS_DEDUP_WINDOW  = 1800;  // 30 minutes
+const RD_VIEWS_LOG_RETENTION = 31536000; // 1 year (cleans up old entries)
 
 /**
- * Hook: enfileira script de tracking nas páginas singulares
+ * Hook: enqueues the tracking script on singular pages
  */
 function rd_views_enqueue_tracker() {
 	if ( ! is_singular( array( 'post', 'page' ) ) ) {
@@ -29,16 +29,16 @@ function rd_views_enqueue_tracker() {
 		return;
 	}
 
-	// Não rastrear admins (evita inflar contagem durante edição)
+	// Don't track admins (avoids inflating the count during editing)
 	if ( current_user_can( 'edit_posts' ) ) {
 		return;
 	}
 
 	$post_id = get_the_ID();
 
-	// SoC: JS estático em assets/js/views-tracker.js, dados dinâmicos
-	// (post_id, nonce, ajaxurl) injetados via wp_localize_script. Browser
-	// cacheia o .js entre requests; só os dados de localize são únicos por page.
+	// SoC: static JS in assets/js/views-tracker.js, dynamic data
+	// (post_id, nonce, ajaxurl) injected via wp_localize_script. The browser
+	// caches the .js between requests; only the localize data is unique per page.
 	wp_enqueue_script(
 		'rd-views-tracker',
 		get_template_directory_uri() . '/assets/js/views-tracker.js',
@@ -60,13 +60,13 @@ function rd_views_enqueue_tracker() {
 add_action( 'wp_enqueue_scripts', 'rd_views_enqueue_tracker' );
 
 /**
- * Endpoint AJAX: registra view (acessível por usuários não logados)
+ * AJAX endpoint: records a view (accessible by non-logged-in users)
  */
 function rd_views_ajax_track() {
 	$post_id = isset( $_POST['post_id'] ) ? absint( $_POST['post_id'] ) : 0;
 	$nonce   = isset( $_POST['nonce'] ) ? sanitize_text_field( wp_unslash( $_POST['nonce'] ) ) : '';
 
-	// Validação básica
+	// Basic validation
 	if ( ! $post_id || ! wp_verify_nonce( $nonce, 'rd_track_view_' . $post_id ) ) {
 		wp_send_json_error( 'invalid', 400 );
 	}
@@ -75,19 +75,19 @@ function rd_views_ajax_track() {
 		wp_send_json_error( 'not_published', 400 );
 	}
 
-	// Bloqueia admins / editores também no backend (defesa em profundidade)
+	// Blocks admins / editors on the backend too (defense in depth)
 	if ( is_user_logged_in() && current_user_can( 'edit_posts' ) ) {
 		wp_send_json_success( 'admin_ignored' );
 	}
 
-	// Filtra bots por User-Agent
+	// Filter bots by User-Agent
 	if ( rd_views_is_bot() ) {
 		wp_send_json_success( 'bot_ignored' );
 	}
 
-	// Deduplica por IP — `rd_get_client_ip` valida REMOTE_ADDR antes de
-	// confiar em headers de proxy (evita inflação artificial de views via
-	// CF-Connecting-IP spoofado em loop).
+	// Deduplicate by IP — `rd_get_client_ip` validates REMOTE_ADDR before
+	// trusting proxy headers (avoids artificial view inflation via
+	// a spoofed CF-Connecting-IP in a loop).
 	$ip        = rd_get_client_ip();
 	$dedup_key = 'rd_view_' . md5( $post_id . '_' . $ip );
 
@@ -95,10 +95,10 @@ function rd_views_ajax_track() {
 		wp_send_json_success( 'already_counted' );
 	}
 
-	// Registra view
+	// Record the view
 	rd_views_increment( $post_id );
 
-	// Marca IP como contado pra esse post
+	// Mark the IP as counted for this post
 	set_transient( $dedup_key, 1, RD_VIEWS_DEDUP_WINDOW );
 
 	wp_send_json_success( 'counted' );
@@ -107,18 +107,18 @@ add_action( 'wp_ajax_rd_track_view', 'rd_views_ajax_track' );
 add_action( 'wp_ajax_nopriv_rd_track_view', 'rd_views_ajax_track' );
 
 /**
- * Incrementa contadores: total + log temporal
+ * Increments counters: total + temporal log
  *
- * Usa update_post_meta diretamente sem trigger de save_post,
- * evitando que o editor detecte "post modificado".
+ * Uses update_post_meta directly without triggering save_post,
+ * preventing the editor from detecting a "modified post".
  */
 function rd_views_increment( $post_id ) {
 
-	// Contador total (all-time)
+	// Total counter (all-time)
 	$total = (int) get_post_meta( $post_id, RD_VIEWS_META_KEY, true );
 	update_post_meta( $post_id, RD_VIEWS_META_KEY, $total + 1 );
 
-	// Log temporal (timestamps das últimas N views, pra queries por janela)
+	// Temporal log (timestamps of the last N views, for windowed queries)
 	$log = get_post_meta( $post_id, RD_VIEWS_META_KEY_LOG, true );
 	if ( ! is_array( $log ) ) {
 		$log = array();
@@ -127,7 +127,7 @@ function rd_views_increment( $post_id ) {
 	$now   = time();
 	$log[] = $now;
 
-	// Limpa entries mais velhas que retention (evita explodir banco)
+	// Clean up entries older than retention (avoids blowing up the database)
 	$cutoff = $now - RD_VIEWS_LOG_RETENTION;
 	$log    = array_filter( $log, fn( $t ) => $t >= $cutoff );
 
@@ -135,11 +135,11 @@ function rd_views_increment( $post_id ) {
 }
 
 /**
- * Detecta bots por User-Agent (lista dos principais)
+ * Detects bots by User-Agent (list of the main ones)
  */
 function rd_views_is_bot() {
 	if ( empty( $_SERVER['HTTP_USER_AGENT'] ) ) {
-		return true; // sem UA = suspeito
+		return true; // no UA = suspicious
 	}
 
 	$ua   = strtolower( sanitize_text_field( wp_unslash( $_SERVER['HTTP_USER_AGENT'] ) ) );
@@ -186,9 +186,9 @@ function rd_views_is_bot() {
 }
 
 /**
- * Esconde nossos meta keys da UI de Custom Fields do editor
- * (eles começam com "_" então o WP já esconde por convenção,
- *  mas reforçamos aqui pra garantir)
+ * Hides our meta keys from the editor's Custom Fields UI
+ * (they start with "_" so WP already hides them by convention,
+ *  but we reinforce it here to be sure)
  */
 function rd_views_hide_meta_keys( $is_protected, $meta_key ) {
 	if ( in_array( $meta_key, array( RD_VIEWS_META_KEY, RD_VIEWS_META_KEY_LOG ), true ) ) {
@@ -200,11 +200,11 @@ add_filter( 'is_protected_meta', 'rd_views_hide_meta_keys', 10, 2 );
 
 /*
 =============================================================================
- *  API PÚBLICA (use em templates)
+ *  PUBLIC API (use in templates)
  * ============================================================================= */
 
 /**
- * Retorna número de views de um post (all-time ou janela)
+ * Returns the number of views of a post (all-time or window)
  *
  * @param int    $post_id
  * @param string $window 'all', 'day', 'week', 'month', 'year'
@@ -236,25 +236,25 @@ function rd_get_post_views( $post_id, $window = 'all' ) {
 }
 
 /**
- * Formata um número de views conforme a config do painel.
+ * Formats a view count according to the panel config.
  *
- * Modos (option `views_number_format`):
- *   - 'full' (default) → "1.234" via number_format_i18n (respeita locale)
- *   - 'compact'        → "1.2k" / "1.2M" estilo redes sociais (YouTube/Reddit/GitHub)
+ * Modes (option `views_number_format`):
+ *   - 'full' (default) → "1,234" via number_format_i18n (respects locale)
+ *   - 'compact'        → "1.2k" / "1.2M" social-media style (YouTube/Reddit/GitHub)
  *
- * Algoritmo compact (escolhido pra evitar arredondamento enganoso):
- *   < 1.000           → número exato
- *   < 10.000          → "X.Yk" (1 decimal, truncado via floor)
- *   < 1.000.000       → "Nk"   (sem decimal)
- *   < 10.000.000      → "X.YM" (1 decimal)
- *   < 1.000.000.000   → "NM"
- *   ≥ 1B              → "NB"   (defensivo, improvável)
+ * Compact algorithm (chosen to avoid misleading rounding):
+ *   < 1,000           → exact number
+ *   < 10,000          → "X.Yk" (1 decimal, truncated via floor)
+ *   < 1,000,000       → "Nk"   (no decimal)
+ *   < 10,000,000      → "X.YM" (1 decimal)
+ *   < 1,000,000,000   → "NM"
+ *   ≥ 1B              → "NB"   (defensive, unlikely)
  *
- * Truncate (floor) em vez de round: 1999 vira "1.9k", não "2k" (que mentiria).
+ * Truncate (floor) instead of round: 1999 becomes "1.9k", not "2k" (which would lie).
  *
- * Aplicado SÓ no frontend (cards/single). O admin (coluna de posts, painel
- * Statistics em mod-stats.php) usa number_format_i18n diretamente — admin
- * sempre quer números exatos.
+ * Applied ONLY on the frontend (cards/single). The admin (posts column,
+ * Statistics panel in mod-stats.php) uses number_format_i18n directly — admin
+ * always wants exact numbers.
  */
 function rd_format_views_number( $n ) {
 	$n = (int) $n;
@@ -287,17 +287,17 @@ function rd_format_views_number( $n ) {
 }
 
 /**
- * Retorna posts mais populares (all-time)
+ * Returns the most popular posts (all-time)
  *
- * @param int   $limit Quantidade
- * @param array $args  Args adicionais pra WP_Query
+ * @param int   $limit Amount
+ * @param array $args  Additional args for WP_Query
  * @return WP_Query
  */
 function rd_get_popular_posts( $limit = 3, $args = array() ) {
 	$defaults = array(
 		'post_type'      => 'post',
 		'posts_per_page' => $limit,
-		// phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key -- API pública usada poucas vezes por request (sidebar widget, 404 fallback, etc); orderby por meta é a única forma de listar posts por views.
+		// phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key -- public API used a few times per request (sidebar widget, 404 fallback, etc); orderby on meta is the only way to list posts by views.
 		'meta_key'       => RD_VIEWS_META_KEY,
 		'orderby'        => 'meta_value_num',
 		'order'          => 'DESC',
@@ -309,7 +309,7 @@ function rd_get_popular_posts( $limit = 3, $args = array() ) {
 }
 
 /**
- * Adiciona coluna "Views" na lista de posts do admin
+ * Adds a "Views" column to the admin posts list
  */
 function rd_views_admin_column( $columns ) {
 	$columns['rd_views'] = __( '👁️ Views', 'reloaded' );

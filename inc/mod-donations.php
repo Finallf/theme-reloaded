@@ -79,7 +79,7 @@ function rd_render_support_block() {
 			if ( $pix_url ) {
 
 				echo '<a href="' . esc_url( $pix_url ) . '" target="_blank" class="rd-qr-link">';
-				echo '  <img src="' . esc_url( get_template_directory_uri() . '/assets/img/logo-pix.svg' ) . '" alt="PIX Logo" width="100" height="36">';
+				echo '  <img src="' . esc_url( get_template_directory_uri() . '/assets/img/logo-pix.svg' ) . '" alt="PIX Logo" width="60" height="36">';
 				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- rd_render_qr_img returns wp_get_attachment_image() output (already escaped) or pre-escaped <img> fallback
 				echo '  ' . rd_render_qr_img( $pix_img, esc_attr__( 'QR Code PIX', 'reloaded' ) );
 				echo '  <small>' . esc_html__( '(Click or Scan to donate)', 'reloaded' ) . '</small>';
@@ -113,7 +113,7 @@ function rd_render_support_block() {
 		if ( $paypal_qr ) {
 			if ( $paypal_url ) {
 				echo '<a href="' . esc_url( $paypal_url ) . '" target="_blank" class="rd-qr-link">';
-				echo '  <img src="' . esc_url( get_template_directory_uri() . '/assets/img/logo-paypal.svg' ) . '" alt="PayPal Logo" width="100" height="36">';
+				echo '  <img src="' . esc_url( get_template_directory_uri() . '/assets/img/logo-paypal.svg' ) . '" alt="PayPal Logo" width="70" height="36">';
 				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- rd_render_qr_img returns wp_get_attachment_image() output (already escaped) or pre-escaped <img> fallback
 				echo '  ' . rd_render_qr_img( $paypal_qr, esc_attr__( 'PayPal Donate', 'reloaded' ) );
 				echo '  <small>' . esc_html__( '(Click or Scan to donate)', 'reloaded' ) . '</small>';
