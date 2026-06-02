@@ -1,25 +1,25 @@
 <?php
 defined( 'ABSPATH' ) || exit;
 /*******************************************************************************
- * Module: Menu - Comportamento de destaque do menu nav                       *
+ * Module: Menu - Highlight behavior of the nav menu                          *
  *                                                                            *
- * Resolve o problema do "múltiplos itens destacados": quando um post tem     *
- * mais de uma categoria, o WordPress adiciona `current-menu-*` em todos os   *
- * itens do menu correspondentes. Aqui filtramos pra deixar só a categoria    *
- * principal (escolhida no editor via meta box `_rd_primary_category`) e      *
- * seus ancestrais no menu como "current".                                    *
+ * Solves the "multiple highlighted items" problem: when a post has           *
+ * more than one category, WordPress adds `current-menu-*` to all the         *
+ * matching menu items. Here we filter to keep only the primary               *
+ * category (chosen in the editor via the `_rd_primary_category` meta box) and*
+ * its menu ancestors as "current".                                           *
  *******************************************************************************/
 
 /**
- * Retorna o ID da categoria principal do post.
+ * Returns the post's primary category ID.
  *
- * Cascata:
- *   1. Meta `_rd_primary_category` (escolha do autor) — se a categoria ainda
- *      pertencer ao post
- *   2. Primeira categoria via get_the_category() (ordem ID padrão do WP)
+ * Cascade:
+ *   1. Meta `_rd_primary_category` (author's choice) — if the category still
+ *      belongs to the post
+ *   2. First category via get_the_category() (WP's default ID order)
  *
  * @param int $post_id
- * @return int 0 se o post não tem categorias
+ * @return int 0 if the post has no categories
  */
 function rd_get_primary_category_id( $post_id ) {
 	$post_id = (int) $post_id;
@@ -35,38 +35,38 @@ function rd_get_primary_category_id( $post_id ) {
 	$chosen = (int) get_post_meta( $post_id, '_rd_primary_category', true );
 
 	if ( $chosen ) {
-		// Confirma que a categoria escolhida ainda está no post
+		// Confirm the chosen category is still on the post
 		foreach ( $cats as $cat ) {
 			if ( (int) $cat->term_id === $chosen ) {
 				return $chosen;
 			}
 		}
-		// Escolha obsoleta — fallback pra primeira
+		// Stale choice — fall back to the first
 	}
 
 	return (int) $cats[0]->term_id;
 }
 
 /**
- * Filtra os objetos do menu antes de renderizar pra deixar só a categoria
- * principal (e seus ancestrais no menu) com classes `current-*`. Demais itens
- * apontando pra categorias não-principais perdem o destaque.
+ * Filters the menu objects before rendering to keep only the primary
+ * category (and its menu ancestors) with `current-*` classes. Other items
+ * pointing to non-primary categories lose the highlight.
  *
- * Usa `wp_nav_menu_objects` (em vez de `nav_menu_css_class`) porque precisa
- * da árvore completa pra calcular ancestrais.
+ * Uses `wp_nav_menu_objects` (instead of `nav_menu_css_class`) because it needs
+ * the full tree to compute ancestors.
  *
- * @param array  $items Lista de objetos de menu (WP_Post-like)
- * @param object $args  Argumentos do wp_nav_menu
+ * @param array  $items List of menu objects (WP_Post-like)
+ * @param object $args  wp_nav_menu arguments
  * @return array
  */
-// phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed -- $args faz parte da assinatura do filter `wp_nav_menu_objects`, mesmo quando não consultamos os args do menu.
+// phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed -- $args is part of the `wp_nav_menu_objects` filter signature, even when we don't consult the menu args.
 function rd_filter_menu_primary_category( $items, $args ) {
-	// Gate principal — opção desativada no painel desliga toda a feature
+	// Main gate — the option disabled in the panel turns off the whole feature
 	if ( ! rd_get_option_bool( 'enable_primary_category' ) ) {
 		return $items;
 	}
 
-	// Só faz sentido em single de post
+	// Only makes sense on a single post
 	if ( ! is_singular( 'post' ) ) {
 		return $items;
 	}
@@ -76,7 +76,7 @@ function rd_filter_menu_primary_category( $items, $args ) {
 		return $items;
 	}
 
-	// 1) Acha o item de menu que aponta pra categoria principal
+	// 1) Find the menu item that points to the primary category
 	$primary_item_id = 0;
 	foreach ( $items as $item ) {
 		if ( $item->object === 'category' && (int) $item->object_id === $primary_cat_id ) {
@@ -86,13 +86,13 @@ function rd_filter_menu_primary_category( $items, $args ) {
 	}
 
 	if ( ! $primary_item_id ) {
-		// Categoria principal não está no menu — não filtra (deixa WP destacar
-		// o que conseguir, melhor algo que nada)
+		// The primary category isn't in the menu — don't filter (let WP highlight
+		// whatever it can, something is better than nothing)
 		return $items;
 	}
 
-	// 2) Monta o conjunto "keep": item da categoria principal + ancestrais
-	// no menu (subindo via menu_item_parent)
+	// 2) Build the "keep" set: primary category item + ancestors
+	// in the menu (climbing via menu_item_parent)
 	$keep_ids    = array( $primary_item_id );
 	$items_by_id = array();
 	foreach ( $items as $item ) {
@@ -114,8 +114,8 @@ function rd_filter_menu_primary_category( $items, $args ) {
 	}
 	$keep_ids_lookup = array_flip( $keep_ids );
 
-	// 3) Pra cada item NÃO no keep set, remove classes `current-*` (e variantes
-	// com underscore que algumas versões do WP / temas usam)
+	// 3) For each item NOT in the keep set, remove `current-*` classes (and the
+	// underscore variants that some WP versions / themes use)
 	foreach ( $items as &$item ) {
 		if ( isset( $keep_ids_lookup[ (int) $item->ID ] ) ) {
 			continue;
@@ -130,10 +130,10 @@ function rd_filter_menu_primary_category( $items, $args ) {
 				&& strpos( $css_class, 'current_' ) !== 0;
 			}
 		);
-		// array_filter preserva chaves; reseta pro WP renderizar limpo
+		// array_filter preserves keys; reset so WP renders cleanly
 		$item->classes = array_values( $item->classes );
 	}
-	unset( $item ); // boa prática após foreach por referência
+	unset( $item ); // good practice after a foreach by reference
 
 	return $items;
 }
