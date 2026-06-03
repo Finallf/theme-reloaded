@@ -1,27 +1,27 @@
 <?php
 defined( 'ABSPATH' ) || exit;
 /*******************************************************************************
- * Module: Archive Header — Cabeçalho contextual do template archive.php       *
+ * Module: Archive Header — Contextual header for the archive.php template     *
  *                                                                             *
- * Renderiza um header rico pra páginas de archive (categoria, tag, taxonomia, *
- * data) com 3 features sobre o cabeçalho original:                            *
+ * Renders a rich header for archive pages (category, tag, taxonomy,           *
+ * date) with 3 features over the original header:                             *
  *                                                                             *
- *   1. Ícone contextual SVG (folder pra cat, tag pra tag, calendário pra data)*
- *   2. Contador de posts encontrados (`$wp_query->found_posts`)               *
- *   3. Borda esquerda colorida — quando archive de categoria, usa a cor       *
- *      configurada em term_meta `rd_category_color` (mod-category-colors)     *
+ *   1. Contextual SVG icon (folder for cat, tag for tag, calendar for date)   *
+ *   2. Counter of found posts (`$wp_query->found_posts`)                      *
+ *   3. Colored left border — on a category archive, uses the color            *
+ *      configured in the `rd_category_color` term_meta (mod-category-colors)  *
  *                                                                             *
- * O título e a descrição vêm dos helpers nativos do WP (the_archive_title,    *
- * the_archive_description), preservando i18n e o `<span>` interno do título.  *
+ * The title and description come from WP's native helpers (the_archive_title, *
+ * the_archive_description), preserving i18n and the title's inner `<span>`.   *
  *                                                                             *
- * Chamado de archive.php (e templates derivados) via                          *
- * `rd_render_archive_header()`. Sem hook automático — quem chama é o template *
- * porque o markup precisa ficar no lugar certo do DOM.                        *
+ * Called from archive.php (and derived templates) via                         *
+ * `rd_render_archive_header()`. No automatic hook — the template calls it     *
+ * because the markup must go in the right place in the DOM.                   *
  *******************************************************************************/
 
 /*******************************************************************************
- * SVG icons em estilo feather/lucide (stroke 2, no fill).                     *
- * Inline pra evitar request HTTP extra. `aria-hidden` no wrapper externo.     *
+ * SVG icons in feather/lucide style (stroke 2, no fill).                      *
+ * Inline to avoid an extra HTTP request. `aria-hidden` on the outer wrapper.  *
  *******************************************************************************/
 function rd_archive_header_get_icon( string $context ): string {
 	$icons = array(
@@ -35,7 +35,7 @@ function rd_archive_header_get_icon( string $context ): string {
 }
 
 /*******************************************************************************
- * Identifica o contexto do archive atual em uma string única                  *
+ * Identifies the current archive context in a single string                   *
  *******************************************************************************/
 function rd_archive_header_get_context(): string {
 	if ( is_category() ) {
@@ -45,7 +45,7 @@ function rd_archive_header_get_context(): string {
 		return 'tag';
 	}
 	if ( is_tax() ) {
-		return 'tag';   // taxonomias custom seguem o ícone de tag
+		return 'tag';   // custom taxonomies follow the tag icon
 	}
 	if ( is_author() ) {
 		return 'author';
@@ -57,9 +57,9 @@ function rd_archive_header_get_context(): string {
 }
 
 /*******************************************************************************
- * Resolve a cor de acento da borda esquerda do header.                        *
- * Só categorias têm cor própria (term meta `rd_category_color`). Outros       *
- * contextos retornam string vazia → CSS usa o fallback brand-blue do tema.    *
+ * Resolves the accent color of the header's left border.                      *
+ * Only categories have their own color (`rd_category_color` term meta). Other *
+ * contexts return an empty string → CSS uses the theme's brand-blue fallback. *
  *******************************************************************************/
 function rd_archive_header_get_accent_color(): string {
 	if ( ! is_category() ) {
@@ -76,8 +76,8 @@ function rd_archive_header_get_accent_color(): string {
 }
 
 /*******************************************************************************
- * Renderiza o cabeçalho completo do archive.                                  *
- * Chamado direto do template (archive.php).                                   *
+ * Renders the full archive header.                                            *
+ * Called directly from the template (archive.php).                            *
  *******************************************************************************/
 function rd_render_archive_header(): void {
 	global $wp_query;
@@ -87,7 +87,7 @@ function rd_render_archive_header(): void {
 	$accent_color = rd_archive_header_get_accent_color();
 	$count        = (int) $wp_query->found_posts;
 
-	// CSS custom property pro acento — fallback definido no SCSS
+	// CSS custom property for the accent — fallback defined in SCSS
 	$style_attr = '';
 	if ( ! empty( $accent_color ) ) {
 		$style_attr = ' style="--rd-archive-accent: ' . esc_attr( $accent_color ) . '"';

@@ -1,31 +1,31 @@
 <?php
 defined( 'ABSPATH' ) || exit;
 /*******************************************************************************
- * Module: Breadcrumbs — Trilha de navegação contextual + JSON-LD              *
+ * Module: Breadcrumbs — Contextual navigation trail + JSON-LD                 *
  *                                                                             *
- * Calcula uma única vez o "trail" (array de [name, url]) e alimenta DOIS      *
- * consumidores a partir da mesma fonte:                                       *
+ * Computes the "trail" (array of [name, url]) once and feeds TWO              *
+ * consumers from the same source:                                             *
  *                                                                             *
- *   1. `rd_render_breadcrumbs()`  — markup HTML visível, chamado de header.php*
- *      logo após o fechamento do <header>. Gated pelo toggle `enable_breadcrumbs`.
+ *   1. `rd_render_breadcrumbs()`  — visible HTML markup, called from header.php
+ *      right after the <header> closes. Gated by the `enable_breadcrumbs` toggle.
  *                                                                             *
- *   2. `rd_add_breadcrumb_jsonld()` — Schema.org BreadcrumbList no <head>,    *
- *      sempre ativo (SEO baseline, independe do toggle visual).               *
+ *   2. `rd_add_breadcrumb_jsonld()` — Schema.org BreadcrumbList in <head>,    *
+ *      always active (SEO baseline, independent of the visual toggle).        *
  *                                                                             *
- * Quem decide a aparência é o SCSS (`components/_breadcrumbs.scss`). Esse     *
- * arquivo cuida só de lógica + markup semântico.                              *
+ * The SCSS decides the appearance (`components/_breadcrumbs.scss`). This      *
+ * file only handles logic + semantic markup.                                  *
  *******************************************************************************/
 
 /*******************************************************************************
- * Calcula o trail contextual do breadcrumb                    - (Breadcrumbs) *
+ * Computes the breadcrumb's contextual trail                  - (Breadcrumbs) *
  *                                                                             *
- * Retorna array de itens `['name' => string, 'url' => string|null]`. O último *
- * item representa a página atual e vem com `url = null` por convenção.        *
+ * Returns an array of items `['name' => string, 'url' => string|null]`. The   *
+ * last item represents the current page and comes with `url = null` by convention.
  *                                                                             *
- * Retorna array vazio na front page (não faz sentido breadcrumb na home).     *
+ * Returns an empty array on the front page (a breadcrumb on home makes no sense).
  *******************************************************************************/
 function rd_get_breadcrumb_trail(): array {
-	// Front page: sem breadcrumb (você já está na raiz)
+	// Front page: no breadcrumb (you're already at the root)
 	if ( is_front_page() ) {
 		return array();
 	}
@@ -42,9 +42,9 @@ function rd_get_breadcrumb_trail(): array {
 			return $trail;
 		}
 
-		// Pra posts (não pages), tenta inserir a categoria primária como
-		// pai. Reusa o meta `_rd_primary_category` quando o admin escolheu
-		// explicitamente; fallback pra primeira categoria atribuída.
+		// For posts (not pages), try to insert the primary category as the
+		// parent. Reuses the `_rd_primary_category` meta when the admin chose
+		// explicitly; falls back to the first assigned category.
 		if ( is_single() && get_post_type( $post ) === 'post' ) {
 			$cats = get_the_category( $post->ID );
 			$cat  = null;
@@ -81,7 +81,7 @@ function rd_get_breadcrumb_trail(): array {
 
 	if ( is_category() ) {
 		$term = get_queried_object();
-		// Inclui ancestrais (cat aninhadas) na ordem raiz → folha
+		// Include ancestors (nested cats) in root → leaf order
 		$ancestors = array_reverse( get_ancestors( $term->term_id, 'category' ) );
 		foreach ( $ancestors as $aid ) {
 			$a = get_term( $aid, 'category' );
@@ -192,10 +192,10 @@ function rd_get_breadcrumb_trail(): array {
 }
 
 /*******************************************************************************
- * Renderiza o markup visível do breadcrumb                  - (Breadcrumbs) *
+ * Renders the breadcrumb's visible markup                     - (Breadcrumbs) *
  *                                                                             *
- * Chamado de header.php logo após o </header>. Markup semântico (<nav> +     *
- * <ol>) com `aria-label` e `aria-current="page"` no item atual.              *
+ * Called from header.php right after </header>. Semantic markup (<nav> +      *
+ * <ol>) with `aria-label` and `aria-current="page"` on the current item.      *
  *******************************************************************************/
 function rd_render_breadcrumbs(): void {
 	if ( ! rd_get_option_bool( 'enable_breadcrumbs' ) ) {
@@ -230,14 +230,15 @@ function rd_render_breadcrumbs(): void {
 }
 
 /*******************************************************************************
- * BreadcrumbList Schema.org JSON-LD                         - (Breadcrumbs) *
+ * BreadcrumbList Schema.org JSON-LD                           - (Breadcrumbs) *
  *                                                                             *
- * Emite o BreadcrumbList no <wp_head>, independente do toggle visual. Não    *
- * gera em search/404 (Google não quer breadcrumb pra páginas não-indexáveis) *
- * nem quando o trail tem menos de 2 itens (só Home não vira breadcrumb).    *
+ * Emits the BreadcrumbList in <wp_head>, independent of the visual toggle.    *
+ * Doesn't generate on search/404 (Google doesn't want a breadcrumb for        *
+ * non-indexable pages) nor when the trail has fewer than 2 items (Home alone  *
+ * isn't a breadcrumb).                                                        *
  *                                                                             *
- * O último item (página atual) omite a chave `item` por convenção — sinaliza *
- * pro Google que aquela é a posição atual sem precisar de URL duplicada.     *
+ * The last item (current page) omits the `item` key by convention — it tells  *
+ * Google that's the current position without needing a duplicate URL.         *
  *******************************************************************************/
 function rd_add_breadcrumb_jsonld(): void {
 	if ( is_search() || is_404() ) {

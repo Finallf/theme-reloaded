@@ -125,7 +125,7 @@ body.rd-sidebar-left .site-main .container {
 	}
 
 	.post-content-area {
-		padding: 20px;
+		padding: 5px 20px 20px;
 		// Não adicionar `position: relative` aqui — o ::after invisível
 		// do .entry-title a.main-link precisa ancorar no .grid-item pra
 		// cobrir o thumbnail também (overlay clicável do card inteiro).
@@ -188,7 +188,7 @@ body.rd-sidebar-left .site-main .container {
 #secondary {
 	flex-basis: 30%; /* O ideal: tenta manter 30% da largura do container */
     min-width: 300px; /* O piso: protege o banner de 300x250 e o layout do PIX */
-    max-width: 350px;
+    max-width: 300px;
 	/* margin-left: auto; */
 	flex-shrink: 0;
 
