@@ -7,6 +7,20 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 <br>
 
 
+## [1.1.0-beta.1](https://github.com/Finallf/theme-reloaded/compare/v1.0.1-beta.1...v1.1.0-beta.1) (2026-06-03)
+
+### ✨ Features
+
+* **i18n:** make admin media-picker strings translatable ([92e55cd](https://github.com/Finallf/theme-reloaded/commit/92e55cd0247ebc97835a84afebf163c913c8840b))
+
+### 📝 Documentation
+
+* **contributor:** contrib-readme-action has updated readme ([2c16aa4](https://github.com/Finallf/theme-reloaded/commit/2c16aa4ac3e796138245e258ca99a129c4ca2fd7))
+
+<br>
+
+---
+
 ## [1.0.1-beta.1](https://github.com/Finallf/theme-reloaded/compare/v1.0.0...v1.0.1-beta.1) (2026-05-30)
 
 ### 🐛 Bug Fixes
