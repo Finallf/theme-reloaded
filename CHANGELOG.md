@@ -7,6 +7,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 <br>
 
 
+## [1.1.0-beta.4](https://github.com/Finallf/theme-reloaded/compare/v1.1.0-beta.3...v1.1.0-beta.4) (2026-06-03)
+
+### 🐛 Bug Fixes
+
+* **comments:** remove dead moderation-detection branch in AJAX submit ([8b618fa](https://github.com/Finallf/theme-reloaded/commit/8b618fa4b54591a94a253ca9fd216fa84ae4196f))
+
+<br>
+
+---
+
 ## [1.1.0-beta.3](https://github.com/Finallf/theme-reloaded/compare/v1.1.0-beta.2...v1.1.0-beta.3) (2026-06-03)
 
 ### 🐛 Bug Fixes
