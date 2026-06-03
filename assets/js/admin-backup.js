@@ -1,41 +1,41 @@
 /**
  * assets/js/admin-backup.js
  *
- * Coordena o fluxo de import na sub-seção Backup da aba Manutenção do painel:
- *   1. User escolhe arquivo JSON
- *   2. JS lê via FileReader e faz POST pra /wp-json/rd/v1/backup/preview
- *   3. Backend valida + calcula diff → JS renderiza preview
- *   4. User clica "Apply import" → POST pra /wp-json/rd/v1/backup/import
- *   5. Backend salva snapshot e aplica → JS recarrega a página
+ * Coordinates the import flow in the Backup sub-section of the panel's Maintenance tab:
+ *   1. User picks a JSON file
+ *   2. JS reads it via FileReader and POSTs to /wp-json/rd/v1/backup/preview
+ *   3. Backend validates + computes the diff → JS renders the preview
+ *   4. User clicks "Apply import" → POST to /wp-json/rd/v1/backup/import
+ *   5. Backend saves a snapshot and applies it → JS reloads the page
  *
- * Carregado SÓ na aba Manutenção via rd_backup_admin_enqueue() em inc/mod-backup.php.
- * Sem dependências externas (vanilla JS).
+ * Loaded ONLY on the Maintenance tab via rd_backup_admin_enqueue() in inc/mod-backup.php.
+ * No external dependencies (vanilla JS).
  */
 ( function () {
 	'use strict';
 
 	document.addEventListener( 'DOMContentLoaded', function () {
-		// Sai cedo se o objeto rdBackup não existe (carregamos só na aba Manutenção)
+		// Bail early if the rdBackup object doesn't exist (we only load on the Maintenance tab)
 		if ( typeof window.rdBackup === 'undefined' ) return;
 
-		// ============= EXPORT: atualizar href do link conforme checkboxes =============
-		// Usamos link <a> em vez de form/button pra não conflitar com o form pai
-		// (callback de section roda DENTRO do <form action="options.php"> do painel —
-		// forms aninhados viram submit pro form errado). Esse handler reconstrói o
-		// URL do ZERO a partir dos data-attrs do link (base, action, nonce) e
-		// adiciona sections[] conforme checkboxes — evita acumular params antigos.
+		// ============= EXPORT: update the link href based on the checkboxes =============
+		// We use an <a> link instead of a form/button to avoid clashing with the parent
+		// form (the section callback runs INSIDE the panel's <form action="options.php"> —
+		// nested forms submit to the wrong form). This handler rebuilds the URL from
+		// SCRATCH out of the link's data-attrs (base, action, nonce) and appends
+		// sections[] based on the checkboxes — avoids accumulating stale params.
 		var exportLink     = document.getElementById( 'rd-backup-export-link' );
 		var exportCheckbox = document.querySelectorAll( '.rd-backup-export-cb' );
 
 		function updateExportLink() {
 			if ( ! exportLink ) return;
 
-			// Reconstrói do zero: base URL limpa + action + nonce
+			// Rebuild from scratch: clean base URL + action + nonce
 			var url = new URL( exportLink.dataset.baseUrl, window.location.origin );
 			url.searchParams.set( 'action',   exportLink.dataset.action );
 			url.searchParams.set( '_wpnonce', exportLink.dataset.nonce );
 
-			// Adiciona sections[] das checkboxes marcadas
+			// Append sections[] from the checked checkboxes
 			exportCheckbox.forEach( function ( cb ) {
 				if ( cb.checked ) {
 					url.searchParams.append( 'sections[]', cb.value );
@@ -49,7 +49,7 @@
 			cb.addEventListener( 'change', updateExportLink );
 		} );
 
-		// Roda 1x no load pra normalizar o URL (caso PHP tenha gerado sections[0]/[1])
+		// Run once on load to normalize the URL (in case PHP generated sections[0]/[1])
 		updateExportLink();
 
 		// ============= IMPORT =============
@@ -60,14 +60,14 @@
 
 		if ( ! fileInput ) return;
 
-		// Estado in-memory do JSON pendente — usado pelo botão Apply
+		// In-memory state of the pending JSON — used by the Apply button
 		var pendingData = null;
 
-		// ============= Helpers de UI =============
+		// ============= UI helpers =============
 
-		// Mapping callsite -> CSS variant: callsites usam 'info'/'success'/'error'
-		// (semântica histórica); CSS do design system rd-pstatus usa 'danger' em
-		// vez de 'error'. Mapeamos aqui pra não tocar nos chamadores.
+		// Mapping callsite -> CSS variant: callsites use 'info'/'success'/'error'
+		// (historical semantics); the rd-pstatus design-system CSS uses 'danger'
+		// instead of 'error'. We map here so we don't have to touch the callers.
 		function setStatus( type, message ) {
 			var variant = ( 'error' === type ) ? 'danger' : type;
 			statusEl.hidden = false;
@@ -86,21 +86,21 @@
 			pendingData = null;
 		}
 
-		// Escape HTML pra inserção segura (defesa em profundidade — backend já sanitiza)
+		// Escape HTML for safe insertion (defense in depth — backend already sanitizes)
 		function esc( str ) {
 			var d = document.createElement( 'div' );
 			d.textContent = String( str );
 			return d.innerHTML;
 		}
 
-		// sprintf-style %d/%s substitution pra strings i18n com placeholders.
-		// Necessário porque traduções (ex: pt-BR) podem reordenar a posição do
-		// número/valor na frase — não dá pra concatenar literal em JS.
+		// sprintf-style %d/%s substitution for i18n strings with placeholders.
+		// Needed because translations (e.g. pt-BR) may reorder the position of the
+		// number/value in the sentence — you can't concatenate literally in JS.
 		function fmt( template, value ) {
 			return String( template ).replace( /%[ds]/, value );
 		}
 
-		// Atalho pro objeto de strings traduzidas
+		// Shortcut to the translated-strings object
 		var i18n = window.rdBackup.i18n;
 
 		// ============= File selection =============
@@ -159,7 +159,7 @@
 			} );
 		}
 
-		// ============= Render do preview =============
+		// ============= Preview render =============
 
 		function renderPreview( meta, diff ) {
 			var html = '<h4 class="rd-backup-preview__title">' + esc( i18n.previewTitle ) + '</h4>';
@@ -192,7 +192,7 @@
 				html += '</div>';
 			}
 
-			// Ad banners diff (mesma estrutura que settings)
+			// Ad banners diff (same structure as settings)
 			if ( diff.ad_banners ) {
 				var a = diff.ad_banners;
 				html += '<div class="rd-backup-diff-section">';
@@ -264,7 +264,7 @@
 					return;
 				}
 				setStatus( 'success', rdBackup.i18n.importSuccess );
-				// Reload pra mostrar configs aplicadas
+				// Reload to show the applied settings
 				setTimeout( function () { window.location.reload(); }, 1200 );
 			} )
 			.catch( function ( err ) {
@@ -272,7 +272,7 @@
 			} );
 		}
 
-		// ============= RESTORE: rollback do último import =============
+		// ============= RESTORE: rollback of the last import =============
 		var restoreBtn    = document.getElementById( 'rd-backup-restore-btn' );
 		var restoreStatus = document.getElementById( 'rd-backup-restore-status' );
 

@@ -1,6 +1,6 @@
 jQuery(document).ready(function($){
-    // .on('click', ...) em vez de .click(fn) — shorthand foi removido no jQuery 4
-    // (jquery-migrate só avisa por enquanto, mas vai quebrar quando WP atualizar)
+    // .on('click', ...) instead of .click(fn) — the shorthand was removed in jQuery 4
+    // (jquery-migrate only warns for now, but it'll break once WP updates)
     $('.rd-upload-button').on('click', function(e) {
         e.preventDefault();
         var button = $(this);
@@ -12,7 +12,7 @@ jQuery(document).ready(function($){
             multiple: false
         }).on('select', function() {
             var attachment = custom_uploader.state().get('selection').first().toJSON();
-            $('#' + input_id).val(attachment.url); // Grava a URL no input
+            $('#' + input_id).val(attachment.url); // Store the URL in the input
             $('#' + input_id + '_preview').html('<img src="'+attachment.url+'" style="max-width:200px; height:auto; border:1px solid #ccc; display:block;">');
             button.siblings('.rd-remove-button').show();
         }).open();

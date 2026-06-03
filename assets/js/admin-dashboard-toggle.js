@@ -1,11 +1,11 @@
 /**
  * assets/js/admin-dashboard-toggle.js
  *
- * Switches inline do Dashboard (Wave 11 Categoria B) — handler do clique
- * em `<button class="rd-pswitch">` pra flipar features ON/OFF via AJAX,
- * sem precisar abrir a aba específica do painel.
+ * Inline Dashboard switches (Wave 11 Category B) — handler for the click
+ * on `<button class="rd-pswitch">` to flip features ON/OFF via AJAX,
+ * without having to open the panel's specific tab.
  *
- * Markup esperado:
+ * Expected markup:
  *   <button type="button"
  *           class="rd-pswitch"
  *           role="switch"
@@ -17,12 +17,12 @@
  *     <span class="rd-pswitch__thumb"></span>
  *   </button>
  *
- * AJAX endpoint: rd_dashboard_toggle (em inc/mod-dashboard.php).
- * Whitelist server-side restringe quais option keys podem ser flipadas.
+ * AJAX endpoint: rd_dashboard_toggle (in inc/mod-dashboard.php).
+ * A server-side whitelist restricts which option keys can be flipped.
  *
- * Carregado SÓ na aba Dashboard (gate em mod-stats.php → rd_stats_admin_enqueue).
- * Depende de window.ajaxurl (definido pelo WP no admin) + window.rdDashboardToggle
- * (localized via wp_localize_script com i18n).
+ * Loaded ONLY on the Dashboard tab (gated in mod-stats.php → rd_stats_admin_enqueue).
+ * Depends on window.ajaxurl (defined by WP in the admin) + window.rdDashboardToggle
+ * (localized via wp_localize_script with i18n).
  */
 ( function () {
 	'use strict';
@@ -41,7 +41,7 @@
 	function handleClick( ev ) {
 		var btn = ev.currentTarget;
 
-		// Bloqueia clique duplo enquanto AJAX está rolando.
+		// Block double-clicks while the AJAX request is in flight.
 		if ( btn.classList.contains( 'is-loading' ) ) {
 			return;
 		}
@@ -52,8 +52,8 @@
 		var isOn      = 'true' === btn.getAttribute( 'aria-checked' );
 		var newValue  = isOn ? '0' : '1';
 
-		// Confirm dialog opcional (Maintenance Mode tem). Só pede confirmação
-		// quando vai LIGAR — desligar é seguro, não precisa avisar.
+		// Optional confirm dialog (Maintenance Mode has one). Only asks for
+		// confirmation when turning ON — turning off is safe, no warning needed.
 		if ( confirmMsg && '1' === newValue ) {
 			if ( ! window.confirm( confirmMsg ) ) {
 				return;
@@ -82,7 +82,7 @@
 			.then( function ( res ) {
 				setLoading( btn, false );
 				if ( res.body && res.body.ok ) {
-					// Sucesso — atualiza visual do switch + badge irmão.
+					// Success — update the switch visual + sibling badge.
 					applyState( btn, '1' === String( res.body.value ) );
 				} else {
 					setError( btn );
@@ -107,29 +107,29 @@
 
 	function setError( btn ) {
 		btn.classList.add( 'is-error' );
-		// Auto-remove o estado de erro após 1.5s pra não travar visualmente.
+		// Auto-clear the error state after 1.5s so it doesn't get visually stuck.
 		setTimeout( function () {
 			btn.classList.remove( 'is-error' );
 		}, 1500 );
 	}
 
 	/**
-	 * Atualiza o switch (aria-checked) E o badge irmão na mesma card-status-line.
-	 * Sem reload — UX instantâneo.
+	 * Updates the switch (aria-checked) AND the sibling badge on the same card-status-line.
+	 * No reload — instant UX.
 	 */
 	function applyState( btn, isOn ) {
 		btn.setAttribute( 'aria-checked', isOn ? 'true' : 'false' );
 
-		// Atualiza tooltip pra refletir a próxima ação disponível.
-		// Ex: depois de ligar, tooltip vira "Desligar" (a ação disponível agora).
+		// Update the tooltip to reflect the next available action.
+		// E.g. after turning on, the tooltip becomes "Turn off" (the action available now).
 		var nextTooltip = isOn ? btn.dataset.tooltipOn : btn.dataset.tooltipOff;
 		if ( nextTooltip ) {
 			btn.setAttribute( 'data-tooltip', nextTooltip );
 		}
 
-		// Badge é o `<span class="rd-pbadge">` que vem ANTES do botão na mesma
-		// linha .rd-dashboard-status-line. Atualiza variant + texto pra refletir
-		// o novo estado sem precisar de reload.
+		// The badge is the `<span class="rd-pbadge">` that comes BEFORE the button on
+		// the same .rd-dashboard-status-line. Update variant + text to reflect the
+		// new state without needing a reload.
 		var statusLine = btn.closest( '.rd-dashboard-status-line' );
 		if ( ! statusLine ) {
 			return;
@@ -139,19 +139,19 @@
 			return;
 		}
 
-		// Todos os toggles usam "success" (verde) pra ON e "neutral" pra OFF —
-		// consistência visual. Maintenance ganha prefix ⚠️ no texto ON pra
-		// reforço visual de "estado anormal" (site bloqueado), sem quebrar a
-		// regra de cor uniforme. Emoji vai num <span class="rd-pbadge__emoji">
-		// pra alinhamento vertical correto (sem isso emoji fica deslocado).
+		// All toggles use "success" (green) for ON and "neutral" for OFF —
+		// visual consistency. Maintenance gets a ⚠️ prefix on the ON text as a
+		// visual cue for an "abnormal state" (site locked), without breaking the
+		// uniform color rule. The emoji goes in a <span class="rd-pbadge__emoji">
+		// for correct vertical alignment (without it the emoji is offset).
 		var key = btn.dataset.rdToggle;
 		var newVariant = isOn ? 'success' : 'neutral';
 		var onHtml = 'maintenance_mode' === key
 			? '<span class="rd-pbadge__emoji">⚠️</span>ON'
 			: 'ON';
 
-		// Remove variants antigos + adiciona o novo. innerHTML (não textContent)
-		// porque o caso do Maintenance precisa do <span> do emoji.
+		// Remove old variants + add the new one. innerHTML (not textContent)
+		// because the Maintenance case needs the emoji's <span>.
 		badge.className = 'rd-pbadge rd-pbadge--' + newVariant;
 		badge.innerHTML = isOn ? onHtml : 'OFF';
 	}

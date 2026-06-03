@@ -1,12 +1,12 @@
 /**
  * assets/js/admin-stats.js
  *
- * Inicializa o gráfico de crescimento mensal (K4) na aba Statistics do painel.
- * Carregado SÓ no contexto admin/rd_options/tab=estatisticas — ver enqueue
- * em inc/mod-stats.php → rd_stats_admin_enqueue().
+ * Initializes the monthly-growth chart (K4) on the panel's Statistics tab.
+ * Loaded ONLY in the admin/rd_options/tab=estatisticas context — see the
+ * enqueue in inc/mod-stats.php → rd_stats_admin_enqueue().
  *
- * Dados (labels + values) vêm via data-attributes do <canvas>, populados
- * pelo PHP em rd_stats_render_dashboard(). Mantém zero inline JS.
+ * Data (labels + values) comes via the <canvas> data-attributes, populated
+ * by PHP in rd_stats_render_dashboard(). Keeps zero inline JS.
  */
 ( function () {
 	'use strict';
@@ -17,7 +17,7 @@
 			return;
 		}
 
-		// Parse defensivo dos data-attributes (JSON.parse pode jogar se vier malformado)
+		// Defensive parse of the data-attributes (JSON.parse can throw if malformed)
 		var labels, values, labelViews;
 		try {
 			labels     = JSON.parse( canvas.dataset.labels  || '[]' );
@@ -39,7 +39,7 @@
 				datasets: [ {
 					label: labelViews,
 					data: values,
-					backgroundColor: 'rgba(34, 113, 177, 0.7)', // azul WP com transparência
+					backgroundColor: 'rgba(34, 113, 177, 0.7)', // WP blue with transparency
 					borderColor: 'rgba(34, 113, 177, 1)',
 					borderWidth: 1,
 					borderRadius: 4,
@@ -50,7 +50,7 @@
 				responsive: true,
 				maintainAspectRatio: false,
 				plugins: {
-					legend: { display: false }, // só uma série, label do dataset basta
+					legend: { display: false }, // single series, the dataset label is enough
 					tooltip: {
 						backgroundColor: 'rgba(29, 35, 39, 0.95)',
 						padding: 10,
@@ -58,7 +58,7 @@
 						bodyFont: { size: 13 },
 						displayColors: false,
 						callbacks: {
-							// Formata o valor com separador de milhar (locale-aware)
+							// Format the value with a thousands separator (locale-aware)
 							label: function ( context ) {
 								return labelViews + ': ' + context.parsed.y.toLocaleString();
 							},

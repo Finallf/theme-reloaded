@@ -1,14 +1,14 @@
 /**
  * assets/js/admin-self-update.js
  *
- * Handler do botão "Check for updates" no card Theme Updates do Dashboard.
- * AJAX: action=rd_check_update (em inc/mod-self-update.php).
+ * Handler for the "Check for updates" button on the Dashboard's Theme Updates card.
+ * AJAX: action=rd_check_update (in inc/mod-self-update.php).
  *
- * Atualiza inline (sem reload):
- *   #rd-self-update-latest      ← versão remota
+ * Updates inline (no reload):
+ *   #rd-self-update-latest      ← remote version
  *   #rd-self-update-status      ← badge (Up to date / Update available)
  *   #rd-self-update-last-check  ← "just now"
- *   #rd-self-update-action      ← injeta CTA quando há update disponível
+ *   #rd-self-update-action      ← injects the CTA when an update is available
  *
  * Localized data:
  *   window.rdSelfUpdate = {

@@ -1,12 +1,12 @@
 /**
  * Image Formats — Regeneration UI
  *
- * Handler do botão "Start regeneration" na aba Performance do painel.
- * Loop AJAX em chunks (10 attachments por request) com progress bar.
+ * Handler for the "Start regeneration" button on the panel's Performance tab.
+ * AJAX loop in chunks (10 attachments per request) with a progress bar.
  *
- * Dados localizados pelo wp_localize_script('rd_img_regen', ...):
+ * Data localized by wp_localize_script('rd_img_regen', ...):
  *   - ajaxurl
- *   - i18n: strings traduzidas pros labels
+ *   - i18n: translated strings for the labels
  */
 (function () {
     'use strict';
@@ -77,7 +77,7 @@
                         return;
                     }
 
-                    // Próximo chunk
+                    // Next chunk
                     processChunk(processed);
                 })
                 .catch(function (err) {
