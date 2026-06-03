@@ -320,14 +320,11 @@ document.addEventListener('DOMContentLoaded', function () {
 					errMsg = t.comment_error || 'Unexpected error submitting the comment. Reload the page and try again.';
 				}
 
-				// "moderation" / "aprovação" are success-with-notice cases
-				const lower = errMsg.toLowerCase();
-				if (lower.indexOf('moderation') !== -1 || lower.indexOf('aprovação') !== -1) {
-					showFeedback('success', errMsg);
-					setTimeout(function () { window.location.reload(); }, 1500);
-				} else {
-					showFeedback('error', errMsg);
-				}
+				// Reaching here means a real error (200 + wp_die HTML). A successful
+				// comment — including one held for moderation — comes back as a 302
+				// redirect, handled by the opaqueredirect branch above, so it never
+				// lands here. No locale-specific moderation string matching needed.
+				showFeedback('error', errMsg);
 			} catch (err) {
 				showFeedback('error', (t.network_error || 'Network error: ') + err.message);
 			} finally {
