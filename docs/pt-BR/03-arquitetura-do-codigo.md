@@ -33,8 +33,8 @@ reloaded.com.br/
 │   ├── js/
 │   │   ├── navigation.js     # Frontend (menu, modais, busca AJAX, ad close, 404 trigger, theme toggle)
 │   │   ├── views-tracker.js  # Tracking de views (carregado só em singles)
-│   │   ├── admin-scripts.js  # Painel admin
-│   │   └── admin-img-regen.js # Regeneração WebP/AVIF em chunks (aba Performance)
+│   │   ├── admin-panel.js    # Bundle do painel admin (todas as abas; cada módulo se auto-protege)
+│   │   └── admin-category-color.js # Color picker na tela de Categorias
 │   └── vendor/
 │       └── prism/            # Prism.js (syntax highlighting)
 │
@@ -226,7 +226,7 @@ Funções que você pode usar em templates ou módulos próprios:
 | `init` | `remove_image_size()` — tira tamanhos nativos não usados |
 | `widgets_init` | `rd_widgets_init()` — registra Sidebar Principal + Footer Widget Area |
 | `wp_enqueue_scripts` | Enqueue de Prism, navigation.js, views-tracker.js (singles) |
-| `admin_enqueue_scripts` | Enqueue do `admin-scripts.js` + `admin-style.css` (apenas no painel ReloadeD) |
+| `admin_enqueue_scripts` | Enqueue do `admin-panel.js` (bundle único) + `admin-style.css` (apenas no painel ReloadeD) |
 | `admin_menu` | `rd_add_admin_menu()` — registra "ReloadeD" no menu top-level |
 | `add_meta_boxes` | `rd_add_post_options_meta_box` — meta box "Post Options (ReloadeD)" |
 | `wp_head` | Scripts do GA + Open Graph tags + ad global |

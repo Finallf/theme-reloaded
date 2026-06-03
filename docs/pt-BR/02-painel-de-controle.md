@@ -495,7 +495,7 @@ Pra dar consistência visual ao painel admin, existe um conjunto de **componente
 
 **Grid** (sem helper PHP — use direto): `.rd-pgrid` com modifiers `--two-cols`, `--three-cols`, `--sidebar-main`. Item span full-width: `.rd-pgrid__item--full`.
 
-**Charts auto-render** (Wave 11 Fase G — `assets/js/admin-charts.js`): qualquer `<canvas data-rd-chart-type="doughnut|bar" data-labels="..." data-values="...">` no DOM é detectado e inicializado automaticamente. Chart.js precisa estar enfileirado na aba — gate em `mod-stats.php → rd_stats_admin_enqueue()`.
+**Charts auto-render** (Wave 11 Fase G — módulo charts no bundle `assets/js/admin-panel.js`): qualquer `<canvas data-rd-chart-type="doughnut|bar" data-labels="..." data-values="...">` no DOM é detectado e inicializado automaticamente. Chart.js precisa estar enfileirado na aba — gate em `mod-stats.php → rd_stats_admin_enqueue()`.
 
 ### Variantes de cor (badge + status)
 

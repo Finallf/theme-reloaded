@@ -388,11 +388,11 @@ window.addEventListener('DOMContentLoaded', function () {
 
 Dados (`post_id`, `nonce`, `ajaxurl`) injetados via `wp_localize_script` no `mod-views.php`.
 
-### `assets/js/admin-scripts.js`
+### `assets/js/admin-panel.js`
 
-JS do painel admin (uploads de mídia via WP Media Library, abas, etc.).
+Bundle único do painel admin — consolida 7 módulos que antes eram arquivos separados por aba: uploads de mídia (WP Media Library), gráficos K4/auto-render (Chart.js), toggles inline do Dashboard, self-update do tema, import/export/restore de backup e regeneração WebP/AVIF. Enfileirado uma vez (`rd-admin-panel`, prioridade 5) em qualquer aba do painel; cada módulo interno tem escopo próprio e se auto-protege (sai cedo se o DOM/objeto localizado dele não existe), então o código fica inerte nas abas que não atende. Os módulos por aba (`mod-stats`/`mod-dashboard`/`mod-backup`/`mod-image-formats`) só injetam seus dados via `wp_localize_script` no handle `rd-admin-panel`.
 
-> Esse usa jQuery (porque o admin do WP carrega jQuery por padrão).
+> O módulo de upload de mídia usa jQuery (porque o admin do WP carrega jQuery por padrão); o resto é vanilla.
 
 ### `assets/js/admin-category-color.js`
 

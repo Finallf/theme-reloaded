@@ -778,7 +778,7 @@ A função `rd_dashboard_render()` (callback de `add_settings_section('sec_dashb
    - Posts Last 30 Days — query `get_posts` com `date_query` rolling: `now − 30 dias`
    - Pending Comments — `wp_count_comments()->moderated`; snapshot do estado atual; quando > 0 mostra link "Review queue"
 
-3. **Activity Trend** (Wave 11 Fase G) — bar chart de views por dia, últimos 7 dias. Função `rd_dashboard_get_views_7d()` parseia logs (`_rd_post_views_log`) sem cache (mesma filosofia do Views Last 24h — Dashboard sempre fresh). Render via canvas com `data-rd-chart-type="bar"`, auto-inicializado pelo `admin-charts.js`. Sempre renderiza — sem dados, barras ficam zeradas (preview do layout futuro).
+3. **Activity Trend** (Wave 11 Fase G) — bar chart de views por dia, últimos 7 dias. Função `rd_dashboard_get_views_7d()` parseia logs (`_rd_post_views_log`) sem cache (mesma filosofia do Views Last 24h — Dashboard sempre fresh). Render via canvas com `data-rd-chart-type="bar"`, auto-inicializado pelo módulo charts do bundle `admin-panel.js`. Sempre renderiza — sem dados, barras ficam zeradas (preview do layout futuro).
 
 ### Toggle switches inline (adições pós-Fase H)
 
@@ -796,7 +796,7 @@ A função `rd_dashboard_render()` (callback de `add_settings_section('sec_dashb
 
 Retorna JSON `{ ok: true|false, key, value | error }`. Maintenance Mode é o único com confirm dialog (turning ON bloqueia visitantes); desligar é sempre seguro. Badge ON do Maintenance ganha prefix `⚠️` via `<span class="rd-pbadge__emoji">` (kept green for visual consistency com outros toggles).
 
-**JS handler** em `assets/js/admin-dashboard-toggle.js` (~115 linhas) — detecta clique em `.rd-pswitch[data-rd-toggle]`, dispara fetch, atualiza visual sem reload (aria-checked + badge variant + texto ON/OFF). Network/server errors trigger shake animation no switch (`is-error` class).
+**JS handler** no módulo dashboard-toggle do bundle `assets/js/admin-panel.js` — detecta clique em `.rd-pswitch[data-rd-toggle]`, dispara fetch, atualiza visual sem reload (aria-checked + badge variant + texto ON/OFF). Network/server errors trigger shake animation no switch (`is-error` class).
 
 **Componente CSS `.rd-pswitch`** — toggle deslizante moderno (track verde/cinza + thumb branca animada). `role="switch"` + `aria-checked` pra acessibilidade. Estados `.is-loading` (cursor wait, opacity reduzida) e `.is-error` (track vermelha + shake animation).
 
@@ -866,11 +866,11 @@ Agrega dados coletados pelo `mod-views.php` num dashboard read-only no painel ad
 
 ### Enqueue admin (gated)
 
-- `rd_stats_admin_enqueue($hook)` — só roda em `toplevel_page_rd_options` + `?tab=estatisticas` (ou Dashboard tab + Segurança tab pra Chart.js de outros gráficos). Carrega `chartjs.min.js` (v4.5.1, ~204KB) e `admin-stats.js` em sequência. **Zero impacto em outras telas do admin e no frontend.**
+- `rd_stats_admin_enqueue($hook)` — só roda em `toplevel_page_rd_options` + `?tab=estatisticas` (ou Dashboard tab + Segurança tab pra Chart.js de outros gráficos). Carrega só a lib `chartjs.min.js` (v4.5.1, ~204KB); o JS de init dos gráficos vive no bundle `admin-panel.js` (módulos stats/charts), que tem guard de `typeof window.Chart`. **Zero impacto em outras telas do admin e no frontend.**
 
 ### Render
 
-- `rd_stats_render_dashboard()` — callback da section `sec_stats_dashboard` do Settings API. Renderiza os 4 widgets (K2/K1/K3/K4) usando os helpers acima e os data-attributes que `admin-stats.js` consome no DOMContentLoaded pra desenhar o Chart.js.
+- `rd_stats_render_dashboard()` — callback da section `sec_stats_dashboard` do Settings API. Renderiza os 4 widgets (K2/K1/K3/K4) usando os helpers acima e os data-attributes que o módulo stats do `admin-panel.js` consome no DOMContentLoaded pra desenhar o Chart.js.
 
 ---
 
@@ -1396,7 +1396,7 @@ Card "Theme Updates" entre Activity Trend e Quick Actions (`rd_dashboard_render_
 - **Botão "Check for updates"** — canto superior direito do card, dispara AJAX que invalida cache + re-fetcha imediato + atualiza inline (sem reload)
 - **CTA condicional** — quando há update, mostra "Go to Themes → Update Now" + "View release on GitHub"
 
-JS handler em `assets/js/admin-self-update.js` (~145 linhas). i18n localizado via `wp_localize_script` (`rdSelfUpdate.i18n`).
+JS handler no módulo self-update do bundle `assets/js/admin-panel.js`. i18n localizado via `wp_localize_script` (`rdSelfUpdate.i18n`).
 
 ### Filosofia
 
