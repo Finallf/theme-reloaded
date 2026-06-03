@@ -1,5 +1,8 @@
 document.addEventListener('DOMContentLoaded', function () {
 
+	// Localized i18n strings (reloaded_i18n), with en-US fallbacks if absent
+	var t = (typeof reloaded_i18n !== 'undefined') ? reloaded_i18n : {};
+
 	/* Back to top */
 	const backToTopBtn = document.getElementById("back-to-top");
 
@@ -43,7 +46,7 @@ document.addEventListener('DOMContentLoaded', function () {
 		if (menuToggleBtn) {
 			menuToggleBtn.innerHTML = '<span class="hamburger-icon" aria-hidden="true">&#10006;</span>';
 			menuToggleBtn.setAttribute('aria-expanded', 'true');
-			menuToggleBtn.setAttribute('aria-label', 'Fechar menu de navegação');
+			menuToggleBtn.setAttribute('aria-label', t.menu_close || 'Close navigation menu');
 		}
 		if (focusSearch && menuSearchInput) {
 			// Small delay to wait for the panel's transition to finish
@@ -57,7 +60,7 @@ document.addEventListener('DOMContentLoaded', function () {
 		if (menuToggleBtn) {
 			menuToggleBtn.innerHTML = '<span class="hamburger-icon" aria-hidden="true">&#9776;</span>';
 			menuToggleBtn.setAttribute('aria-expanded', 'false');
-			menuToggleBtn.setAttribute('aria-label', 'Abrir menu de navegação');
+			menuToggleBtn.setAttribute('aria-label', t.menu_open || 'Open navigation menu');
 		}
 	}
 
@@ -273,8 +276,9 @@ document.addEventListener('DOMContentLoaded', function () {
 			const originalLabel = submitBtn ? (submitBtn.value || submitBtn.textContent) : '';
 			if (submitBtn) {
 				submitBtn.disabled = true;
-				if ('value' in submitBtn) submitBtn.value = 'Enviando…';
-				else submitBtn.textContent = 'Enviando…';
+				var sendingLabel = t.comment_sending || 'Sending…';
+				if ('value' in submitBtn) submitBtn.value = sendingLabel;
+				else submitBtn.textContent = sendingLabel;
 			}
 
 			try {
@@ -294,7 +298,7 @@ document.addEventListener('DOMContentLoaded', function () {
 				// Redirect = comment created. Reload the current page so the user
 				// sees the comment in the list (the page already has it in the DB).
 				if (response.type === 'opaqueredirect') {
-					showFeedback('success', 'Comentário enviado! Carregando…');
+					showFeedback('success', t.comment_sent || 'Comment sent! Loading…');
 					setTimeout(function () { window.location.reload(); }, 600);
 					return;
 				}
@@ -313,7 +317,7 @@ document.addEventListener('DOMContentLoaded', function () {
 				}
 
 				if (!errMsg) {
-					errMsg = 'Erro inesperado ao enviar comentário. Recarregue a página e tente novamente.';
+					errMsg = t.comment_error || 'Unexpected error submitting the comment. Reload the page and try again.';
 				}
 
 				// "moderation" / "aprovação" are success-with-notice cases
@@ -325,7 +329,7 @@ document.addEventListener('DOMContentLoaded', function () {
 					showFeedback('error', errMsg);
 				}
 			} catch (err) {
-				showFeedback('error', 'Erro de rede: ' + err.message);
+				showFeedback('error', (t.network_error || 'Network error: ') + err.message);
 			} finally {
 				if (submitBtn) {
 					submitBtn.disabled = false;
