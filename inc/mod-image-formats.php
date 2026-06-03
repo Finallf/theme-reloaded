@@ -758,8 +758,9 @@ function rd_img_ajax_regenerate() {
 add_action( 'wp_ajax_rd_img_regenerate', 'rd_img_ajax_regenerate' );
 
 /**
- * Enqueue the regeneration JS — only on the Performance tab of the rd_options panel.
- * Conditional loading avoids polluting other admin screens.
+ * Localizes the regeneration JS data — only on the Images & Media tab of the
+ * rd_options panel. The JS itself ships in the consolidated admin-panel.js
+ * bundle; this only attaches its ajaxurl + i18n strings to that handle.
  */
 function rd_img_admin_enqueue( $hook ) {
 	if ( strpos( $hook, 'rd_options' ) === false ) {
@@ -773,16 +774,11 @@ function rd_img_admin_enqueue( $hook ) {
 		return;
 	}
 
-	wp_enqueue_script(
-		'rd-img-regen',
-		get_template_directory_uri() . '/assets/js/admin-img-regen.js',
-		array(),
-		rd_asset_version( '/assets/js/admin-img-regen.js' ),
-		true
-	);
-
+	// The regeneration JS now ships in the consolidated admin-panel.js bundle
+	// (enqueued in core.php at priority 5). Here we only attach its data
+	// (ajaxurl + i18n) to that handle, still gated to the Images & Media tab.
 	wp_localize_script(
-		'rd-img-regen',
+		'rd-admin-panel',
 		'rd_img_regen',
 		array(
 			'ajaxurl' => admin_url( 'admin-ajax.php' ),

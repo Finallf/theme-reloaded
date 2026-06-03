@@ -210,7 +210,7 @@ function rd_dashboard_render(): void {
  * button or on the natural 24h transient expiration). The button in the top-right
  * corner fires AJAX to re-check immediately.
  *
- * Server-side only renders the FROZEN state. JS (admin-self-update.js) updates
+ * Server-side only renders the FROZEN state. JS (admin-panel.js) updates
  * the content after the AJAX response — DOM ids used as targets:
  *   #rd-self-update-latest, #rd-self-update-status, #rd-self-update-last-check,
  *   #rd-self-update-action.
@@ -828,10 +828,11 @@ add_action( 'wp_ajax_rd_dashboard_toggle', 'rd_dashboard_ajax_toggle' );
 // would already reject it, but registering only on `wp_ajax_` makes the intent clear).
 
 /**
- * Enqueues the JS for the inline toggles (rd-pswitch) — Dashboard tab only.
+ * Localizes the self-update data for the Dashboard tab.
  *
- * Independent of Chart.js / mod-stats — lives here to keep responsibility
- * clear (the toggle is a Dashboard feature, not a Stats one).
+ * The toggle (rd-pswitch) and self-update JS now ship in the consolidated
+ * admin-panel.js bundle; this function only attaches the rdSelfUpdate localized
+ * data to that handle, gated to the Dashboard tab.
  *
  * @param string $hook Hook suffix of the current admin page.
  */
@@ -846,24 +847,11 @@ function rd_dashboard_admin_enqueue( $hook ): void {
 		return;
 	}
 
-	wp_enqueue_script(
-		'rd-admin-dashboard-toggle',
-		get_template_directory_uri() . '/assets/js/admin-dashboard-toggle.js',
-		array(),
-		rd_asset_version( '/assets/js/admin-dashboard-toggle.js' ),
-		true
-	);
-
-	wp_enqueue_script(
-		'rd-admin-self-update',
-		get_template_directory_uri() . '/assets/js/admin-self-update.js',
-		array(),
-		rd_asset_version( '/assets/js/admin-self-update.js' ),
-		true
-	);
-
+	// The toggle + self-update JS now ship in the consolidated admin-panel.js
+	// bundle (enqueued in core.php at priority 5). Here we only attach the
+	// self-update localized data to that handle, still gated to the Dashboard tab.
 	wp_localize_script(
-		'rd-admin-self-update',
+		'rd-admin-panel',
 		'rdSelfUpdate',
 		array(
 			'themes_url' => admin_url( 'themes.php' ),

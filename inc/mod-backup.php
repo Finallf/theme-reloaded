@@ -503,7 +503,7 @@ function rd_backup_restore_snapshot(): bool {
 
 /*
 =============================================================================
- *  REST ENDPOINTS — preview and import (consumed by admin-backup.js)
+ *  REST ENDPOINTS — preview and import (consumed by admin-panel.js, backup module)
  * ============================================================================= */
 
 /**
@@ -632,11 +632,12 @@ function rd_backup_rest_import( WP_REST_Request $request ) {
 
 /*
 =============================================================================
- *  ADMIN ENQUEUE — import JS only on the panel's Backup tab
+ *  ADMIN ENQUEUE — backup JS data only on the panel's Backup tab
  * ============================================================================= */
 
 /**
- * Enqueues the import JS only on the panel's Backup tab.
+ * Localizes the backup import/export data, only on the panel's Backup tab.
+ * The JS itself ships in the consolidated admin-panel.js bundle.
  */
 function rd_backup_admin_enqueue( $hook ) {
 	if ( $hook !== 'toplevel_page_rd_options' ) {
@@ -648,17 +649,11 @@ function rd_backup_admin_enqueue( $hook ) {
 		return;
 	}
 
-	wp_enqueue_script(
-		'rd-admin-backup',
-		get_template_directory_uri() . '/assets/js/admin-backup.js',
-		array(),
-		rd_asset_version( '/assets/js/admin-backup.js' ),
-		true
-	);
-
-	// Data for the JS: REST URL + nonce (X-WP-Nonce header)
+	// The backup import/export JS now ships in the consolidated admin-panel.js
+	// bundle (enqueued in core.php at priority 5). Here we only attach its data
+	// (REST URL + nonce + i18n) to that handle, still gated to the Backup tab.
 	wp_localize_script(
-		'rd-admin-backup',
+		'rd-admin-panel',
 		'rdBackup',
 		array(
 			'restUrl' => esc_url_raw( rest_url( 'rd/v1/backup/' ) ),
@@ -675,7 +670,7 @@ function rd_backup_admin_enqueue( $hook ) {
 				'restoreSuccess'        => __( 'Previous state restored! Reloading...', 'reloaded' ),
 				'restoreFailed'         => __( 'Restore failed:', 'reloaded' ),
 				'confirmRestore'        => __( 'Restore the previous state (before the last import)? The current settings will be overwritten. This is a one-shot undo — the snapshot is deleted after restore.', 'reloaded' ),
-				// Preview UI strings (populated by admin-backup.js after a successful preview)
+				// Preview UI strings (populated by admin-panel.js after a successful preview)
 				'previewTitle'          => __( 'Preview', 'reloaded' ),
 				'previewExportedFrom'   => __( 'Exported from:', 'reloaded' ),
 				/* translators: %s = theme version string like "0.4.0-beta.64" */
@@ -876,7 +871,7 @@ function rd_backup_render_panel(): void {
 	</div>
 
 	<div id="rd-backup-preview" class="rd-backup-preview" hidden>
-		<!-- Content populated by admin-backup.js after a successful preview. -->
+		<!-- Content populated by admin-panel.js after a successful preview. -->
 	</div>
 
 	<div id="rd-backup-status" class="rd-pstatus" hidden role="status" aria-live="polite"></div>

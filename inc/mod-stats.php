@@ -523,12 +523,13 @@ add_action( 'admin_init', 'rd_stats_handle_refresh_request' );
  * ============================================================================= */
 
 /**
- * Enqueues Chart.js on the tabs that need it (Stats / Dashboard / Security CSP).
+ * Enqueues the Chart.js library on the tabs that need it (Stats / Dashboard /
+ * Security CSP). The chart-init JS lives in the consolidated admin-panel.js
+ * bundle; this function only decides whether the lib itself must be present.
  *
- * Wave 11 Phase G expanded the gate: besides the original Statistics tab, Dashboard
- * (7d views chart) and Security (CSP doughnut by directive) also
- * load Chart.js + admin-charts.js (generic auto-render via data attrs).
- * The K4-specific admin-stats.js stays restricted to the Statistics tab.
+ * Wave 11 Phase G expanded the gate: besides the original Statistics tab,
+ * Dashboard (7d views chart) and Security (CSP doughnut by directive) also
+ * render charts and therefore need Chart.js loaded.
  *
  * Hook: admin_enqueue_scripts.
  *
@@ -543,22 +544,20 @@ function rd_stats_admin_enqueue( $hook ) {
 	// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only gate in admin_enqueue_scripts: decides whether to enqueue Chart.js, doesn't process a form.
 	$active_tab = isset( $_GET['tab'] ) ? sanitize_key( wp_unslash( $_GET['tab'] ) ) : 'dashboard';
 
-	// Per-tab decision: which gate (feature flag) + which specific JS to load.
-	$load_chartjs   = false;
-	$load_stats_js  = false; // admin-stats.js — only for the Statistics tab (K4-specific chart).
-	$load_charts_js = false; // admin-charts.js — auto-render via data attrs (Wave 11 Phase G).
+	// Per-tab decision: does this tab render any Chart.js canvas? The chart-init
+	// JS itself lives in the consolidated admin-panel.js bundle now; here we only
+	// decide whether the Chart.js library needs to be enqueued for this tab.
+	$load_chartjs = false;
 
 	if ( 'statistics' === $active_tab ) {
-		$load_chartjs  = true;
-		$load_stats_js = true;
+		// Statistics tab: K4 monthly chart.
+		$load_chartjs = true;
 	} elseif ( 'dashboard' === $active_tab ) {
-		// Dashboard shows "Views per Day (7d)" — Chart.js always loaded on this tab.
-		$load_chartjs   = true;
-		$load_charts_js = true;
+		// Dashboard shows "Views per Day (7d)".
+		$load_chartjs = true;
 	} elseif ( 'security' === $active_tab && rd_get_option_bool( 'enable_csp_report_only' ) ) {
 		// Security CSP doughnut only if the CSP feature is active (no reports = no chart).
-		$load_chartjs   = true;
-		$load_charts_js = true;
+		$load_chartjs = true;
 	}
 
 	if ( ! $load_chartjs ) {
@@ -573,27 +572,10 @@ function rd_stats_admin_enqueue( $hook ) {
 		true
 	);
 
-	if ( $load_stats_js ) {
-		// K4 chart initialization — depends on Chart.js already being loaded.
-		wp_enqueue_script(
-			'rd-admin-stats',
-			get_template_directory_uri() . '/assets/js/admin-stats.js',
-			array( 'rd-chartjs' ),
-			rd_asset_version( '/assets/js/admin-stats.js' ),
-			true
-		);
-	}
-
-	if ( $load_charts_js ) {
-		// Auto-render de canvas via data-rd-chart-type (Wave 11 Fase G).
-		wp_enqueue_script(
-			'rd-admin-charts',
-			get_template_directory_uri() . '/assets/js/admin-charts.js',
-			array( 'rd-chartjs' ),
-			rd_asset_version( '/assets/js/admin-charts.js' ),
-			true
-		);
-	}
+	// The chart-init code (K4 monthly chart + generic data-attr auto-render) now
+	// lives in the consolidated assets/js/admin-panel.js bundle, which guards on
+	// `typeof window.Chart`. Both are footer scripts, so Chart.js is defined by
+	// the time the bundle's DOMContentLoaded handler runs.
 }
 add_action( 'admin_enqueue_scripts', 'rd_stats_admin_enqueue' );
 

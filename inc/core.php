@@ -195,15 +195,20 @@ function rd_admin_scripts( $hook ) {
 	// JS + Media — only inside the rd_options panel.
 	if ( $is_panel ) {
 		wp_enqueue_media();
+		// Single consolidated admin-panel bundle (formerly 7 separate per-tab
+		// files). Loaded on every tab; each internal module self-guards. Enqueued
+		// at this hook's priority 5 so the per-tab modules (mod-stats, mod-backup,
+		// mod-dashboard, mod-image-formats) can attach their wp_localize_script
+		// data to the 'rd-admin-panel' handle at the default priority 10.
 		wp_enqueue_script(
-			'rd-admin-js',
-			get_template_directory_uri() . '/assets/js/admin-scripts.js',
+			'rd-admin-panel',
+			get_template_directory_uri() . '/assets/js/admin-panel.js',
 			array( 'jquery' ),
-			rd_asset_version( '/assets/js/admin-scripts.js' ),
+			rd_asset_version( '/assets/js/admin-panel.js' ),
 			true
 		);
 		wp_localize_script(
-			'rd-admin-js',
+			'rd-admin-panel',
 			'rdAdminScripts',
 			array(
 				'i18n' => array(
@@ -214,7 +219,7 @@ function rd_admin_scripts( $hook ) {
 		);
 	}
 }
-add_action( 'admin_enqueue_scripts', 'rd_admin_scripts' );
+add_action( 'admin_enqueue_scripts', 'rd_admin_scripts', 5 );
 
 /*******************************************************************************
  * Helper: asset version with safe fallback                     - (Performance) *
