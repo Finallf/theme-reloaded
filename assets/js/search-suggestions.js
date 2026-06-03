@@ -1,22 +1,22 @@
 /**
  * assets/js/search-suggestions.js
  *
- * Search autocomplete — anexa em .search-field (header desktop) e
- * .menu-search-field (busca dentro do painel hambúrguer).
+ * Search autocomplete — attaches to .search-field (desktop header) and
+ * .menu-search-field (search inside the hamburger panel).
  *
- * Comportamentos:
- *   1. Debounce 250ms entre keystrokes (configurável via rdSearchSugg.debounceMs)
- *   2. Min 3 chars pra disparar AJAX (rdSearchSugg.minChars)
- *   3. Dropdown abaixo do input com até 5 resultados
- *   4. Keyboard nav: ↑/↓ percorre, Enter abre, Esc fecha
- *   5. Click fora fecha
- *   6. Footer "See all results for X" → vai pra página de busca completa
+ * Behaviors:
+ *   1. 250ms debounce between keystrokes (configurable via rdSearchSugg.debounceMs)
+ *   2. Min 3 chars to fire the AJAX (rdSearchSugg.minChars)
+ *   3. Dropdown below the input with up to 5 results
+ *   4. Keyboard nav: ↑/↓ moves, Enter opens, Esc closes
+ *   5. Click outside closes
+ *   6. Footer "See all results for X" → goes to the full search page
  *
- * Backend: wp_ajax_rd_search_suggestions em inc/mod-search-suggestions.php.
- * Resultados cacheados server-side 15min; AbortController cancela fetches
- * pendentes quando o user continua digitando.
+ * Backend: wp_ajax_rd_search_suggestions in inc/mod-search-suggestions.php.
+ * Results cached server-side for 15min; AbortController cancels pending
+ * fetches when the user keeps typing.
  *
- * Markup HTML do dropdown (injetado por JS):
+ * Dropdown HTML markup (injected by JS):
  *   <div class="rd-sugg" role="listbox">
  *     <a class="rd-sugg__item" role="option" href="...">
  *       <img class="rd-sugg__thumb">
@@ -44,11 +44,11 @@
 	} );
 
 	function setupInput( input ) {
-		// Cria o dropdown e anexa no <body>. NÃO podemos colocar dentro do
-		// <form> porque o .search-form tem overflow:hidden (necessário pra
-		// animação de expansão hover/focus) — dropdown seria clipado.
-		// position:fixed + coordenadas calculadas via getBoundingClientRect()
-		// resolvem em qualquer container, sem importar overflow do ancestral.
+		// Create the dropdown and attach it to <body>. We can NOT place it inside
+		// the <form> because .search-form has overflow:hidden (needed for the
+		// hover/focus expansion animation) — the dropdown would be clipped.
+		// position:fixed + coordinates computed via getBoundingClientRect()
+		// work in any container, regardless of the ancestor's overflow.
 		var dropdown = document.createElement( 'div' );
 		dropdown.className = 'rd-sugg';
 		dropdown.setAttribute( 'role', 'listbox' );
@@ -58,9 +58,9 @@
 
 		var form = input.closest( 'form' ) || input.parentNode;
 
-		// Estado por input — debounce timer, AbortController, índice ativo
+		// Per-input state — debounce timer, AbortController, active index
 		var state = {
-			input:      input, // ref pro reposicionamento do dropdown
+			input:      input, // ref for repositioning the dropdown
 			timer:      null,
 			controller: null,
 			items:      [],
@@ -107,7 +107,7 @@
 			}
 		} );
 
-		// ===== Click fora fecha =====
+		// ===== Click outside closes =====
 		document.addEventListener( 'click', function ( ev ) {
 			if ( dropdown.hidden ) {
 				return;
@@ -118,7 +118,7 @@
 			hideDropdown( dropdown, state );
 		} );
 
-		// Re-abre dropdown ao focar input com texto suficiente
+		// Re-open the dropdown when focusing the input with enough text
 		input.addEventListener( 'focus', function () {
 			if ( input.value.trim().length >= config.minChars && state.lastQuery === input.value.trim() && state.items.length ) {
 				positionDropdown( dropdown, input );
@@ -127,9 +127,9 @@
 		} );
 	}
 
-	// ===== Scroll/resize global → esconde todos os dropdowns =====
-	// User scrollando = não tá ativamente buscando. Esconde pra não ficar
-	// flutuando dessincronizado dos inputs (position:fixed não acompanha scroll).
+	// ===== Global scroll/resize → hide all dropdowns =====
+	// User scrolling = not actively searching. Hide it so it doesn't float
+	// desynced from the inputs (position:fixed doesn't follow scroll).
 	function hideAllDropdowns() {
 		document.querySelectorAll( '.rd-sugg' ).forEach( function ( d ) {
 			if ( ! d.hidden ) {
@@ -140,21 +140,21 @@
 	window.addEventListener( 'scroll', hideAllDropdowns, { passive: true } );
 	window.addEventListener( 'resize', hideAllDropdowns );
 
-	// ===== Posicionamento do dropdown =====
-	// position:fixed + coords calculadas a partir do input pra escapar de
-	// qualquer container com overflow:hidden. Recalcula em show() pra pegar
-	// a posição atual do input (search-form do header expande de 40→230px no focus).
+	// ===== Dropdown positioning =====
+	// position:fixed + coords computed from the input to escape any container
+	// with overflow:hidden. Recomputed in show() to get the input's current
+	// position (the header search-form expands from 40→230px on focus).
 	//
-	// Comportamento difere entre os 2 inputs:
-	//   - .menu-search-field (hamburger, lado esquerdo da tela): dropdown sai
-	//     13px à esquerda do input, cresce pra direita (input estreito num
-	//     painel estreito; dropdown ganha largura útil).
-	//   - .search-field (desktop, canto direito da tela): dropdown ancorado
-	//     pela DIREITA do input, cresce pra esquerda (evita overflow no
-	//     edge direito da viewport).
+	// Behavior differs between the 2 inputs:
+	//   - .menu-search-field (hamburger, left side of the screen): dropdown comes
+	//     out 13px to the left of the input, grows to the right (narrow input in a
+	//     narrow panel; the dropdown gains usable width).
+	//   - .search-field (desktop, right corner of the screen): dropdown anchored
+	//     by the RIGHT of the input, grows to the left (avoids overflow at the
+	//     right edge of the viewport).
 	var DROPDOWN_WIDTH         = 310;
 	var MENU_LEFT_OFFSET_PX    = -13;
-	var DESKTOP_RIGHT_SHIFT_PX = 40; // compensa o botão de submit (lupa) que vem depois do .search-field no .search-form
+	var DESKTOP_RIGHT_SHIFT_PX = 40; // compensates for the submit button (magnifier) that comes after .search-field in .search-form
 
 	function positionDropdown( dropdown, input ) {
 		var rect         = input.getBoundingClientRect();
@@ -164,19 +164,19 @@
 		dropdown.style.width = DROPDOWN_WIDTH + 'px';
 
 		if ( isMenuSearch ) {
-			// Hamburger: ancora pela esquerda do input + offset pra esquerda
+			// Hamburger: anchor by the left of the input + offset to the left
 			dropdown.style.left = ( rect.left + MENU_LEFT_OFFSET_PX ) + 'px';
 		} else {
-			// Desktop: ancora pela direita do FORM (input + botão submit).
-			// rect.right é só do input — somamos o shift do botão pra alinhar
-			// com a borda direita real do search-form.
+			// Desktop: anchor by the right of the FORM (input + submit button).
+			// rect.right is just the input — we add the button shift to align
+			// with the search-form's real right edge.
 			dropdown.style.left = ( rect.right + DESKTOP_RIGHT_SHIFT_PX - DROPDOWN_WIDTH ) + 'px';
 		}
 	}
 
 	// ===== AJAX fetch + render =====
 	function fetchSuggestions( query, dropdown, state ) {
-		// Cancela request anterior se ainda tá em flight
+		// Cancel the previous request if it's still in flight
 		if ( state.controller ) {
 			state.controller.abort();
 		}
@@ -203,7 +203,7 @@
 				positionDropdown( dropdown, state.input );
 			} )
 			.catch( function ( err ) {
-				// AbortError quando user continua digitando — silencioso
+				// AbortError when the user keeps typing — silent
 				if ( err.name !== 'AbortError' ) {
 					console.warn( 'rd-search-suggestions:', err );
 				}
@@ -230,7 +230,7 @@
 					var thumb = document.createElement( 'img' );
 					thumb.className = 'rd-sugg__thumb';
 					thumb.src       = item.thumb;
-					thumb.alt       = ''; // decorativo — título tá ao lado
+					thumb.alt       = ''; // decorative — the title is right next to it
 					thumb.loading   = 'lazy';
 					thumb.width     = 71;
 					thumb.height    = 40;
@@ -263,7 +263,7 @@
 	function hideDropdown( dropdown, state ) {
 		dropdown.hidden = true;
 		state.active    = -1;
-		// Limpa highlight ativo
+		// Clear the active highlight
 		dropdown.querySelectorAll( '.is-active' ).forEach( function ( el ) {
 			el.classList.remove( 'is-active' );
 		} );
@@ -274,7 +274,7 @@
 		if ( ! items.length ) {
 			return;
 		}
-		// Limpa anterior
+		// Clear the previous one
 		if ( state.active >= 0 && items[ state.active ] ) {
 			items[ state.active ].classList.remove( 'is-active' );
 		}

@@ -1,21 +1,21 @@
 /**
  * assets/js/toc.js
  *
- * Table of Contents — interactivity do FAB + painel collapsible.
- * Renderizado por rd_toc_render_html() em inc/mod-table-of-contents.php.
+ * Table of Contents — FAB + collapsible panel interactivity.
+ * Rendered by rd_toc_render_html() in inc/mod-table-of-contents.php.
  *
- * Comportamentos:
- *   1. Click no FAB → toggla painel (.is-open)
- *   2. Click em link interno (.rd-toc__list a) → fecha painel
- *      (browser scrolla via href nativo + CSS scroll-behavior: smooth)
- *   3. Click fora do TOC → fecha painel
- *   4. ESC → fecha painel
+ * Behaviors:
+ *   1. Click the FAB → toggle the panel (.is-open)
+ *   2. Click an internal link (.rd-toc__list a) → close the panel
+ *      (browser scrolls via native href + CSS scroll-behavior: smooth)
+ *   3. Click outside the TOC → close the panel
+ *   4. ESC → close the panel
  *
- * Visibilidade do FAB é gerenciada por CSS via position:sticky no parent
- * .entry-content — quando user passa do conteúdo, FAB scrolla pra fora
- * naturalmente. Sem necessidade de IntersectionObserver.
+ * FAB visibility is handled by CSS via position:sticky on the parent
+ * .entry-content — when the user scrolls past the content, the FAB scrolls
+ * away naturally. No IntersectionObserver needed.
  *
- * Carregado só em singles de post quando `enable_table_of_contents` está ON.
+ * Loaded only on post singles when `enable_table_of_contents` is ON.
  */
 ( function () {
 	'use strict';
@@ -23,7 +23,7 @@
 	document.addEventListener( 'DOMContentLoaded', function () {
 		var toc = document.querySelector( '[data-rd-toc]' );
 		if ( ! toc ) {
-			return; // página sem TOC (post curto, feature off, etc)
+			return; // page without a TOC (short post, feature off, etc.)
 		}
 
 		var fab   = toc.querySelector( '.rd-toc__fab' );
@@ -52,8 +52,8 @@
 
 		fab.addEventListener( 'click', toggleToc );
 
-		// Click em link interno: scroll é nativo via href hash + CSS scroll-behavior.
-		// Só fechamos o painel — sem preventDefault.
+		// Click on an internal link: scroll is native via the href hash + CSS scroll-behavior.
+		// We only close the panel — no preventDefault.
 		panel.addEventListener( 'click', function ( ev ) {
 			var link = ev.target.closest( 'a' );
 			if ( link && panel.contains( link ) ) {
@@ -61,7 +61,7 @@
 			}
 		} );
 
-		// Click fora: fecha painel
+		// Click outside: close the panel
 		document.addEventListener( 'click', function ( ev ) {
 			if ( ! toc.classList.contains( 'is-open' ) ) {
 				return;
@@ -72,7 +72,7 @@
 			closeToc();
 		} );
 
-		// ESC: fecha + devolve foco pro FAB
+		// ESC: close + return focus to the FAB
 		document.addEventListener( 'keydown', function ( ev ) {
 			if ( 'Escape' === ev.key && toc.classList.contains( 'is-open' ) ) {
 				closeToc();
@@ -80,14 +80,14 @@
 			}
 		} );
 
-		// Detecta estado "sticky ativo" via IntersectionObserver no sentinel.
-		// Quando o sentinel (posicionado no top do anchor = natural position do
-		// FAB) passa do top da viewport, o sticky kicou — adicionamos .is-stuck
-		// no .rd-toc, que ativa box-shadow no FAB via CSS.
+		// Detect the "sticky active" state via an IntersectionObserver on the sentinel.
+		// When the sentinel (positioned at the top of the anchor = the FAB's natural
+		// position) passes the top of the viewport, the sticky has kicked in — we add
+		// .is-stuck on .rd-toc, which enables the FAB's box-shadow via CSS.
 		//
-		// rootMargin '-20px 0 0 0' encolhe o root da viewport por 20px do topo,
-		// matching com o `top: 20px` do .rd-toc sticky. Quando o sentinel cruza
-		// esse threshold, intersectionRatio vai a 0 = sticky ativou.
+		// rootMargin '-20px 0 0 0' shrinks the viewport root by 20px from the top,
+		// matching the `top: 20px` of the .rd-toc sticky. When the sentinel crosses
+		// that threshold, intersectionRatio goes to 0 = sticky activated.
 		var sentinel = toc.parentNode && toc.parentNode.querySelector( '.rd-toc__sentinel' );
 		if ( sentinel && 'IntersectionObserver' in window ) {
 			var stickyObserver = new IntersectionObserver(
