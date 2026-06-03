@@ -202,6 +202,16 @@ function rd_admin_scripts( $hook ) {
 			rd_asset_version( '/assets/js/admin-scripts.js' ),
 			true
 		);
+		wp_localize_script(
+			'rd-admin-js',
+			'rdAdminScripts',
+			array(
+				'i18n' => array(
+					'selectImage' => __( 'Select fallback image', 'reloaded' ),
+					'useImage'    => __( 'Use this image', 'reloaded' ),
+				),
+			)
+		);
 	}
 }
 add_action( 'admin_enqueue_scripts', 'rd_admin_scripts' );

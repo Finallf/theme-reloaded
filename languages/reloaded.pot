@@ -282,6 +282,14 @@ msgstr ""
 msgid "Add widgets here to appear in the footer."
 msgstr ""
 
+#: inc/core.php:210
+msgid "Select fallback image"
+msgstr ""
+
+#: inc/core.php:211
+msgid "Use this image"
+msgstr ""
+
 #: inc/mod-ads.php:32
 msgid "Close ad"
 msgstr ""

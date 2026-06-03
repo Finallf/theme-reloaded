@@ -1,4 +1,7 @@
 jQuery(document).ready(function($){
+    // Localized i18n strings (rdAdminScripts.i18n), with en-US fallbacks if absent
+    var rdI18n = (window.rdAdminScripts && window.rdAdminScripts.i18n) || {};
+
     // .on('click', ...) instead of .click(fn) — the shorthand was removed in jQuery 4
     // (jquery-migrate only warns for now, but it'll break once WP updates)
     $('.rd-upload-button').on('click', function(e) {
@@ -7,8 +10,8 @@ jQuery(document).ready(function($){
         var input_id = button.data('input-id');
 
         var custom_uploader = wp.media({
-            title: 'Selecionar Imagem de Fallback',
-            button: { text: 'Usar esta imagem' },
+            title: rdI18n.selectImage || 'Select fallback image',
+            button: { text: rdI18n.useImage || 'Use this image' },
             multiple: false
         }).on('select', function() {
             var attachment = custom_uploader.state().get('selection').first().toJSON();

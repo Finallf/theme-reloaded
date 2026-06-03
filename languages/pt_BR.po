@@ -298,6 +298,14 @@ msgstr "Rodapé - Coluna 3 (Posts Populares)"
 msgid "Add widgets here to appear in the footer."
 msgstr "Adicione widgets aqui para aparecerem no rodapé."
 
+#: inc/core.php:210
+msgid "Select fallback image"
+msgstr "Selecionar Imagem de Fallback"
+
+#: inc/core.php:211
+msgid "Use this image"
+msgstr "Usar esta imagem"
+
 #: inc/mod-ads.php:32
 msgid "Close ad"
 msgstr "Fechar anúncio"
