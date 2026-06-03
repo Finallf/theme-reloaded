@@ -7,6 +7,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 <br>
 
 
+## [1.1.0-beta.2](https://github.com/Finallf/theme-reloaded/compare/v1.1.0-beta.1...v1.1.0-beta.2) (2026-06-03)
+
+### ✨ Features
+
+* **i18n:** make navigation.js user-facing strings translatable ([461e782](https://github.com/Finallf/theme-reloaded/commit/461e78298728560834a51e218a37b24789a59d80))
+
+<br>
+
+---
+
 ## [1.1.0-beta.1](https://github.com/Finallf/theme-reloaded/compare/v1.0.1-beta.1...v1.1.0-beta.1) (2026-06-03)
 
 ### ✨ Features
