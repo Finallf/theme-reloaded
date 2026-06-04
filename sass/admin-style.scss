@@ -140,10 +140,8 @@ $rd-bp-lg: 1024px;
         line-height: 1.5;
     }
 
-    &__body {
-        /* No default rules — just groups the content between title/desc and hint.
-           Each consumer (table, list, form, etc.) defines its own styles. */
-    }
+    /* No `&__body` rule — it only groups the content between title/desc and
+       hint; each consumer (table, list, form, etc.) defines its own styles. */
 
     /* Action row — utility class to align [explanatory text] + [action button]
        on one line, both pushed to the right of the card. Used in action cards
@@ -462,7 +460,7 @@ $rd-bp-lg: 1024px;
 /* Intermediate breakpoints: at medium viewport (768-1023px) the dense grids
    reduce columns so they don't compress too much. Mobile (<768px) falls back
    to 1 column via the base rule. */
-@media (min-width: $rd-bp-md) and (max-width: $rd-bp-lg - 1) {
+@media (min-width: $rd-bp-md) and (max-width: #{$rd-bp-lg - 1}) {
     .rd-pgrid--four-cols {
         grid-template-columns: 1fr 1fr;
     }
@@ -1516,9 +1514,8 @@ body {
 
 /* === Theme Updates card (Dashboard) === */
 
-.rd-pcard.rd-self-update {
-    /* updates card container — no extra visual variation */
-}
+/* .rd-pcard.rd-self-update — updates card container; no extra visual variation
+   beyond the base .rd-pcard (kept only as a documented hook). */
 
 .rd-self-update {
     &__header {
