@@ -7,6 +7,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 <br>
 
 
+## [1.1.0-beta.8](https://github.com/Finallf/theme-reloaded/compare/v1.1.0-beta.7...v1.1.0-beta.8) (2026-06-04)
+
+### ✨ Features
+
+* **widgets:** add a Latest Video widget for the sidebar/footer ([ece965d](https://github.com/Finallf/theme-reloaded/commit/ece965d8b365b5dce3b8b3bd28e976bc5748c0a3))
+
+<br>
+
+---
+
 ## [1.1.0-beta.7](https://github.com/Finallf/theme-reloaded/compare/v1.1.0-beta.6...v1.1.0-beta.7) (2026-06-04)
 
 ### ✨ Features
