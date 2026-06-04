@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ReloadeD 0.1.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/theme/reloaded\n"
-"POT-Creation-Date: 2026-06-04T13:55:19-03:00\n"
-"PO-Revision-Date: 2026-06-04 14:01-0300\n"
+"POT-Creation-Date: 2026-06-04T17:00:40-03:00\n"
+"PO-Revision-Date: 2026-06-04 17:04-0300\n"
 "Last-Translator: Regis Vieira Delgado (Finallf) <finallf2@gmail.com>\n"
 "Language-Team: Brazilian Portuguese\n"
 "Language: pt_BR\n"
@@ -218,6 +218,36 @@ msgstr "Alternar modo claro/escuro"
 msgid "Open navigation menu"
 msgstr "Abrir menu de navegação"
 
+#: inc/class-rd-latest-video-widget.php:32
+msgid "ReloadeD: Latest Video"
+msgstr "ReloadeD: Último Vídeo"
+
+#: inc/class-rd-latest-video-widget.php:34
+msgid ""
+"Shows the most recent video from a chosen category. Reuses the YouTube facade "
+"when enabled; otherwise links to the post."
+msgstr ""
+"Mostra o vídeo mais recente de uma categoria escolhida. Reaproveita o facade "
+"do YouTube quando ativo; senão, linka pro post."
+
+#: inc/class-rd-latest-video-widget.php:44
+#: inc/class-rd-latest-video-widget.php:142
+msgid "Latest Video"
+msgstr "Último Vídeo"
+
+#: inc/class-rd-latest-video-widget.php:146
+#: inc/class-rd-popular-posts-widget.php:128
+msgid "Title:"
+msgstr "Título:"
+
+#: inc/class-rd-latest-video-widget.php:155
+msgid "Category:"
+msgstr "Categoria:"
+
+#: inc/class-rd-latest-video-widget.php:159
+msgid "— Select —"
+msgstr "— Selecionar —"
+
 #: inc/class-rd-popular-posts-widget.php:26
 msgid "ReloadeD: Popular Posts"
 msgstr "ReloadeD: Mais Lidos"
@@ -261,10 +291,6 @@ msgstr "Este mês"
 #: inc/class-rd-popular-posts-widget.php:124 inc/mod-stats.php:675
 msgid "This week"
 msgstr "Esta semana"
-
-#: inc/class-rd-popular-posts-widget.php:128
-msgid "Title:"
-msgstr "Título:"
 
 #: inc/class-rd-popular-posts-widget.php:137
 msgid "Time window:"

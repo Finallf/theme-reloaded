@@ -64,7 +64,8 @@
 	// theme widgets that reuse the aesthetic. To enroll a classic widget in
 	// this shell, add its classname to the selector below.
 	.widget_block,
-	.widget_rd_popular_posts {
+	.widget_rd_popular_posts,
+	.widget_rd_latest_video {
 		background-color: $glass-bg; // Unifying with the Support the Project block
 		padding: 20px;
 		border-radius: 5px; // Golden rule

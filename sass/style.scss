@@ -29,6 +29,7 @@
 @use 'components/page-archive';
 @use 'components/pagination';
 @use 'components/popular-widget';
+@use 'components/latest-video';
 @use 'components/search';
 @use 'components/related-posts'; // after search — inherits .rd-wrapper-grid and overrides grid-template-columns
 @use 'components/toc';

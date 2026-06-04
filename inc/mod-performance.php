@@ -242,6 +242,50 @@ function rd_youtube_parse_timestamp( $t ) {
 	return $seconds;
 }
 
+/**
+ * Extracts the first YouTube video ID found in a string — a single oEmbed URL
+ * or a whole post content. Returns '' when there is none.
+ *
+ * Shared by the facade (oEmbed filter) and the Latest Video widget, which
+ * scans post_content for the first embedded video.
+ */
+function rd_youtube_extract_id( $text ) {
+	if ( ! is_string( $text ) || '' === $text ) {
+		return '';
+	}
+	if ( preg_match( '~(?:youtube\.com/(?:watch\?v=|embed/|shorts/|v/)|youtu\.be/|youtube-nocookie\.com/embed/)([a-zA-Z0-9_-]{11})~', $text, $matches ) ) {
+		return $matches[1];
+	}
+	return '';
+}
+
+/**
+ * Thumbnail + play button used inside the facade. Extracted so the Latest
+ * Video widget can reuse the exact same cover for its "facade off" poster.
+ * `alt` stays a literal to keep the facade output byte-for-byte unchanged.
+ */
+function rd_youtube_cover_html( $video_id ) {
+	return '<img src="https://img.youtube.com/vi/' . esc_attr( $video_id ) . '/sddefault.jpg" alt="Video cover" loading="lazy" width="640" height="480">
+                        <div class="play-button">
+                            <svg viewBox="0 0 68 48">
+                                <path d="M66.52 7.74c-.78-2.93-2.49-5.41-5.42-6.19C55.79.13 34 0 34 0S12.21.13 6.9 1.55c-2.93.78-4.64 3.26-5.42 6.19C.06 13.05 0 24 0 24s.06 10.95 1.48 16.26c.78 2.93 2.49 5.41 5.42 6.19C12.21 47.87 34 48 34 48s21.79-.13 27.1-1.55c2.93-.78 4.64-3.26 5.42-6.19C67.94 34.95 68 24 68 24s-.06-10.95-1.48-16.26z" fill="#FF0000"/>
+                                <path d="M27.26 33.15V14.85L44.5 24z" fill="#fff"/>
+                            </svg>
+                        </div>';
+}
+
+/**
+ * Wraps the cover in the .rd-facade click-to-load container (navigation.js
+ * swaps in the real iframe on click). Used by the oEmbed filter and the
+ * Latest Video widget when the facade is enabled.
+ */
+function rd_youtube_facade_markup( $video_id, $timestamp = 0 ) {
+	$data_t = $timestamp > 0 ? ' data-t="' . esc_attr( $timestamp ) . '"' : '';
+	return '<div class="rd-facade" data-type="youtube" data-id="' . esc_attr( $video_id ) . '"' . $data_t . '>
+                        ' . rd_youtube_cover_html( $video_id ) . '
+                    </div>';
+}
+
 // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed -- $attr is part of the `embed_oembed_html` filter signature, even when unused.
 function rd_youtube_facade( $cache, $url, $attr ) {
 
@@ -249,8 +293,7 @@ function rd_youtube_facade( $cache, $url, $attr ) {
 		return $cache; }
 
 	if ( strpos( $url, 'youtube.com' ) !== false || strpos( $url, 'youtu.be' ) !== false || strpos( $url, 'youtube-nocookie.com' ) !== false ) {
-		preg_match( '~(?:youtube\.com/(?:watch\?v=|embed/|shorts/|v/)|youtu\.be/|youtube-nocookie\.com/embed/)([a-zA-Z0-9_-]{11})~', $url, $matches );
-		$video_id = isset( $matches[1] ) ? $matches[1] : '';
+		$video_id = rd_youtube_extract_id( $url );
 
 		// Timestamp: try `t=` first (user-facing format); fall back to `start=` (embed format)
 		$timestamp = 0;
@@ -262,16 +305,7 @@ function rd_youtube_facade( $cache, $url, $attr ) {
 		}
 
 		if ( $video_id ) {
-			$data_t = $timestamp > 0 ? ' data-t="' . esc_attr( $timestamp ) . '"' : '';
-			return '<div class="rd-facade" data-type="youtube" data-id="' . esc_attr( $video_id ) . '"' . $data_t . '>
-                        <img src="https://img.youtube.com/vi/' . esc_attr( $video_id ) . '/sddefault.jpg" alt="Video cover" loading="lazy" width="640" height="480">
-                        <div class="play-button">
-                            <svg viewBox="0 0 68 48">
-                                <path d="M66.52 7.74c-.78-2.93-2.49-5.41-5.42-6.19C55.79.13 34 0 34 0S12.21.13 6.9 1.55c-2.93.78-4.64 3.26-5.42 6.19C.06 13.05 0 24 0 24s.06 10.95 1.48 16.26c.78 2.93 2.49 5.41 5.42 6.19C12.21 47.87 34 48 34 48s21.79-.13 27.1-1.55c2.93-.78 4.64-3.26 5.42-6.19C67.94 34.95 68 24 68 24s-.06-10.95-1.48-16.26z" fill="#FF0000"/>
-                                <path d="M27.26 33.15V14.85L44.5 24z" fill="#fff"/>
-                            </svg>
-                        </div>
-                    </div>';
+			return rd_youtube_facade_markup( $video_id, $timestamp );
 		}
 	}
 	return $cache;
