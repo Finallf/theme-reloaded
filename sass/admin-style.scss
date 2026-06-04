@@ -29,6 +29,7 @@
 $rd-text:           #1d2327; // primary text
 $rd-text-secondary: #50575e; // secondary text / labels
 $rd-text-muted:     #757575; // hints, captions
+$rd-text-dim:       #8c8f94; // dimmed — ranking numbers, view links
 
 // Accent (blue)
 $rd-blue:      #2271b1; // links, active state, metrics
@@ -50,6 +51,7 @@ $rd-green:      #007a39; // success accent
 $rd-red:        #d63638; // danger accent
 $rd-red-text:   #8a1f20; // danger text
 $rd-red-bg:     #fdf0f0; // danger card background
+$rd-red-muted:  #b32d2e; // muted red — downward trend / skipped item
 
 // Card elevation
 $rd-shadow-card: 0 1px 3px rgba(0, 0, 0, 0.04);
@@ -836,47 +838,47 @@ body {
    etc.) that have no generalizable equivalent. */
 
 .rd-stats-card {
-    background: #fff;
-    border: 1px solid #c3c4c7;
+    background: $rd-white;
+    border: 1px solid $rd-border;
     border-radius: 4px;
     padding: 20px 24px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+    box-shadow: $rd-shadow-card;
     min-width: 0; /* CRITICAL in grid items: without it, intrinsic content (text) forces the card to grow beyond the grid cell, causing horizontal overflow */
-}
 
-/* Modifier for cards that should span the whole row on desktop (K3 and K4
-   look better full-width to fit long lists and the horizontal chart).
-   On mobile (1-column grid) they already span everything naturally.
-   Breakpoint aligned with .rd-pgrid--sidebar-main (1024px) to avoid a gap
-   between when the grid becomes 2-cols and when --full starts spanning all. */
-@media (min-width: 1024px) {
-    .rd-stats-card--full {
-        grid-column: 1 / -1;
+    /* Modifier for cards that should span the whole row on desktop (K3 and K4
+       look better full-width to fit long lists and the horizontal chart).
+       On mobile (1-column grid) they already span everything naturally.
+       Breakpoint aligned with .rd-pgrid--sidebar-main (1024px) to avoid a gap
+       between when the grid becomes 2-cols and when --full starts spanning all. */
+    @media (min-width: $rd-bp-lg) {
+        &--full {
+            grid-column: 1 / -1;
+        }
     }
-}
 
-.rd-stats-card__title {
-    font-size: 0.8rem;
-    text-transform: uppercase;
-    letter-spacing: 0.6px;
-    color: #50575e;
-    margin: 0 0 12px;
-    font-weight: 600;
-}
+    &__title {
+        font-size: 0.8rem;
+        text-transform: uppercase;
+        letter-spacing: 0.6px;
+        color: $rd-text-secondary;
+        margin: 0 0 12px;
+        font-weight: 600;
+    }
 
-.rd-stats-card__big-number {
-    font-size: 2.6rem;
-    font-weight: 700;
-    color: #2271b1;
-    line-height: 1;
-    margin-bottom: 18px;
-    /* tabular-nums aligns digits by column — big numbers become more legible */
-    font-variant-numeric: tabular-nums;
-}
+    &__big-number {
+        font-size: 2.6rem;
+        font-weight: 700;
+        color: $rd-blue;
+        line-height: 1;
+        margin-bottom: 18px;
+        /* tabular-nums aligns digits by column — big numbers become more legible */
+        font-variant-numeric: tabular-nums;
+    }
 
-.rd-stats-card__breakdown {
-    border-top: 1px solid #f0f0f1;
-    padding-top: 12px;
+    &__breakdown {
+        border-top: 1px solid $rd-border-faint;
+        padding-top: 12px;
+    }
 }
 
 .rd-stats-row {
@@ -885,48 +887,48 @@ body {
     gap: 10px;
     padding: 5px 0;
     font-size: 0.92rem;
-}
 
-.rd-stats-row__label {
-    color: #50575e;
-    min-width: 100px;
-}
+    &__label {
+        color: $rd-text-secondary;
+        min-width: 100px;
+    }
 
-.rd-stats-row__value {
-    font-weight: 600;
-    color: #1d2327;
-    flex: 1;
-    font-variant-numeric: tabular-nums;
-}
+    &__value {
+        font-weight: 600;
+        color: $rd-text;
+        flex: 1;
+        font-variant-numeric: tabular-nums;
+    }
 
-.rd-stats-row__trend {
-    font-size: 0.8rem;
-    font-weight: 600;
-    padding: 2px 8px;
-    border-radius: 3px;
-    white-space: nowrap;
-    cursor: help; /* hover shows the previous period's value via title */
-}
+    &__trend {
+        font-size: 0.8rem;
+        font-weight: 600;
+        padding: 2px 8px;
+        border-radius: 3px;
+        white-space: nowrap;
+        cursor: help; /* hover shows the previous period's value via title */
 
-.rd-stats-row__trend--up {
-    color: #007a39;
-    background: rgba(0, 122, 57, 0.1);
-}
+        &--up {
+            color: $rd-green;
+            background: rgba($rd-green, 0.1);
+        }
 
-.rd-stats-row__trend--down {
-    color: #b32d2e;
-    background: rgba(179, 45, 46, 0.1);
-}
+        &--down {
+            color: $rd-red-muted;
+            background: rgba($rd-red-muted, 0.1);
+        }
 
-.rd-stats-row__trend--flat {
-    color: #757575;
-    background: rgba(0, 0, 0, 0.05);
-}
+        &--flat {
+            color: $rd-text-muted;
+            background: rgba(0, 0, 0, 0.05);
+        }
 
-.rd-stats-row__trend--new {
-    color: #2271b1;
-    background: rgba(34, 113, 177, 0.1);
-    font-style: italic;
+        &--new {
+            color: $rd-blue;
+            background: rgba($rd-blue, 0.1);
+            font-style: italic;
+        }
+    }
 }
 
 /* -----------------------------------------------
@@ -939,33 +941,33 @@ body {
     display: flex;
     gap: 4px;
     margin-bottom: 16px;
-    border-bottom: 1px solid #dcdcde;
-}
+    border-bottom: 1px solid $rd-border-light;
 
-.rd-stats-tabs__item {
-    padding: 8px 14px;
-    text-decoration: none;
-    color: #50575e;
-    font-size: 0.88rem;
-    font-weight: 500;
-    border-bottom: 2px solid transparent;
-    margin-bottom: -1px; /* overlaps the .rd-stats-tabs border to stick to it */
-    transition: color 0.15s ease, border-color 0.15s ease;
-}
+    &__item {
+        padding: 8px 14px;
+        text-decoration: none;
+        color: $rd-text-secondary;
+        font-size: 0.88rem;
+        font-weight: 500;
+        border-bottom: 2px solid transparent;
+        margin-bottom: -1px; /* overlaps the .rd-stats-tabs border to stick to it */
+        transition: color 0.15s ease, border-color 0.15s ease;
 
-.rd-stats-tabs__item:hover {
-    color: #2271b1;
-}
+        &:hover {
+            color: $rd-blue;
+        }
 
-.rd-stats-tabs__item.is-active {
-    color: #2271b1;
-    border-bottom-color: #2271b1;
-}
+        &.is-active {
+            color: $rd-blue;
+            border-bottom-color: $rd-blue;
+        }
 
-.rd-stats-tabs__item:focus {
-    box-shadow: none;
-    outline: 1px dashed #2271b1;
-    outline-offset: 2px;
+        &:focus {
+            box-shadow: none;
+            outline: 1px dashed $rd-blue;
+            outline-offset: 2px;
+        }
+    }
 }
 
 /* Numbered ranking list */
@@ -974,127 +976,127 @@ body {
     margin: 0;
     padding: 0;
     counter-reset: rd-rank;
-}
 
-.rd-stats-ranking__item {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 10px 4px;
-    border-bottom: 1px solid #f0f0f1;
-    font-size: 0.92rem;
-    flex-wrap: wrap; /* on narrow screens, the metric drops to the next line */
-}
+    &__item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 10px 4px;
+        border-bottom: 1px solid $rd-border-faint;
+        font-size: 0.92rem;
+        flex-wrap: wrap; /* on narrow screens, the metric drops to the next line */
 
-.rd-stats-ranking__item:last-child {
-    border-bottom: none;
-}
+        &:last-child {
+            border-bottom: none;
+        }
+    }
 
-.rd-stats-ranking__rank {
-    font-weight: 700;
-    color: #8c8f94;
-    min-width: 24px;
-    text-align: right;
-    font-variant-numeric: tabular-nums;
-    font-size: 0.95rem;
-    flex-shrink: 0;
-}
+    &__rank {
+        font-weight: 700;
+        color: $rd-text-dim;
+        min-width: 24px;
+        text-align: right;
+        font-variant-numeric: tabular-nums;
+        font-size: 0.95rem;
+        flex-shrink: 0;
+    }
 
-/* Top 3 get highlighted ("podium" style) */
-.rd-stats-ranking__item:nth-child(1) .rd-stats-ranking__rank { color: #d4a017; } /* gold */
-.rd-stats-ranking__item:nth-child(2) .rd-stats-ranking__rank { color: #7d7d7d; } /* silver */
-.rd-stats-ranking__item:nth-child(3) .rd-stats-ranking__rank { color: #a06b3a; } /* bronze */
+    /* Top 3 get highlighted ("podium" style) */
+    &__item:nth-child(1) &__rank { color: #d4a017; } /* gold */
+    &__item:nth-child(2) &__rank { color: #7d7d7d; } /* silver */
+    &__item:nth-child(3) &__rank { color: #a06b3a; } /* bronze */
 
-.rd-stats-ranking__chip {
-    display: inline-block;
-    font-size: 0.72rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.4px;
-    padding: 2px 8px;
-    border-radius: 3px;
-    white-space: nowrap;
-    max-width: 120px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    flex-shrink: 0;
-}
+    &__chip {
+        display: inline-block;
+        font-size: 0.72rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.4px;
+        padding: 2px 8px;
+        border-radius: 3px;
+        white-space: nowrap;
+        max-width: 120px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        flex-shrink: 0;
+    }
 
-.rd-stats-ranking__title {
-    flex: 1 1 0;
-    min-width: 0; /* CRITICAL in flex: without it, long text blows out the container and breaks layout (horizontal overflow). Classic flexbox bug. */
-    color: #1d2327;
-    text-decoration: none;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    font-weight: 500;
-}
+    &__title {
+        flex: 1 1 0;
+        min-width: 0; /* CRITICAL in flex: without it, long text blows out the container and breaks layout (horizontal overflow). Classic flexbox bug. */
+        color: $rd-text;
+        text-decoration: none;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        font-weight: 500;
 
-.rd-stats-ranking__title:hover {
-    color: #2271b1;
-    text-decoration: underline;
-}
+        &:hover {
+            color: $rd-blue;
+            text-decoration: underline;
+        }
+    }
 
-.rd-stats-ranking__view-link {
-    color: #8c8f94;
-    text-decoration: none;
-    transition: color 0.15s ease;
-    flex-shrink: 0;
-}
+    &__view-link {
+        color: $rd-text-dim;
+        text-decoration: none;
+        transition: color 0.15s ease;
+        flex-shrink: 0;
 
-.rd-stats-ranking__view-link:hover {
-    color: #2271b1;
-}
+        &:hover {
+            color: $rd-blue;
+        }
 
-.rd-stats-ranking__view-link .dashicons {
-    font-size: 16px;
-    width: 16px;
-    height: 16px;
-}
+        .dashicons {
+            font-size: 16px;
+            width: 16px;
+            height: 16px;
+        }
+    }
 
-.rd-stats-ranking__metric {
-    font-weight: 600;
-    color: #2271b1;
-    font-variant-numeric: tabular-nums;
-    text-align: right;
-    min-width: 90px;
-    white-space: nowrap;
-    flex-shrink: 0;
-}
+    &__metric {
+        font-weight: 600;
+        color: $rd-blue;
+        font-variant-numeric: tabular-nums;
+        text-align: right;
+        min-width: 90px;
+        white-space: nowrap;
+        flex-shrink: 0;
 
-.rd-stats-ranking__metric small {
-    color: #757575;
-    font-weight: 400;
-    font-size: 0.78rem;
-    margin-left: 2px;
-}
+        small {
+            color: $rd-text-muted;
+            font-weight: 400;
+            font-size: 0.78rem;
+            margin-left: 2px;
+        }
+    }
 
-/* Engagement ratio (K3): secondary pill next to the comment count.
-   Neutral color so it doesn't compete with the main metric (blue). */
-.rd-stats-ranking__ratio {
-    display: inline-block;
-    margin-left: 6px;
-    padding: 1px 6px;
-    background: #f0f0f1;
-    color: #50575e;
-    font-size: 0.72rem;
-    font-weight: 600;
-    border-radius: 3px;
-    cursor: help; /* hover shows a tooltip via the parent .rd-stats-ranking__metric title */
-}
+    /* Engagement ratio (K3): secondary pill next to the comment count.
+       Neutral color so it doesn't compete with the main metric (blue). */
+    &__ratio {
+        display: inline-block;
+        margin-left: 6px;
+        padding: 1px 6px;
+        background: $rd-border-faint;
+        color: $rd-text-secondary;
+        font-size: 0.72rem;
+        font-weight: 600;
+        border-radius: 3px;
+        cursor: help; /* hover shows a tooltip via the parent .rd-stats-ranking__metric title */
 
-/* When ratio is the active sort criterion, it gets a blue highlight
-   (visually signals "this is the number the list was sorted by"). */
-.rd-stats-ranking__ratio.is-highlighted {
-    background: rgba(34, 113, 177, 0.12);
-    color: #2271b1;
+        /* When ratio is the active sort criterion, it gets a blue highlight
+           (visually signals "this is the number the list was sorted by"). */
+        &.is-highlighted {
+            background: rgba($rd-blue, 0.12);
+            color: $rd-blue;
+        }
+    }
 }
 
 /* Mobile: reduces card padding and pushes the metric to a second line.
    On narrow screens, [rank chip title] on one line and [metric] below is
    better than everything compressed into a single clipped line. */
-@media (max-width: 600px) {
+@media (max-width: $rd-bp-sm) {
     .rd-stats-card {
         padding: 16px;
     }
@@ -1107,7 +1109,7 @@ body {
 
 /* Empty state (no data in the selected window) */
 .rd-stats-empty {
-    color: #757575;
+    color: $rd-text-muted;
     font-style: italic;
     padding: 20px 0;
     text-align: center;
@@ -1124,10 +1126,10 @@ body {
     position: relative;
     height: 280px;
     margin-top: 8px;
-}
 
-.rd-stats-chart-wrapper canvas {
-    max-width: 100%;
+    canvas {
+        max-width: 100%;
+    }
 }
 
 /* Generic chart wrapper (Wave 11 Phase G — CSP doughnut, Dashboard 7d bar, etc).
@@ -1138,11 +1140,10 @@ body {
     position: relative;
     height: 280px;
     margin-top: 8px;
-}
 
-.rd-csp-chart-wrapper canvas,
-.rd-dashboard-chart-wrapper canvas {
-    max-width: 100%;
+    canvas {
+        max-width: 100%;
+    }
 }
 
 /* ==========================================================================
