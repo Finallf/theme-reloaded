@@ -7,6 +7,25 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 <br>
 
 
+## [1.1.0-beta.5](https://github.com/Finallf/theme-reloaded/compare/v1.1.0-beta.4...v1.1.0-beta.5) (2026-06-04)
+
+### 🐛 Bug Fixes
+
+* **backup:** preserve dots in the export filename hostname ([2f6ee8a](https://github.com/Finallf/theme-reloaded/commit/2f6ee8aad1e217271ec1b51d230aa60ab76ecca0))
+
+### ♻️ Code Refactoring
+
+* **admin:** compile admin-style.css from SCSS source ([96ad6d8](https://github.com/Finallf/theme-reloaded/commit/96ad6d86f13a66a87c18fa78c9dca69f395a9d06))
+* **admin:** consolidate 7 panel JS files into a single bundle ([80eddbe](https://github.com/Finallf/theme-reloaded/commit/80eddbe50e4fde897b6ad59302e8745f2c5ae61b))
+
+### 📝 Documentation
+
+* update references after admin JS consolidation ([6d0171e](https://github.com/Finallf/theme-reloaded/commit/6d0171e235f3ff245133dbf0a1956fb7efeaaaf0))
+
+<br>
+
+---
+
 ## [1.1.0-beta.4](https://github.com/Finallf/theme-reloaded/compare/v1.1.0-beta.3...v1.1.0-beta.4) (2026-06-03)
 
 ### 🐛 Bug Fixes
