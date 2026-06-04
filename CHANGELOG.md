@@ -7,6 +7,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 <br>
 
 
+## [1.1.0-beta.6](https://github.com/Finallf/theme-reloaded/compare/v1.1.0-beta.5...v1.1.0-beta.6) (2026-06-04)
+
+### 🐛 Bug Fixes
+
+* **search:** float compact-card views to the bottom-right corner ([406c2c2](https://github.com/Finallf/theme-reloaded/commit/406c2c28e081193457a8387ca5d79e4a076901c6))
+
+<br>
+
+---
+
 ## [1.1.0-beta.5](https://github.com/Finallf/theme-reloaded/compare/v1.1.0-beta.4...v1.1.0-beta.5) (2026-06-04)
 
 ### 🐛 Bug Fixes
