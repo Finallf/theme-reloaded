@@ -7,6 +7,20 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 <br>
 
 
+## [1.1.0-beta.9](https://github.com/Finallf/theme-reloaded/compare/v1.1.0-beta.8...v1.1.0-beta.9) (2026-06-04)
+
+### ✨ Features
+
+* **footer:** 4-column footer with three widget areas ([33b8509](https://github.com/Finallf/theme-reloaded/commit/33b8509c285a03ff5b6f8c2bbb341595ee4fdb82))
+
+### 📝 Documentation
+
+* document the Dashboard card tooltips and Latest Video widget ([0074e66](https://github.com/Finallf/theme-reloaded/commit/0074e6639dbbbc912bfb1b022cfa61f60f1d1a46))
+
+<br>
+
+---
+
 ## [1.1.0-beta.8](https://github.com/Finallf/theme-reloaded/compare/v1.1.0-beta.7...v1.1.0-beta.8) (2026-06-04)
 
 ### ✨ Features
