@@ -38,6 +38,7 @@ $rd-blue-dark: #135e96; // accent hover
 $rd-border:       #c3c4c7; // default border
 $rd-border-light: #dcdcde; // light border
 $rd-border-faint: #f0f0f1; // faintest divider / inline-code background
+$rd-border-panel: #ccd0d4; // options-panel header/form border
 $rd-bg-strip:     #f6f7f7; // gray header strips, hover rows
 $rd-white:        #fff;
 
@@ -543,17 +544,19 @@ $rd-bp-lg: 1024px;
 /* ============================================================
    META BOX in the post editor (rd_post_options)
    ============================================================ */
-.rd-post-options-label {
-    display: block;
-    margin-bottom: 5px;
-}
+.rd-post-options {
+    &-label {
+        display: block;
+        margin-bottom: 5px;
+    }
 
-.rd-post-options-divider {
-    margin: 12px 0;
-}
+    &-divider {
+        margin: 12px 0;
+    }
 
-.rd-post-options-select {
-    width: 100%;
+    &-select {
+        width: 100%;
+    }
 }
 
 /* ============================================================
@@ -568,12 +571,20 @@ $rd-bp-lg: 1024px;
    the central gap, not in the switch/gear position. */
 .rd-dashboard-status-line {
     margin: 0;
-    color: #1d2327;
+    color: $rd-text;
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 10px;
     flex-wrap: wrap;
+
+    code {
+        background: $rd-border-faint;
+        padding: 1px 6px;
+        border-radius: 3px;
+        font-size: 0.85rem;
+        color: $rd-text-secondary;
+    }
 }
 
 /* Left group wrapper (switch + gear). Joins the 2 controls into a single
@@ -594,14 +605,6 @@ $rd-bp-lg: 1024px;
     gap: 10px;
 }
 
-.rd-dashboard-status-line code {
-    background: #f0f0f1;
-    padding: 1px 6px;
-    border-radius: 3px;
-    font-size: 0.85rem;
-    color: #50575e;
-}
-
 /* "Configure" icon button below the badge (CSP / Login Protection / Next-gen
    Images). Only the icon (dashicons gear) is visible; the text is hidden but
    accessible via aria-label. Styled tooltip on hover/focus via data-tooltip
@@ -612,29 +615,29 @@ $rd-bp-lg: 1024px;
     align-items: center;
     justify-content: center;
     width: 32px;
-    color: #2271b1;
+    color: $rd-blue;
     text-decoration: none;
     border-radius: 4px;
     transition: background 0.15s ease, color 0.15s ease;
-}
 
-.rd-dashboard-card-link:hover,
-.rd-dashboard-card-link:focus {
-    color: #135e96;
-    background: #f0f0f1;
-    text-decoration: none;
-    outline: none;
-}
+    &:hover,
+    &:focus {
+        color: $rd-blue-dark;
+        background: $rd-border-faint;
+        text-decoration: none;
+        outline: none;
+    }
 
-.rd-dashboard-card-link:focus-visible {
-    box-shadow: 0 0 0 2px #2271b1;
-}
+    &:focus-visible {
+        box-shadow: 0 0 0 2px $rd-blue;
+    }
 
-.rd-dashboard-card-link .dashicons {
-    font-size: 20px;
-    width: 20px;
-    height: 20px;
-    line-height: 1;
+    .dashicons {
+        font-size: 20px;
+        width: 20px;
+        height: 20px;
+        line-height: 1;
+    }
 }
 
 /* Styled tooltip — appears on hover/focus, same look as the Chart.js
@@ -654,7 +657,7 @@ $rd-bp-lg: 1024px;
     transform: translateX(-50%);
     padding: 5px 10px;
     background: rgba(0, 0, 0, 0.75);
-    color: #fff;
+    color: $rd-white;
     border-radius: 4px;
     font-size: 0.75rem;
     font-weight: 500;
@@ -686,134 +689,140 @@ $rd-bp-lg: 1024px;
     flex-wrap: wrap;
     gap: 8px;
     margin: 0;
-}
 
-.rd-dashboard-actions .button .dashicons {
-    margin-right: 4px;
-    font-size: 18px;
-    line-height: 1;
-    vertical-align: middle;
+    .button .dashicons {
+        margin-right: 4px;
+        font-size: 18px;
+        line-height: 1;
+        vertical-align: middle;
+    }
 }
 
 /* Footer with theme · WP · PHP version — discreet and centered. */
 .rd-dashboard-footer-info {
     margin-top: 24px;
     text-align: center;
-    color: #757575;
+    color: $rd-text-muted;
     font-size: 0.9rem;
-}
 
-.rd-dashboard-footer-info code {
-    background: transparent;
-    padding: 0 2px;
-    color: #50575e;
-    font-weight: 600;
+    code {
+        background: transparent;
+        padding: 0 2px;
+        color: $rd-text-secondary;
+        font-weight: 600;
+    }
 }
 
 /* ============================================================
    OPTIONS PANEL (rd_options) — Header + Form wrapper
    ============================================================ */
-.rd-panel-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
-    padding-bottom: 15px;
-    border-bottom: 1px solid #ccd0d4;
-}
+.rd-panel {
+    &-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+        padding-bottom: 15px;
+        border-bottom: 1px solid $rd-border-panel;
+    }
 
-.rd-panel-title {
-    margin: 0;
-    padding: 0;
-}
+    &-title {
+        margin: 0;
+        padding: 0;
+    }
 
-.rd-panel-logo {
-    max-height: 50px;
-    width: auto;
-}
+    &-logo {
+        max-height: 50px;
+        width: auto;
+    }
 
-.rd-panel-form {
-    background: #fff;
-    padding: 20px;
-    border: 1px solid #ccd0d4;
-    border-top: none;
-    margin-top: 0;
+    &-form {
+        background: $rd-white;
+        padding: 20px;
+        border: 1px solid $rd-border-panel;
+        border-top: none;
+        margin-top: 0;
+    }
 }
 
 /* ============================================================
    PANEL — Media upload ("media" type fields)
    ============================================================ */
-body .rd-media-container {
-    background: #f0f0f1 !important;
-    padding: 10px !important;
-    border: 1px solid #c3c4c7 !important;
-    border-radius: 4px !important;
-    /* width: fit-content shrinks the container to the natural width of the
-       content (preview + buttons), instead of stretching to fill the
-       form-table cell. max-width still works as a ceiling for wide images. */
-    width: fit-content !important;
-    max-width: 450px !important;
-    /* Vertical layout: preview on top, buttons below side by side. Works
-       uniformly for any image ratio (horizontal banner / square QR /
-       square OG). */
-    display: flex !important;
-    flex-direction: column !important;
-    align-items: flex-start !important;
-    gap: 10px !important;
-}
+/* All media-uploader rules are scoped under `body` to win specificity against
+   WP's form-table defaults (hence the !important flags too). */
+body {
+    .rd-media-container {
+        background: $rd-border-faint !important;
+        padding: 10px !important;
+        border: 1px solid $rd-border !important;
+        border-radius: 4px !important;
+        /* width: fit-content shrinks the container to the natural width of the
+           content (preview + buttons), instead of stretching to fill the
+           form-table cell. max-width still works as a ceiling for wide images. */
+        width: fit-content !important;
+        max-width: 450px !important;
+        /* Vertical layout: preview on top, buttons below side by side. Works
+           uniformly for any image ratio (horizontal banner / square QR /
+           square OG). */
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        gap: 10px !important;
+    }
 
-body .rd-media-preview {
-    margin-bottom: 0;
-}
+    .rd-media-preview {
+        margin-bottom: 0;
 
-body .rd-media-preview:not(:empty) {
-    padding: 8px !important;
-    background: #ffffff !important;
-    border: 2px dashed #c3c4c7 !important;
-    border-radius: 4px !important;
-    display: inline-block !important;
-}
+        &:not(:empty) {
+            padding: 8px !important;
+            background: $rd-white !important;
+            border: 2px dashed $rd-border !important;
+            border-radius: 4px !important;
+            display: inline-block !important;
+        }
 
-/* Buttons wrapper (Select + Remove) — stays a flex row to keep the two
-   side by side, below the preview. */
-body .rd-media-actions {
-    display: flex;
-    gap: 8px;
-    flex-wrap: wrap;
-}
+        img {
+            max-width: 200px;
+            height: auto;
+            display: block;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+    }
 
-body .rd-media-preview img {
-    max-width: 200px;
-    height: auto;
-    display: block;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-}
+    /* Buttons wrapper (Select + Remove) — stays a flex row to keep the two
+       side by side, below the preview. */
+    .rd-media-actions {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+    }
 
-/* Select button — Blue. Spacing between buttons via the flex parent's `gap`. */
-body .rd-upload-button {
-    color: #2271b1 !important;
-    border-color: #2271b1 !important;
-}
+    /* Select button — Blue. Spacing between buttons via the flex parent's `gap`. */
+    .rd-upload-button {
+        color: $rd-blue !important;
+        border-color: $rd-blue !important;
 
-body .rd-upload-button:hover,
-body .rd-upload-button:focus {
-    background: #2271b1 !important;
-    color: #fff !important;
-    border-color: #2271b1 !important;
-}
+        &:hover,
+        &:focus {
+            background: $rd-blue !important;
+            color: $rd-white !important;
+            border-color: $rd-blue !important;
+        }
+    }
 
-/* Remove button — Red */
-body .rd-remove-button {
-    color: #d63638 !important;
-    border-color: #d63638 !important;
-}
+    /* Remove button — Red */
+    .rd-remove-button {
+        color: $rd-red !important;
+        border-color: $rd-red !important;
 
-body .rd-remove-button:hover,
-body .rd-remove-button:focus {
-    background: #d63638 !important;
-    color: #fff !important;
-    border-color: #d63638 !important;
+        &:hover,
+        &:focus {
+            background: $rd-red !important;
+            color: $rd-white !important;
+            border-color: $rd-red !important;
+        }
+    }
 }
 
 /* ==========================================================================
