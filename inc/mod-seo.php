@@ -416,7 +416,7 @@ function rd_seo_resolve_site_logo(): array {
 }
 
 /*******************************************************************************
- * Imprime um bloco <script type="application/ld+json">                - (SEO) *
+ * Prints a <script type="application/ld+json"> block                  - (SEO) *
  *                                                                             *
  * Internal helper: serializes to JSON with HTML-safe flags and wraps it in    *
  * a <script>. Uses JSON_UNESCAPED_SLASHES and JSON_UNESCAPED_UNICODE to       *

@@ -18,12 +18,7 @@ add_action(
 			?>
 		<?php // phpcs:ignore WordPress.WP.EnqueuedResources.NonEnqueuedScript -- official gtag/Google Analytics script injected inline in wp_head — wp_enqueue_script isn't appropriate here (must run at exactly this position in the <head>, before other tracking scripts, with correct data layer setup). ?>
 		<script<?php echo $nonce_attr; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- nonce attribute already escaped by rd_csp_nonce_attr() ?> async src="https://www.googletagmanager.com/gtag/js?id=<?php echo esc_attr( $ga_id ); ?>"></script>
-		<script<?php echo $nonce_attr; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- nonce attribute already escaped by rd_csp_nonce_attr() ?>>
-			window.dataLayer = window.dataLayer || [];
-			function gtag(){dataLayer.push(arguments);}
-			gtag('js', new Date());
-			gtag('config', '<?php echo esc_attr( $ga_id ); ?>');
-		</script>
+		<script<?php echo $nonce_attr; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- nonce attribute already escaped by rd_csp_nonce_attr() ?>>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','<?php echo esc_attr( $ga_id ); ?>');</script>
 			<?php
 		}
 
@@ -101,13 +96,7 @@ add_action(
 		$clarity_id = trim( (string) rd_get_option( 'clarity_id' ) );
 		if ( $clarity_id !== '' && preg_match( '/^[a-z0-9]+$/i', $clarity_id ) && rd_consent_given( 'analytics' ) ) :
 			?>
-		<script type="text/javascript"<?php echo $nonce_attr; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- nonce already escaped ?>>
-			(function(c,l,a,r,i,t,y){
-				c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
-				t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
-				y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
-			})(window, document, "clarity", "script", "<?php echo esc_js( $clarity_id ); ?>");
-		</script>
+		<script type="text/javascript"<?php echo $nonce_attr; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- nonce already escaped ?>>(function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);})(window,document,"clarity","script","<?php echo esc_js( $clarity_id ); ?>");</script>
 			<?php
 	endif;
 
