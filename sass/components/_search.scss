@@ -358,28 +358,32 @@ mark.rd-highlight {
         }
     }
 
-    // Meta line in compact: date + views inline, separated by gap.
-    // Overrides the shared absolute .rd-card-meta rule (.rd-search-card)
-    // since here compact uses .rd-card-meta-compact (a distinct class) and
-    // we want the fields in the flow, not floating.
+    // Meta line in compact: only the date stays in the flow.
     .rd-card-meta-compact {
-        display: flex;
-        align-items: center;
-        gap: 12px;
         margin-top: 4px;
         font-size: 0.8rem;
         color: $text-muted-dark;
+    }
 
-        .rd-card-views {
-            display: inline-flex;
-            align-items: center;
-            gap: 5px;
+    // Views float in the card's bottom-right corner — consistent with the
+    // grid/vertical layouts' .rd-card-meta, instead of sitting inline right
+    // after the date. Anchored to the .layout-compact <article> (position: relative).
+    .rd-card-views {
+        position: absolute;
+        bottom: 12px;
+        right: 16px;
+        z-index: 3;
+        pointer-events: none; // doesn't block the card's link-wrapper
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        font-size: 0.8rem;
+        color: $text-muted-dark;
 
-            svg {
-                color: $brand-blue-light;
-                opacity: 0.85;
-                vertical-align: middle;
-            }
+        svg {
+            color: $brand-blue-light;
+            opacity: 0.85;
+            vertical-align: middle;
         }
     }
 }
