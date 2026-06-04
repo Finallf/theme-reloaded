@@ -105,6 +105,7 @@ function rd_panel_dash_header( array $args ): void {
  * @param array $args Card arguments.
  *
  *     @type string $title   Uppercase card title, optional.
+ *     @type string $tooltip Short hover explanation on the title, optional (plain text).
  *     @type string $desc    Description below the title, optional (accepts HTML).
  *     @type string $hint    Discreet italic hint in the footer, optional (accepts HTML).
  *     @type string $variant One of: default, placeholder, warning, danger.
@@ -112,6 +113,7 @@ function rd_panel_dash_header( array $args ): void {
  */
 function rd_panel_card_open( array $args = array() ): void {
 	$title   = $args['title'] ?? '';
+	$tooltip = $args['tooltip'] ?? '';
 	$desc    = $args['desc'] ?? '';
 	$hint    = $args['hint'] ?? '';
 	$variant = $args['variant'] ?? 'default';
@@ -126,7 +128,11 @@ function rd_panel_card_open( array $args = array() ): void {
 	echo '<div class="rd-pcard' . esc_attr( $variant_class . $class ) . '">';
 
 	if ( '' !== $title ) {
-		echo '<h3 class="rd-pcard__title">' . esc_html( $title ) . '</h3>';
+		echo '<h3 class="rd-pcard__title"';
+		if ( '' !== $tooltip ) {
+			echo ' data-tooltip="' . esc_attr( $tooltip ) . '"';
+		}
+		echo '>' . esc_html( $title ) . '</h3>';
 	}
 	if ( '' !== $desc ) {
 		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- caller passes controlled HTML (text + <code>/<strong>); using wp_kses_post would be overhead for internal panel usage.

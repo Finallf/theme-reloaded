@@ -113,6 +113,7 @@ $rd-bp-lg: 1024px;
    Main content container inside a dashboard.
    ----------------------------------------------- */
 .rd-pcard {
+    position: relative; /* containing block for the Dashboard card-title tooltip (centers it over the card) */
     background: $rd-white;
     border: 1px solid $rd-border;
     border-radius: 4px;
@@ -645,11 +646,14 @@ $rd-bp-lg: 1024px;
    above the element with a little arrow pointing down). Applied to:
    - .rd-dashboard-card-link (deep-link gears)
    - .rd-pswitch (Dashboard sliding buttons) — dynamic tooltip
-     "Enable"/"Disable" per current state, updated by JS after the flip. */
+     "Enable"/"Disable" per current state, updated by JS after the flip.
+   - .rd-pcard__title[data-tooltip] (Dashboard Site Status card names) */
 .rd-dashboard-card-link[data-tooltip]:hover::after,
 .rd-dashboard-card-link[data-tooltip]:focus::after,
 .rd-pswitch[data-tooltip]:hover::after,
-.rd-pswitch[data-tooltip]:focus::after {
+.rd-pswitch[data-tooltip]:focus::after,
+.rd-pcard__title[data-tooltip]:hover::after,
+.rd-pcard__title[data-tooltip]:focus::after {
     content: attr(data-tooltip);
     position: absolute;
     bottom: calc(100% + 8px);
@@ -671,7 +675,9 @@ $rd-bp-lg: 1024px;
 .rd-dashboard-card-link[data-tooltip]:hover::before,
 .rd-dashboard-card-link[data-tooltip]:focus::before,
 .rd-pswitch[data-tooltip]:hover::before,
-.rd-pswitch[data-tooltip]:focus::before {
+.rd-pswitch[data-tooltip]:focus::before,
+.rd-pcard__title[data-tooltip]:hover::before,
+.rd-pcard__title[data-tooltip]:focus::before {
     content: '';
     position: absolute;
     bottom: calc(100% + -2px);
@@ -681,6 +687,25 @@ $rd-bp-lg: 1024px;
     border-top-color: rgba(0, 0, 0, 0.75);
     pointer-events: none;
     z-index: 100;
+}
+
+/* Card-title tooltip (Dashboard Site Status) — reuses the black bubble above.
+   The title is the hover target, but the bubble anchors to the .rd-pcard
+   (position: relative on the card) so it sits centered over the whole card
+   instead of over the left-aligned name. Card explanations run longer than the
+   switch labels, so the bubble wraps into a small rectangle (max-width). */
+.rd-pcard__title[data-tooltip] {
+    display: inline-block; /* tight hover target on the name; the bubble anchors to .rd-pcard */
+    cursor: help;
+}
+
+.rd-pcard__title[data-tooltip]:hover::after,
+.rd-pcard__title[data-tooltip]:focus::after {
+    white-space: normal;
+    width: max-content;
+    max-width: 240px;
+    text-align: center;
+    text-transform: none; /* the title is uppercase — keep the explanation in normal case */
 }
 
 /* Horizontal list of buttons in the Quick Actions section. */

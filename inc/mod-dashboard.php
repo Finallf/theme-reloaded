@@ -42,8 +42,14 @@ function rd_dashboard_render(): void {
 
 	echo '<div class="rd-pgrid rd-pgrid--five-cols">';
 	$toggle_nonce = wp_create_nonce( 'rd_dashboard_toggle' );
+	$status_tips  = rd_dashboard_get_status_tooltips();
 	foreach ( rd_dashboard_get_status_data() as $item ) {
-		rd_panel_card_open( array( 'title' => $item['title'] ) );
+		rd_panel_card_open(
+			array(
+				'title'   => $item['title'],
+				'tooltip' => $status_tips[ $item['toggle'] ] ?? '',
+			)
+		);
 
 		/*
 		 * Status line: 2 groups side by side with justify-content: space-between.
@@ -531,6 +537,36 @@ function rd_dashboard_get_status_data(): array {
 	);
 
 	return $data;
+}
+
+/**
+ * Short hover explanations for the Site Status cards.
+ *
+ * Keyed by each card's toggle option name so it maps onto
+ * rd_dashboard_get_status_data() without bloating that array (which stays
+ * focused on live state). Rendered as a tooltip on the card title via the
+ * `tooltip` arg of rd_panel_card_open().
+ *
+ * @return array<string,string> Option name => one-line explanation.
+ */
+function rd_dashboard_get_status_tooltips(): array {
+	return array(
+		'enable_csp_report_only'   => __( 'Browser policy that blocks unauthorized scripts and resources.', 'reloaded' ),
+		'enable_login_protection'  => __( 'Hides the login URL behind a secret slug and limits attempts.', 'reloaded' ),
+		'maintenance_mode'         => __( 'Shows a holding page to visitors while the site is offline.', 'reloaded' ),
+		'enable_views_tracking'    => __( 'Records the page views shown in the Statistics tab.', 'reloaded' ),
+		'inline_critical_css'      => __( 'Inlines critical CSS to speed up the first paint.', 'reloaded' ),
+		'enable_next_gen_images'   => __( 'Serves WebP/AVIF image versions to supported browsers.', 'reloaded' ),
+		'enable_top_bar'           => __( 'Announcement bar shown above the site header.', 'reloaded' ),
+		'enable_comments_globally' => __( 'Enables the comment system across the whole site.', 'reloaded' ),
+		'markdown_enabled'         => __( 'Lets you write posts using Markdown syntax.', 'reloaded' ),
+		'discord_widget'           => __( 'Shows your Discord server widget on the site.', 'reloaded' ),
+		'facade_youtube'           => __( 'Replaces YouTube embeds with a light click-to-load preview.', 'reloaded' ),
+		'enable_breadcrumbs'       => __( 'Shows the navigation trail above post titles.', 'reloaded' ),
+		'enable_lgpd'              => __( 'Granular cookie consent banner (LGPD/GDPR).', 'reloaded' ),
+		'enable_sitemap'           => __( 'Enables the native wp-sitemap.xml for search engines.', 'reloaded' ),
+		'enable_open_graph'        => __( 'Adds Open Graph tags for rich social previews.', 'reloaded' ),
+	);
 }
 
 /**
