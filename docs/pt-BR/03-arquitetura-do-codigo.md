@@ -55,7 +55,8 @@ reloaded.com.br/
 │   └── pt_BR.mo              # Compilado (gerado pelo Poedit)
 │
 ├── sass/                     # SCSS modular (fonte do CSS)
-│   ├── style.scss            # Entry point — só @use
+│   ├── style.scss            # Entry point do frontend — só @use → assets/css/style.css
+│   ├── admin-style.scss      # Fonte do painel admin → assets/css/admin-style.css
 │   ├── base/                 # Variáveis, globals, design tokens
 │   ├── layout/               # Estruturas (header, footer, grid, sidebar, single, media queries)
 │   └── components/           # Pedaços reutilizáveis (search, page-*, comments, lgpd, etc.)

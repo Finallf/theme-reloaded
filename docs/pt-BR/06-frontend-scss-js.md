@@ -2,13 +2,14 @@
 
 ## 🎨 Arquitetura SCSS
 
-O CSS do tema é totalmente **escrito em SCSS** com sistema modular `@use`. O entry point é `sass/style.scss`, que importa todos os parciais.
+O CSS do tema é totalmente **escrito em SCSS** com sistema modular `@use`. O entry point do frontend é `sass/style.scss`, que importa todos os parciais → `assets/css/style.css`. O painel admin tem um source próprio standalone, `sass/admin-style.scss` → `assets/css/admin-style.css` (não usa `@use`, é um arquivo único; convertido de CSS-à-mão pra SCSS pra ganhar minificação + comentários stripados no build, igual ao frontend).
 
 ### Estrutura de pastas
 
 ```
 sass/
-├── style.scss              # Entry point (só @use)
+├── style.scss              # Entry point do frontend (só @use)
+├── admin-style.scss        # Source do painel admin (standalone) → admin-style.css
 ├── base/
 │   ├── _variables.scss     # @font-face + SCSS vars + CSS vars (dark/light)
 │   ├── _globals.scss       # Reset, body, h_, .container, .post-tag, scrollbar
