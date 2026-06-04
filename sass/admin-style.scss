@@ -18,25 +18,51 @@
         Panel header, media uploader, post meta box.
 */
 
+// ╔════════════════════════════════════════════════════════════════════════════╗
+// ║   PALETTE — native WP admin colors                                         ║
+// ║   This panel blends with the surrounding wp-admin chrome, not the theme's  ║
+// ║   frontend palette (sass/base/_tokens.scss). Values centralized here in    ║
+// ║   the admin-style Phase 2 refactor.                                        ║
+// ╚════════════════════════════════════════════════════════════════════════════╝
+
+// Text
+$rd-text:           #1d2327; // primary text
+$rd-text-secondary: #50575e; // secondary text / labels
+$rd-text-muted:     #757575; // hints, captions
+
+// Accent (blue)
+$rd-blue:      #2271b1; // links, active state, metrics
+$rd-blue-dark: #135e96; // accent hover
+
+// Borders & surfaces
+$rd-border:       #c3c4c7; // default border
+$rd-border-light: #dcdcde; // light border
+$rd-border-faint: #f0f0f1; // faintest divider / inline-code background
+$rd-bg-strip:     #f6f7f7; // gray header strips, hover rows
+$rd-white:        #fff;
+
+// Status — accent / text / card background per state
+$rd-amber:      #d29922; // warning accent
+$rd-amber-text: #79670a; // warning text
+$rd-amber-bg:   #fdf6e3; // warning card background
+$rd-green:      #007a39; // success accent
+$rd-red:        #d63638; // danger accent
+$rd-red-text:   #8a1f20; // danger text
+$rd-red-bg:     #fdf0f0; // danger card background
+
+// Card elevation
+$rd-shadow-card: 0 1px 3px rgba(0, 0, 0, 0.04);
+
+// Responsive breakpoints
+$rd-bp-sm: 600px;
+$rd-bp-md: 768px;
+$rd-bp-lg: 1024px;
+
 /* ╔════════════════════════════════════════════════════════════════════════════╗
-   ║                                                                            ║
    ║   1. COMPONENT SYSTEM (rd-p*) — Wave 11 Phase C                            ║
-   ║                                                                            ║
    ║   Reusable components for the ReloadeD admin panel design system.          ║
    ║   Use these classes in any new markup. The legacy classes below            ║
    ║   (.rd-stats-*, .rd-csp-*, .rd-backup-*) will be migrated here in Phase E. ║
-   ║                                                                            ║
-   ║   Palette follows native WP admin colors:                                  ║
-   ║   #1d2327 — primary text                                                   ║
-   ║   #50575e — secondary text                                                 ║
-   ║   #2271b1 — blue accent (links, active)                                    ║
-   ║   #c3c4c7 — default border                                                 ║
-   ║   #dcdcde — light border                                                   ║
-   ║   #f6f7f7 — light gray background (header strips)                          ║
-   ║   #d29922 — amber (warning)                                                ║
-   ║   #007a39 — green (success)                                                ║
-   ║   #d63638 — red (danger)                                                   ║
-   ║                                                                            ║
    ╚════════════════════════════════════════════════════════════════════════════╝ */
 
 /* -----------------------------------------------
@@ -44,39 +70,39 @@
    ----------------------------------------------- */
 .rd-pdash {
     margin-top: 12px;
-}
 
-/* Spacing between .rd-pgrid stacked inside the same .rd-pdash.
-   Useful for custom-rendered sections that use multiple rows of cards
-   (e.g. mod-backup with Row 1 full-width + Row 2 sidebar-main). */
-.rd-pdash > .rd-pgrid + .rd-pgrid {
-    margin-top: 20px;
-}
+    /* Spacing between .rd-pgrid stacked inside the same .rd-pdash.
+       Useful for custom-rendered sections that use multiple rows of cards
+       (e.g. mod-backup with Row 1 full-width + Row 2 sidebar-main). */
+    > .rd-pgrid + .rd-pgrid {
+        margin-top: 20px;
+    }
 
-/* Gray header with info on the left + action on the right
-   Used in custom-rendered sections to give context and quick actions
-   (e.g. "Status: ON [badge]   [Clear reports]") */
-.rd-pdash__header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 16px;
-    margin-bottom: 20px;
-    padding: 12px 16px;
-    background: #f6f7f7;
-    border: 1px solid #dcdcde;
-    border-radius: 4px;
-    flex-wrap: wrap; /* mobile: the action wraps to the next line */
-}
+    /* Gray header with info on the left + action on the right
+       Used in custom-rendered sections to give context and quick actions
+       (e.g. "Status: ON [badge]   [Clear reports]") */
+    &__header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        margin-bottom: 20px;
+        padding: 12px 16px;
+        background: $rd-bg-strip;
+        border: 1px solid $rd-border-light;
+        border-radius: 4px;
+        flex-wrap: wrap; /* mobile: the action wraps to the next line */
+    }
 
-.rd-pdash__header-info {
-    color: #50575e;
-    font-size: 0.85rem;
-    /* no global italic — badges/strong inside the info stay normal */
-}
+    &__header-info {
+        color: $rd-text-secondary;
+        font-size: 0.85rem;
+        /* no global italic — badges/strong inside the info stay normal */
+    }
 
-.rd-pdash__header-action {
-    flex-shrink: 0;
+    &__header-action {
+        flex-shrink: 0;
+    }
 }
 
 /* -----------------------------------------------
@@ -84,129 +110,129 @@
    Main content container inside a dashboard.
    ----------------------------------------------- */
 .rd-pcard {
-    background: #fff;
-    border: 1px solid #c3c4c7;
+    background: $rd-white;
+    border: 1px solid $rd-border;
     border-radius: 4px;
     padding: 20px 24px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+    box-shadow: $rd-shadow-card;
     min-width: 0; /* CRITICAL in grid items — without it, long text forces horizontal overflow */
-}
 
-/* For vertically stacked cards, use .rd-pgrid (which has gap: 20px).
-   Don't use `.rd-pcard + .rd-pcard { margin-top }` because it breaks visual
-   alignment when cards are in a horizontal grid (item 2+ get pushed down by
-   the margin-top, leaving row item 1 visually "taller"). */
+    /* For vertically stacked cards, use .rd-pgrid (which has gap: 20px).
+       Don't use `.rd-pcard + .rd-pcard { margin-top }` because it breaks visual
+       alignment when cards are in a horizontal grid (item 2+ get pushed down by
+       the margin-top, leaving row item 1 visually "taller"). */
 
-.rd-pcard__title {
-    margin: 0 0 8px;
-    color: #1d2327;
-    font-size: 1rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-}
+    &__title {
+        margin: 0 0 8px;
+        color: $rd-text;
+        font-size: 1rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
 
-.rd-pcard__desc {
-    color: #50575e;
-    margin: 0 0 16px;
-    line-height: 1.5;
-}
+    &__desc {
+        color: $rd-text-secondary;
+        margin: 0 0 16px;
+        line-height: 1.5;
+    }
 
-.rd-pcard__body {
-    /* No default rules — just groups the content between title/desc and hint.
-       Each consumer (table, list, form, etc.) defines its own styles. */
-}
+    &__body {
+        /* No default rules — just groups the content between title/desc and hint.
+           Each consumer (table, list, form, etc.) defines its own styles. */
+    }
 
-/* Action row — utility class to align [explanatory text] + [action button]
-   on one line, both pushed to the right of the card. Used in action cards
-   like Export/Import/Restore/Regenerate. On mobile, it wraps to a column via
-   flex-wrap but keeps the right alignment.
+    /* Action row — utility class to align [explanatory text] + [action button]
+       on one line, both pushed to the right of the card. Used in action cards
+       like Export/Import/Restore/Regenerate. On mobile, it wraps to a column via
+       flex-wrap but keeps the right alignment.
 
-   HTML pattern:
-     <p class="rd-pcard__action-row">
-       <span>Explanatory text / count / hint</span>
-       <button class="button">Action</button>
-     </p>
-*/
-.rd-pcard__action-row {
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    flex-wrap: wrap;
-    gap: 12px;
-    margin: 0; /* override the WP admin default <p> margin */
-}
+       HTML pattern:
+         <p class="rd-pcard__action-row">
+           <span>Explanatory text / count / hint</span>
+           <button class="button">Action</button>
+         </p>
+    */
+    &__action-row {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin: 0; /* override the WP admin default <p> margin */
+    }
 
-.rd-pcard__hint {
-    color: #757575;
-    font-size: 0.85rem;
-    font-style: italic;
-    margin: 16px 0 0;
-    padding-top: 12px;
-    border-top: 1px solid #f0f0f1;
-}
+    &__hint {
+        color: $rd-text-muted;
+        font-size: 0.85rem;
+        font-style: italic;
+        margin: 16px 0 0;
+        padding-top: 12px;
+        border-top: 1px solid $rd-border-faint;
 
-.rd-pcard__hint code {
-    background: #f0f0f1;
-    padding: 1px 5px;
-    border-radius: 3px;
-    font-size: 0.85rem;
-    font-style: normal;
-}
+        code {
+            background: $rd-border-faint;
+            padding: 1px 5px;
+            border-radius: 3px;
+            font-size: 0.85rem;
+            font-style: normal;
+        }
+    }
 
-/* Highlighted metric inside a card (big number + optional hint).
-   Pattern used by the Dashboard tab (Wave 11 Phase F) — views/24h, posts/month, etc. */
-.rd-pcard__big-number {
-    font-size: 2.6rem;
-    font-weight: 700;
-    color: #2271b1;
-    line-height: 1;
-    font-variant-numeric: tabular-nums; /* aligns digits by column to read big numbers */
-    margin: 8px 0;
-}
+    /* Highlighted metric inside a card (big number + optional hint).
+       Pattern used by the Dashboard tab (Wave 11 Phase F) — views/24h, posts/month, etc. */
+    &__big-number {
+        font-size: 2.6rem;
+        font-weight: 700;
+        color: $rd-blue;
+        line-height: 1;
+        font-variant-numeric: tabular-nums; /* aligns digits by column to read big numbers */
+        margin: 8px 0;
+    }
 
-.rd-pcard__big-hint {
-    color: #757575;
-    font-size: 0.85rem;
-    margin-top: 4px;
-}
+    &__big-hint {
+        color: $rd-text-muted;
+        font-size: 0.85rem;
+        margin-top: 4px;
 
-.rd-pcard__big-hint a {
-    color: #2271b1;
-    text-decoration: none;
-}
+        a {
+            color: $rd-blue;
+            text-decoration: none;
 
-.rd-pcard__big-hint a:hover {
-    text-decoration: underline;
-}
+            &:hover {
+                text-decoration: underline;
+            }
+        }
+    }
 
-/* Modifier: "placeholder" card — pending or in-development feature.
-   Subtler look to signal "this is here but not functional yet". */
-.rd-pcard--placeholder {
-    background: #f6f7f7;
-    border-style: dashed;
-}
+    /* Modifier: "placeholder" card — pending or in-development feature.
+       Subtler look to signal "this is here but not functional yet". */
+    &--placeholder {
+        background: $rd-bg-strip;
+        border-style: dashed;
+    }
 
-/* Modifier: "warning" card — reversible but dangerous action (e.g. Restore backup).
-   Amber left-border + light yellow background to signal "careful here". */
-.rd-pcard--warning {
-    border-left: 4px solid #d29922;
-    background: #fdf6e3;
-}
+    /* Modifier: "warning" card — reversible but dangerous action (e.g. Restore backup).
+       Amber left-border + light yellow background to signal "careful here". */
+    &--warning {
+        border-left: 4px solid $rd-amber;
+        background: $rd-amber-bg;
 
-.rd-pcard--warning .rd-pcard__title {
-    color: #79670a; /* dark amber for contrast with the background */
-}
+        .rd-pcard__title {
+            color: $rd-amber-text; /* dark amber for contrast with the background */
+        }
+    }
 
-/* Modifier: "danger" card — destructive action (e.g. delete all reports).
-   Red left-border + very light pink background. */
-.rd-pcard--danger {
-    border-left: 4px solid #d63638;
-    background: #fdf0f0;
-}
+    /* Modifier: "danger" card — destructive action (e.g. delete all reports).
+       Red left-border + very light pink background. */
+    &--danger {
+        border-left: 4px solid $rd-red;
+        background: $rd-red-bg;
 
-.rd-pcard--danger .rd-pcard__title {
-    color: #8a1f20;
+        .rd-pcard__title {
+            color: $rd-red-text;
+        }
+    }
 }
 
 /* -----------------------------------------------
@@ -224,44 +250,44 @@
     font-style: normal;
     line-height: 1.5;
     vertical-align: middle;
-}
 
-.rd-pbadge--info {
-    background: rgba(34, 113, 177, 0.12);
-    color: #2271b1;
-}
+    &--info {
+        background: rgba($rd-blue, 0.12);
+        color: $rd-blue;
+    }
 
-.rd-pbadge--success {
-    background: rgba(0, 122, 57, 0.12);
-    color: #007a39;
-}
+    &--success {
+        background: rgba($rd-green, 0.12);
+        color: $rd-green;
+    }
 
-.rd-pbadge--warning {
-    background: rgba(210, 153, 34, 0.18);
-    color: #79670a;
-}
+    &--warning {
+        background: rgba($rd-amber, 0.18);
+        color: $rd-amber-text;
+    }
 
-.rd-pbadge--danger {
-    background: rgba(214, 54, 56, 0.12);
-    color: #d63638;
-}
+    &--danger {
+        background: rgba($rd-red, 0.12);
+        color: $rd-red;
+    }
 
-.rd-pbadge--neutral {
-    background: rgba(0, 0, 0, 0.07);
-    color: #50575e;
-}
+    &--neutral {
+        background: rgba(0, 0, 0, 0.07);
+        color: $rd-text-secondary;
+    }
 
-/* Emoji prefix inside the badge (e.g. ⚠️ ON in Maintenance Mode).
-   Emojis have a different baseline than text — a small tweak via top:-1px
-   visually aligns it with the uppercase text. (No vertical-align: middle —
-   empirically tested, it conflicts with top:-1px and shifts too much.) */
-.rd-pbadge__emoji {
-    display: inline-block;
-    margin-right: 3px;
-    font-size: 0.85rem;
-    line-height: 1;
-    position: relative;
-    top: -1px;
+    /* Emoji prefix inside the badge (e.g. ⚠️ ON in Maintenance Mode).
+       Emojis have a different baseline than text — a small tweak via top:-1px
+       visually aligns it with the uppercase text. (No vertical-align: middle —
+       empirically tested, it conflicts with top:-1px and shifts too much.) */
+    &__emoji {
+        display: inline-block;
+        margin-right: 3px;
+        font-size: 0.85rem;
+        line-height: 1;
+        position: relative;
+        top: -1px;
+    }
 }
 
 /* -----------------------------------------------
@@ -284,61 +310,63 @@
     vertical-align: middle;
     /* Reset margin/outline to look custom */
     margin: 0;
-}
 
-.rd-pswitch:focus {
-    outline: none;
-}
+    &:focus {
+        outline: none;
+    }
 
-.rd-pswitch:focus-visible .rd-pswitch__track {
-    box-shadow: 0 0 0 2px #2271b1;
-}
+    &:focus-visible .rd-pswitch__track {
+        box-shadow: 0 0 0 2px $rd-blue;
+    }
 
-.rd-pswitch__track {
-    /* Gray/green track — the sliding part behind the thumb */
-    position: absolute;
-    inset: 0;
-    background: #c3c4c7;
-    border-radius: 12px;
-    transition: background 0.15s ease;
-}
+    &__track {
+        /* Gray/green track — the sliding part behind the thumb */
+        position: absolute;
+        inset: 0;
+        background: $rd-border;
+        border-radius: 12px;
+        transition: background 0.15s ease;
+    }
 
-.rd-pswitch__thumb {
-    /* White knob — slides left/right */
-    position: absolute;
-    top: 3px;
-    left: 3px;
-    width: 15px;
-    height: 15px;
-    background: #fff;
-    border-radius: 50%;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
-    transition: left 0.15s ease;
-}
+    &__thumb {
+        /* White knob — slides left/right */
+        position: absolute;
+        top: 3px;
+        left: 3px;
+        width: 15px;
+        height: 15px;
+        background: $rd-white;
+        border-radius: 50%;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+        transition: left 0.15s ease;
+    }
 
-/* ON state (aria-checked="true") — green track + thumb on the right */
-.rd-pswitch[aria-checked="true"] .rd-pswitch__track {
-    background: #007a39;
-}
+    /* ON state (aria-checked="true") — green track + thumb on the right */
+    &[aria-checked="true"] {
+        .rd-pswitch__track {
+            background: $rd-green;
+        }
 
-.rd-pswitch[aria-checked="true"] .rd-pswitch__thumb {
-    left: 25px; /* 44 - 18 - 3 = 23 */
-}
+        .rd-pswitch__thumb {
+            left: 25px; /* 44 - 18 - 3 = 23 */
+        }
+    }
 
-/* "saving" state (during the AJAX request) — processing visual */
-.rd-pswitch.is-loading .rd-pswitch__track {
-    opacity: 0.5;
-}
+    /* "saving" state (during the AJAX request) — processing visual */
+    &.is-loading {
+        cursor: wait;
+        pointer-events: none;
 
-.rd-pswitch.is-loading {
-    cursor: wait;
-    pointer-events: none;
-}
+        .rd-pswitch__track {
+            opacity: 0.5;
+        }
+    }
 
-/* "error" state (AJAX failed) — quick red track to signal it */
-.rd-pswitch.is-error .rd-pswitch__track {
-    background: #d63638;
-    animation: rd-pswitch-shake 0.3s ease-out;
+    /* "error" state (AJAX failed) — quick red track to signal it */
+    &.is-error .rd-pswitch__track {
+        background: $rd-red;
+        animation: rd-pswitch-shake 0.3s ease-out;
+    }
 }
 
 @keyframes rd-pswitch-shake {
@@ -357,30 +385,30 @@
     border-radius: 4px;
     font-size: 0.92rem;
     line-height: 1.5;
-}
 
-.rd-pstatus--info {
-    background: rgba(34, 113, 177, 0.08);
-    border-left: 4px solid #2271b1;
-    color: #1d2327;
-}
+    &--info {
+        background: rgba($rd-blue, 0.08);
+        border-left: 4px solid $rd-blue;
+        color: $rd-text;
+    }
 
-.rd-pstatus--success {
-    background: rgba(0, 122, 57, 0.1);
-    border-left: 4px solid #007a39;
-    color: #1d2327;
-}
+    &--success {
+        background: rgba($rd-green, 0.1);
+        border-left: 4px solid $rd-green;
+        color: $rd-text;
+    }
 
-.rd-pstatus--warning {
-    background: rgba(210, 153, 34, 0.12);
-    border-left: 4px solid #d29922;
-    color: #1d2327;
-}
+    &--warning {
+        background: rgba($rd-amber, 0.12);
+        border-left: 4px solid $rd-amber;
+        color: $rd-text;
+    }
 
-.rd-pstatus--danger {
-    background: rgba(214, 54, 56, 0.1);
-    border-left: 4px solid #d63638;
-    color: #1d2327;
+    &--danger {
+        background: rgba($rd-red, 0.1);
+        border-left: 4px solid $rd-red;
+        color: $rd-text;
+    }
 }
 
 /* -----------------------------------------------
@@ -388,7 +416,7 @@
    Centered italic text for "nothing to show here".
    ----------------------------------------------- */
 .rd-pempty {
-    color: #757575;
+    color: $rd-text-muted;
     font-style: italic;
     margin: 0;
     padding: 20px 0;
@@ -405,7 +433,7 @@
     grid-template-columns: 1fr;
 }
 
-@media (min-width: 1024px) {
+@media (min-width: $rd-bp-lg) {
     .rd-pgrid--two-cols {
         grid-template-columns: 1fr 1fr;
     }
@@ -431,7 +459,7 @@
 /* Intermediate breakpoints: at medium viewport (768-1023px) the dense grids
    reduce columns so they don't compress too much. Mobile (<768px) falls back
    to 1 column via the base rule. */
-@media (min-width: 768px) and (max-width: 1023px) {
+@media (min-width: $rd-bp-md) and (max-width: $rd-bp-lg - 1) {
     .rd-pgrid--four-cols {
         grid-template-columns: 1fr 1fr;
     }
@@ -442,7 +470,7 @@
 }
 
 /* A grid item can span the whole row on desktop via a modifier */
-@media (min-width: 1024px) {
+@media (min-width: $rd-bp-lg) {
     .rd-pgrid__item--full {
         grid-column: 1 / -1;
     }
@@ -459,46 +487,46 @@
     gap: 12px;
     margin: 24px 0 16px;
     padding-bottom: 12px;
-    border-bottom: 1px solid #dcdcde;
+    border-bottom: 1px solid $rd-border-light;
     flex-wrap: wrap;
-}
 
-.rd-psection-header__icon {
-    color: #2271b1;
-    font-size: 24px;
-    width: 24px;
-    height: 24px;
-    flex-shrink: 0;
-}
+    &__icon {
+        color: $rd-blue;
+        font-size: 24px;
+        width: 24px;
+        height: 24px;
+        flex-shrink: 0;
+    }
 
-/* The title is an <h2> — to harmonize with the rest of the WP admin, we fix
-   size/weight and zero out paddings (WP admin has <h2> rules with large
-   padding/font-size that blew out the header layout). */
-.rd-psection-header__title {
-    margin: 0;
-    padding: 0;
-    color: #1d2327;
-    font-size: 1.1rem;
-    font-weight: 600;
-    line-height: 1.4;
-    flex: 1;
-    min-width: 0;
-    background: none; /* defense against a theme/plugin styling <h2> with a background */
-}
+    /* The title is an <h2> — to harmonize with the rest of the WP admin, we fix
+       size/weight and zero out paddings (WP admin has <h2> rules with large
+       padding/font-size that blew out the header layout). */
+    &__title {
+        margin: 0;
+        padding: 0;
+        color: $rd-text;
+        font-size: 1.1rem;
+        font-weight: 600;
+        line-height: 1.4;
+        flex: 1;
+        min-width: 0;
+        background: none; /* defense against a theme/plugin styling <h2> with a background */
+    }
 
-.rd-psection-header__desc {
-    flex-basis: 100%;
-    margin: 4px 0 0;
-    color: #50575e;
-    font-size: 0.9rem;
-    line-height: 1.5;
-}
+    &__desc {
+        flex-basis: 100%;
+        margin: 4px 0 0;
+        color: $rd-text-secondary;
+        font-size: 0.9rem;
+        line-height: 1.5;
 
-.rd-psection-header__desc code {
-    background: #f0f0f1;
-    padding: 1px 5px;
-    border-radius: 3px;
-    font-size: 0.85rem;
+        code {
+            background: $rd-border-faint;
+            padding: 1px 5px;
+            border-radius: 3px;
+            font-size: 0.85rem;
+        }
+    }
 }
 
 /* ╔════════════════════════════════════════════════════════════════════════════╗
