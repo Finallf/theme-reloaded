@@ -10,31 +10,32 @@
 							<?php else : ?>
 								<h2 class="footer-title"><?php echo esc_html( get_bloginfo( 'name' ) ); ?></h2>
 							<?php endif; ?>
-							<p><?php esc_html_e( 'News, technology, games and the best of the open-source world. Where information is reloaded daily.', 'reloaded' ); ?></p>
-						</div>
-
-						<div class="footer-column">
-							<h3 class="footer-heading"><?php esc_html_e( 'Navigation', 'reloaded' ); ?></h3>
 							<?php
-							wp_nav_menu(
-								array(
-									'theme_location' => 'menu-footer',
-									'container'      => false,
-									'menu_class'     => 'footer-links',
-									'fallback_cb'    => false,
-								)
-							);
+							// Tagline from the WP Site Description (Settings > General), with the
+							// original sentence as a fallback when the description is empty.
+							$footer_tagline = get_bloginfo( 'description' );
+							if ( '' === trim( (string) $footer_tagline ) ) {
+								$footer_tagline = __( 'News, technology, games and the best of the open-source world. Where information is reloaded daily.', 'reloaded' );
+							}
 							?>
+							<p><?php echo esc_html( $footer_tagline ); ?></p>
 						</div>
 
-						<div class="footer-column">
-							<?php if ( is_active_sidebar( 'footer-widget-area' ) ) : ?>
-								<?php dynamic_sidebar( 'footer-widget-area' ); ?>
-							<?php else : ?>
-								<h3 class="footer-heading"><?php esc_html_e( 'Featured', 'reloaded' ); ?></h3>
-								<p class="footer-widget-empty"><?php esc_html_e( 'Add a widget in Appearance > Widgets.', 'reloaded' ); ?></p>
-							<?php endif; ?>
-						</div>
+						<?php
+						// Footer columns 2-4 — dynamic widget areas. The empty-state hint shows
+						// only to admins, so visitors never see setup instructions.
+						foreach ( array( 'footer-widget-area', 'footer-widget-area-2', 'footer-widget-area-3' ) as $rd_footer_col ) :
+							?>
+							<div class="footer-column">
+								<?php if ( is_active_sidebar( $rd_footer_col ) ) : ?>
+									<?php dynamic_sidebar( $rd_footer_col ); ?>
+								<?php elseif ( current_user_can( 'edit_theme_options' ) ) : ?>
+									<p class="footer-widget-empty"><?php esc_html_e( 'Add a widget in Appearance > Widgets.', 'reloaded' ); ?></p>
+								<?php endif; ?>
+							</div>
+							<?php
+						endforeach;
+						?>
 
 					</div>
 

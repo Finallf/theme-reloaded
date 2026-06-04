@@ -152,18 +152,27 @@ function rd_widgets_init() {
 		)
 	);
 
-	// Footer — dynamic area.
-	register_sidebar(
-		array(
-			'name'          => __( 'Footer - Column 3 (Popular Posts)', 'reloaded' ),
-			'id'            => 'footer-widget-area',
-			'description'   => __( 'Add widgets here to appear in the footer.', 'reloaded' ),
-			'before_widget' => '<div id="%1$s" class="widget footer-widget %2$s">',
-			'after_widget'  => '</div>',
-			'before_title'  => '<h3 class="footer-heading">',
-			'after_title'   => '</h3>',
-		)
+	// Footer — 3 dynamic columns (columns 2-4 of the footer grid; column 1 is the
+	// fixed brand block in footer.php). The first keeps the legacy id
+	// `footer-widget-area` so any widget already placed there is preserved.
+	$rd_footer_columns = array(
+		'footer-widget-area'   => __( 'Footer Column 2', 'reloaded' ),
+		'footer-widget-area-2' => __( 'Footer Column 3', 'reloaded' ),
+		'footer-widget-area-3' => __( 'Footer Column 4', 'reloaded' ),
 	);
+	foreach ( $rd_footer_columns as $rd_footer_id => $rd_footer_name ) {
+		register_sidebar(
+			array(
+				'name'          => $rd_footer_name,
+				'id'            => $rd_footer_id,
+				'description'   => __( 'Add widgets here to appear in this footer column.', 'reloaded' ),
+				'before_widget' => '<div id="%1$s" class="widget footer-widget %2$s">',
+				'after_widget'  => '</div>',
+				'before_title'  => '<h3 class="footer-heading">',
+				'after_title'   => '</h3>',
+			)
+		);
+	}
 }
 add_action( 'widgets_init', 'rd_widgets_init' );
 
