@@ -162,6 +162,7 @@ Priority 5 no wp_head:
 
 - **YouTube Facade** (`facade_youtube`): hook em `embed_oembed_html` substitui iframes YT por `<div class="rd-facade">` com thumb. Swap pra iframe real ao clicar feito em `navigation.js`
   - **Timestamp preservation**: helper `rd_youtube_parse_timestamp($t)` parseia o parâmetro de tempo da URL original (4 formatos aceitos pelo YouTube: `30` puro, `30s` com sufixo, `1m30s`, `1h2m30s`) e devolve inteiro em segundos. Tenta `?t=` primeiro (formato user-facing das URLs de share), cai pra `?start=N` (embed). Injeta `data-t="N"` no `<div class="rd-facade">` quando > 0. O click handler em `navigation.js` lê o atributo e propaga como `&start=N` na URL do iframe — vídeo abre no tempo correto. Sem timestamp na URL = atributo não renderiza = comportamento idêntico ao anterior
+  - **Helpers reusáveis**: a extração de ID e a montagem do markup foram fatoradas em 3 funções — `rd_youtube_extract_id($text)` (acha o 1º ID de vídeo num texto, seja uma URL única ou um `post_content` inteiro), `rd_youtube_cover_html($id)` (thumbnail + botão play) e `rd_youtube_facade_markup($id, $t)` (wrapper `.rd-facade` completo). O filtro oEmbed e o widget "Latest Video" (sidebar/footer) compartilham os mesmos helpers — saída do facade inalterada
 
 ### Database / Server
 
@@ -786,6 +787,8 @@ A função `rd_dashboard_render()` (callback de `add_settings_section('sec_dashb
 
 9 cards com **toggle switch inline** (Maintenance Mode, Statistics Tracking, Critical CSS Inline, Top Bar, Comments, Markdown, Discord Widget, YouTube Facade, Breadcrumbs) — admin flipa ON/OFF sem sair do Dashboard.
 
+**Tooltips de nome (Wave 12)** — passar o mouse no **nome** de qualquer card do Site Status mostra uma explicação curta do que a feature faz, reusando o mesmo balão `[data-tooltip]` dos switches/engrenagens (fundo preto translúcido). O balão fica centralizado sobre o card (âncora via `position: relative` no `.rd-pcard`) e o texto em caixa normal. As explicações vivem em `rd_dashboard_get_status_tooltips()` (keyed pelo option name de cada card) e são injetadas pelo novo arg `tooltip` do `rd_panel_card_open()`.
+
 **AJAX endpoint `wp_ajax_rd_dashboard_toggle`** (callback `rd_dashboard_ajax_toggle()`) — defesa em profundidade:
 
 - **Whitelist constant** `RD_DASHBOARD_TOGGLE_WHITELIST` restringe quais option keys podem ser flipadas (9 atualmente — todas binárias 0/1)
@@ -816,7 +819,8 @@ Retorna JSON `{ ok: true|false, key, value | error }`. Maintenance Mode é o ún
 
 ### Helpers internos
 
-- `rd_dashboard_get_status_data()` — coleta os 6 itens de status (lê 8 options diferentes via `rd_get_option_bool`)
+- `rd_dashboard_get_status_data()` — coleta os itens de status (lê os options via `rd_get_option_bool`)
+- `rd_dashboard_get_status_tooltips()` — mapa `option name → explicação curta` mostrada no tooltip do nome do card (mantido separado do status data pra não inchar aquele array)
 - `rd_dashboard_get_metrics_data()` — coleta as 3 métricas
 - `rd_dashboard_get_quick_actions()` — monta a lista de atalhos (URL/icon/label)
 
@@ -918,6 +922,42 @@ Lista vertical (`<ul class="rd-popular-posts">`) com item per-post (`<li class="
 ### CSS
 
 Estilos próprios em `sass/components/_popular-widget.scss`. Pra herdar o **card glass shell** da sidebar (background, border, padding, shadow, h2 com linha azul), o `_sidebar.scss` foi refatorado pra que o seletor do shell inclua `.widget_block, .widget_rd_popular_posts`. Pra inscrever futuros widgets clássicos do tema nesse shell, basta adicionar o classname ao seletor.
+
+---
+
+## 🎬 `inc/class-rd-latest-video-widget.php` — Widget "Latest Video" (Último Vídeo)
+
+**Segundo widget WP nativo do tema** (mesma convenção `class-{kebab-case}.php` do popular). Classe `RD_Latest_Video_Widget extends WP_Widget`, registrada em `widgets_init`. Aparece em **Aparência → Widgets** como "ReloadeD: Latest Video" e pode ser arrastado pra **qualquer área registrada** — Main Sidebar (`sidebar-1`) **ou** Footer (`footer-widget-area`). Esse é o ganho do modelo `WP_Widget`: posicionamento livre, sem toggle dedicado no painel.
+
+Mostra o **vídeo mais recente** de uma categoria escolhida: varre os últimos posts da categoria e pega o **primeiro embed do YouTube** encontrado no conteúdo.
+
+### Configuração no admin (`form()`)
+
+- **Title** (text) — default `"Latest Video"`
+- **Category** (select via `wp_dropdown_categories`) — categoria de onde puxar os vídeos. Per-instance: cada widget pode apontar pra uma categoria diferente
+
+### Output frontend (`widget()`)
+
+1. Lê categoria + título. Sem categoria escolhida → não renderiza nada.
+2. `get_latest_video($cat_id)` busca os últimos `SCAN_LIMIT` (10) posts publicados da categoria (data desc) e roda `rd_youtube_extract_id()` no `post_content` de cada um — o **primeiro com YouTube válido** vence (pula posts sem vídeo). Nenhum vídeo na categoria → widget não renderiza.
+3. Renderiza dentro de `<div class="rd-lvideo">`:
+   - **Facade ON** (`facade_youtube`) → reusa `rd_youtube_facade_markup()` (mesmo `.rd-facade` click-to-load; `navigation.js` troca pelo iframe no clique)
+   - **Facade OFF** → `<a class="rd-lvideo__poster">` com o mesmo thumbnail (`rd_youtube_cover_html()`) linkando pro **post** — a sidebar/footer nunca carrega um iframe pesado
+   - **+ título curto** (`.rd-lvideo__title`) linkando pro post
+
+### Cache
+
+Resultado (ou marcador `'none'`) guardado no transient `rd_latest_video_{cat_id}` (TTL 1h). Invalidado em `save_post` + `before_delete_post` (`rd_latest_video_flush_cache()`): varre as categorias do post e limpa o transient de cada uma. A varredura roda no máximo 1×/hora por categoria, e um vídeo novo aparece assim que publicado.
+
+### Dependências (todas em `mod-performance.php`)
+
+- `rd_youtube_extract_id($text)` — acha o 1º ID de vídeo num texto (URL ou `post_content`)
+- `rd_youtube_facade_markup($id, $t)` — wrapper `.rd-facade` (facade ON)
+- `rd_youtube_cover_html($id)` — thumbnail + botão play (facade OFF)
+
+### CSS
+
+`sass/components/_latest-video.scss`. O caminho facade-ON reusa `.rd-facade` (já estilizado em `_facades.scss`); o `.rd-lvideo__poster` (facade OFF) espelha o visual mas como `<a>` — a classe `.rd-facade` é **evitada** ali pra não brigar com o handler de clique do `navigation.js`. Inscrito no card glass shell da sidebar via `.widget_rd_latest_video` no `_sidebar.scss`.
 
 ---
 

@@ -59,6 +59,8 @@ Grid de **15 cards** em 5 colunas (3 linhas × 5 cards em desktop; 3 colunas em 
 
 **Toggle switches inline:** componente `.rd-pswitch` (track + thumb animado). Clicar flipa via AJAX (`wp_ajax_rd_dashboard_toggle`) sem reload. Defesa em profundidade: whitelist server-side de 11 keys permitidas + nonce + `current_user_can('manage_options')` + validação estrita de valor. Maintenance Mode mostra confirm dialog ao **ligar** (operação que bloqueia visitantes); desligar é sempre seguro, sem confirm.
 
+**Tooltips de nome:** passar o mouse no **nome** de cada card mostra uma explicação curta da feature, reusando o balão `[data-tooltip]` dos switches/engrenagens (fundo preto translúcido, centralizado sobre o card). As explicações vêm de `rd_dashboard_get_status_tooltips()` e são injetadas via o arg `tooltip` do `rd_panel_card_open()`.
+
 **Layout estável dos controles:** o switch/gear fica sempre na **esquerda** do card e o badge à **direita** via `justify-content: space-between` no `.rd-dashboard-status-line`. Sem isso, a posição do controle "jumpava" 1px lateralmente quando o badge mudava de "ON" pra "OFF" (texto ~5px mais largo). Agora o ajuste cai no gap central, controle fica plantado.
 
 **Deep link buttons:** ícone de engrenagem com tooltip estilizado (fundo escuro com setinha, visual igual ao Chart.js). Click abre a aba relevante e o browser scrolla nativo até a section via hash anchor — sem JS necessário.

@@ -2,7 +2,7 @@
 
 ## 🎨 Arquitetura SCSS
 
-O CSS do tema é totalmente **escrito em SCSS** com sistema modular `@use`. O entry point do frontend é `sass/style.scss`, que importa todos os parciais → `assets/css/style.css`. O painel admin tem um source próprio standalone, `sass/admin-style.scss` → `assets/css/admin-style.css` (não usa `@use`, é um arquivo único; convertido de CSS-à-mão pra SCSS pra ganhar minificação + comentários stripados no build, igual ao frontend).
+O CSS do tema é totalmente **escrito em SCSS** com sistema modular `@use`. O entry point do frontend é `sass/style.scss`, que importa todos os parciais → `assets/css/style.css`. O painel admin tem um source próprio standalone, `sass/admin-style.scss` → `assets/css/admin-style.css` (não usa `@use`, é um arquivo único; convertido de CSS-à-mão pra SCSS pra ganhar minificação + comentários stripados no build, igual ao frontend). A **Fase 2** do refactor reorganizou o arquivo inteiro: paleta nativa do wp-admin centralizada em ~22 variáveis `$rd-*` + nesting BEM (`&__elem`/`&--mod`) em todos os seletores. Continua standalone — **não** compartilha os tokens do frontend (`base/_tokens.scss`), porque a paleta do admin é a do wp-admin (azul `#2271b1`, cinzas `#1d2327`/`#50575e`, etc.), não a da marca.
 
 ### Estrutura de pastas
 
@@ -27,6 +27,7 @@ sass/
     ├── _buttons.scss       # Botões compartilhados
     ├── _comments.scss      # Lista de comentários + form
     ├── _facades.scss       # Facade YouTube/Discord (estado clickable)
+    ├── _latest-video.scss  # Widget "Último Vídeo" da sidebar/footer (reusa o facade)
     ├── _lgpd.scss          # Banner de cookies (expansível, 3 categorias de consent)
     ├── _markdown.scss      # Estilização de conteúdo Markdown (h_, code, blockquote, table, alerts GitHub-style)
     ├── _overline.scss      # Chapéu/sobretítulo do post (dois contextos: single + card)
@@ -69,6 +70,7 @@ sass/
 @use 'components/page-archive';
 @use 'components/pagination';
 @use 'components/popular-widget';   // Widget "Most Read" da sidebar
+@use 'components/latest-video';     // Widget "Último Vídeo" da sidebar/footer
 @use 'components/search';
 @use 'components/related-posts';    // Depois de search — herda .rd-wrapper-grid
 @use 'components/toc';              // Sticky Table of Contents (FAB)
