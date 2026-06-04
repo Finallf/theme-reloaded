@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ReloadeD 0.1.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/theme/reloaded\n"
-"POT-Creation-Date: 2026-05-30T12:30:51-03:00\n"
-"PO-Revision-Date: 2026-05-30 17:54-0300\n"
+"POT-Creation-Date: 2026-06-04T00:21:09-03:00\n"
+"PO-Revision-Date: 2026-06-04 00:27-0300\n"
 "Last-Translator: Regis Vieira Delgado (Finallf) <finallf2@gmail.com>\n"
 "Language-Team: Brazilian Portuguese\n"
 "Language: pt_BR\n"
@@ -56,8 +56,8 @@ msgstr "PORTÃO SELADO"
 #: 403.php:39
 msgid ""
 "You approach a locked door. The guardian does not recognize your authority — "
-"this chamber requires a key you have not yet earned. Return to the main portal "
-"or present your credentials to try again."
+"this chamber requires a key you have not yet earned. Return to the main "
+"portal or present your credentials to try again."
 msgstr ""
 "Você se aproxima de uma porta trancada. O guardião não reconhece sua "
 "autoridade — esta câmara requer uma chave que você ainda não possui. Retorne "
@@ -89,8 +89,8 @@ msgid ""
 "have been removed, moved to another coordinate, or never existed in this "
 "universe."
 msgstr ""
-"Esta área não existe no mapa do portal. O caminho que você tentou acessar pode "
-"ter sido removido, movido para outra coordenada, ou nunca existiu neste "
+"Esta área não existe no mapa do portal. O caminho que você tentou acessar "
+"pode ter sido removido, movido para outra coordenada, ou nunca existiu neste "
 "universo."
 
 #: 404.php:33
@@ -152,8 +152,8 @@ msgid ""
 "News, technology, games and the best of the open-source world. Where "
 "information is reloaded daily."
 msgstr ""
-"Notícias, tecnologia, games e o melhor do mundo open-source. Onde a informação "
-"é recarregada diariamente."
+"Notícias, tecnologia, games e o melhor do mundo open-source. Onde a "
+"informação é recarregada diariamente."
 
 #: footer.php:17
 msgid "Navigation"
@@ -214,7 +214,7 @@ msgstr "Abrir Pesquisa"
 msgid "Toggle dark/light mode"
 msgstr "Alternar modo claro/escuro"
 
-#: header.php:171
+#: header.php:171 inc/mod-performance.php:89
 msgid "Open navigation menu"
 msgstr "Abrir menu de navegação"
 
@@ -225,8 +225,8 @@ msgstr "ReloadeD: Mais Lidos"
 #: inc/class-rd-popular-posts-widget.php:28
 msgid ""
 "Lists most-viewed posts. Uses the theme view tracker, supports time windows "
-"(all-time / year / month / week), respects the global \"Views Display Format\" "
-"config."
+"(all-time / year / month / week), respects the global \"Views Display "
+"Format\" config."
 msgstr ""
 "Lista os posts mais visualizados. Usa o rastreador de visualizações do tema, "
 "suporta janelas temporais (sempre / ano / mês / semana), respeita a "
@@ -242,7 +242,7 @@ msgid "No popular posts yet."
 msgstr "Ainda não há posts populares."
 
 #: inc/class-rd-popular-posts-widget.php:100 inc/mod-dashboard.php:155
-#: inc/mod-stats.php:895 inc/post-card.php:36
+#: inc/mod-stats.php:877 inc/post-card.php:36
 msgid "Views"
 msgstr "Visualizações"
 
@@ -250,15 +250,15 @@ msgstr "Visualizações"
 msgid "All time"
 msgstr "Sempre"
 
-#: inc/class-rd-popular-posts-widget.php:122 inc/mod-stats.php:695
+#: inc/class-rd-popular-posts-widget.php:122 inc/mod-stats.php:677
 msgid "This year"
 msgstr "Este ano"
 
-#: inc/class-rd-popular-posts-widget.php:123 inc/mod-stats.php:694
+#: inc/class-rd-popular-posts-widget.php:123 inc/mod-stats.php:676
 msgid "This month"
 msgstr "Este mês"
 
-#: inc/class-rd-popular-posts-widget.php:124 inc/mod-stats.php:693
+#: inc/class-rd-popular-posts-widget.php:124 inc/mod-stats.php:675
 msgid "This week"
 msgstr "Esta semana"
 
@@ -274,35 +274,35 @@ msgstr "Janela temporal:"
 msgid "Number of posts to show:"
 msgstr "Quantidade de posts a exibir:"
 
-#: inc/core.php:51
+#: inc/core.php:52
 msgid "Primary Menu"
 msgstr "Menu Principal"
 
-#: inc/core.php:52
+#: inc/core.php:53
 msgid "Footer Menu"
 msgstr "Menu do Rodapé"
 
-#: inc/core.php:144
+#: inc/core.php:145
 msgid "Main Sidebar"
 msgstr "Barra Lateral Principal"
 
-#: inc/core.php:146
+#: inc/core.php:147
 msgid "Add widgets here to appear in the sidebar."
 msgstr "Adicione widgets aqui para aparecerem na lateral."
 
-#: inc/core.php:157
+#: inc/core.php:158
 msgid "Footer - Column 3 (Popular Posts)"
 msgstr "Rodapé - Coluna 3 (Posts Populares)"
 
-#: inc/core.php:159
+#: inc/core.php:160
 msgid "Add widgets here to appear in the footer."
 msgstr "Adicione widgets aqui para aparecerem no rodapé."
 
-#: inc/core.php:210
+#: inc/core.php:215
 msgid "Select fallback image"
 msgstr "Selecionar Imagem de Fallback"
 
-#: inc/core.php:211
+#: inc/core.php:216
 msgid "Use this image"
 msgstr "Usar esta imagem"
 
@@ -371,31 +371,31 @@ msgstr "A seção de banners de anúncios deve ser um objeto."
 msgid "No snapshot available — restore unavailable."
 msgstr "Nenhum snapshot disponível — restauração indisponível."
 
-#: inc/mod-backup.php:667
+#: inc/mod-backup.php:662
 msgid "Reading file..."
 msgstr "Lendo arquivo…"
 
-#: inc/mod-backup.php:668
+#: inc/mod-backup.php:663
 msgid "File is not valid JSON."
 msgstr "O arquivo não é um JSON válido."
 
-#: inc/mod-backup.php:669
+#: inc/mod-backup.php:664
 msgid "Validating and calculating diff..."
 msgstr "Validando e calculando as diferenças…"
 
-#: inc/mod-backup.php:670
+#: inc/mod-backup.php:665
 msgid "Applying import..."
 msgstr "Aplicando importação…"
 
-#: inc/mod-backup.php:671
+#: inc/mod-backup.php:666
 msgid "Import applied! Reloading page..."
 msgstr "Importação concluída! Recarregando a página…"
 
-#: inc/mod-backup.php:672
+#: inc/mod-backup.php:667
 msgid "Import failed:"
 msgstr "A importação falhou:"
 
-#: inc/mod-backup.php:673
+#: inc/mod-backup.php:668
 msgid ""
 "Confirm import? This will overwrite the current settings (an auto-backup will "
 "be saved before)."
@@ -403,135 +403,136 @@ msgstr ""
 "Confirmar importação? Isso substituirá as configurações atuais (um backup "
 "automático será salvo antes)."
 
-#: inc/mod-backup.php:674
+#: inc/mod-backup.php:669
 msgid "Restoring previous state..."
 msgstr "Restaurando o estado anterior…"
 
-#: inc/mod-backup.php:675
+#: inc/mod-backup.php:670
 msgid "Previous state restored! Reloading..."
 msgstr "Estado anterior restaurado! Recarregando…"
 
-#: inc/mod-backup.php:676
+#: inc/mod-backup.php:671
 msgid "Restore failed:"
 msgstr "A restauração falhou:"
 
-#: inc/mod-backup.php:677
+#: inc/mod-backup.php:672
 msgid ""
-"Restore the previous state (before the last import)? The current settings will "
-"be overwritten. This is a one-shot undo — the snapshot is deleted after "
+"Restore the previous state (before the last import)? The current settings "
+"will be overwritten. This is a one-shot undo — the snapshot is deleted after "
 "restore."
 msgstr ""
 "Restaura o estado anterior (antes da última importação)? As configurações "
 "atuais serão sobrescritas. Esta ação pode ser feita apenas uma vez — o "
 "instantâneo é excluído após a restauração."
 
-#: inc/mod-backup.php:679
+#: inc/mod-backup.php:674
 msgid "Preview"
 msgstr "Pré-visualização"
 
-#: inc/mod-backup.php:680
+#: inc/mod-backup.php:675
 msgid "Exported from:"
 msgstr "Exportado de:"
 
 #. translators: %s = theme version string like "0.4.0-beta.64"
-#: inc/mod-backup.php:682
+#: inc/mod-backup.php:677
 #, php-format
 msgid "theme %s"
 msgstr "tema %s"
 
-#: inc/mod-backup.php:683 inc/mod-backup.php:786
+#: inc/mod-backup.php:678 inc/mod-backup.php:781
 msgid "Settings"
 msgstr "Configurações"
 
-#: inc/mod-backup.php:684 inc/mod-backup.php:807
+#: inc/mod-backup.php:679 inc/mod-backup.php:802
 msgid "Ad banners"
 msgstr "Banners de anúncios"
 
-#: inc/mod-backup.php:685 inc/mod-backup.php:794
+#: inc/mod-backup.php:680 inc/mod-backup.php:789
 msgid "Category colors"
 msgstr "Cores das categorias"
 
 #. translators: %d = number of keys/items that will be updated by the import
-#: inc/mod-backup.php:687
+#: inc/mod-backup.php:682
 #, php-format
 msgid "%d will be UPDATED"
 msgstr "%d serão ATUALIZADAS"
 
 #. translators: %d = number of keys/items that will be added by the import
-#: inc/mod-backup.php:689
+#: inc/mod-backup.php:684
 #, php-format
 msgid "%d will be ADDED"
 msgstr "%d serão ADICIONADAS"
 
 #. translators: %d = number of settings keys currently set but absent from the import file
-#: inc/mod-backup.php:691
+#: inc/mod-backup.php:686
 #, php-format
 msgid "%d current keys NOT in file (will be kept)"
 msgstr "%d chaves atuais NÃO estão no arquivo (serão mantidas)"
 
 #. translators: %d = number of ad banner slots currently filled but absent from the import file
-#: inc/mod-backup.php:693
+#: inc/mod-backup.php:688
 #, php-format
 msgid "%d current ads NOT in file (will be kept)"
 msgstr "%d anúncios atuais NÃO estão no arquivo (serão mantidos)"
 
 #. translators: %d = number of category color entries skipped because no category with that slug exists on this site
-#: inc/mod-backup.php:695
+#: inc/mod-backup.php:690
 #, php-format
 msgid "%d SKIPPED (no matching slug here)"
 msgstr "%d IGNORADOS (nenhum slug correspondente aqui)"
 
-#: inc/mod-backup.php:696
+#: inc/mod-backup.php:691
 msgid "Show keys that will change"
 msgstr "Mostrar chaves que serão alteradas"
 
-#: inc/mod-backup.php:697
+#: inc/mod-backup.php:692
 msgid "Apply import"
 msgstr "Aplicar"
 
-#: inc/mod-backup.php:698
+#: inc/mod-backup.php:693
 msgid "Cancel"
 msgstr "Cancelar"
 
-#: inc/mod-backup.php:722 inc/mod-dashboard.php:643 inc/panel.php:264
+#: inc/mod-backup.php:717 inc/mod-dashboard.php:643 inc/panel.php:264
 msgid "Backup"
 msgstr "Backup"
 
-#: inc/mod-backup.php:765
+#: inc/mod-backup.php:760
 msgid "Export"
 msgstr "Exportar"
 
-#: inc/mod-backup.php:766
+#: inc/mod-backup.php:761
 msgid ""
 "Download a JSON file with the theme configuration from this install. Useful "
 "for migration (sandbox → production), snapshots before risky changes, or "
 "replicating the theme on another site."
 msgstr ""
 "Baixe um arquivo JSON com as configurações do tema. Útil para migração, "
-"criação de snapshots antes de alterações arriscadas ou para replicar o tema em "
-"outro site."
+"criação de snapshots antes de alterações arriscadas ou para replicar o tema "
+"em outro site."
 
-#: inc/mod-backup.php:776
+#: inc/mod-backup.php:771
 msgid "Theme configuration backup only."
 msgstr "Backup apenas das configurações do tema."
 
-#: inc/mod-backup.php:777
+#: inc/mod-backup.php:772
 msgid ""
 "This file contains panel options, category colors and ad codes. It does NOT "
 "include posts, pages, comments, media files or WordPress core data. For full "
 "site backups, use a dedicated plugin (UpdraftPlus, WPVivid, etc.) or your "
 "hosting provider's tools."
 msgstr ""
-"Este arquivo contém opções do painel, cores de categoria e códigos de anúncio. "
-"Ele NÃO inclui posts, páginas, comentários, arquivos de mídia ou dados do core "
-"do WordPress. Para backup completo do site, use um plugin dedicado "
-"(UpdraftPlus, WPVivid, etc.) ou as ferramentas do seu provedor de hospedagem."
+"Este arquivo contém opções do painel, cores de categoria e códigos de "
+"anúncio. Ele NÃO inclui posts, páginas, comentários, arquivos de mídia ou "
+"dados do core do WordPress. Para backup completo do site, use um plugin "
+"dedicado (UpdraftPlus, WPVivid, etc.) ou as ferramentas do seu provedor de "
+"hospedagem."
 
-#: inc/mod-backup.php:781
+#: inc/mod-backup.php:776
 msgid "Sections to include in the export"
 msgstr "Seções a serem incluídas na exportação"
 
-#: inc/mod-backup.php:787
+#: inc/mod-backup.php:782
 msgid ""
 "All panel toggles, IDs and texts (rd_settings option) — single key in the "
 "database, fully portable between sites"
@@ -540,7 +541,7 @@ msgstr ""
 "entre sites"
 
 #. translators: %d = number of categories with custom color set
-#: inc/mod-backup.php:798
+#: inc/mod-backup.php:793
 #, php-format
 msgid "%d category with custom color"
 msgid_plural "%d categories with custom colors"
@@ -548,14 +549,14 @@ msgstr[0] "%d categoria com cor personalizada"
 msgstr[1] "%d categorias com cores personalizadas"
 
 #. translators: %d = number of ad zones with content (keys starting with ad_)
-#: inc/mod-backup.php:811
+#: inc/mod-backup.php:806
 #, php-format
 msgid "%d ad zone with content"
 msgid_plural "%d ad zones with content"
 msgstr[0] "%d zona de anúncio com conteúdo"
 msgstr[1] "%d zonas de anúncio com conteúdo"
 
-#: inc/mod-backup.php:813
+#: inc/mod-backup.php:808
 msgid ""
 "tip: uncheck if migrating to another site (ad codes are often site-specific)"
 msgstr ""
@@ -563,20 +564,20 @@ msgstr ""
 "anúncios geralmente são específicos de cada site)"
 
 #. translators: %s = filename template like reloaded-backup-{host}-{YYYY-MM-DD}.json
-#: inc/mod-backup.php:824
+#: inc/mod-backup.php:819
 #, php-format
 msgid "Filename: %s"
 msgstr "Nome do arquivo: %s"
 
-#: inc/mod-backup.php:836
+#: inc/mod-backup.php:831
 msgid "Download backup JSON"
 msgstr "Baixar JSON"
 
-#: inc/mod-backup.php:858
+#: inc/mod-backup.php:853
 msgid "Import"
 msgstr "Importar"
 
-#: inc/mod-backup.php:859
+#: inc/mod-backup.php:854
 msgid ""
 "Upload a backup JSON, preview the diff, then apply. An auto-snapshot of the "
 "current state is saved before applying — safe to experiment."
@@ -585,28 +586,28 @@ msgstr ""
 "as alterações. Um instantâneo automático do estado atual é salvo antes da "
 "aplicação — seguro para experimentar."
 
-#: inc/mod-backup.php:865
+#: inc/mod-backup.php:860
 msgid "Use the Restore card (below) to undo if needed."
 msgstr "Use o campo Restaurar (abaixo) para desfazer, se necessário."
 
-#: inc/mod-backup.php:869
+#: inc/mod-backup.php:864
 msgid "Choose backup JSON"
 msgstr "Enviar JSON"
 
-#: inc/mod-backup.php:899 inc/mod-backup.php:911
+#: inc/mod-backup.php:894 inc/mod-backup.php:906
 msgid "Restore previous state"
 msgstr "Restaurar"
 
 #. translators: %s = formatted date/time of the last auto-snapshot
-#: inc/mod-backup.php:902
+#: inc/mod-backup.php:897
 #, php-format
 msgid ""
 "Auto-snapshot saved before the last import: %s. You can restore that exact "
 "state in one click. After restoring, the snapshot is deleted (one-shot undo)."
 msgstr ""
 "Um instantâneo automático foi salvo antes da última importação: %s. Você pode "
-"restaurar esse estado exato com um clique. Após a restauração, o instantâneo é "
-"excluído (desfazer com um único clique)."
+"restaurar esse estado exato com um clique. Após a restauração, o instantâneo "
+"é excluído (desfazer com um único clique)."
 
 #: inc/mod-breadcrumbs.php:35
 msgid "Home"
@@ -649,8 +650,8 @@ msgid ""
 "adjusted (black or white) for readable contrast. Leave the default to fall "
 "back to the theme gray."
 msgstr ""
-"Cor de fundo para este selo de categoria: exibida nos cards de posts no grid e "
-"ao lado do título, no topo dos posts individuais. A cor do texto é ajustada "
+"Cor de fundo para este selo de categoria: exibida nos cards de posts no grid "
+"e ao lado do título, no topo dos posts individuais. A cor do texto é ajustada "
 "automaticamente (preto ou branco) para garantir um bom contraste. Deixe a "
 "opção padrão para usar o cinza do tema."
 
@@ -660,8 +661,8 @@ msgid ""
 "next to the title at the top of single posts. The text color is automatically "
 "adjusted (black or white) for readable contrast."
 msgstr ""
-"Cor de fundo para este selo de categoria: exibida nos cards de posts no grid e "
-"ao lado do título, no topo dos posts individuais. A cor do texto é ajustada "
+"Cor de fundo para este selo de categoria: exibida nos cards de posts no grid "
+"e ao lado do título, no topo dos posts individuais. A cor do texto é ajustada "
 "automaticamente (preto ou branco) para garantir um bom contraste."
 
 #: inc/mod-csp.php:713
@@ -708,8 +709,8 @@ msgstr "Violações por Diretiva"
 
 #: inc/mod-csp.php:769
 msgid ""
-"Distribution of recorded violations grouped by CSP directive. Hover slices for "
-"exact counts and percentages."
+"Distribution of recorded violations grouped by CSP directive. Hover slices "
+"for exact counts and percentages."
 msgstr ""
 "Distribuição das violações registradas agrupadas por diretiva CSP. Passe o "
 "mouse sobre as fatias para ver contagens e porcentagens exatas."
@@ -744,8 +745,8 @@ msgstr "Status do Site"
 
 #: inc/mod-dashboard.php:39
 msgid ""
-"Current state of key features. Click any tab on the navigation above to change "
-"a setting."
+"Current state of key features. Click any tab on the navigation above to "
+"change a setting."
 msgstr ""
 "Estado atual das principais funcionalidades. Clique em qualquer aba na "
 "navegação acima para alterar uma configuração."
@@ -777,8 +778,8 @@ msgstr "Tendência de Atividade"
 
 #: inc/mod-dashboard.php:144
 msgid ""
-"Views per day over the last 7 days. Useful to spot weekly patterns and traffic "
-"spikes."
+"Views per day over the last 7 days. Useful to spot weekly patterns and "
+"traffic spikes."
 msgstr ""
 "Visualizações por dia nos últimos 7 dias. Útil para identificar padrões "
 "semanais e picos de tráfego."
@@ -818,12 +819,12 @@ msgstr "Nunca verificado"
 msgid "never"
 msgstr "nunca"
 
-#: inc/mod-dashboard.php:242 inc/mod-dashboard.php:874
+#: inc/mod-dashboard.php:242 inc/mod-dashboard.php:862
 #: inc/mod-self-update.php:293
 msgid "Update available"
 msgstr "Atualização disponível"
 
-#: inc/mod-dashboard.php:244 inc/mod-dashboard.php:873
+#: inc/mod-dashboard.php:244 inc/mod-dashboard.php:861
 #: inc/mod-self-update.php:294
 msgid "Up to date"
 msgstr "Atualizado"
@@ -858,11 +859,11 @@ msgstr "Última versão"
 msgid "Last check"
 msgstr "Última verificação"
 
-#: inc/mod-dashboard.php:286 inc/mod-dashboard.php:875
+#: inc/mod-dashboard.php:286 inc/mod-dashboard.php:863
 msgid "Go to Themes → Update Now"
 msgstr "Acesse Temas → Atualizar Agora"
 
-#: inc/mod-dashboard.php:290 inc/mod-dashboard.php:876
+#: inc/mod-dashboard.php:290 inc/mod-dashboard.php:864
 msgid "View release on GitHub"
 msgstr "Ver release no GitHub"
 
@@ -987,16 +988,16 @@ msgstr "Imagens & Mídia"
 msgid "Statistics"
 msgstr "Estatísticas"
 
-#: inc/mod-dashboard.php:871
+#: inc/mod-dashboard.php:859
 msgid "Checking…"
 msgstr "Verificando…"
 
-#: inc/mod-dashboard.php:872 inc/mod-self-update.php:279
+#: inc/mod-dashboard.php:860 inc/mod-self-update.php:279
 #: inc/mod-self-update.php:295
 msgid "just now"
 msgstr "agora mesmo"
 
-#: inc/mod-dashboard.php:877 inc/mod-self-update.php:278
+#: inc/mod-dashboard.php:865 inc/mod-self-update.php:278
 msgid "Could not reach GitHub. Try again later."
 msgstr "Não foi possível acessar o GitHub. Tente novamente mais tarde."
 
@@ -1049,8 +1050,8 @@ msgid ""
 "Check to prevent the thumbnail from duplicating with videos inserted at the "
 "beginning of the text."
 msgstr ""
-"Marque para impedir que a miniatura duplique com vídeos inseridos no início do "
-"texto."
+"Marque para impedir que a miniatura duplique com vídeos inseridos no início "
+"do texto."
 
 #: inc/mod-general.php:57 inc/panel.php:438
 msgid "Primary Category"
@@ -1058,7 +1059,8 @@ msgstr "Categoria principal"
 
 #: inc/mod-general.php:65
 msgid "Save the post with categories assigned to choose a primary one."
-msgstr "Salve o post com as categorias atribuídas para selecionar uma principal."
+msgstr ""
+"Salve o post com as categorias atribuídas para selecionar uma principal."
 
 #: inc/mod-general.php:70
 msgid "Auto (first category)"
@@ -1069,8 +1071,8 @@ msgid ""
 "When the post belongs to multiple categories, only the primary one will "
 "highlight in the menu."
 msgstr ""
-"Quando um post pertence a várias categorias, apenas a principal será destacada "
-"no menu."
+"Quando um post pertence a várias categorias, apenas a principal será "
+"destacada no menu."
 
 #: inc/mod-general.php:94
 msgid "Overline"
@@ -1086,8 +1088,8 @@ msgid ""
 "cards. Useful for journalism-style overlines. Leave empty to hide."
 msgstr ""
 "Etiqueta pequena opcional exibida acima do título em posts individuais e em "
-"cards de grid. Útil para legendas em estilo jornalístico. Deixe em branco para "
-"ocultar."
+"cards de grid. Útil para legendas em estilo jornalístico. Deixe em branco "
+"para ocultar."
 
 #: inc/mod-general.php:348
 msgid "Name"
@@ -1110,72 +1112,72 @@ msgstr "Salvar meus dados neste navegador para a próxima vez que eu comentar."
 msgid "Markdown:"
 msgstr "Markdown:"
 
-#: inc/mod-image-formats.php:790
+#: inc/mod-image-formats.php:786
 msgid "No JPEG/PNG attachments to process."
 msgstr "Nenhum anexo JPEG/PNG para processar."
 
 #. translators: %d: number of JPEG/PNG attachments to process
-#: inc/mod-image-formats.php:792
+#: inc/mod-image-formats.php:788
 #, php-format
 msgid "Start processing %d images? This may take several minutes."
 msgstr "Iniciar processamento de %d imagens? Isso pode levar alguns minutos."
 
-#: inc/mod-image-formats.php:793
+#: inc/mod-image-formats.php:789
 msgid "Starting..."
 msgstr "Iniciando…"
 
-#: inc/mod-image-formats.php:794
+#: inc/mod-image-formats.php:790
 msgid "Processed %p of %t (%pct%)"
-msgstr "Processadas %p de %t (%pct%%)"
+msgstr "Processadas %p de %t (%pct%)"
 
-#: inc/mod-image-formats.php:795
+#: inc/mod-image-formats.php:791
 msgid "Done! Processed %t images."
 msgstr "Pronto! %t imagens processadas."
 
-#: inc/mod-image-formats.php:796
+#: inc/mod-image-formats.php:792
 msgid "Error: "
 msgstr "Erro: "
 
-#: inc/mod-image-formats.php:827
+#: inc/mod-image-formats.php:823
 msgid "Server Capabilities"
 msgstr "Capacidades do Servidor"
 
-#: inc/mod-image-formats.php:828
+#: inc/mod-image-formats.php:824
 msgid "Auto-detected from PHP extensions installed on this server."
 msgstr "Auto detectado a partir das extensões PHP instaladas neste servidor."
 
-#: inc/mod-image-formats.php:838 inc/mod-image-formats.php:849
-#: inc/mod-image-formats.php:859
+#: inc/mod-image-formats.php:834 inc/mod-image-formats.php:845
+#: inc/mod-image-formats.php:855
 msgid "available"
 msgstr "disponível"
 
-#: inc/mod-image-formats.php:840
+#: inc/mod-image-formats.php:836
 msgid "not installed"
 msgstr "não instalado"
 
-#: inc/mod-image-formats.php:842
+#: inc/mod-image-formats.php:838
 msgid "(preferred)"
 msgstr "(preferencial)"
 
-#: inc/mod-image-formats.php:851 inc/mod-image-formats.php:861
+#: inc/mod-image-formats.php:847 inc/mod-image-formats.php:857
 msgid "unavailable"
 msgstr "indisponível"
 
-#: inc/mod-image-formats.php:867
+#: inc/mod-image-formats.php:863
 msgid ""
 "Neither WebP nor AVIF is available — module is dormant. Uploads will not be "
 "converted and no <picture> wrapping happens. Original JPEG/PNG continue to "
 "work normally."
 msgstr ""
 "Nem WebP nem AVIF estão disponíveis — módulo dormente. Uploads não serão "
-"convertidos e nenhum wrapping <picture> acontece. JPEG/PNG originais continuam "
-"funcionando normalmente."
+"convertidos e nenhum wrapping <picture> acontece. JPEG/PNG originais "
+"continuam funcionando normalmente."
 
-#: inc/mod-image-formats.php:875
+#: inc/mod-image-formats.php:871
 msgid "Regenerate sizes and next-gen formats for existing attachments"
 msgstr "Regenerar tamanhos e formatos next-gen para anexos existentes"
 
-#: inc/mod-image-formats.php:876
+#: inc/mod-image-formats.php:872
 msgid ""
 "New uploads are processed automatically. Use this button after: (a) enabling "
 "the module on a site with existing images; (b) switching the Format Mode "
@@ -1185,23 +1187,24 @@ msgid ""
 "current settings. May take several minutes on a large Media Library — runs in "
 "chunks of 10 via AJAX to avoid timeouts."
 msgstr ""
-"Uploads novos são processados automaticamente. Use este botão após: (a) ativar "
-"o módulo em um site com imagens existentes; (b) trocar o Modo de Formato "
-"acima; ou (c) adicionar/alterar um tamanho de imagem customizado no tema (re-"
-"corta todos os tamanhos via wp_generate_attachment_metadata do WP, depois gera "
-"WebP/AVIF de cada um). A ação é idempotente: re-rodar sobrescreve os arquivos "
-"existentes com as configurações atuais. Pode demorar vários minutos em uma "
-"Biblioteca de Mídia grande — roda em lotes de 10 via AJAX para evitar timeouts."
+"Uploads novos são processados automaticamente. Use este botão após: (a) "
+"ativar o módulo em um site com imagens existentes; (b) trocar o Modo de "
+"Formato acima; ou (c) adicionar/alterar um tamanho de imagem customizado no "
+"tema (re-corta todos os tamanhos via wp_generate_attachment_metadata do WP, "
+"depois gera WebP/AVIF de cada um). A ação é idempotente: re-rodar sobrescreve "
+"os arquivos existentes com as configurações atuais. Pode demorar vários "
+"minutos em uma Biblioteca de Mídia grande — roda em lotes de 10 via AJAX para "
+"evitar timeouts."
 
 #. translators: 1: number of JPEG/PNG attachments in the Media Library
-#: inc/mod-image-formats.php:885
+#: inc/mod-image-formats.php:881
 #, php-format
 msgid "%d JPEG/PNG attachment in the Media Library"
 msgid_plural "%d JPEG/PNG attachments in the Media Library"
 msgstr[0] "%d anexo JPEG/PNG na Biblioteca de Mídia"
 msgstr[1] "%d anexos JPEG/PNG na Biblioteca de Mídia"
 
-#: inc/mod-image-formats.php:897
+#: inc/mod-image-formats.php:893
 msgid "Start regeneration"
 msgstr "Iniciar regeneração"
 
@@ -1242,8 +1245,8 @@ msgid ""
 "The %s portal is undergoing scheduled maintenance to bring you new features. "
 "Thank you for your patience."
 msgstr ""
-"O portal %s está passando por uma manutenção programada para trazer novidades. "
-"Agradecemos a paciência."
+"O portal %s está passando por uma manutenção programada para trazer "
+"novidades. Agradecemos a paciência."
 
 #. translators: %s: site name from WordPress general settings
 #: inc/mod-maintenance.php:202
@@ -1277,6 +1280,28 @@ msgstr "Chave Copiada!"
 msgid "Error copying: "
 msgstr "Erro ao copiar: "
 
+#: inc/mod-performance.php:88
+msgid "Close navigation menu"
+msgstr "Fechar menu de navegação"
+
+#: inc/mod-performance.php:90
+msgid "Sending…"
+msgstr "Enviando…"
+
+#: inc/mod-performance.php:91
+msgid "Comment sent! Loading…"
+msgstr "Comentário enviado! Carregando…"
+
+#: inc/mod-performance.php:92
+msgid "Unexpected error submitting the comment. Reload the page and try again."
+msgstr ""
+"Ocorreu um erro inesperado ao enviar o comentário. Recarregue a página e "
+"tente novamente."
+
+#: inc/mod-performance.php:93
+msgid "Network error: "
+msgstr "Erro de rede:"
+
 #: inc/mod-privacy.php:143
 msgid "Privacy Policy"
 msgstr "Política de Privacidade"
@@ -1307,7 +1332,8 @@ msgstr ""
 
 #: inc/mod-privacy.php:176
 msgid ""
-"Help us understand how you use the site (Google Analytics, Clarity, Plausible)."
+"Help us understand how you use the site (Google Analytics, Clarity, "
+"Plausible)."
 msgstr ""
 "Ajude-nos a entender como você usa o site (Google Analytics, Clarity, "
 "Plausible)."
@@ -1377,8 +1403,9 @@ msgid ""
 "The server returned an unexpected error. The site administrator has been "
 "automatically notified by email and will investigate as soon as possible."
 msgstr ""
-"O servidor retornou um erro inesperado. O administrador do site foi notificado "
-"automaticamente por e-mail e investigará o problema assim que possível."
+"O servidor retornou um erro inesperado. O administrador do site foi "
+"notificado automaticamente por e-mail e investigará o problema assim que "
+"possível."
 
 #: inc/mod-security.php:188
 msgid "In the meantime, please try refreshing the page in a few minutes."
@@ -1442,21 +1469,21 @@ msgstr "Facebook (URL)"
 msgid "new"
 msgstr "novo"
 
-#. translators: %s = cache TTL em minutos (ex: "60")
-#: inc/mod-stats.php:622
+#. translators: %s = cache TTL in minutes (e.g. "60")
+#: inc/mod-stats.php:604
 #, php-format
 msgid "Aggregated data cached for %s minutes."
 msgstr "Dados agregados armazenados em cache por %s minutos."
 
-#: inc/mod-stats.php:628
+#: inc/mod-stats.php:610
 msgid "Refresh now"
 msgstr "Atualizar"
 
-#: inc/mod-stats.php:660
+#: inc/mod-stats.php:642
 msgid "Tracking is currently disabled"
 msgstr "O rastreamento está desabilitado no momento"
 
-#: inc/mod-stats.php:661
+#: inc/mod-stats.php:643
 msgid ""
 "No new views are being recorded. Enable the \"Enable views tracking\" toggle "
 "in the Tracking Settings section above to resume data collection. Past data "
@@ -1467,11 +1494,11 @@ msgstr ""
 "coleta de dados. Dados anteriores (se houver) são preservados e continuam "
 "visíveis nos cards abaixo."
 
-#: inc/mod-stats.php:671
+#: inc/mod-stats.php:653
 msgid "Waiting for first visitors"
 msgstr "Aguardando os primeiros visitantes"
 
-#: inc/mod-stats.php:672
+#: inc/mod-stats.php:654
 msgid ""
 "Tracking is active. Stats will populate here as visitors browse the site. "
 "Allow 24-48h for the first data points to show up."
@@ -1480,96 +1507,96 @@ msgstr ""
 "visitantes navegarem pelo site. Aguarde 24-48h para os primeiros dados "
 "aparecerem."
 
-#: inc/mod-stats.php:673
+#: inc/mod-stats.php:655
 msgid ""
-"Bots, admins and duplicate visits (same IP within 30 minutes) are filtered out "
-"automatically — only real human visits count."
+"Bots, admins and duplicate visits (same IP within 30 minutes) are filtered "
+"out automatically — only real human visits count."
 msgstr ""
 "Bots, admins e visitas duplicadas (mesmo IP em 30 minutos) são filtrados "
 "automaticamente — apenas visitas humanas reais são contabilizadas."
 
-#: inc/mod-stats.php:685
+#: inc/mod-stats.php:667
 msgid "Total Views"
 msgstr "Total de Visualizações"
 
-#: inc/mod-stats.php:692
+#: inc/mod-stats.php:674
 msgid "Today"
 msgstr "Hoje"
 
 #. translators: %s is the views count for the previous period (e.g. last week, last month), already locale-formatted with number_format_i18n. Shown as tooltip on the trend pill.
-#: inc/mod-stats.php:708
+#: inc/mod-stats.php:690
 #, php-format
 msgid "Previous period: %s"
 msgstr "Período anterior: %s"
 
-#: inc/mod-stats.php:738
+#: inc/mod-stats.php:720
 msgid "All-time"
 msgstr "Sempre"
 
-#: inc/mod-stats.php:739
+#: inc/mod-stats.php:721
 msgid "Year"
 msgstr "Ano"
 
-#: inc/mod-stats.php:740
+#: inc/mod-stats.php:722
 msgid "Month"
 msgstr "Mês"
 
-#: inc/mod-stats.php:741
+#: inc/mod-stats.php:723
 msgid "Week"
 msgstr "Semana"
 
-#: inc/mod-stats.php:745
+#: inc/mod-stats.php:727
 msgid "Top Posts by Views"
 msgstr "Posts mais populares por visualizações"
 
-#: inc/mod-stats.php:763
+#: inc/mod-stats.php:745
 msgid "No data in this window yet — give it time."
 msgstr "Ainda não há dados nesta janela — aguarde."
 
-#: inc/mod-stats.php:779 inc/mod-stats.php:847
+#: inc/mod-stats.php:761 inc/mod-stats.php:829
 msgid "Edit this post"
 msgstr "Editar este post"
 
-#: inc/mod-stats.php:782 inc/mod-stats.php:850
+#: inc/mod-stats.php:764 inc/mod-stats.php:832
 msgid "Open on the frontend"
 msgstr "Abrir no site"
 
-#: inc/mod-stats.php:787
+#: inc/mod-stats.php:769
 msgid "views"
 msgstr "visualizações"
 
-#: inc/mod-stats.php:808
+#: inc/mod-stats.php:790
 msgid "By Comments"
 msgstr "Por Comentários"
 
-#: inc/mod-stats.php:809
+#: inc/mod-stats.php:791
 msgid "By Engagement Ratio"
 msgstr "Por Engajamento"
 
-#: inc/mod-stats.php:813
+#: inc/mod-stats.php:795
 msgid "Top Posts by Comments"
 msgstr "Posts mais Populares por Comentários"
 
-#: inc/mod-stats.php:831
+#: inc/mod-stats.php:813
 msgid "No comments yet — the discussion is just starting."
 msgstr "Ainda não há comentários — a discussão está apenas começando."
 
 #. translators: 1: views count, locale-formatted (e.g. "1.205"); 2: engagement ratio as percentage (e.g. "2.8"). The literal %% in the string is an escaped percent sign that renders as a single % in the final tooltip.
-#: inc/mod-stats.php:856
+#: inc/mod-stats.php:838
 #, php-format
 msgid "%1$s views • %2$s%% engagement ratio (comments / views)"
 msgstr ""
 "%1$s visualizações • %2$s%% taxa de engajamento (comentários / visualizações)"
 
-#: inc/mod-stats.php:860
+#: inc/mod-stats.php:842
 msgid "comments"
 msgstr "comentários"
 
-#: inc/mod-stats.php:886
+#: inc/mod-stats.php:868
 msgid "Monthly Growth (last 12 months)"
 msgstr "Crescimento Mensal (últimos 12 meses)"
 
-#: inc/mod-stats.php:889
+#: inc/mod-stats.php:871
 msgid ""
 "No views in the last 12 months yet — the chart will fill up as data arrives."
 msgstr ""
@@ -1643,7 +1670,8 @@ msgstr "Ativar Barra de Topo"
 #: inc/panel.php:336
 msgid ""
 "Displays a small bar at the top with date, latest news, and social networks."
-msgstr "Exibe uma pequena barra no topo com data, últimos posts e redes sociais."
+msgstr ""
+"Exibe uma pequena barra no topo com data, últimos posts e redes sociais."
 
 #: inc/panel.php:341
 msgid "Show Breadcrumbs"
@@ -1651,14 +1679,14 @@ msgstr "Mostrar Navegação"
 
 #: inc/panel.php:348
 msgid ""
-"Displays a breadcrumb trail (Home › Category › Post) below the header on every "
-"page except the front page. The Schema.org BreadcrumbList for SEO is always "
-"generated, regardless of this toggle."
+"Displays a breadcrumb trail (Home › Category › Post) below the header on "
+"every page except the front page. The Schema.org BreadcrumbList for SEO is "
+"always generated, regardless of this toggle."
 msgstr ""
 "Exibe um caminho de navegação (Página Inicial › Categoria › Postagem) abaixo "
-"do cabeçalho em todas as páginas, exceto na página inicial. A lista de trilhas "
-"(BreadcrumbList) do Schema.org para SEO é sempre gerada, independentemente "
-"dessa opção estar ativada."
+"do cabeçalho em todas as páginas, exceto na página inicial. A lista de "
+"trilhas (BreadcrumbList) do Schema.org para SEO é sempre gerada, "
+"independentemente dessa opção estar ativada."
 
 #: inc/panel.php:353
 msgid "Sidebar Position"
@@ -1738,8 +1766,8 @@ msgid ""
 "Optional extra line below the copyright in the footer. Accepts basic HTML "
 "(links, strong, em). Leave empty to hide."
 msgstr ""
-"Linha extra opcional abaixo do copyright no rodapé. Aceita HTML básico (links, "
-"strong, em). Deixe vazio para ocultar."
+"Linha extra opcional abaixo do copyright no rodapé. Aceita HTML básico "
+"(links, strong, em). Deixe vazio para ocultar."
 
 #: inc/panel.php:423
 msgid "Content"
@@ -1773,14 +1801,14 @@ msgstr "Overline do Post"
 
 #: inc/panel.php:457
 msgid ""
-"Adds a free-text \"overline\" field in the post editor (journalism-style label "
-"like INTERVIEW, EXCLUSIVE, ANALYSIS). When set, it renders above the title on "
-"single posts and above the title on grid cards (smaller, uppercase)."
+"Adds a free-text \"overline\" field in the post editor (journalism-style "
+"label like INTERVIEW, EXCLUSIVE, ANALYSIS). When set, it renders above the "
+"title on single posts and above the title on grid cards (smaller, uppercase)."
 msgstr ""
 "Adiciona um campo de texto livre \"acima do título\" no editor de posts "
 "(rótulo no estilo jornalístico, como ENTREVISTA, EXCLUSIVO, ANÁLISE). Quando "
-"ativado, ele aparece acima do título em posts individuais e acima do título em "
-"cards de grade (menor e em maiúsculas)."
+"ativado, ele aparece acima do título em posts individuais e acima do título "
+"em cards de grade (menor e em maiúsculas)."
 
 #: inc/panel.php:462
 msgid "Excerpt Length (words)"
@@ -1805,7 +1833,8 @@ msgid "Ex: Continue Reading &rarr;"
 msgstr "Ex: Continuar Lendo &rarr;"
 
 #: inc/panel.php:485
-msgid "Customizes the excerpt button text. Leave blank to use the theme default."
+msgid ""
+"Customizes the excerpt button text. Leave blank to use the theme default."
 msgstr ""
 "Personaliza o texto do botão de resumo. Deixe em branco para usar o padrão do "
 "tema."
@@ -1840,8 +1869,8 @@ msgid ""
 "article footer and the comments). Picks posts from the same primary category, "
 "ordered by tag overlap. Helps with time-on-site and reduces bounce rate."
 msgstr ""
-"Exibe um bloco de 3 posts relacionados ao final de cada post individual (entre "
-"o rodapé do post e os comentários). Seleciona posts da mesma categoria "
+"Exibe um bloco de 3 posts relacionados ao final de cada post individual "
+"(entre o rodapé do post e os comentários). Seleciona posts da mesma categoria "
 "principal, ordenados por sobreposição de tags. Ajuda a aumentar o tempo de "
 "permanência no site e reduz a taxa de rejeição."
 
@@ -1857,10 +1886,10 @@ msgid ""
 "social links, the box auto-hides to avoid noise."
 msgstr ""
 "Exibe uma caixa com avatar, nome, biografia e links para redes sociais do "
-"autor ao final de cada post. Reforça os sinais E-E-A-T (os mesmos dados também "
-"alimentam o Schema.org Person na página do autor). Se o autor não tiver "
-"biografia nem links para redes sociais, a caixa se oculta automaticamente para "
-"evitar ruído."
+"autor ao final de cada post. Reforça os sinais E-E-A-T (os mesmos dados "
+"também alimentam o Schema.org Person na página do autor). Se o autor não "
+"tiver biografia nem links para redes sociais, a caixa se oculta "
+"automaticamente para evitar ruído."
 
 #: inc/panel.php:538
 msgid "Reading Time"
@@ -1901,31 +1930,31 @@ msgstr "Ativar Comentários Globalmente"
 #: inc/panel.php:572
 msgid ""
 "Master switch that controls comments site-wide. When OFF, no comment form, "
-"list, count or Recent Comments widget appears on any post or page — regardless "
-"of per-post settings or the WordPress Discussion settings. Useful to quickly "
-"kill comments on the whole site (e.g. after migrating to Discourse, Disqus or "
-"another platform) without bulk-editing every post. When ON, normal WordPress "
-"behavior applies (each post can still be opened/closed individually). External "
-"comment plugins (WP-Discourse, Disqus, etc.) that override the comments "
-"template continue to work regardless of this toggle. <strong>Note:</strong> "
-"manually added widget blocks (e.g. a separate Heading \"Comments\" above the "
-"Recent Comments widget) may need to be removed manually in <em>Appearance → "
-"Widgets</em> to avoid orphaned titles."
+"list, count or Recent Comments widget appears on any post or page — "
+"regardless of per-post settings or the WordPress Discussion settings. Useful "
+"to quickly kill comments on the whole site (e.g. after migrating to "
+"Discourse, Disqus or another platform) without bulk-editing every post. When "
+"ON, normal WordPress behavior applies (each post can still be opened/closed "
+"individually). External comment plugins (WP-Discourse, Disqus, etc.) that "
+"override the comments template continue to work regardless of this toggle. "
+"<strong>Note:</strong> manually added widget blocks (e.g. a separate Heading "
+"\"Comments\" above the Recent Comments widget) may need to be removed "
+"manually in <em>Appearance → Widgets</em> to avoid orphaned titles."
 msgstr ""
 "Interruptor principal que controla os comentários em todo o site. Quando "
 "DESATIVADO, nenhum formulário de comentário, lista, contador ou widget de "
 "Comentários Recentes aparece em qualquer post ou página — independentemente "
-"das configurações de cada post ou das configurações de Discussão do WordPress. "
-"Útil para desativar rapidamente os comentários em todo o site (por exemplo, "
-"após migrar para o Discourse, Disqus ou outra plataforma) sem precisar editar "
-"em massa todos os posts. Quando ATIVADO, o comportamento normal do WordPress "
-"se aplica (cada post ainda pode ser aberto/fechado individualmente). Plugins "
-"de comentários externos (WP-Discourse, Disqus, etc.) que sobrescrevem o modelo "
-"de comentários continuam funcionando independentemente desta opção. "
-"<strong>Observação:</strong> Blocos de widgets adicionados manualmente (por "
-"exemplo, um título separado \"Comentários\" acima do widget de Comentários "
-"Recentes) podem precisar ser removidos manualmente em <em>Aparência → Widgets</"
-"em> para evitar títulos órfãos."
+"das configurações de cada post ou das configurações de Discussão do "
+"WordPress. Útil para desativar rapidamente os comentários em todo o site (por "
+"exemplo, após migrar para o Discourse, Disqus ou outra plataforma) sem "
+"precisar editar em massa todos os posts. Quando ATIVADO, o comportamento "
+"normal do WordPress se aplica (cada post ainda pode ser aberto/fechado "
+"individualmente). Plugins de comentários externos (WP-Discourse, Disqus, "
+"etc.) que sobrescrevem o modelo de comentários continuam funcionando "
+"independentemente desta opção. <strong>Observação:</strong> Blocos de widgets "
+"adicionados manualmente (por exemplo, um título separado \"Comentários\" "
+"acima do widget de Comentários Recentes) podem precisar ser removidos "
+"manualmente em <em>Aparência → Widgets</em> para evitar títulos órfãos."
 
 #: inc/panel.php:577
 msgid "Comment Accessibility"
@@ -1947,8 +1976,9 @@ msgid ""
 "<strong>empty</strong> for WP default or type <strong>&amp;nbsp;</strong> to "
 "hide."
 msgstr ""
-"Texto entre o Autor e o Post (ex: \"comentou no post:\"). Deixe <strong>vazio</"
-"strong> para o padrão do WP ou digite <strong>&amp;nbsp;</strong> para ocultar."
+"Texto entre o Autor e o Post (ex: \"comentou no post:\"). Deixe "
+"<strong>vazio</strong> para o padrão do WP ou digite <strong>&amp;nbsp;</"
+"strong> para ocultar."
 
 # --- Busca ---
 #: inc/panel.php:601
@@ -1982,8 +2012,8 @@ msgid ""
 "frontend, all results fall back here regardless of this setting."
 msgstr ""
 "Ativa o layout Compact (miniatura + título inline). <strong>Nota:</strong> O "
-"Compact também atua como rede de segurança — se o visitante desativar todos os "
-"chips no frontend, todos os resultados caem aqui independente desta "
+"Compact também atua como rede de segurança — se o visitante desativar todos "
+"os chips no frontend, todos os resultados caem aqui independente desta "
 "configuração."
 
 #: inc/panel.php:640
@@ -2020,8 +2050,8 @@ msgstr "Consentimento de Cookies"
 msgid ""
 "Enables the cookie consent banner in the site footer for legal compliance."
 msgstr ""
-"Ativa o banner de consentimento de cookies no rodapé do site para conformidade "
-"com a lei."
+"Ativa o banner de consentimento de cookies no rodapé do site para "
+"conformidade com a lei."
 
 #: inc/panel.php:691
 msgid "Cookie Banner Text"
@@ -2035,10 +2065,10 @@ msgid ""
 "the Privacy Policy link to appear — the URL comes from <em>Settings → Privacy "
 "→ Privacy Policy Page</em>. Leave empty to use the default translatable text."
 msgstr ""
-"Customize a mensagem do banner de cookies. Use <strong>%s</strong> onde quiser "
-"que o link da Política de Privacidade apareça — a URL vem de <em>Configurações "
-"→ Privacidade → Página da Política de Privacidade</em>. Deixe vazio para usar "
-"o texto traduzível padrão."
+"Customize a mensagem do banner de cookies. Use <strong>%s</strong> onde "
+"quiser que o link da Política de Privacidade apareça — a URL vem de "
+"<em>Configurações → Privacidade → Página da Política de Privacidade</em>. "
+"Deixe vazio para usar o texto traduzível padrão."
 
 #: inc/panel.php:703
 msgid "Hardening"
@@ -2083,8 +2113,8 @@ msgid ""
 "MIME sniffing. Does not affect the admin panel."
 msgstr ""
 "Envia headers HTTP defensivos no frontend (X-Frame-Options, X-Content-Type-"
-"Options, Referrer-Policy, Permissions-Policy) para mitigar clickjacking e MIME "
-"sniffing. Não afeta o painel admin."
+"Options, Referrer-Policy, Permissions-Policy) para mitigar clickjacking e "
+"MIME sniffing. Não afeta o painel admin."
 
 #: inc/panel.php:742
 msgid "Trusted Proxy IPs"
@@ -2102,14 +2132,14 @@ msgid ""
 "Sucuri, BunnyCDN, etc). Example:"
 "<br><code>203.0.113.0/24<br>198.51.100.0/24<br>2001:db8::/32</code>"
 msgstr ""
-"Faixas de IP (CIDR, uma por linha) de reverse proxies ou CDNs na frente do seu "
-"site. Quando uma requisição chega de um desses IPs, o tema confia nos headers "
-"<code>CF-Connecting-IP</code> e <code>X-Forwarded-For</code> para identificar "
-"o visitante real — usado internamente para rate limiting e proteção contra "
-"abuso. <strong>Faixas do Cloudflare já estão incluídas por padrão</strong>, "
-"então deixe vazio se você usa apenas Cloudflare ou nenhum proxy. Adicione "
-"faixas customizadas apenas para outros setups (Nginx reverse-proxy custom, AWS "
-"ALB, Sucuri, BunnyCDN, etc). Exemplo:"
+"Faixas de IP (CIDR, uma por linha) de reverse proxies ou CDNs na frente do "
+"seu site. Quando uma requisição chega de um desses IPs, o tema confia nos "
+"headers <code>CF-Connecting-IP</code> e <code>X-Forwarded-For</code> para "
+"identificar o visitante real — usado internamente para rate limiting e "
+"proteção contra abuso. <strong>Faixas do Cloudflare já estão incluídas por "
+"padrão</strong>, então deixe vazio se você usa apenas Cloudflare ou nenhum "
+"proxy. Adicione faixas customizadas apenas para outros setups (Nginx reverse-"
+"proxy custom, AWS ALB, Sucuri, BunnyCDN, etc). Exemplo:"
 "<br><code>203.0.113.0/24<br>198.51.100.0/24<br>2001:db8::/32</code>"
 
 #: inc/panel.php:758
@@ -2151,12 +2181,12 @@ msgstr ""
 "<code>/wp-login.php</code> retorna 404 para visitantes anônimos (usuários "
 "logados mantêm o acesso para logout), e o login só pode ser acessado via "
 "<code>/{slug}</code>. Bloqueia cerca de 95%% dos bots que só conhecem <code>/"
-"wp-login.php</code>. Deixe em branco para desativar. 3 a 50 caracteres, letras "
-"minúsculas/números/hífens. Palavras reservadas (<code>wp-admin</code>, "
+"wp-login.php</code>. Deixe em branco para desativar. 3 a 50 caracteres, "
+"letras minúsculas/números/hífens. Palavras reservadas (<code>wp-admin</code>, "
 "<code>login</code>, <code>feed</code>, etc.) são rejeitadas."
 "<br><br><strong>URL de login atual:</strong> <code>%s</code><br><br>⚠️ "
-"<strong>Salve esta URL em um local seguro.</strong> Se você a perder, consulte "
-"a documentação do tema para obter instruções de recuperação."
+"<strong>Salve esta URL em um local seguro.</strong> Se você a perder, "
+"consulte a documentação do tema para obter instruções de recuperação."
 
 #: inc/panel.php:788
 msgid "Max Failed Login Attempts"
@@ -2170,8 +2200,8 @@ msgid ""
 msgstr ""
 "Número máximo de tentativas de login falhas por IP dentro do intervalo abaixo "
 "antes que novas tentativas sejam bloqueadas. Padrão: 5. O IP do cliente é "
-"detectado de forma confiável e resistente à falsificação de cabeçalho por meio "
-"da lista de IPs de proxy confiáveis ​​acima."
+"detectado de forma confiável e resistente à falsificação de cabeçalho por "
+"meio da lista de IPs de proxy confiáveis ​​acima."
 
 #: inc/panel.php:801
 msgid "Lockout Window (minutes)"
@@ -2180,11 +2210,12 @@ msgstr "Janela de Bloqueio (minutos)"
 #: inc/panel.php:808
 msgid ""
 "Time window for counting failed login attempts. After this duration without "
-"new failures, the counter resets and the IP can try again. Default: 15 minutes."
+"new failures, the counter resets and the IP can try again. Default: 15 "
+"minutes."
 msgstr ""
-"Janela de tempo para contagem de tentativas de login falhas. Após esta duração "
-"sem novas falhas, o contador é resetado e o IP pode tentar novamente. Padrão: "
-"15 minutos."
+"Janela de tempo para contagem de tentativas de login falhas. Após esta "
+"duração sem novas falhas, o contador é resetado e o IP pode tentar novamente. "
+"Padrão: 15 minutos."
 
 #: inc/panel.php:814
 msgid "Hide User Enumeration"
@@ -2194,8 +2225,8 @@ msgstr "Ocultar Enumeração de Usuários"
 msgid ""
 "Replaces WordPress's default login errors that reveal whether a username "
 "exists (<em>\"User does not exist\"</em> vs <em>\"Password is incorrect for "
-"user X\"</em>) with a generic <em>\"Invalid username or password\"</em>. Stops "
-"attackers from enumerating valid usernames before brute-forcing. "
+"user X\"</em>) with a generic <em>\"Invalid username or password\"</em>. "
+"Stops attackers from enumerating valid usernames before brute-forcing. "
 "<strong>Recommended:</strong> keep enabled. Disable only if you want "
 "friendlier error messages for legitimate users who forgot their username — "
 "they can still use the \"Lost your password?\" link."
@@ -2203,11 +2234,11 @@ msgstr ""
 "Substitui os erros de login padrão do WordPress que revelam se um usuário "
 "existe (<em>\"Usuário não existe\"</em> vs <em>\"Senha incorreta para o "
 "usuário X\"</em>) por uma mensagem genérica <em>\"Usuário ou senha "
-"inválidos\"</em>. Impede que atacantes enumerem nomes de usuário válidos antes "
-"de fazer brute-force. <strong>Recomendado:</strong> manter ativado. Desabilite "
-"apenas se quiser mensagens de erro mais amigáveis para usuários legítimos que "
-"esqueceram o nome de usuário — eles ainda podem usar o link \"Perdeu sua senha?"
-"\"."
+"inválidos\"</em>. Impede que atacantes enumerem nomes de usuário válidos "
+"antes de fazer brute-force. <strong>Recomendado:</strong> manter ativado. "
+"Desabilite apenas se quiser mensagens de erro mais amigáveis para usuários "
+"legítimos que esqueceram o nome de usuário — eles ainda podem usar o link "
+"\"Perdeu sua senha?\"."
 
 #: inc/panel.php:829
 msgid "Content Security Policy (Report-Only)"
@@ -2222,22 +2253,23 @@ msgid ""
 "Sends the <code>Content-Security-Policy</code> header on the frontend with a "
 "policy calculated from your active integrations (GA, Clarity, FB Pixel, "
 "Discord, YouTube, etc.). By default uses <strong>Report-Only mode</strong> — "
-"does not block anything, only reports violations to the browser console and to "
-"an internal endpoint (<code>/wp-json/rd/v1/csp-report</code>). Useful for "
+"does not block anything, only reports violations to the browser console and "
+"to an internal endpoint (<code>/wp-json/rd/v1/csp-report</code>). Useful for "
 "auditing what your site loads from external sources. Use the <strong>Enforce "
 "Mode</strong> toggle below to promote to actual blocking. <strong>Note:</"
-"strong> generates a POST request per violation, so disable in heavy traffic if "
-"not actively monitoring."
+"strong> generates a POST request per violation, so disable in heavy traffic "
+"if not actively monitoring."
 msgstr ""
 "Envia o cabeçalho <code>Content-Security-Policy</code> no frontend com uma "
 "política calculada a partir de suas integrações ativas (GA, Clarity, Pixel do "
-"Facebook, Discord, YouTube, etc.). Por padrão, usa o modo <strong>REPORT-ONLY</"
-"strong> — não bloqueia nada, apenas relata violações ao console do navegador e "
-"a um endpoint interno (<code>/wp-json/rd/v1/csp-report</code>). Útil para "
-"auditar o que seu site carrega de fontes externas. Use a opção <strong>Enforce "
-"Mode</strong> abaixo para ativar o bloqueio real. <strong>Nota:</strong> gera "
-"uma solicitação POST por violação, portanto, desative-a em períodos de tráfego "
-"intenso se não estiver monitorando ativamente."
+"Facebook, Discord, YouTube, etc.). Por padrão, usa o modo <strong>REPORT-"
+"ONLY</strong> — não bloqueia nada, apenas relata violações ao console do "
+"navegador e a um endpoint interno (<code>/wp-json/rd/v1/csp-report</code>). "
+"Útil para auditar o que seu site carrega de fontes externas. Use a opção "
+"<strong>Enforce Mode</strong> abaixo para ativar o bloqueio real. "
+"<strong>Nota:</strong> gera uma solicitação POST por violação, portanto, "
+"desative-a em períodos de tráfego intenso se não estiver monitorando "
+"ativamente."
 
 #: inc/panel.php:845
 msgid "⚠️ Enforce Mode"
@@ -2255,14 +2287,14 @@ msgid ""
 "policy.md</code> for the full promotion checklist."
 msgstr ""
 "<strong style=\"color:#d63638\">ZONA DE PERIGO.</strong> Promover a CSP do "
-"modo <em>REPORT-ONLY</em> (monitoramento passivo) para o <em>Enforce Mode</em> "
-"— o navegador irá <strong>bloquear</strong> recursos que violem a política. "
-"<strong>Ative esta opção somente após 30 dias ou mais de relatórios de "
-"monitoramento sem violações inesperadas</strong> — ativá-la prematuramente "
+"modo <em>REPORT-ONLY</em> (monitoramento passivo) para o <em>Enforce Mode</"
+"em> — o navegador irá <strong>bloquear</strong> recursos que violem a "
+"política. <strong>Ative esta opção somente após 30 dias ou mais de relatórios "
+"de monitoramento sem violações inesperadas</strong> — ativá-la prematuramente "
 "interromperá funcionalidades legítimas (imagens, conteúdo incorporado, "
 "scripts). Requer que a opção acima esteja ATIVADA. Reversão fácil: basta "
-"desmarcar esta opção. Consulte <code>docs/pt-BR/10-content-security-policy.md</"
-"code> para obter a lista de verificação completa."
+"desmarcar esta opção. Consulte <code>docs/pt-BR/10-content-security-"
+"policy.md</code> para obter a lista de verificação completa."
 
 #: inc/panel.php:862
 msgid "Custom Origins — Scripts & APIs"
@@ -2274,16 +2306,16 @@ msgid ""
 "new trackers, SDKs, JS libraries or any external API your frontend calls. "
 "<strong>One per line.</strong> Examples: <code>https://cdn.mixpanel.com</"
 "code>, <code>https://api.mixpanel.com</code>, <code>https://*.example.com</"
-"code>. Only HTTPS origins accepted; keywords with quotes (<code>'self'</code>, "
-"<code>'unsafe-inline'</code>) and the bare wildcard (<code>*</code>) are "
-"rejected for safety."
+"code>. Only HTTPS origins accepted; keywords with quotes (<code>'self'</"
+"code>, <code>'unsafe-inline'</code>) and the bare wildcard (<code>*</code>) "
+"are rejected for safety."
 msgstr ""
 "Adiciona origens a <code>script-src</code> e <code>connect-src</code>. Use "
 "para novos trackers, SDKs, bibliotecas JS ou qualquer API externa que seu "
 "frontend chame. <strong>Uma por linha.</strong> Exemplos: <code>https://"
 "cdn.mixpanel.com</code>, <code>https://api.mixpanel.com</code>, <code>https://"
-"*.example.com</code>. Apenas origens HTTPS aceitas; palavras-chave entre aspas "
-"(<code>'self'</code>, <code>'unsafe-inline'</code>) e o wildcard puro "
+"*.example.com</code>. Apenas origens HTTPS aceitas; palavras-chave entre "
+"aspas (<code>'self'</code>, <code>'unsafe-inline'</code>) e o wildcard puro "
 "(<code>*</code>) são rejeitados por segurança."
 
 #: inc/panel.php:875
@@ -2311,9 +2343,10 @@ msgstr "Origens Customizadas — Styles & Fonts"
 #: inc/panel.php:895
 msgid ""
 "Adds origins to <code>style-src</code> and <code>font-src</code>. Use for "
-"external font CDNs (Bunny Fonts, Google Fonts mirror) or external stylesheets. "
-"<strong>One per line.</strong> Examples: <code>https://fonts.bunny.net</code>, "
-"<code>https://fonts.googleapis.com</code>. Only HTTPS origins accepted."
+"external font CDNs (Bunny Fonts, Google Fonts mirror) or external "
+"stylesheets. <strong>One per line.</strong> Examples: <code>https://"
+"fonts.bunny.net</code>, <code>https://fonts.googleapis.com</code>. Only HTTPS "
+"origins accepted."
 msgstr ""
 "Adiciona origens a <code>style-src</code> e <code>font-src</code>. Use para "
 "CDNs externos de fontes (Bunny Fonts, mirror do Google Fonts) ou stylesheets "
@@ -2374,8 +2407,8 @@ msgid ""
 "Website ID (UUID) from your Umami dashboard → Settings → Websites. Requires "
 "the script URL below to render. Leave both fields empty to disable."
 msgstr ""
-"ID do site (UUID) do seu painel do Umami → Configurações → Sites. Requer o URL "
-"do script abaixo para ser exibido. Deixe ambos os campos em branco para "
+"ID do site (UUID) do seu painel do Umami → Configurações → Sites. Requer o "
+"URL do script abaixo para ser exibido. Deixe ambos os campos em branco para "
 "desativar."
 
 #: inc/panel.php:961
@@ -2387,9 +2420,9 @@ msgid ""
 "Full URL to your self-hosted Umami script file (typically <code>/script.js</"
 "code> on your Umami instance). Used together with the Website ID above."
 msgstr ""
-"URL completa do seu arquivo de script Umami auto-hospedado (normalmente <code>/"
-"script.js</code> na sua instância Umami). Usado em conjunto com o ID do site "
-"acima."
+"URL completa do seu arquivo de script Umami auto-hospedado (normalmente "
+"<code>/script.js</code> na sua instância Umami). Usado em conjunto com o ID "
+"do site acima."
 
 #: inc/panel.php:973
 msgid "Marketing & Conversion Pixels"
@@ -2401,9 +2434,10 @@ msgstr "ID do Pixel do Facebook"
 
 #: inc/panel.php:984
 msgid ""
-"Numeric Pixel ID from <a href=\"https://business.facebook.com/events_manager\" "
-"target=\"_blank\" rel=\"noopener\">Meta Events Manager</a> → Data Sources → "
-"Settings. Enables retargeting and conversion tracking. Leave empty to disable."
+"Numeric Pixel ID from <a href=\"https://business.facebook.com/"
+"events_manager\" target=\"_blank\" rel=\"noopener\">Meta Events Manager</a> → "
+"Data Sources → Settings. Enables retargeting and conversion tracking. Leave "
+"empty to disable."
 msgstr ""
 "ID numérico do pixel obtido em <a href=\"https://business.facebook.com/"
 "events_manager\" target=\"_blank\" rel=\"noopener\">Gerenciador de Meta "
@@ -2439,10 +2473,10 @@ msgstr "ID Server do Discord"
 #: inc/panel.php:1024
 msgid ""
 "Numeric <strong>Server ID</strong> (snowflake, 17-19 digits) — <strong>NOT</"
-"strong> a username or invite code. To get it: enable Developer Mode in Discord "
-"(Settings → Advanced → Developer Mode), then right-click your server icon in "
-"the sidebar → \"Copy Server ID\". Required by the widget API: server must also "
-"have Widget enabled in Server Settings → Widget."
+"strong> a username or invite code. To get it: enable Developer Mode in "
+"Discord (Settings → Advanced → Developer Mode), then right-click your server "
+"icon in the sidebar → \"Copy Server ID\". Required by the widget API: server "
+"must also have Widget enabled in Server Settings → Widget."
 msgstr ""
 "<strong>ID do Servidor</strong> numérico (snowflake, 17-19 dígitos) — "
 "<strong>NÃO</strong> é um nome de usuário ou código de convite. Para obter: "
@@ -2504,29 +2538,29 @@ msgstr "CSS Crítico Inline"
 msgid ""
 "Eliminates render-blocking by inlining the above-the-fold CSS in the "
 "<code>&lt;head&gt;</code> and loading the full stylesheet asynchronously. "
-"Lighthouse estimates ~1 second LCP improvement on mobile. <strong>Requires pre-"
-"generated critical CSS files</strong> in <code>assets/css/critical-"
+"Lighthouse estimates ~1 second LCP improvement on mobile. <strong>Requires "
+"pre-generated critical CSS files</strong> in <code>assets/css/critical-"
 "{template}.css</code> — run <code>npm run critical:all</code> from the theme "
 "root after major SCSS changes to above-the-fold rules. If the critical file "
 "for the current template is missing, the theme gracefully degrades to "
 "synchronous loading. Off by default — opt-in only after you confirm the "
 "critical files are generated."
 msgstr ""
-"Elimina render-blocking inlineando o CSS above-the-fold no <code>&lt;head&gt;</"
-"code> e carregando o stylesheet completo de forma assíncrona. O Lighthouse "
+"Elimina render-blocking inlineando o CSS above-the-fold no <code>&lt;head&gt;"
+"</code> e carregando o stylesheet completo de forma assíncrona. O Lighthouse "
 "estima melhoria de ~1 segundo no LCP em mobile. <strong>Requer arquivos "
-"critical CSS pré-gerados</strong> em <code>assets/css/critical-{template}.css</"
-"code> — rode <code>npm run critical:all</code> a partir da raiz do tema após "
-"mudanças grandes de SCSS em regras above-the-fold. Se o arquivo critical do "
-"template atual estiver ausente, o tema degrada graciosamente para carregamento "
-"síncrono. Desligado por padrão — ativa apenas após confirmar que os arquivos "
-"critical foram gerados."
+"critical CSS pré-gerados</strong> em <code>assets/css/critical-"
+"{template}.css</code> — rode <code>npm run critical:all</code> a partir da "
+"raiz do tema após mudanças grandes de SCSS em regras above-the-fold. Se o "
+"arquivo critical do template atual estiver ausente, o tema degrada "
+"graciosamente para carregamento síncrono. Desligado por padrão — ativa apenas "
+"após confirmar que os arquivos critical foram gerados."
 
 #: inc/panel.php:1079
 msgid ""
-"Replaces YouTube embeds with a lightweight thumbnail image, loading the player "
-"iframe only when the user clicks. Drastically reduces initial page weight on "
-"posts with videos."
+"Replaces YouTube embeds with a lightweight thumbnail image, loading the "
+"player iframe only when the user clicks. Drastically reduces initial page "
+"weight on posts with videos."
 msgstr ""
 "Substitui os vídeos incorporados do YouTube por uma imagem em miniatura leve, "
 "carregando o iframe do player somente quando o usuário clica. Isso reduz "
@@ -2539,8 +2573,8 @@ msgstr "Fachada do Discord"
 #: inc/panel.php:1091
 msgid ""
 "Replaces the Discord sidebar widget with a static placeholder, loading the "
-"live iframe only when the user clicks. Saves a third-party connection on every "
-"page load."
+"live iframe only when the user clicks. Saves a third-party connection on "
+"every page load."
 msgstr ""
 "Substitui o widget da barra lateral do Discord por um espaço reservado "
 "estático, carregando o iframe dinâmico somente quando o usuário clica. Isso "
@@ -2568,8 +2602,8 @@ msgstr "Desativa o CSS do WP (Bloat)"
 
 #: inc/panel.php:1117
 msgid ""
-"Removes global and block CSS from Gutenberg. Makes the site lighter, ideal for "
-"those using Markdown."
+"Removes global and block CSS from Gutenberg. Makes the site lighter, ideal "
+"for those using Markdown."
 msgstr ""
 "Remove o CSS global e de blocos do Gutenberg. Deixa o site mais leve, ideal "
 "para quem usa Markdown."
@@ -2586,9 +2620,10 @@ msgid ""
 "revisions entirely."
 msgstr ""
 "Número máximo de revisões que o WordPress mantém por post. O padrão do WP é "
-"ilimitado — ao longo dos anos, isso infla o banco de dados. Recomendação: 5 (o "
-"suficiente para recuperar de edições acidentais sem armazenar dezenas de "
-"cópias desatualizadas). Defina como 0 para desativar as revisões completamente."
+"ilimitado — ao longo dos anos, isso infla o banco de dados. Recomendação: 5 "
+"(o suficiente para recuperar de edições acidentais sem armazenar dezenas de "
+"cópias desatualizadas). Defina como 0 para desativar as revisões "
+"completamente."
 
 #: inc/panel.php:1137
 msgid "Optimize Heartbeat"
@@ -2605,10 +2640,10 @@ msgstr ""
 "Reduz a frequência da API Heartbeat do WordPress: aumenta o tempo de resposta "
 "das páginas administrativas de 60 para 120 segundos (o máximo permitido pelo "
 "WordPress, reduzindo pela metade as requisições ao admin-ajax.php), mantém o "
-"tempo padrão nas telas do editor de posts (preservando o salvamento automático "
-"e o bloqueio de edição) e, por precaução, cancela o registro do Heartbeat no "
-"frontend (caso algum plugin o esteja enfileirando). Útil em hospedagens "
-"compartilhadas ou para reduzir a carga do servidor."
+"tempo padrão nas telas do editor de posts (preservando o salvamento "
+"automático e o bloqueio de edição) e, por precaução, cancela o registro do "
+"Heartbeat no frontend (caso algum plugin o esteja enfileirando). Útil em "
+"hospedagens compartilhadas ou para reduzir a carga do servidor."
 
 #: inc/panel.php:1154
 msgid "Upload & Quality"
@@ -2633,19 +2668,19 @@ msgstr "Qualidade das Imagens (%)"
 #: inc/panel.php:1177
 msgid ""
 "Quality used when WordPress re-encodes images on upload (JPEG, WebP, AVIF). "
-"Range 1-100. WP core default is 82; the theme defaults to 80 for a better size/"
-"quality tradeoff. <strong>Tip on file formats:</strong> upload featured images "
-"as <strong>WebP</strong> or <strong>JPEG</strong> for photos; avoid PNG unless "
-"you need transparency (PNG files are typically 3-5x larger than the equivalent "
-"WebP)."
+"Range 1-100. WP core default is 82; the theme defaults to 80 for a better "
+"size/quality tradeoff. <strong>Tip on file formats:</strong> upload featured "
+"images as <strong>WebP</strong> or <strong>JPEG</strong> for photos; avoid "
+"PNG unless you need transparency (PNG files are typically 3-5x larger than "
+"the equivalent WebP)."
 msgstr ""
-"Qualidade usada quando o WordPress recodifica imagens ao fazer o upload (JPEG, "
-"WebP, AVIF). Intervalo de 1 a 100. O padrão do núcleo do WP é 82; o tema usa "
-"80 por padrão para um melhor equilíbrio entre tamanho e qualidade. "
+"Qualidade usada quando o WordPress recodifica imagens ao fazer o upload "
+"(JPEG, WebP, AVIF). Intervalo de 1 a 100. O padrão do núcleo do WP é 82; o "
+"tema usa 80 por padrão para um melhor equilíbrio entre tamanho e qualidade. "
 "<strong>Dica sobre formatos de arquivo:</strong> faça o upload de imagens em "
-"destaque como <strong>WebP</strong> ou <strong>JPEG</strong> para fotos; evite "
-"PNG, a menos que precise de transparência (arquivos PNG são normalmente de 3 a "
-"5 vezes maiores que o WebP equivalente)."
+"destaque como <strong>WebP</strong> ou <strong>JPEG</strong> para fotos; "
+"evite PNG, a menos que precise de transparência (arquivos PNG são normalmente "
+"de 3 a 5 vezes maiores que o WebP equivalente)."
 
 #: inc/panel.php:1182
 msgid "Enable WebP/AVIF Delivery"
@@ -2654,16 +2689,16 @@ msgstr "Ativar Entrega WebP/AVIF"
 #: inc/panel.php:1189
 msgid ""
 "Automatically generates WebP/AVIF versions of every uploaded JPEG/PNG (all "
-"sizes) and wraps <img> tags in <picture> with <source> elements. Browsers that "
-"support next-gen formats get the smaller file (AVIF ~50%, WebP ~30% smaller "
-"than JPEG), older browsers fall back transparently to the original. Original "
-"files are always preserved."
+"sizes) and wraps <img> tags in <picture> with <source> elements. Browsers "
+"that support next-gen formats get the smaller file (AVIF ~50%, WebP ~30% "
+"smaller than JPEG), older browsers fall back transparently to the original. "
+"Original files are always preserved."
 msgstr ""
 "Gera automaticamente versões WebP/AVIF de cada JPEG/PNG enviado (todos os "
 "tamanhos) e envolve tags <img> em <picture> com elementos <source>. Browsers "
 "que suportam formatos next-gen recebem o arquivo menor (AVIF ~50%, WebP ~30% "
-"menor que JPEG), browsers antigos fazem fallback transparente para o original. "
-"Arquivos originais são sempre preservados."
+"menor que JPEG), browsers antigos fazem fallback transparente para o "
+"original. Arquivos originais são sempre preservados."
 
 #: inc/panel.php:1194
 msgid "Format Mode"
@@ -2688,8 +2723,9 @@ msgid ""
 "86+, Safari 16+). Best compression but reduces fallback chain. <strong>WebP "
 "only</strong>: ~30% smaller than JPEG, ~95% browser support. <strong>AVIF + "
 "WebP</strong>: maximum compatibility — browser picks AVIF if supported, falls "
-"back to WebP for older browsers, falls back to original for very old browsers. "
-"Trade-off: each image generates 2 extra files on disk (~2x extra space)."
+"back to WebP for older browsers, falls back to original for very old "
+"browsers. Trade-off: each image generates 2 extra files on disk (~2x extra "
+"space)."
 msgstr ""
 "Escolha qual(is) formato(s) next-gen gerar. <strong>Apenas AVIF</strong> "
 "(padrão): ~50% menor que JPEG, ~80% de suporte em browsers (Chrome 85+, "
@@ -2815,11 +2851,11 @@ msgstr "Outras Meta Tags de Verificação"
 #: inc/panel.php:1360
 msgid ""
 "Paste full <code>&lt;meta&gt;</code> tags from other verification services "
-"(one per line). Useful for: Pinterest (<code>p:domain_verify</code>), Facebook "
-"Domain (<code>facebook-domain-verification</code>), Yandex, Naver, Norton "
-"SafeWeb, Apple News, etc. Only <code>&lt;meta&gt;</code> tags with <code>name</"
-"code> + <code>content</code> attributes are accepted — anything else is "
-"stripped at save."
+"(one per line). Useful for: Pinterest (<code>p:domain_verify</code>), "
+"Facebook Domain (<code>facebook-domain-verification</code>), Yandex, Naver, "
+"Norton SafeWeb, Apple News, etc. Only <code>&lt;meta&gt;</code> tags with "
+"<code>name</code> + <code>content</code> attributes are accepted — anything "
+"else is stripped at save."
 msgstr ""
 "Cole tags <code>&lt;meta&gt;</code> completas de outros serviços de "
 "verificação (uma por linha). Útil para: Pinterest (<code>p:domain_verify</"
@@ -2862,8 +2898,8 @@ msgstr "Ativa Sitemap do WordPress"
 #: inc/panel.php:1400
 msgid ""
 "Generates <code>/wp-sitemap.xml</code> with sub-sitemaps for posts, pages, "
-"taxonomies and authors (WP 5.5+ native). Disable only if you use a third-party "
-"SEO plugin (Yoast, RankMath) that provides its own sitemap."
+"taxonomies and authors (WP 5.5+ native). Disable only if you use a third-"
+"party SEO plugin (Yoast, RankMath) that provides its own sitemap."
 msgstr ""
 "Gera o arquivo <code>/wp-sitemap.xml</code> com sub-sitemaps para posts, "
 "páginas, taxonomias e autores (nativo do WP 5.5+). Desative apenas se você "
@@ -2876,10 +2912,10 @@ msgstr "Incluir Autores no Sitemap"
 
 #: inc/panel.php:1412
 msgid ""
-"Adds <code>/wp-sitemap-users-1.xml</code> with author archive URLs. Useful for "
-"multi-author blogs. <strong>Leave off for solo blogs</strong> — the author "
-"archive duplicates the home page and creates near-duplicate content for "
-"crawlers."
+"Adds <code>/wp-sitemap-users-1.xml</code> with author archive URLs. Useful "
+"for multi-author blogs. <strong>Leave off for solo blogs</strong> — the "
+"author archive duplicates the home page and creates near-duplicate content "
+"for crawlers."
 msgstr ""
 "Adiciona <code>/wp-sitemap-users-1.xml</code> com URLs da página do autor. "
 "Útil para blogs com vários autores. <strong>Deixe desligado para blogs "
@@ -2972,7 +3008,8 @@ msgstr "Banner Sidebar - Topo (300x250)"
 
 #: inc/panel.php:1500
 msgid "Rendered in the sidebar, right below integrations (e.g. Discord)."
-msgstr "Renderizado na barra lateral, logo abaixo das integrações (ex: Discord)."
+msgstr ""
+"Renderizado na barra lateral, logo abaixo das integrações (ex: Discord)."
 
 #: inc/panel.php:1505
 msgid "Sidebar Banner - Sticky (300x600)"
@@ -2993,7 +3030,8 @@ msgstr "GitHub Sponsors"
 #: inc/panel.php:1532
 msgid "Link to your official GitHub sponsorship page for global supporters."
 msgstr ""
-"Link para a sua página oficial de patrocínio no GitHub para apoiadores globais."
+"Link para a sua página oficial de patrocínio no GitHub para apoiadores "
+"globais."
 
 #: inc/panel.php:1537
 msgid "PayPal Donation Link"
@@ -3025,8 +3063,8 @@ msgstr "Link do PIX (Copia e Cola)"
 
 #: inc/panel.php:1572
 msgid ""
-"Direct URL for PIX payment (if your bank provides a link). The QR Code will be "
-"clickable."
+"Direct URL for PIX payment (if your bank provides a link). The QR Code will "
+"be clickable."
 msgstr ""
 "URL direta para o pagamento PIX (se o seu banco fornecer link). O QR Code "
 "ficará clicável."
@@ -3074,10 +3112,11 @@ msgstr "Senha de Dev"
 
 #: inc/panel.php:1628
 msgid ""
-"Password for developers to bypass maintenance. Access: <strong>yourdomain.com/?"
-"rd-dev-login</strong> and enter the password in the form (do not pass it "
-"through the URL). The password is stored as a cryptographic hash — after "
-"saving, this field will appear empty (this is normal and secure)."
+"Password for developers to bypass maintenance. Access: "
+"<strong>yourdomain.com/?rd-dev-login</strong> and enter the password in the "
+"form (do not pass it through the URL). The password is stored as a "
+"cryptographic hash — after saving, this field will appear empty (this is "
+"normal and secure)."
 msgstr ""
 "Senha para desenvolvedores contornarem a manutenção. Acesse: "
 "<strong>seudominio.com.br/?rd-dev-login</strong> e digite a senha no "
@@ -3130,8 +3169,8 @@ msgid ""
 "How view counts are displayed on the frontend (post cards and single posts). "
 "The admin panel always shows exact numbers."
 msgstr ""
-"As contagens de visualizações são exibidas no frontend (cards de posts e posts "
-"individuais). O painel admin sempre mostra números exatos."
+"As contagens de visualizações são exibidas no frontend (cards de posts e "
+"posts individuais). O painel admin sempre mostra números exatos."
 
 #: inc/panel.php:1681
 msgid "Items per Ranking"
@@ -3214,8 +3253,8 @@ msgstr ""
 
 #~ msgid ""
 #~ "Applying replaces the current configuration with what's in the file. An "
-#~ "auto-snapshot is saved automatically — use the Restore card (right) to undo "
-#~ "if needed."
+#~ "auto-snapshot is saved automatically — use the Restore card (right) to "
+#~ "undo if needed."
 #~ msgstr ""
 #~ "Aplicar substitui a configuração atual pelo conteúdo do arquivo. Um auto-"
 #~ "snapshot é salvo automaticamente — use o card Restaurar (à direita) para "
@@ -3230,8 +3269,8 @@ msgstr ""
 #~ msgid ""
 #~ "Enables the <strong>Statistics</strong> tab in the admin panel — a read-"
 #~ "only dashboard with top posts (by views and by comments), total site views "
-#~ "and a 12-month growth chart. Uses data collected by the views tracker. When "
-#~ "OFF, the tab is hidden and Chart.js is not loaded, but view tracking "
+#~ "and a 12-month growth chart. Uses data collected by the views tracker. "
+#~ "When OFF, the tab is hidden and Chart.js is not loaded, but view tracking "
 #~ "continues normally so no historical data is lost."
 #~ msgstr ""
 #~ "Habilita a aba <strong>Estatísticas</strong> no painel de administração — "
@@ -3261,7 +3300,8 @@ msgstr ""
 #~ msgstr "Apoio via PIX"
 
 #~ msgid ""
-#~ "Server ID to activate communication with the official widget in the sidebar."
+#~ "Server ID to activate communication with the official widget in the "
+#~ "sidebar."
 #~ msgstr ""
 #~ "ID do servidor (Server ID) para ativar a comunicação com o widget oficial "
 #~ "na barra lateral."
@@ -3273,8 +3313,8 @@ msgstr ""
 #~ "Changes image quality. WP default is 82. Lower values make the site faster "
 #~ "but reduce visual quality."
 #~ msgstr ""
-#~ "Altera a qualidade das imagens. O padrão do WP é 82. Valores menores deixam "
-#~ "o site mais rápido, mas reduzem a qualidade visual."
+#~ "Altera a qualidade das imagens. O padrão do WP é 82. Valores menores "
+#~ "deixam o site mais rápido, mas reduzem a qualidade visual."
 
 #~ msgid "Facades System"
 #~ msgstr "Sistema de Fachadas"
@@ -3306,5 +3346,5 @@ msgstr ""
 #~ "Customize the message shown to the user. You can use HTML tags like "
 #~ "&lt;a&gt; for links."
 #~ msgstr ""
-#~ "Personalize a mensagem que aparece para o usuário. Você pode usar tags HTML "
-#~ "como &lt;a&gt; para links."
+#~ "Personalize a mensagem que aparece para o usuário. Você pode usar tags "
+#~ "HTML como &lt;a&gt; para links."

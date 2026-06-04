@@ -172,9 +172,12 @@ function rd_backup_handle_export() {
 	$data = rd_backup_collect_data( $sections );
 
 	// Filename: reloaded-backup-{host}-{date}.json
-	// Clean host (no dots/ports) to avoid issues on various filesystems
+	// Domain-safe host sanitization: keep dots/hyphens, strip anything else.
+	// We avoid sanitize_file_name() here because its multi-extension guard
+	// appends "_" to dot-separated segments that look like a non-allowed
+	// extension, turning "theme.reloaded.com.br" into "theme.reloaded.com_.br".
 	$host     = wp_parse_url( home_url(), PHP_URL_HOST );
-	$host     = $host ? sanitize_file_name( $host ) : 'site';
+	$host     = $host ? preg_replace( '/[^a-zA-Z0-9.\-]/', '', $host ) : 'site';
 	$filename = 'reloaded-backup-' . $host . '-' . gmdate( 'Y-m-d' ) . '.json';
 
 	// Send headers + body
