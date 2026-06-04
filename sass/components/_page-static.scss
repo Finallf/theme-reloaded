@@ -2,10 +2,10 @@
 @use '../base/variables' as *;
 
 /* ==========================================================================
-   Páginas Estáticas (page.php)
+   Static Pages (page.php)
    ========================================================================== */
 
-/* ===== ARTIGO PRINCIPAL ===== */
+/* ===== MAIN ARTICLE ===== */
 
 .rd-page-article {
     background: $glass-bg;
@@ -23,7 +23,7 @@
     }
 }
 
-/* ===== HEADER (Título da página) ===== */
+/* ===== HEADER (Page title) ===== */
 
 .rd-page-header {
     margin-bottom: 35px;
@@ -38,7 +38,7 @@
     color: $dark-text;
     margin: 0;
 
-    // Highlight sutil com gradiente da marca
+    // Subtle highlight with the brand gradient
     background: $brand-gradient;
     -webkit-background-clip: text;
     background-clip: text;
@@ -65,7 +65,7 @@
     }
 }
 
-/* ===== CONTEÚDO ===== */
+/* ===== CONTENT ===== */
 
 .rd-page-content {
     font-family: $font-primary;
@@ -73,7 +73,7 @@
     line-height: 1.75;
     color: $dark-text;
 
-    // Headings dentro do conteúdo
+    // Headings inside the content
     h2, h3, h4, h5, h6 {
         font-family: $font-heading;
         color: $dark-text;
@@ -110,8 +110,8 @@
         margin-bottom: 0.5em;
     }
 
-    // blockquote: regra global vive em components/_markdown.scss
-    // (cobre posts, páginas, comentários e static pages com um único estilo)
+    // blockquote: the global rule lives in components/_markdown.scss
+    // (covers posts, pages, comments and static pages with a single style)
 
     img {
         max-width: 100%;
@@ -130,11 +130,11 @@
 }
 
 /* ==========================================================================
-   Página: Política de Privacidade (page-politica-de-privacidade.php)
+   Page: Privacy Policy (page-politica-de-privacidade.php)
    ========================================================================== */
 
 .rd-page-privacy {
-    // Data de "Última atualização" abaixo do título — discreta, em itálico
+    // "Last updated" date below the title — discreet, in italics
     .rd-page-updated {
         margin: 8px 0 0;
         font-size: 0.85rem;
@@ -144,7 +144,7 @@
 }
 
 /* ==========================================================================
-   Página: Sobre (page-sobre.php) — Hero com avatar + bio + sociais
+   Page: About (page-sobre.php) — Hero with avatar + bio + socials
    ========================================================================== */
 
 .rd-about-hero {
@@ -156,7 +156,7 @@
     border-bottom: 1px solid $glass-border;
 
     @media (max-width: 600px) {
-        // Mobile: empilha vertical, centraliza tudo
+        // Mobile: stacks vertical, centers everything
         flex-direction: column;
         text-align: center;
         gap: 16px;
@@ -186,10 +186,10 @@
     font-size: 2rem;
     font-weight: 700;
     color: $dark-text;
-    margin: 0; // espaçamento gerenciado pelo .rd-about-info-header (margin-bottom)
+    margin: 0; // spacing managed by .rd-about-info-header (margin-bottom)
     letter-spacing: 0.5px;
 
-    // Highlight com o gradiente da marca (mesmo padrão do .rd-page-title)
+    // Highlight with the brand gradient (same pattern as .rd-page-title)
     background: $brand-gradient;
     -webkit-background-clip: text;
     background-clip: text;
@@ -207,8 +207,8 @@
     margin: 0 0 14px;
 }
 
-// Linha do título: H1 à esquerda + botão "View all posts" à direita.
-// Em mobile empilha vertical e mantém centralizado pelo text-align do hero pai.
+// Title row: H1 on the left + "View all posts" button on the right.
+// On mobile it stacks vertical and stays centered by the parent hero's text-align.
 .rd-about-info-header {
     display: flex;
     align-items: center;
@@ -223,9 +223,9 @@
     }
 }
 
-// Botão "View all posts" — leva pra /author/{username}/ (archive automático
-// do WP renderizado por author.php). Estilo secondary (border + transparente)
-// pra não competir visualmente com o conteúdo principal.
+// The "View all posts" button — goes to /author/{username}/ (WP's automatic
+// archive rendered by author.php). Secondary style (border + transparent)
+// so it doesn't visually compete with the main content.
 .rd-about-cta-btn {
     display: inline-flex;
     align-items: center;
@@ -248,9 +248,9 @@
     &:hover {
         background: rgba(0, 168, 255, 0.1);
         transform: translateY(-2px);
-        color: $brand-blue-light; // preserva azul no hover
+        color: $brand-blue-light; // preserves blue on hover
 
-        // Setinha "anda" pra direita no hover — feedback sutil de "vai pra outro lugar"
+        // Arrow "walks" right on hover — subtle "going elsewhere" feedback
         svg {
             transform: translateX(3px);
         }
@@ -258,15 +258,15 @@
 }
 
 .rd-about-socials {
-    // Reusa o estilo do .rd-social-icons (já posiciona em flex) — só ajusta
-    // o alinhamento no mobile (centralizado quando o hero empilha)
+    // Reuses the .rd-social-icons style (already lays out in flex) — only adjusts
+    // the alignment on mobile (centered when the hero stacks)
     @media (max-width: 600px) {
         .rd-social-icons {
             justify-content: center;
         }
 
-        // Reset do margin-left:15px do primeiro ícone quando centralizado
-        // (mesmo fix usado no footer-bottom em mobile)
+        // Reset of the first icon's margin-left:15px when centered
+        // (same fix used in footer-bottom on mobile)
         .rd-social-link:first-child {
             margin-left: 0;
         }

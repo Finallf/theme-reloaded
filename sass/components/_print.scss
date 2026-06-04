@@ -3,16 +3,16 @@
 
 // ==========================================================
 // Print Stylesheet
-//   Otimiza o output em papel / "Salvar como PDF":
-//   - Esconde elementos UI/navegação que não fazem sentido impressos
-//   - Força fundo branco + texto preto (economia de tinta + legibilidade)
-//   - Mostra URL após links externos pra contexto offline
-//   - Tipografia print-friendly (serif, contraste alto)
+// Optimizes the output on paper / "Save as PDF":
+// - Hides UI/navigation elements that make no sense printed
+// - Forces white background + black text (ink saving + legibility)
+// - Shows the URL after external links for offline context
+// - Print-friendly typography (serif, high contrast)
 // ==========================================================
 
 @media print {
 
-    // --- Fundo + tipografia base ---
+    // --- Background + base typography ---
     html,
     body {
         background: #fff !important;
@@ -22,7 +22,7 @@
         line-height: 1.5;
     }
 
-    // Evita quebrar gradientes/sombras impressos
+    // Avoids breaking printed gradients/shadows
     * {
         background: transparent !important;
         color: #000 !important;
@@ -30,7 +30,7 @@
         text-shadow: none !important;
     }
 
-    // --- Esconder UI / navegação ---
+    // --- Hide UI / navigation ---
     .site-header,
     .site-footer,
     .rd-top-bar,
@@ -75,7 +75,7 @@
         display: none !important;
     }
 
-    // --- Layout: força conteúdo full-width sem sidebar ---
+    // --- Layout: forces full-width content without sidebar ---
     .site-main,
     .content-area,
     .single-post-content,
@@ -88,21 +88,21 @@
         padding: 0 !important;
     }
 
-    // --- Links: mostra URL ao lado pra contexto offline ---
-    // Só pra links externos absolutos; relativos/internos viram ruído.
+    // --- Links: shows the URL beside them for offline context ---
+    // Only for absolute external links; relative/internal ones become noise.
     a[href^="http"]:after {
         content: " (" attr(href) ")";
         font-size: 90%;
         word-break: break-all;
     }
 
-    // Skip URL de âncoras e mailto
+    // Skip URL for anchors and mailto
     a[href^="#"]:after,
     a[href^="mailto:"]:after {
         content: "";
     }
 
-    // --- Imagens: não cortar entre páginas, max-width 100% ---
+    // --- Images: don't cut between pages, max-width 100% ---
     img,
     picture {
         max-width: 100% !important;
@@ -110,13 +110,13 @@
         page-break-inside: avoid;
     }
 
-    // --- Quebra de página: títulos não terminam página sozinhos ---
+    // --- Page break: headings don't end a page alone ---
     h1, h2, h3, h4, h5, h6 {
         page-break-after: avoid;
         page-break-inside: avoid;
     }
 
-    // Parágrafos / listas / blockquotes: evita quebrar no meio
+    // Paragraphs / lists / blockquotes: avoid breaking in the middle
     p,
     blockquote,
     ul,
@@ -128,7 +128,7 @@
         widows: 3;
     }
 
-    // --- Code blocks: borda visível pra distinguir do texto ---
+    // --- Code blocks: visible border to distinguish from text ---
     pre,
     code {
         border: 1px solid #999 !important;

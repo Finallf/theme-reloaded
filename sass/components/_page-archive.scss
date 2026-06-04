@@ -1,11 +1,11 @@
 // ==========================================================
-// PÁGINA DE ARCHIVE
-// Cobre os fallbacks do template hierarchy: category, tag, date.
+// ARCHIVE PAGE
+// Covers the template hierarchy fallbacks: category, tag, date.
 //
-// Markup montado por rd_render_archive_header() em mod-archive-header.php.
-// O title e a description seguem vindos do WordPress via the_archive_title()
-// e the_archive_description(); o helper adiciona ícone contextual,
-// contador de posts e a borda esquerda colorida (acento da categoria).
+// Markup assembled by rd_render_archive_header() in mod-archive-header.php.
+// The title and description still come from WordPress via the_archive_title()
+// and the_archive_description(); the helper adds a contextual icon,
+// a post counter and the colored left border (category accent).
 // ==========================================================
 @use '../base/variables' as *;
 
@@ -17,15 +17,15 @@
     border-radius: 5px;
     padding: 25px 30px;
     margin-bottom: 25px;
-    box-shadow: 0 8px 20px var(--rd-glass-shadow); // Adapta dark/light (plana no light)
+    box-shadow: 0 8px 20px var(--rd-glass-shadow); // Adapts dark/light (flat in light)
 
-    // Ícone à esquerda + bloco de texto à direita
+    // Icon on the left + text block on the right
     display: grid;
     grid-template-columns: auto 1fr;
     gap: 20px;
     align-items: center;
 
-    // Borda superior com gradiente da marca (preservada do design original)
+    // Top border with the brand gradient (preserved from the original design)
     &::before {
         content: "";
         position: absolute;
@@ -36,8 +36,8 @@
         background: $brand-gradient;
     }
 
-    // Borda esquerda como acento — usa CSS var injetada inline pelo helper
-    // (cor da categoria do mod-category-colors). Fallback pro brand-blue.
+    // Left border as an accent — uses a CSS var injected inline by the helper
+    // (category color from mod-category-colors). Fallback to brand-blue.
     &::after {
         content: "";
         position: absolute;
@@ -61,7 +61,7 @@
     }
 
     .rd-archive-text {
-        min-width: 0; // permite truncamento se o título for muito longo
+        min-width: 0; // allows truncation if the title is very long
     }
 
     .rd-archive-title {
@@ -72,8 +72,8 @@
         letter-spacing: 0.5px;
         margin: 0;
 
-        // O the_archive_title() do WP envolve a parte dinâmica
-        // (nome da categoria/tag/data) em um <span>
+        // WP's the_archive_title() wraps the dynamic part
+        // (category/tag/date name) in a <span>
         span {
             background: $brand-gradient;
             -webkit-background-clip: text;
@@ -91,9 +91,9 @@
         p + p { margin-top: 0.5em; }
     }
 
-    // Contador de posts — flutua no canto direito do header (mesmo padrão
-    // dos views nos cards). Sai do flow do .rd-archive-text, ancorando direto
-    // no .rd-archive-header que já é position: relative pelos pseudo-elements.
+    // Post counter — floats in the right corner of the header (same pattern
+    // as the views in the cards). Leaves the .rd-archive-text flow, anchoring directly
+    // to the .rd-archive-header that is already position: relative due to the pseudo-elements.
     .rd-archive-count {
         position: absolute;
         top: 50%;
@@ -109,9 +109,9 @@
         }
     }
 
-    // Mobile: ícone menor, padding reduzido, gap mais apertado
+    // Mobile: smaller icon, reduced padding, tighter gap
     @media (max-width: 600px) {
-        padding: 18px 20px 18px 22px; // padding-left maior pra compensar a borda de 4px
+        padding: 18px 20px 18px 22px; // larger padding-left to compensate for the 4px border
         gap: 14px;
 
         .rd-archive-icon {
@@ -127,8 +127,8 @@
             font-size: 0.9rem;
         }
 
-        // Count volta pro flow em mobile — ancorado à direita absoluto colidiria
-        // com título/descrição em telas estreitas
+        // Count returns to the flow on mobile — anchored absolutely right it would collide
+        // with the title/description on narrow screens
         .rd-archive-count {
             position: static;
             transform: none;

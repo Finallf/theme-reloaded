@@ -3,7 +3,7 @@
 
 .submit,
 .wp-block-button__link {
-	background: $brand-gradient; // Puxando a variável oficial!
+	background: $brand-gradient; // Pulling the official variable!
 	color: #fff;
 	border: none;
 	padding: 12px 30px;
@@ -16,7 +16,7 @@
 
 	&:hover {
 		opacity: 0.8;
-		transform: translateY(-2px); // Dá aquele pulinho charmoso
+		transform: translateY(-2px); // Gives that charming little hop
 	}
 
 	&:active {

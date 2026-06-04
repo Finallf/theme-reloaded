@@ -8,14 +8,14 @@
     border-radius: 5px;
     overflow: hidden;
     cursor: pointer;
-    box-shadow: 0 8px 20px var(--rd-glass-shadow); // Adapta dark/light (plana no light)
+    box-shadow: 0 8px 20px var(--rd-glass-shadow); // Adapts dark/light (flat in light)
 
     // ==========================================================
-    // 1. FACHADA DO YOUTUBE (Força proporção 16:9)
+    // 1. YOUTUBE FACADE (Forces 16:9 ratio)
     // ==========================================================
     &[data-type="youtube"] {
         aspect-ratio: 16 / 9;
-        background-color: #000; // Mantido preto absoluto propositalmente para o vídeo
+        background-color: #000; // Kept absolute black on purpose for the video
 
         img {
             width: 100%;
@@ -38,19 +38,19 @@
             justify-content: center;
             color: #fff;
             font-size: 24px;
-            transition: transform 0.2s ease; // Mudamos para transform para animar o pulo
+            transition: transform 0.2s ease; // Switched to transform to animate the hop
         }
 
-        // Efeito interativo quando o usuário passa o mouse na fachada
+        // Interactive effect when the user hovers the facade
         &:hover {
             .play-button {
-                transform: translate(-50%, -50%) scale(1.1); // Botão do YT dá um pequeno zoom
+                transform: translate(-50%, -50%) scale(1.1); // The YT button does a small zoom
             }
         }
     }
 
     // ==========================================================
-    // 2. FACHADA DO DISCORD (Tamanho flexível, sem cortes)
+    // 2. DISCORD FACADE (Flexible size, no cropping)
     // ==========================================================
     &[data-type="discord"] {
         aspect-ratio: auto; 

@@ -2,22 +2,22 @@
 @use '../base/variables' as *;
 
 // ==========================================================
-// Botão Voltar ao Topo
+// Back to Top Button
 // ==========================================================
 .back-to-top {
     position: fixed;
     bottom: 20px;
-    // Trava o botão a 30px da borda direita de um "container virtual" de 1660px.
-    // - Em telas =<1660px: max() retorna 30px (igual antes)
-    // - Em telas >1660px (ultra-wide): trava na posição do container, evitando
-    //   que o botão se afaste do conteúdo e fique "perdido" no canto
+    // Pins the button 30px from the right edge of a 1660px "virtual container".
+    // - On screens =<1660px: max() returns 30px (same as before)
+    // - On screens >1660px (ultra-wide): pins to the container position, preventing
+    // the button from drifting away from the content and getting "lost" in the corner
     right: max(20px, calc((100vw - 1600px) / 2 + 20px));
     width: 40px;
     height: 40px;
-    background-color: $dark-surface; // Trazendo para a paleta do tema
+    background-color: $dark-surface; // Bringing it into the theme palette
     color: $text-muted-dark;
-    border: 1px solid $glass-border; // Usando a nossa transparência elegante
-    border-radius: 5px; // Um arredondamento sutil, moderno
+    border: 1px solid $glass-border; // Using our elegant transparency
+    border-radius: 5px; // A subtle, modern rounding
     box-shadow: 0 2px 10px rgba(0, 0, 0, .5);
     display: flex;
     align-items: center;
@@ -25,30 +25,30 @@
     cursor: pointer;
     z-index: 9999;
 
-    // Escondido por padrão
+    // Hidden by default
     opacity: 0;
     visibility: hidden;
-    transform: translateY(15px); // Começa um pouco mais baixo
+    transform: translateY(15px); // Starts a bit lower
 
-    // Transições suaves para todos os estados (adicionei cor e borda na transição)
+    // Smooth transitions for all states (added color and border to the transition)
     transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease, background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
 
-    // Classe que o Javascript vai adicionar quando a tela rolar
+    // Class the JavaScript adds when the screen scrolls
     &.show {
         opacity: 1;
         visibility: visible;
-        transform: translateY(0); // Sobe para a posição original
+        transform: translateY(0); // Rises to the original position
     }
 
-    // Efeito Hover
+    // Hover Effect
     &:hover {
         background-color: $dark-bg;
         color: $text-light;
-        border-color: $border-light; // Um toque da marca no hover!
+        border-color: $border-light; // A touch of the brand on hover!
     }
 
     svg {
-        pointer-events: none; // Evita bugs de clique no ícone em vez do botão
+        pointer-events: none; // Avoids click bugs on the icon instead of the button
         width: 20px;
         height: 20px;
     }
