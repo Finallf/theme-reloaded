@@ -2,7 +2,7 @@
 @use '../base/variables' as *;
 
 .site-footer {
-	background-color: $dark-deep; // #111 ancorado na variável
+	background-color: $dark-deep; // #111 anchored to the variable
 	color: $text-muted-dark;
 	padding-bottom: 0.5rem;
 	font-family: $font-primary; // Inter
@@ -11,8 +11,8 @@
 		content: '';
 		display: block;
 		width: 100%;
-		height: 5px; // Espessura do risco
-		background: $brand-gradient; // Usa o degradê que definimos
+		height: 5px; // Stripe thickness
+		background: $brand-gradient; // Uses the gradient we defined
 	}
 
 	.footer-grid {
@@ -23,7 +23,7 @@
 	}
 
 	.footer-heading {
-		color: var(--rd-text); // Títulos brancos para máximo contraste no fundo escuro
+		color: var(--rd-text); // White headings for maximum contrast on the dark background
 		font-family: $font-heading; // Poppins
 		font-size: 1.2rem;
 		margin-bottom: 1.5rem;
@@ -38,8 +38,8 @@
 		}
 	}
 
-	// Mensagem "Add a widget in Appearance > Widgets" — empty state
-	// quando a área de widgets do rodapé não tem nada registrado.
+	// "Add a widget in Appearance > Widgets" message — empty state
+	// when the footer widget area has nothing registered.
 	.footer-widget-empty {
 		color: $text-muted-dark;
 		font-size: 0.9rem;
@@ -53,7 +53,7 @@
 			margin-bottom: 0.8rem;
 
 			a {
-				color: $text-label; // Fica um cinza claro elegante para links
+				color: $text-label; // An elegant light gray for links
 				text-decoration: none;
 				transition: color 0.3s ease, padding-left 0.3s ease;
 
@@ -66,12 +66,12 @@
 	}
 
 	.footer-bottom {
-		border-top: 1px solid $border-dark; // Linha divisória fina
+		border-top: 1px solid $border-dark; // Thin divider line
 		padding-top: 2rem;
 		font-size: 0.85rem;
 
-		// 2 colunas: info (copyright + hosting) à esquerda, redes sociais à direita.
-		// Em mobile vira coluna única (override na media query mais abaixo).
+		// 2 columns: info (copyright + hosting) on the left, social icons on the right.
+		// On mobile it becomes a single column (override in the media query below).
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
@@ -83,15 +83,15 @@
 
 		.hosting-info {
 			margin-top: 0.5rem;
-			// Hierarquia visual sutil entre essa linha (assinatura de brand)
-			// e o copyright acima via opacity. 0.85 preserva o degradê de
-			// importância e bate WCAG AA 4.5:1 contra o footer #111 (~4.6:1).
+			// Subtle visual hierarchy between this line (brand signature)
+			// and the copyright above via opacity. 0.85 preserves the importance
+			// gradient and meets WCAG AA 4.5:1 against the footer #111 (~4.6:1).
 			opacity: 0.85;
 			font-style: italic;
 
-			// Links inline (ex: "Made with ❤️ in <a>Brazil</a>") herdam
-			// a cor do parágrafo pra manter a estética unificada — sem
-			// destaque shout-y. Underline é o único affordance visual.
+			// Inline links (e.g. "Made with ❤️ in <a>Brazil</a>") inherit
+			// the paragraph color to keep the aesthetics unified — no
+			// shout-y highlight. Underline is the only visual affordance.
 			a {
 				color: inherit;
 				text-decoration: underline;
@@ -103,7 +103,7 @@
 	}
 }
 
-// Responsividade para tablets/mobile
+// Responsiveness for tablets/mobile
 @media (max-width: 768px) {
 	.site-footer {
 		padding: 3rem 1.5rem 1.5rem;
@@ -112,8 +112,8 @@
 			gap: 2rem;
 		}
 
-		// Em mobile, o bottom bar empilha: copyright em cima, redes embaixo.
-		// Centraliza ambos pra não ficar desalinhado depois do break.
+		// On mobile, the bottom bar stacks: copyright on top, social below.
+		// Centers both so they don't look misaligned after the break.
 		.footer-bottom {
 			flex-direction: column;
 			text-align: center;
@@ -122,8 +122,8 @@
 				justify-content: center;
 			}
 
-			// O primeiro ícone tem margin-left: 15px (padrão da regra .rd-social-link)
-			// que cria assimetria visual quando centralizado. Zera no primeiro.
+			// The first icon has margin-left: 15px (default of the .rd-social-link rule)
+			// which creates visual asymmetry when centered. Zero it on the first one.
 			.rd-social-link:first-child {
 				margin-left: 0;
 			}
@@ -133,7 +133,7 @@
 
 .footer-widget {
 
-	// Estiliza a lista de posts dentro do widget
+	// Styles the post list inside the widget
 	ul {
 		list-style: none;
 		padding: 0;
@@ -150,29 +150,29 @@
 				border-bottom: none;
 			}
 
-			// A imagem miniatura do post
+			// The post thumbnail image
 			img {
 				width: 60px;
 				height: 60px;
 				object-fit: cover;
-				border-radius: 5px; // O SEU NOVO PADRÃO DE 5PX!
+				border-radius: 5px; // YOUR NEW 5PX STANDARD!
 				background-color: $dark-surface;
 			}
 
-			// O link do título do post
+			// The post title link
 			a {
 				font-size: 0.95rem;
 				line-height: 1.3;
-				color: $dark-text !important; // Substituiu o #eee
+				color: $dark-text !important; // Replaced #eee
 				font-weight: 500;
 				text-decoration: none;
 
 				&:hover {
-					color: $brand-blue-light !important; // BUG CORRIGIDO AQUI!
+					color: $brand-blue-light !important; // BUG FIXED HERE!
 				}
 			}
 
-			// A data abaixo do título
+			// The date below the title
 			.wp-block-latest-posts__post-date {
 				display: block;
 				font-size: 0.75rem;

@@ -1,53 +1,53 @@
 // sass/layout/_sidebar.scss
 @use '../base/variables' as *;
 
-// Barra lateral (Sidebar)
+// Sidebar
 #secondary {
 
-	// Widget Discord — visual de "card" da sidebar (glass + border + shadow).
-	// Aplica em DUAS situações mutuamente exclusivas:
-	//   1. .discord-style — wrapper customizado (com facade)
-	//   2. iframe oficial QUANDO renderizado solo (facade desativado no painel)
+	// Discord widget — sidebar "card" look (glass + border + shadow).
+	// Applies in TWO mutually exclusive situations:
+	//   1. .discord-style — custom wrapper (with facade)
+	//   2. official iframe WHEN rendered solo (facade disabled in the panel)
 	//
-	// O `:not(.discord-style *)` impede dupla aplicação quando o iframe está
-	// aninhado dentro do wrapper — antes da correção, ambos ganhavam border
-	// (parecia 2px) e margin-bottom (duplicava espaço abaixo do widget).
+	// The `:not(.discord-style *)` prevents double application when the iframe
+	// is nested inside the wrapper — before the fix, both got a border
+	// (looked like 2px) and margin-bottom (doubled the space below the widget).
 	.discord-style,
 	iframe[src*="discord.com/widget"]:not(.discord-style *) {
-		background-color: $glass-bg; // Glassmorphism padrão da sidebar!
-		border-radius: 5px; // Regra de ouro mantida
-		border: 1px solid $glass-border; // Usando a variável
+		background-color: $glass-bg; // Default sidebar glassmorphism!
+		border-radius: 5px; // Golden rule kept
+		border: 1px solid $glass-border; // Using the variable
 		margin-bottom: 20px;
-		box-shadow: 0 8px 20px var(--rd-glass-shadow); // Adapta dark/light (plana no light)
+		box-shadow: 0 8px 20px var(--rd-glass-shadow); // Adapts dark/light (flat in light)
 	}
 
-	// Fixes do iframe do Discord:
+	// Discord iframe fixes:
 	//
-	// 1. `color-scheme: normal` quebra a herança de `:root { color-scheme: dark }`.
-	//    Sem essa quebra, o Chrome aplica uma "camada de fallback" dark no iframe
-	//    (otimização pra evitar flash em conteúdo cross-origin). Como o Discord
-	//    não responde à dica de scheme do mesmo jeito que o Chrome espera, o
-	//    composiramento entre a camada de fallback e o conteúdo do Discord deixa
-	//    pixels brancos visíveis nos cantos arredondados internos. Setando
-	//    `normal`, o iframe renderiza sem essa otimização e os cantos ficam limpos.
+	// 1. `color-scheme: normal` breaks the inheritance of `:root { color-scheme: dark }`.
+	//    Without that break, Chrome applies a dark "fallback layer" to the iframe
+	//    (an optimization to avoid flashing on cross-origin content). Since Discord
+	//    doesn't respond to the scheme hint the way Chrome expects, the
+	//    compositing between the fallback layer and the Discord content leaves
+	//    white pixels visible in the inner rounded corners. Setting
+	//    `normal`, the iframe renders without that optimization and the corners stay clean.
 	//
-	// 2. `display: block` elimina o "descender space" — iframe por padrão é
-	//    `display: inline`, herdando um espaço fantasma de ~4-6px abaixo (área
-	//    reservada pras letras com cauda tipo g/p/y). Esse espaço empurra o
-	//    iframe pra fora do wrapper, fazendo a borda inferior do .discord-style
-	//    aparecer cortando o conteúdo (mais visível em light mode).
+	// 2. `display: block` removes the "descender space" — an iframe is
+	//    `display: inline` by default, inheriting a ghost space of ~4-6px below (area
+	//    reserved for letters with tails like g/p/y). That space pushes the
+	//    iframe out of the wrapper, making the bottom border of .discord-style
+	//    appear cutting through the content (more visible in light mode).
 	iframe[src*="discord.com/widget"] {
 		color-scheme: normal;
 		display: block;
 	}
 
 	.discord-style {
-		// Conteúdo interno do wrapper (placeholder do facade com logo Discord)
+		// Wrapper inner content (facade placeholder with Discord logo)
 		.discord-placeholder {
-			align-items: center; // Centraliza .logo-ext (SVG Discord, alto) e .logo-int (logo do site, menor) verticalmente — sem isso o site logo ficava ancorado no topo
-			background-color: #5865F2; // Mantido hardcoded: é a cor da marca do Discord
+			align-items: center; // Vertically centers .logo-ext (Discord SVG, tall) and .logo-int (site logo, smaller) — without it the site logo stayed anchored at the top
+			background-color: #5865F2; // Kept hardcoded: it's the Discord brand color
 			justify-content: space-between;
-			border-radius: 5px; // Regra de ouro
+			border-radius: 5px; // Golden rule
 			padding: 20px;
 			display: flex;
 			flex-wrap: wrap;
@@ -59,29 +59,29 @@
 		}
 	}
 
-	// "Card glass shell" — visual padrão da sidebar. Aplicado a widgets Gutenberg
-	// (.widget_block, classe que o WP injeta automaticamente) E a widgets clássicos
-	// customizados do tema que reusam a estética. Pra inscrever um widget clássico
-	// nesse shell, adicione seu classname ao seletor abaixo.
+	// "Card glass shell" — default sidebar look. Applied to Gutenberg widgets
+	// (.widget_block, the class WP injects automatically) AND to custom classic
+	// theme widgets that reuse the aesthetic. To enroll a classic widget in
+	// this shell, add its classname to the selector below.
 	.widget_block,
 	.widget_rd_popular_posts {
-		background-color: $glass-bg; // Unificando com o Apoie o Projeto
+		background-color: $glass-bg; // Unifying with the Support the Project block
 		padding: 20px;
-		border-radius: 5px; // Regra de ouro
+		border-radius: 5px; // Golden rule
 		border: 1px solid $glass-border;
 		margin-bottom: 20px;
-		box-shadow: 0 8px 20px var(--rd-glass-shadow); // Adapta dark/light (plana no light)
+		box-shadow: 0 8px 20px var(--rd-glass-shadow); // Adapts dark/light (flat in light)
 
-		// O título dos widgets — h2.wp-block-heading é a classe que o
-		// before_title do register_sidebar já injeta (ver inc/core.php),
-		// então widgets clássicos pegam o mesmo estilo dos blocks WP.
+		// The widget title — h2.wp-block-heading is the class that
+		// register_sidebar's before_title already injects (see inc/core.php),
+		// so classic widgets get the same style as WP blocks.
 		h2.wp-block-heading {
 			color: var(--rd-text);
 			font-size: 1.1rem;
-			// Poppins 500 (Medium) — alinha visualmente com h2 dos grids da home,
-			// consistência tipográfica entre seções. Antes era 800 (ExtraBold) —
-			// era o ÚNICO uso de Poppins 800 no tema, e estava em above-the-fold
-			// (sidebar em toda página) custando ~52 KB no critical path.
+			// Poppins 500 (Medium) — visually aligns with the home grids' h2,
+			// typographic consistency across sections. It was 800 (ExtraBold) before —
+			// the ONLY use of Poppins 800 in the theme, and it was above-the-fold
+			// (sidebar on every page) costing ~52 KB on the critical path.
 			font-weight: 500;
 			margin-bottom: 5px;
 			text-transform: uppercase;
@@ -90,7 +90,7 @@
 			padding-bottom: 12px;
 			border: none;
 
-			// A linha de destaque azul
+			// The blue accent line
 			&::after {
 				content: '';
 				position: absolute;
@@ -104,12 +104,12 @@
 		}
 	}
 
-	// Estilos INTERNOS dos widgets Gutenberg (.widget_block) — listas de posts/
-	// comentários, search bar, etc. Não se aplicam a widgets clássicos do tema
-	// que têm sua própria estrutura interna (caso do .widget_rd_popular_posts).
+	// INTERNAL styles of Gutenberg widgets (.widget_block) — post/comment
+	// lists, search bar, etc. They don't apply to classic theme widgets
+	// that have their own internal structure (such as .widget_rd_popular_posts).
 	.widget_block {
 
-		// Estilizando as listas de posts/comentários dentro dos blocos
+		// Styling the post/comment lists inside the blocks
 		ul {
 			list-style: none;
 			padding: 0;
@@ -117,7 +117,7 @@
 
 			li {
 				padding: 12px 0;
-				border-bottom: 1px solid $glass-border; // Translúcida visível em dark (mesma var do "Apoie o Projeto")
+				border-bottom: 1px solid $glass-border; // Translucent, visible in dark (same var as "Support the Project")
 
 				&:last-child {
 					border-bottom: none;
@@ -131,13 +131,13 @@
 
 					&:hover {
 						color: $brand-blue-light;
-						padding-left: 8px; // Deslocamento suave
+						padding-left: 8px; // Smooth shift
 					}
 				}
 			}
 		}
 
-		// Estilização para o bloco de pesquisa (Search Block)
+		// Styling for the Search Block
 		&.widget_search {
 			.wp-block-search__label {
 				margin-bottom: 15px;
@@ -145,22 +145,22 @@
 			}
 
 			.wp-block-search__inside-wrapper {
-				border: 1px solid $border-light; // Substituiu o #333
-				border-radius: 5px; // ALERTA: Peguei o fugitivo de 8px aqui!
+				border: 1px solid $border-light; // Replaced #333
+				border-radius: 5px; // HEADS UP: caught the 8px fugitive here!
 				overflow: hidden;
-				display: flex; // Mantém botão e campo alinhados
+				display: flex; // Keeps button and field aligned
 
 				.wp-block-search__input {
-					background: $dark-deep; // Substituiu o #111
+					background: $dark-deep; // Replaced #111
 					color: $dark-text;
 					border: none;
 					padding: 10px 15px;
-					outline: none; // Evita bordas nativas do navegador ao focar
+					outline: none; // Avoids native browser borders on focus
 					width: 100%;
 				}
 
 				.wp-block-search__button {
-					background: $brand-gradient; // Puxando o degradê lindo dos botões globais!
+					background: $brand-gradient; // Pulling the gorgeous gradient from the global buttons!
 					color: #fff;
 					border: none;
 					padding: 0 15px;

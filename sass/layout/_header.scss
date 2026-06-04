@@ -2,42 +2,42 @@
 @use '../base/variables' as *;
 
 .site-header {
-	background-color: $dark-deep; // mesma var do .site-footer pra consistência entre topo e rodapé (adapta dark/light)
+	background-color: $dark-deep; // same var as .site-footer for consistency between top and bottom (adapts dark/light)
 }
 
-// 1. ÁREA DE BRANDING SUPERIOR (Conteúdo Contido e Centralizado)
+// 1. TOP BRANDING AREA (Contained and Centered Content)
 .top-branding {
 
-	// Centraliza o container para o logo e o banner
+	// Centers the container for the logo and the banner
 	.container {
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
-		max-width: $container-max; // Puxando da variável global
+		max-width: $container-max; // Pulling from the global variable
 		margin: 0 auto;
 		width: 100%;
 		padding: 20px;
 	}
 
-	// Logotipo em Texto (padrão)
+	// Text Logo (default)
 	.site-branding-text {
 		h1.site-title a {
 			font-size: 2rem;
 			font-weight: 900;
-			color: #fff; // Título branco sobre fundo escuro mantido para contraste
+			color: #fff; // White title on a dark background kept for contrast
 			text-transform: uppercase;
 			text-decoration: none;
 		}
 	}
 
-	// Logotipo em Imagem (Nova Opção)
+	// Image Logo (New Option)
 	.site-branding-image {
 		display: flex;
 		align-items: center;
-		gap: 15px; // Espaço entre ícone e texto na imagem
+		gap: 15px; // Space between icon and text in the image
 
 		img {
-			max-height: 80px; // Altura máxima do logo para não estourar
+			max-height: 80px; // Max logo height so it doesn't overflow
 			width: auto;
 		}
 	}
@@ -47,33 +47,33 @@
 	display: none;
 }
 
-// 2. BARRA DE MENU FIXA (Largura de Tela Inteira)
+// 2. FIXED MENU BAR (Full Screen Width)
 .menu-bar-fixed {
 	background-color: $color-menu-bg;
 	font-family: $font-heading;
 	font-weight: 500;
-	margin-left: calc(-50vw + 50%); // Truque do CSS para centralizar um elemento de largura total
+	margin-left: calc(-50vw + 50%); // CSS trick to center a full-width element
 	margin-right: calc(-50vw + 50%);
-	box-shadow: 0 2px 8px var(--rd-glass-shadow); // Adapta dark/light
+	box-shadow: 0 2px 8px var(--rd-glass-shadow); // Adapts dark/light
 
-	// O RISCO DEGRADÊ: No topo da barra de menu
+	// THE GRADIENT STRIPE: At the top of the menu bar
 	&::before {
 		content: '';
 		display: block;
 		width: 100%;
-		height: 5px; // Espessura do risco
-		background: $brand-gradient; // Usa o degradê que definimos
+		height: 5px; // Stripe thickness
+		background: $brand-gradient; // Uses the gradient we defined
 	}
 
-	// Container interno para centralizar os links
+	// Inner container to center the links
 	.container {
 		display: flex;
-		justify-content: space-between; // Links na esquerda, busca na direita
+		justify-content: space-between; // Links on the left, search on the right
 		align-items: center;
-		position: relative; // ancora o .site-branding-toggle absolute em modo hambúrguer
+		position: relative; // anchors the absolute .site-branding-toggle in hamburger mode
 	}
 
-	// Estilo dos Links do Menu
+	// Menu Link Styles
 	.main-navigation {
 
 		ul {
@@ -82,32 +82,32 @@
 			padding: 0;
 		}
 
-		// Wrapper do painel: em desktop é "transparente" (display: contents),
-		// fazendo o <ul> aparecer como filho direto da nav pra herdar layout.
-		// Em ≤1440px o display vira `block` e position: fixed (vira painel deslizante).
+		// Panel wrapper: on desktop it's "transparent" (display: contents),
+		// making the <ul> appear as a direct child of the nav to inherit layout.
+		// At ≤1440px the display becomes `block` and position: fixed (becomes a sliding panel).
 		.menu-panel {
 			display: contents;
 		}
 
-		// Busca interna do painel só aparece em modo hambúrguer (≤1440px)
+		// The panel's internal search only appears in hamburger mode (≤1440px)
 		.menu-search-form {
 			display: none;
 		}
 
-		/* Nível 1: Menu Principal */
+		/* Level 1: Main Menu */
 		.menu-panel >ul {
 			display: flex;
 			align-items: center;
 
 			>li {
 				position: relative;
-				/* CRÍTICO: Segura o submenu para ele não voar pela tela */
+				/* CRITICAL: Holds the submenu so it doesn't fly across the screen */
 
 				>a {
 					display: flex;
 					align-items: center;
 					gap: 8px;
-					/* Espaço entre o texto e a setinha */
+					/* Space between the text and the little arrow */
 					letter-spacing: 0.8px;
 					padding: 10px 20px;
 					color: #ffffff;
@@ -115,7 +115,7 @@
 					transition: background-color 0.3s ease;
 				}
 
-				/* Estilo da setinha para itens que têm submenu */
+				/* Arrow style for items that have a submenu */
 				&.menu-item-has-children>a::after {
 					content: "";
 					display: inline-block;
@@ -124,48 +124,48 @@
 					border-left: 4px solid transparent;
 					border-right: 4px solid transparent;
 					border-top: 5px solid #ffffff;
-					/* Cor da setinha */
+					/* Arrow color */
 					transition: transform 0.3s ease;
 				}
 
-				/* Efeito Hover no Menu Principal */
+				/* Hover effect on the Main Menu */
 				&:hover>a {
 					background-color: $color-menu-hover;
 				}
 
-				/* Faz a setinha girar 180 graus quando o menu abre (Opcional, mas dá um charme) */
+				/* Rotates the arrow 180 degrees when the menu opens (Optional, but adds charm) */
 				&:hover>a::after {
 					transform: rotate(180deg);
 				}
 
-				/* Quando passa o mouse no item pai, mostra o submenu */
+				/* When hovering the parent item, shows the submenu */
 				&:hover>.sub-menu {
 					opacity: 1;
 					visibility: visible;
 					transform: translateY(0);
-					/* Volta para a posição original */
+					/* Back to the original position */
 				}
 
-				/* Classe que o WP adiciona na página atual */
+				/* Class WP adds on the current page */
 				&.current-menu-item > a,
 				&.current_page_item > a,
 				&.current-menu-ancestor > a,
 				&.current-menu-parent > a {
-					background: $brand-gradient; /* Atualizado para a variável de degradê */
+					background: $brand-gradient; /* Updated to the gradient variable */
 					color: #ffffff;
 				}
 			}
 		}
 
-		/* Nível 2: Submenus (Dropdown) */
+		/* Level 2: Submenus (Dropdown) */
 		.sub-menu {
 			position: absolute;
 			top: 100%;
 			left: 0;
-			// Mesma identidade do menu (sempre dark, não acompanha o switcher dark/light)
+			// Same identity as the menu (always dark, doesn't follow the dark/light switcher)
 			background-color: rgba($color-menu-bg, 0.96);
 			min-width: 200px;
-			border-radius: 0 0 5px 5px; /* A NOVA REGRA DE OURO AQUI! */
+			border-radius: 0 0 5px 5px; /* THE NEW GOLDEN RULE HERE! */
 			overflow: hidden;
 			opacity: 0;
 			visibility: hidden;
@@ -177,15 +177,15 @@
 				content: '';
 				display: block;
 				width: 100%;
-				height: 3px; // Espessura do risco
-				background: $brand-gradient; // Usa o degradê que definimos
+				height: 3px; // Stripe thickness
+				background: $brand-gradient; // Uses the gradient we defined
 			}
 
 			li {
 				width: 100%;
 
 				&.current-menu-item > a {
-                    color: $brand-blue-light; /* Deixa o texto azul */
+                    color: $brand-blue-light; /* Makes the text blue */
                 }
 
 				a {
@@ -203,7 +203,7 @@
 			}
 		}
 
-		// Ícone de Busca no final
+		// Search Icon at the end
 		.menu-search-icon {
 			color: #fff;
 			font-size: 1.2rem;
@@ -216,7 +216,7 @@
 	}
 }
 
-// Quando o menu está aberto (classe .is-active via JS)
+// When the menu is open (.is-active class via JS)
 .main-navigation.is-active {
 	.hamburger {
 		background: transparent;
@@ -237,7 +237,7 @@
 	}
 }
 
-/* Por padrão, esconde botões da versão hambúrguer (visíveis em ≤1440px via _media.scss) */
+/* By default, hides the hamburger-version buttons (visible at ≤1440px via _media.scss) */
 .menu-toggle,
 .menu-search-toggle {
 	display: none;
@@ -282,19 +282,19 @@
 		transform: scale(0.95);
 	}
 
-	/* Sun icon: visível por padrão (dark mode) — clicar vai pro light */
+	/* Sun icon: visible by default (dark mode) — clicking goes to light */
 	.sun-icon {
 		display: block;
 	}
 
-	/* Moon icon: escondido por padrão (dark mode) */
+	/* Moon icon: hidden by default (dark mode) */
 	.moon-icon {
 		display: none;
 	}
 }
 
-/* Lógica de exibição dos ícones baseada no tema — em light mostra moon, em dark mostra sun.
-   Cores do botão NÃO mudam: como o menu é sempre dark, herdam o padrão (#fff). */
+/* Icon display logic based on the theme — in light shows moon, in dark shows sun.
+   Button colors do NOT change: since the menu is always dark, they inherit the default (#fff). */
 [data-theme="light"] .theme-toggle-btn {
 	.sun-icon {
 		display: none;
@@ -305,8 +305,8 @@
 	}
 }
 
-/* Em modo hambúrguer (≤1440px), o theme-switch perde o separador de border
-   esquerda (que faz sentido só ao lado da busca expansível do desktop) */
+/* In hamburger mode (≤1440px), the theme-switch loses the left border
+   separator (which only makes sense next to the desktop's expandable search) */
 @media (max-width: 1440px) {
 	.theme-switch-wrapper {
 		border-left: none;
@@ -315,31 +315,31 @@
 }
 
 /* ==========================================================================
-   Busca no Menu (Design Expansível)
+   Menu Search (Expandable Design)
    ========================================================================== */
 .header-search-container {
 	display: flex;
 	align-items: center;
-	// margin-left: auto empurra search (e o theme-switch que vem depois) pra
-	// direita do container, mantendo nav alinhado à esquerda. Substitui o
-	// comportamento do justify-content: space-between que distribuía os 3
-	// itens (deixando search no meio).
+	// margin-left: auto pushes search (and the theme-switch that comes after) to
+	// the right of the container, keeping nav aligned left. Replaces the
+	// behavior of justify-content: space-between that distributed the 3
+	// items (leaving search in the middle).
 	margin-left: auto;
 
 	.search-form {
 		display: flex;
 		align-items: center;
-		border-radius: 5px; /* Já estava perfeito! */
+		border-radius: 5px; /* It was already perfect! */
 		padding: 0;
 		height: 40px;
 		width: 40px;
 		transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 		overflow: hidden;
 		position: relative;
-		border: 1px solid transparent; // Prepara a borda para a transição
+		border: 1px solid transparent; // Prepares the border for the transition
 
-		// Efeito de expansão ao passar o mouse ou clicar no campo.
-		// Cores fixas dark: o menu é sempre escuro, não acompanha o switcher.
+		// Expansion effect on hover or click in the field.
+		// Fixed dark colors: the menu is always dark, doesn't follow the switcher.
 		&:hover,
 		&:focus-within {
 			width: 230px;
@@ -357,8 +357,8 @@
 			font-size: 1rem;
 			width: 100%;
 			height: 100%;
-			// Força o navegador a renderizar widgets nativos (X do cancelar, etc.)
-			// no estilo dark — necessário pq o menu é sempre dark independente do tema.
+			// Forces the browser to render native widgets (clear X, etc.)
+			// in the dark style — needed because the menu is always dark regardless of the theme.
 			color-scheme: dark;
 
 			&::placeholder {
@@ -388,15 +388,15 @@
 	}
 }
 
-// Esconder a busca expansível assim que entra em modo hambúrguer.
-// (A busca acessível no hambúrguer fica no painel deslizante — _media.scss)
+// Hide the expandable search as soon as hamburger mode kicks in.
+// (The search accessible in hamburger mode lives in the sliding panel — _media.scss)
 @media (max-width: 1440px) {
 	.header-search-container {
 		display: none;
 	}
 }
 
-// Top bar segue específico de mobile real (≤768px); em 769-1440px continua visível
+// Top bar stays specific to real mobile (≤768px); at 769-1440px it remains visible
 @media (max-width: 768px) {
 	.rd-top-bar {
 		display: none;
@@ -404,47 +404,47 @@
 }
 
 /* ==========================================================================
-   Top Bar Principal
+   Main Top Bar
    ========================================================================== */
 .rd-top-bar {
-    background: $dark-deep; /* Substituiu o #111 */
+    background: $dark-deep; /* Replaced #111 */
     font-size: 0.85rem;
-    border-bottom: 1px solid $glass-border; /* Usando nossa transparência unificada */
+    border-bottom: 1px solid $glass-border; /* Using our unified transparency */
     height: 30px;
 }
 
-/* Limita a largura e centraliza a barra para acompanhar o portal */
+/* Limits the width and centers the bar to match the portal */
 .rd-top-bar .rd-container {
     display: flex;
     justify-content: space-between;
     align-items: center;
     height: 100%;
-    max-width: $container-max; /* Puxando da variável global */
+    max-width: $container-max; /* Pulling from the global variable */
     margin: 0 auto;
     padding: 0 15px;
 }
 
-/* --- Data --- */
+/* --- Date --- */
 .rd-top-left {
     flex: 1;
     white-space: nowrap;
 }
 
-/* --- Redes Sociais --- */
+/* --- Social Networks --- */
 .rd-top-right {
     flex: 1;
     display: flex;
     justify-content: flex-end;
 }
-/* Container de Ícones Vetoriais */
-// Container dos ícones — usado tanto na .rd-top-bar (topo) quanto no .footer-bottom (rodapé)
+/* Vector Icons Container */
+// Icons container — used both in .rd-top-bar (top) and in .footer-bottom (footer)
 .rd-social-icons {
     display: flex;
     align-items: center;
 }
 
 .rd-social-link {
-    color: $text-muted-dark; /* Substituiu o #888 */
+    color: $text-muted-dark; /* Replaced #888 */
     margin-left: 15px;
     display: inline-flex;
     align-items: center;
@@ -454,20 +454,20 @@
     transition: color 0.3s ease, transform 0.2s ease;
     text-decoration: none;
 }
-/* Tamanho do desenho e garantia de herdabilidade de cor */
+/* Drawing size and guarantee of color inheritance */
 .rd-social-link svg {
     width: 16px;
     height: 16px;
     fill: currentColor;
     display: block;
 }
-/* O Efeito de Hover sem esforço de processamento */
+/* The Hover Effect with no processing effort */
 .rd-social-link:hover {
-    color: $brand-blue-light; /* Brilha com a cor do site em vez de branco genérico */
+    color: $brand-blue-light; /* Glows with the site color instead of generic white */
     transform: translateY(-2px);
 }
 
-/* --- Ticker de Notícias (O Segredo da Animação) --- */
+/* --- News Ticker (The Animation Secret) --- */
 .rd-top-center {
     flex: 2;
     display: flex;
@@ -479,7 +479,7 @@
 
 .rd-ticker-label {
     font-weight: bold;
-    color: #00bfa5; /* Mantido verde intencionalmente para dar cara de "Ao Vivo / Urgente" */
+    color: #00bfa5; /* Kept green intentionally to give a "Live / Urgent" feel */
     margin-right: 10px;
     text-transform: uppercase;
     font-size: 0.75rem;
@@ -492,7 +492,7 @@
     width: 300px;
 }
 
-/* Tempo de leitura do Ticker (5 posts * 5 segundos cada = 25s) */
+/* Ticker reading time (5 posts * 5 seconds each = 25s) */
 .rd-ticker-list {
     margin: 0;
     padding: 0;
@@ -514,10 +514,10 @@
 }
 
 .rd-ticker-list a:hover {
-    color: $brand-blue-light; /* Fica azul ao passar o mouse */
+    color: $brand-blue-light; /* Turns blue on hover */
 }
 
-/* Keyframes para rolar para baixo/cima. */
+/* Keyframes to scroll down/up. */
 @keyframes ticker-slide {
     0%   { transform: translateY(0); }
     20%  { transform: translateY(-20px); }
