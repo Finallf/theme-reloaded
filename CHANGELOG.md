@@ -7,6 +7,28 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 <br>
 
 
+## [1.1.0-beta.7](https://github.com/Finallf/theme-reloaded/compare/v1.1.0-beta.6...v1.1.0-beta.7) (2026-06-04)
+
+### ✨ Features
+
+* **dashboard:** explain each Site Status card via a title tooltip ([27233ff](https://github.com/Finallf/theme-reloaded/commit/27233ffe7a43513363146caaf70d193aec283dcf))
+
+### ♻️ Code Refactoring
+
+* **admin-style:** extract WP-admin palette to SCSS variables and nest rd-p* components ([14bb7aa](https://github.com/Finallf/theme-reloaded/commit/14bb7aabfe293cf22b19d5ade03cf8fec26c1adc))
+* **admin-style:** merge two near-duplicate grays into the palette ([4fd7dea](https://github.com/Finallf/theme-reloaded/commit/4fd7dea291de37db7f28b4a724169686242e5717)), closes [#c3c4c7](https://github.com/Finallf/theme-reloaded/issues/c3c4c7) [#f9f9f9](https://github.com/Finallf/theme-reloaded/issues/f9f9f9) [#f6f7f7](https://github.com/Finallf/theme-reloaded/issues/f6f7f7)
+* **admin-style:** variables and BEM nesting for the Stats dashboard ([df81fef](https://github.com/Finallf/theme-reloaded/commit/df81fefa1e7b5fdbb21ac1f9816e54668fcf96cb)), closes [#8c8f94](https://github.com/Finallf/theme-reloaded/issues/8c8f94) [#b32d2](https://github.com/Finallf/theme-reloaded/issues/b32d2)
+* **admin-style:** variables and nesting for the dashboard, panel and media blocks ([8f3cc0e](https://github.com/Finallf/theme-reloaded/commit/8f3cc0ee4f253bcca6fb02d1cfcf1099dfae0c59)), closes [#ccd0d4](https://github.com/Finallf/theme-reloaded/issues/ccd0d4)
+* **admin-style:** variables and nesting for the images, CSP, backup and self-update blocks ([01b7ed9](https://github.com/Finallf/theme-reloaded/commit/01b7ed909495ef2b67320f68d9d337ad6ad7bd0d))
+
+### 📝 Documentation
+
+* note admin-style.scss as a separate SCSS source ([34c2783](https://github.com/Finallf/theme-reloaded/commit/34c27838b9fc3ac3878aa79a15e7fde477de0b83))
+
+<br>
+
+---
+
 ## [1.1.0-beta.6](https://github.com/Finallf/theme-reloaded/compare/v1.1.0-beta.5...v1.1.0-beta.6) (2026-06-04)
 
 ### 🐛 Bug Fixes
