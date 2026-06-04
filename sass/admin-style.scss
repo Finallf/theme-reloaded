@@ -1152,67 +1152,69 @@ body {
    below cover what remains (capabilities list + regen button row).
    ========================================================================== */
 
-.rd-img-caps-list {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-}
+.rd-img {
+    &-caps-list {
+        list-style: none;
+        margin: 0;
+        padding: 0;
 
-.rd-img-caps-list li {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 8px 0;
-    border-bottom: 1px solid #f0f0f1;
-    flex-wrap: wrap;
-}
+        li {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 0;
+            border-bottom: 1px solid $rd-border-faint;
+            flex-wrap: wrap;
 
-.rd-img-caps-list li:last-child {
-    border-bottom: none;
-}
+            &:last-child {
+                border-bottom: none;
+            }
 
-.rd-img-caps-list li strong {
-    color: #1d2327;
-    min-width: 70px;
-}
+            strong {
+                color: $rd-text;
+                min-width: 70px;
+            }
 
-.rd-img-caps-list li small {
-    color: #757575;
-    font-style: italic;
-}
+            small {
+                color: $rd-text-muted;
+                font-style: italic;
+            }
+        }
+    }
 
-/* Layout (flex + justify-end) comes from .rd-pcard__action-row.
-   .rd-img-regen-row becomes just a hook for a specific margin below the
-   button (visually separates it from the progress bar shown after a click). */
-.rd-img-regen-row {
-    margin-bottom: 12px;
-}
+    /* Layout (flex + justify-end) comes from .rd-pcard__action-row.
+       .rd-img-regen-row becomes just a hook for a specific margin below the
+       button (visually separates it from the progress bar shown after a click). */
+    &-regen-row {
+        margin-bottom: 12px;
 
-.rd-img-regen-row .button .dashicons {
-    line-height: 1;
-    font-size: 18px;
-    vertical-align: middle;
-    margin-right: 4px;
-}
+        .button .dashicons {
+            line-height: 1;
+            font-size: 18px;
+            vertical-align: middle;
+            margin-right: 4px;
+        }
+    }
 
-.rd-img-regen-count {
-    color: #50575e;
-    font-size: 0.9rem;
-}
+    &-regen-count {
+        color: $rd-text-secondary;
+        font-size: 0.9rem;
+    }
 
-.rd-img-regen-progress {
-    margin-top: 16px;
-}
+    &-regen-progress {
+        margin-top: 16px;
 
-.rd-img-regen-progress progress {
-    width: 100%;
-    height: 20px;
-}
+        progress {
+            width: 100%;
+            height: 20px;
+        }
 
-.rd-img-regen-progress p {
-    margin: 8px 0 0;
-    color: #50575e;
-    font-size: 0.9rem;
+        p {
+            margin: 8px 0 0;
+            color: $rd-text-secondary;
+            font-size: 0.9rem;
+        }
+    }
 }
 
 /* ==========================================================================
@@ -1226,61 +1228,61 @@ body {
     width: 100%;
     border-collapse: collapse;
     font-size: 0.9rem;
-}
 
-.rd-csp-table thead th {
-    text-align: left;
-    padding: 8px 12px;
-    border-bottom: 2px solid #dcdcde;
-    color: #50575e;
-    font-size: 0.78rem;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    font-weight: 600;
-}
+    thead th {
+        text-align: left;
+        padding: 8px 12px;
+        border-bottom: 2px solid $rd-border-light;
+        color: $rd-text-secondary;
+        font-size: 0.78rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        font-weight: 600;
+    }
 
-.rd-csp-table tbody td {
-    padding: 10px 12px;
-    border-bottom: 1px solid #f0f0f1;
-    vertical-align: top;
-    word-break: break-word;
-}
+    tbody td {
+        padding: 10px 12px;
+        border-bottom: 1px solid $rd-border-faint;
+        vertical-align: top;
+        word-break: break-word;
+    }
 
-.rd-csp-table tbody tr:last-child td {
-    border-bottom: none;
-}
+    tbody tr:last-child td {
+        border-bottom: none;
+    }
 
-.rd-csp-table tbody tr:hover {
-    background: #f6f7f7;
-}
+    tbody tr:hover {
+        background: $rd-bg-strip;
+    }
 
-/* Fixed width for the short columns */
-.rd-csp-table__col-when {
-    width: 110px;
-}
-.rd-csp-table__col-dir {
-    width: 170px;
-}
+    /* Fixed width for the short columns */
+    &__col-when {
+        width: 110px;
+    }
+    &__col-dir {
+        width: 170px;
+    }
 
-.rd-csp-table__when {
-    font-variant-numeric: tabular-nums;
-    color: #50575e;
-    white-space: nowrap;
-}
+    &__when {
+        font-variant-numeric: tabular-nums;
+        color: $rd-text-secondary;
+        white-space: nowrap;
+    }
 
-.rd-csp-table__directive {
-    background: #f0f0f1;
-    color: #2271b1;
-    padding: 2px 6px;
-    border-radius: 3px;
-    font-size: 0.82rem;
-    display: inline-block;
-}
+    &__directive {
+        background: $rd-border-faint;
+        color: $rd-blue;
+        padding: 2px 6px;
+        border-radius: 3px;
+        font-size: 0.82rem;
+        display: inline-block;
+    }
 
-.rd-csp-table__uri {
-    color: #1d2327;
-    font-size: 0.82rem;
-    word-break: break-all;
+    &__uri {
+        color: $rd-text;
+        font-size: 0.82rem;
+        word-break: break-all;
+    }
 }
 
 /* ==========================================================================
@@ -1293,7 +1295,7 @@ body {
 /* Fieldset with checkboxes to choose the export sections.
    Mobile: vertical stack (1 col). Desktop ≥ 1024px: 3 columns side by side. */
 .rd-backup-sections {
-    border: 1px solid #dcdcde;
+    border: 1px solid $rd-border-light;
     border-radius: 4px;
     padding: 12px 16px;
     margin: 0 0 16px;
@@ -1301,10 +1303,8 @@ body {
     display: grid;
     gap: 12px;
     grid-template-columns: 1fr;
-}
 
-@media (min-width: 1024px) {
-    .rd-backup-sections {
+    @media (min-width: $rd-bp-lg) {
         grid-template-columns: 1fr 1fr 1fr;
     }
 }
@@ -1317,27 +1317,27 @@ body {
     cursor: pointer;
     /* no border-bottom — it only made sense in a vertical stack. In the 3-col
        layout, each checkbox becomes card-like (visually separated by the grid gap). */
-}
 
-.rd-backup-section input[type="checkbox"] {
-    margin-top: 4px;
-    flex-shrink: 0;
-}
+    input[type="checkbox"] {
+        margin-top: 4px;
+        flex-shrink: 0;
+    }
 
-.rd-backup-section__label {
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-}
+    &__label {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
 
-.rd-backup-section__label strong {
-    color: #1d2327;
-    font-size: 0.95rem;
-}
+        strong {
+            color: $rd-text;
+            font-size: 0.95rem;
+        }
 
-.rd-backup-section__label small {
-    color: #757575;
-    font-size: 0.82rem;
+        small {
+            color: $rd-text-muted;
+            font-size: 0.82rem;
+        }
+    }
 }
 
 /* ===== Export action — inline text next to the Download button ===== */
@@ -1345,17 +1345,17 @@ body {
    Here we only style the companion text (italic + code highlight). */
 
 .rd-backup-export-filename {
-    color: #50575e;
+    color: $rd-text-secondary;
     font-size: 0.9rem;
     font-style: italic;
-}
 
-.rd-backup-export-filename code {
-    font-style: normal;
-    background: rgba(0, 0, 0, 0.04);
-    padding: 1px 6px;
-    border-radius: 3px;
-    font-size: 0.95em;
+    code {
+        font-style: normal;
+        background: rgba(0, 0, 0, 0.04);
+        padding: 1px 6px;
+        border-radius: 3px;
+        font-size: 0.95em;
+    }
 }
 
 /* ===== robots.txt — block of WP defaults in the field description ===== */
@@ -1363,8 +1363,8 @@ body {
 .rd-robots-defaults {
     margin: 6px 0;
     padding: 8px 12px;
-    background: #f6f7f7;
-    border-left: 3px solid #c3c4c7;
+    background: $rd-bg-strip;
+    border-left: 3px solid $rd-border;
     font-size: 12px;
     line-height: 1.5;
     white-space: pre-wrap;
@@ -1379,7 +1379,7 @@ body {
 .rd-backup-import-explainer {
     flex: 1 1 auto; /* takes the leftover space, pushing the button to the end */
     min-width: 0;   /* allows text-wrap in flex without overflow */
-    color: #50575e;
+    color: $rd-text-secondary;
     font-size: 0.85rem;
     font-style: italic;
     text-align: right;
@@ -1390,14 +1390,14 @@ body {
    (pre-selection) so there's no visual gap below the button. */
 .rd-backup-filename-row {
     margin-top: 12px;
-}
 
-.rd-backup-filename-row:has(.rd-backup-filename:empty) {
-    display: none;
+    &:has(.rd-backup-filename:empty) {
+        display: none;
+    }
 }
 
 .rd-backup-filename {
-    color: #50575e;
+    color: $rd-text-secondary;
     font-size: 0.9rem;
     font-style: italic;
 }
@@ -1408,64 +1408,66 @@ body {
 .rd-backup-preview {
     margin-top: 16px;
     padding: 16px;
-    background: #f6f7f7;
-    border: 1px solid #dcdcde;
+    background: $rd-bg-strip;
+    border: 1px solid $rd-border-light;
     border-radius: 4px;
-}
 
-.rd-backup-preview__title {
-    margin: 0 0 8px;
-    color: #1d2327;
-    font-size: 0.95rem;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-}
+    &__title {
+        margin: 0 0 8px;
+        color: $rd-text;
+        font-size: 0.95rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
 
-.rd-backup-preview__meta {
-    color: #757575;
-    margin-bottom: 12px;
+    &__meta {
+        color: $rd-text-muted;
+        margin-bottom: 12px;
+    }
 }
 
 .rd-backup-diff-section {
     margin: 12px 0;
     padding: 10px 12px;
-    background: #fff;
-    border: 1px solid #dcdcde;
+    background: $rd-white;
+    border: 1px solid $rd-border-light;
     border-radius: 4px;
-}
 
-.rd-backup-diff-section h5 {
-    margin: 0 0 8px;
-    color: #1d2327;
-    font-size: 0.88rem;
+    h5 {
+        margin: 0 0 8px;
+        color: $rd-text;
+        font-size: 0.88rem;
+    }
 }
 
 .rd-backup-diff-list {
     list-style: none;
     padding: 0;
     margin: 0 0 8px;
+
+    li {
+        padding: 3px 0;
+        font-size: 0.92rem;
+        font-family: monospace;
+    }
 }
 
-.rd-backup-diff-list li {
-    padding: 3px 0;
-    font-size: 0.92rem;
-    font-family: monospace;
+.rd-backup-diff {
+    &--update { color: $rd-blue; }
+    &--add    { color: $rd-green; }
+    &--keep   { color: $rd-text-secondary; }
+    &--skip   { color: $rd-red-muted; }
 }
-
-.rd-backup-diff--update { color: #2271b1; }
-.rd-backup-diff--add    { color: #007a39; }
-.rd-backup-diff--keep   { color: #50575e; }
-.rd-backup-diff--skip   { color: #b32d2e; }
 
 .rd-backup-diff-details {
     margin-top: 8px;
-}
 
-.rd-backup-diff-details summary {
-    cursor: pointer;
-    color: #2271b1;
-    font-size: 0.88rem;
-    user-select: none;
+    summary {
+        cursor: pointer;
+        color: $rd-blue;
+        font-size: 0.88rem;
+        user-select: none;
+    }
 }
 
 .rd-backup-diff-keys {
@@ -1474,32 +1476,32 @@ body {
     margin: 0;
     max-height: 240px;
     overflow-y: auto;
-    border-top: 1px solid #f0f0f1;
+    border-top: 1px solid $rd-border-faint;
     margin-top: 6px;
-}
 
-.rd-backup-diff-keys li {
-    padding: 4px 0;
-    font-size: 0.85rem;
-    border-bottom: 1px solid #f6f7f7;
-}
+    li {
+        padding: 4px 0;
+        font-size: 0.85rem;
+        border-bottom: 1px solid $rd-bg-strip;
 
-.rd-backup-diff-keys li:last-child {
-    border-bottom: none;
-}
+        &:last-child {
+            border-bottom: none;
+        }
+    }
 
-.rd-backup-diff-keys code {
-    color: #1d2327;
-    background: #f0f0f1;
-    padding: 1px 6px;
-    border-radius: 3px;
-    font-size: 0.85rem;
-}
+    code {
+        color: $rd-text;
+        background: $rd-border-faint;
+        padding: 1px 6px;
+        border-radius: 3px;
+        font-size: 0.85rem;
+    }
 
-.rd-backup-diff-keys small {
-    color: #757575;
-    margin-left: 8px;
-    word-break: break-all;
+    small {
+        color: $rd-text-muted;
+        margin-left: 8px;
+        word-break: break-all;
+    }
 }
 
 .rd-backup-preview__actions {
@@ -1518,72 +1520,74 @@ body {
     /* updates card container — no extra visual variation */
 }
 
-.rd-self-update__header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px;
-    margin: 0 0 14px;
-}
+.rd-self-update {
+    &__header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        margin: 0 0 14px;
+    }
 
-.rd-self-update__title {
-    margin: 0;
-    font-size: 14px;
-    font-weight: 600;
-    color: #1d2327;
-    text-transform: uppercase;
-    letter-spacing: 0.3px;
-}
+    &__title {
+        margin: 0;
+        font-size: 14px;
+        font-weight: 600;
+        color: $rd-text;
+        text-transform: uppercase;
+        letter-spacing: 0.3px;
+    }
 
-.rd-self-update__grid {
-    display: grid;
-    grid-template-columns: max-content 1fr;
-    gap: 8px 16px;
-    margin: 0 0 12px;
-    align-items: center;
-}
+    &__grid {
+        display: grid;
+        grid-template-columns: max-content 1fr;
+        gap: 8px 16px;
+        margin: 0 0 12px;
+        align-items: center;
 
-.rd-self-update__grid dt {
-    font-weight: 600;
-    color: #50575e;
-    font-size: 13px;
-}
+        dt {
+            font-weight: 600;
+            color: $rd-text-secondary;
+            font-size: 13px;
+        }
 
-.rd-self-update__grid dd {
-    margin: 0;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 13px;
-}
+        dd {
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
 
-.rd-self-update__grid dd code {
-    padding: 2px 6px;
-    border-radius: 3px;
-    background: #f0f0f1;
-    font-size: 12px;
-}
+            code {
+                padding: 2px 6px;
+                border-radius: 3px;
+                background: $rd-border-faint;
+                font-size: 12px;
+            }
+        }
+    }
 
-.rd-self-update__action {
-    margin: 0;
-    padding-top: 6px;
-    border-top: 1px solid #f0f0f1;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-}
+    &__action {
+        margin: 0;
+        padding-top: 6px;
+        border-top: 1px solid $rd-border-faint;
+        display: flex;
+        align-items: center;
+        gap: 12px;
 
-.rd-self-update__action:empty {
-    display: none;
+        &:empty {
+            display: none;
+        }
+    }
 }
 
 #rd-self-update-check.is-loading {
     opacity: 0.7;
     cursor: wait;
-}
 
-#rd-self-update-check.is-loading .dashicons-update {
-    animation: rd-spin 0.8s linear infinite;
+    .dashicons-update {
+        animation: rd-spin 0.8s linear infinite;
+    }
 }
 
 @keyframes rd-spin {
