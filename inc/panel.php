@@ -1,19 +1,19 @@
 <?php
 defined( 'ABSPATH' ) || exit;
 /*******************************************************************************
- * Painel de Opções Avançado - ReloadeD
- * Organizado por Abas (Tabs) para LGPD, Performance, SEO e Integrações.
+ * Advanced Options Panel - ReloadeD
+ * Organized by Tabs for LGPD, Performance, SEO and Integrations.
  *******************************************************************************/
 
 /*******************************************************************************
- * Configurações padrão na ativação do tema                      - (Hardcoded) *
+ * Default settings on theme activation                          - (Hardcoded) *
  *******************************************************************************/
 /**
- * Source of truth dos defaults do painel.
+ * Source of truth for the panel defaults.
  *
- * Extraído como função separada pra ser consumido tanto pelo primeiro-ativar
- * (rd_set_default_options) quanto pela migração de keys ausentes
- * (rd_migrate_missing_options) — DRY entre os dois fluxos.
+ * Extracted as a separate function to be consumed both by the first-activation
+ * (rd_set_default_options) and by the missing-keys migration
+ * (rd_migrate_missing_options) — DRY between the two flows.
  */
 function rd_get_default_options(): array {
 	return array(
@@ -129,8 +129,8 @@ function rd_get_default_options(): array {
 }
 
 /**
- * Primeira ativação do tema — popula rd_settings inteiro com defaults.
- * Roda em after_switch_theme. Só faz alguma coisa se a option ainda não existe.
+ * First theme activation — populates the entire rd_settings with defaults.
+ * Runs on after_switch_theme. Only does anything if the option doesn't exist yet.
  */
 function rd_set_default_options() {
 	$options = get_option( 'rd_settings' );
@@ -142,21 +142,21 @@ function rd_set_default_options() {
 add_action( 'after_switch_theme', 'rd_set_default_options' );
 
 /**
- * Migração automática de keys ausentes.
+ * Automatic migration of missing keys.
  *
- * Cenário: o tema é atualizado (git pull / FTP / release) e o código adiciona
- * novas opções ao painel via rd_get_default_options(). O rd_settings já existe
- * no banco (do primeiro after_switch_theme) mas SEM essas keys novas.
- * Resultado sem essa migração: features ficam dormentes silenciosamente porque
- * rd_get_option_bool() retorna false (default genérico) em vez do default do tema.
+ * Scenario: the theme is updated (git pull / FTP / release) and the code adds
+ * new panel options via rd_get_default_options(). rd_settings already exists
+ * in the database (from the first after_switch_theme) but WITHOUT those new keys.
+ * Result without this migration: features stay silently dormant because
+ * rd_get_option_bool() returns false (generic default) instead of the theme default.
  *
- * Esta função roda em admin_init (a cada page load do admin):
- *   1. Compara defaults atuais com rd_settings salvo
- *   2. Detecta keys ausentes via array_diff_key
- *   3. Se houver keys novas, faz merge (preserva valores existentes) e salva
- *   4. Se não houver, retorna early sem tocar no banco (fast path)
+ * This function runs on admin_init (on every admin page load):
+ *   1. Compares the current defaults with the saved rd_settings
+ *   2. Detects missing keys via array_diff_key
+ *   3. If there are new keys, merges (preserving existing values) and saves
+ *   4. If there aren't, returns early without touching the database (fast path)
  *
- * Custo: 1 get_option (autoloaded, cache do WP) + 1 array_diff_key. Imperceptível.
+ * Cost: 1 get_option (autoloaded, WP cache) + 1 array_diff_key. Imperceptible.
  */
 function rd_migrate_missing_options() {
 	$current = get_option( 'rd_settings', array() );
@@ -306,7 +306,7 @@ function rd_options_render() {
 }
 
 /*******************************************************************************
- * Registra os Campos e Seções no Banco de Dados
+ * Registers the Fields and Sections in the Database
  *******************************************************************************/
 function rd_settings_init() {
 	register_setting( 'rd_options_group', 'rd_settings', 'rd_options_sanitize' );
@@ -1038,9 +1038,9 @@ function rd_settings_init() {
 	);
 
 	/*
-	 * --- PERFORMANCE --- (Wave 11: sub-dividida em Loading + Bloat. Movidos
-	 * pra outras abas: markdown/prism → Geral; hide_wp_ver/security_headers →
-	 * Segurança; image fields → Imagens & Mídia.)
+	 * --- PERFORMANCE --- (Wave 11: split into Loading + Bloat. Moved to
+	 * other tabs: markdown/prism → General; hide_wp_ver/security_headers →
+	 * Security; image fields → Images & Media.)
 	 */
 	rd_panel_register_section( 'sec_perf_loading', __( 'Loading Optimization', 'reloaded' ), 'performance', 'rd_options_performance' );
 	add_settings_field(
@@ -1146,10 +1146,10 @@ function rd_settings_init() {
 	);
 
 	/*
-	 * --- IMAGENS & MÍDIA --- (nova em Wave 11)
-	 * Consolida 4 fields antes dispersos: 2 de Geral (image_resizing, jpeg_quality)
-	 * + 2 de Performance (enable_next_gen_images, image_format_mode). Custom
-	 * renderer da Performance (rd_img_render_panel_section) também migrou pra cá.
+	 * --- IMAGES & MEDIA --- (new in Wave 11)
+	 * Consolidates 4 previously scattered fields: 2 from General (image_resizing, jpeg_quality)
+	 * + 2 from Performance (enable_next_gen_images, image_format_mode). Performance's
+	 * custom renderer (rd_img_render_panel_section) also migrated here.
 	 */
 	rd_panel_register_section( 'sec_media_upload', __( 'Upload & Quality', 'reloaded' ), 'upload', 'rd_options_media' );
 	add_settings_field(
@@ -1317,8 +1317,8 @@ function rd_settings_init() {
 	);
 
 	/*
-	 * --- SEO --- (Wave 11: sub-dividida em 4 sections + recebe verifications
-	 * de Integrações onde estavam mal-encaixados.)
+	 * --- SEO --- (Wave 11: split into 4 sections + receives the verifications
+	 * from Integrations where they were poorly placed.)
 	 */
 	rd_panel_register_section( 'sec_seo_verify', __( 'Site Verification', 'reloaded' ), 'yes-alt', 'rd_options_seo' );
 	add_settings_field(
@@ -1599,9 +1599,9 @@ function rd_settings_init() {
 	);
 
 	/*
-	 * --- MANUTENÇÃO ---
-	 * Backup & Restore foi promovido pra aba própria em Wave 11. Aqui sobra
-	 * apenas Access Control (modo manutenção + senha de dev).
+	 * --- MAINTENANCE ---
+	 * Backup & Restore was promoted to its own tab in Wave 11. What remains here
+	 * is just Access Control (maintenance mode + dev password).
 	 */
 	rd_panel_register_section( 'sec_manut_access', __( 'Access Control', 'reloaded' ), 'admin-tools', 'rd_options_maintenance' );
 	add_settings_field(
@@ -1642,10 +1642,10 @@ function rd_settings_init() {
 	);
 
 	/*
-	 * --- ESTATÍSTICAS ---
-	 * Section "Tracking" consolida: configuração do contador de views (movida da
-	 * aba Geral em Wave 11) + limite de itens das rankings. Dashboard segue como
-	 * section separada renderizada por callback custom.
+	 * --- STATISTICS ---
+	 * The "Tracking" section consolidates: the views counter configuration (moved
+	 * from the General tab in Wave 11) + the rankings item limit. Dashboard stays
+	 * as a separate section rendered by a custom callback.
 	 */
 	rd_panel_register_section( 'sec_stats_tracking', __( 'Tracking Settings', 'reloaded' ), 'admin-settings', 'rd_options_statistics' );
 	add_settings_field(

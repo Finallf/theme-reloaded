@@ -1,21 +1,21 @@
 <?php
 /**
- * Template: Page — Política de Privacidade
+ * Template: Page — Privacy Policy
  *
- * Template específico para a página com slug "politica-de-privacidade".
- * WP usa esse arquivo automaticamente via hierarquia de templates
- * (page-{slug}.php) — não precisa selecionar nada no editor.
+ * Specific template for the page with the "politica-de-privacidade" slug.
+ * WP uses this file automatically via the template hierarchy
+ * (page-{slug}.php) — nothing needs to be selected in the editor.
  *
- * Diferenças vs page.php genérico:
- *   - Sem imagem destacada (irrelevante em texto legal)
- *   - Sem comentários (texto legal não vira fórum)
- *   - Header inclui data de "Última atualização" via get_the_modified_date()
- *     (atualiza automaticamente quando o admin editar o conteúdo — boa prática
- *     LGPD: visitante sabe quando o texto foi revisado pela última vez)
- *   - Classe rd-page-privacy no <article> pra estilos específicos
+ * Differences vs the generic page.php:
+ *   - No featured image (irrelevant for legal text)
+ *   - No comments (legal text isn't a forum)
+ *   - Header includes a "Last updated" date via get_the_modified_date()
+ *     (updates automatically when the admin edits the content — good LGPD
+ *     practice: the visitor knows when the text was last revised)
+ *   - rd-page-privacy class on the <article> for specific styles
  *
- * Tipografia (font-size 1.05rem, line-height 1.75) já vem do .rd-page-content
- * em _page-static.scss — adequada pra texto legal denso.
+ * Typography (font-size 1.05rem, line-height 1.75) already comes from .rd-page-content
+ * in _page-static.scss — suitable for dense legal text.
  *
  * @package ReloadeD
  */
