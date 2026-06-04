@@ -1,0 +1,1554 @@
+/* assets/css/admin-style.css
+   ReloadeD admin styles — loaded in two situations:
+     1. "ReloadeD Options" panel (rd_options) — all the classes below
+     2. Post editor (post.php, post-new.php) — only `.rd-post-options-label`
+   See inc/core.php → rd_admin_scripts() for enqueue details.
+
+   Structure:
+     1. COMPONENT SYSTEM (rd-p*) — Wave 11 Phase C, `rd-p` prefix
+        Reusable components for the panel design system. Use in new code.
+        Matching PHP helpers in `inc/panel-helpers.php`.
+
+     2. LEGACY COMPONENTS (rd-stats-*, rd-csp-*, rd-backup-*) — pre-Wave 11
+        Ad-hoc markup of the 3 custom-rendered sections. Will be refactored to
+        use the section-1 components in Phase E. Kept for now for zero
+        regression during the transition.
+
+     3. Scattered UI (.rd-panel-*, .rd-media-*, .rd-post-options-*) — original
+        Panel header, media uploader, post meta box.
+*/
+
+/* ╔════════════════════════════════════════════════════════════════════════════╗
+   ║                                                                            ║
+   ║   1. COMPONENT SYSTEM (rd-p*) — Wave 11 Phase C                            ║
+   ║                                                                            ║
+   ║   Reusable components for the ReloadeD admin panel design system.          ║
+   ║   Use these classes in any new markup. The legacy classes below            ║
+   ║   (.rd-stats-*, .rd-csp-*, .rd-backup-*) will be migrated here in Phase E. ║
+   ║                                                                            ║
+   ║   Palette follows native WP admin colors:                                  ║
+   ║   #1d2327 — primary text                                                   ║
+   ║   #50575e — secondary text                                                 ║
+   ║   #2271b1 — blue accent (links, active)                                    ║
+   ║   #c3c4c7 — default border                                                 ║
+   ║   #dcdcde — light border                                                   ║
+   ║   #f6f7f7 — light gray background (header strips)                          ║
+   ║   #d29922 — amber (warning)                                                ║
+   ║   #007a39 — green (success)                                                ║
+   ║   #d63638 — red (danger)                                                   ║
+   ║                                                                            ║
+   ╚════════════════════════════════════════════════════════════════════════════╝ */
+
+/* -----------------------------------------------
+   Dashboard wrapper (rd_panel_dash_open/close)
+   ----------------------------------------------- */
+.rd-pdash {
+    margin-top: 12px;
+}
+
+/* Spacing between .rd-pgrid stacked inside the same .rd-pdash.
+   Useful for custom-rendered sections that use multiple rows of cards
+   (e.g. mod-backup with Row 1 full-width + Row 2 sidebar-main). */
+.rd-pdash > .rd-pgrid + .rd-pgrid {
+    margin-top: 20px;
+}
+
+/* Gray header with info on the left + action on the right
+   Used in custom-rendered sections to give context and quick actions
+   (e.g. "Status: ON [badge]   [Clear reports]") */
+.rd-pdash__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 20px;
+    padding: 12px 16px;
+    background: #f6f7f7;
+    border: 1px solid #dcdcde;
+    border-radius: 4px;
+    flex-wrap: wrap; /* mobile: the action wraps to the next line */
+}
+
+.rd-pdash__header-info {
+    color: #50575e;
+    font-size: 0.85rem;
+    /* no global italic — badges/strong inside the info stay normal */
+}
+
+.rd-pdash__header-action {
+    flex-shrink: 0;
+}
+
+/* -----------------------------------------------
+   White card (rd_panel_card_open/close)
+   Main content container inside a dashboard.
+   ----------------------------------------------- */
+.rd-pcard {
+    background: #fff;
+    border: 1px solid #c3c4c7;
+    border-radius: 4px;
+    padding: 20px 24px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+    min-width: 0; /* CRITICAL in grid items — without it, long text forces horizontal overflow */
+}
+
+/* For vertically stacked cards, use .rd-pgrid (which has gap: 20px).
+   Don't use `.rd-pcard + .rd-pcard { margin-top }` because it breaks visual
+   alignment when cards are in a horizontal grid (item 2+ get pushed down by
+   the margin-top, leaving row item 1 visually "taller"). */
+
+.rd-pcard__title {
+    margin: 0 0 8px;
+    color: #1d2327;
+    font-size: 1rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.rd-pcard__desc {
+    color: #50575e;
+    margin: 0 0 16px;
+    line-height: 1.5;
+}
+
+.rd-pcard__body {
+    /* No default rules — just groups the content between title/desc and hint.
+       Each consumer (table, list, form, etc.) defines its own styles. */
+}
+
+/* Action row — utility class to align [explanatory text] + [action button]
+   on one line, both pushed to the right of the card. Used in action cards
+   like Export/Import/Restore/Regenerate. On mobile, it wraps to a column via
+   flex-wrap but keeps the right alignment.
+
+   HTML pattern:
+     <p class="rd-pcard__action-row">
+       <span>Explanatory text / count / hint</span>
+       <button class="button">Action</button>
+     </p>
+*/
+.rd-pcard__action-row {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin: 0; /* override the WP admin default <p> margin */
+}
+
+.rd-pcard__hint {
+    color: #757575;
+    font-size: 0.85rem;
+    font-style: italic;
+    margin: 16px 0 0;
+    padding-top: 12px;
+    border-top: 1px solid #f0f0f1;
+}
+
+.rd-pcard__hint code {
+    background: #f0f0f1;
+    padding: 1px 5px;
+    border-radius: 3px;
+    font-size: 0.85rem;
+    font-style: normal;
+}
+
+/* Highlighted metric inside a card (big number + optional hint).
+   Pattern used by the Dashboard tab (Wave 11 Phase F) — views/24h, posts/month, etc. */
+.rd-pcard__big-number {
+    font-size: 2.6rem;
+    font-weight: 700;
+    color: #2271b1;
+    line-height: 1;
+    font-variant-numeric: tabular-nums; /* aligns digits by column to read big numbers */
+    margin: 8px 0;
+}
+
+.rd-pcard__big-hint {
+    color: #757575;
+    font-size: 0.85rem;
+    margin-top: 4px;
+}
+
+.rd-pcard__big-hint a {
+    color: #2271b1;
+    text-decoration: none;
+}
+
+.rd-pcard__big-hint a:hover {
+    text-decoration: underline;
+}
+
+/* Modifier: "placeholder" card — pending or in-development feature.
+   Subtler look to signal "this is here but not functional yet". */
+.rd-pcard--placeholder {
+    background: #f6f7f7;
+    border-style: dashed;
+}
+
+/* Modifier: "warning" card — reversible but dangerous action (e.g. Restore backup).
+   Amber left-border + light yellow background to signal "careful here". */
+.rd-pcard--warning {
+    border-left: 4px solid #d29922;
+    background: #fdf6e3;
+}
+
+.rd-pcard--warning .rd-pcard__title {
+    color: #79670a; /* dark amber for contrast with the background */
+}
+
+/* Modifier: "danger" card — destructive action (e.g. delete all reports).
+   Red left-border + very light pink background. */
+.rd-pcard--danger {
+    border-left: 4px solid #d63638;
+    background: #fdf0f0;
+}
+
+.rd-pcard--danger .rd-pcard__title {
+    color: #8a1f20;
+}
+
+/* -----------------------------------------------
+   Badge (rd_panel_badge) — inline status chip
+   Used to indicate state within text (e.g. "Status: [BADGE]").
+   ----------------------------------------------- */
+.rd-pbadge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 3px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    font-style: normal;
+    line-height: 1.5;
+    vertical-align: middle;
+}
+
+.rd-pbadge--info {
+    background: rgba(34, 113, 177, 0.12);
+    color: #2271b1;
+}
+
+.rd-pbadge--success {
+    background: rgba(0, 122, 57, 0.12);
+    color: #007a39;
+}
+
+.rd-pbadge--warning {
+    background: rgba(210, 153, 34, 0.18);
+    color: #79670a;
+}
+
+.rd-pbadge--danger {
+    background: rgba(214, 54, 56, 0.12);
+    color: #d63638;
+}
+
+.rd-pbadge--neutral {
+    background: rgba(0, 0, 0, 0.07);
+    color: #50575e;
+}
+
+/* Emoji prefix inside the badge (e.g. ⚠️ ON in Maintenance Mode).
+   Emojis have a different baseline than text — a small tweak via top:-1px
+   visually aligns it with the uppercase text. (No vertical-align: middle —
+   empirically tested, it conflicts with top:-1px and shifts too much.) */
+.rd-pbadge__emoji {
+    display: inline-block;
+    margin-right: 3px;
+    font-size: 0.85rem;
+    line-height: 1;
+    position: relative;
+    top: -1px;
+}
+
+/* -----------------------------------------------
+   Switch toggle (.rd-pswitch) — Wave 11 Category B
+   Modern sliding toggle for dashboard cards with ON/OFF features the
+   admin wants to flip inline without opening the specific tab.
+   Markup: <button class="rd-pswitch" role="switch" aria-checked="true|false">
+   Driven by JS (assets/js/admin-panel.js, dashboard-toggle module + AJAX endpoint).
+   ----------------------------------------------- */
+.rd-pswitch {
+    /* Switch container — button without WP default decorations */
+    position: relative;
+    display: inline-block;
+    width: 44px;
+    height: 21px;
+    padding: 0;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    vertical-align: middle;
+    /* Reset margin/outline to look custom */
+    margin: 0;
+}
+
+.rd-pswitch:focus {
+    outline: none;
+}
+
+.rd-pswitch:focus-visible .rd-pswitch__track {
+    box-shadow: 0 0 0 2px #2271b1;
+}
+
+.rd-pswitch__track {
+    /* Gray/green track — the sliding part behind the thumb */
+    position: absolute;
+    inset: 0;
+    background: #c3c4c7;
+    border-radius: 12px;
+    transition: background 0.15s ease;
+}
+
+.rd-pswitch__thumb {
+    /* White knob — slides left/right */
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: 15px;
+    height: 15px;
+    background: #fff;
+    border-radius: 50%;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+    transition: left 0.15s ease;
+}
+
+/* ON state (aria-checked="true") — green track + thumb on the right */
+.rd-pswitch[aria-checked="true"] .rd-pswitch__track {
+    background: #007a39;
+}
+
+.rd-pswitch[aria-checked="true"] .rd-pswitch__thumb {
+    left: 25px; /* 44 - 18 - 3 = 23 */
+}
+
+/* "saving" state (during the AJAX request) — processing visual */
+.rd-pswitch.is-loading .rd-pswitch__track {
+    opacity: 0.5;
+}
+
+.rd-pswitch.is-loading {
+    cursor: wait;
+    pointer-events: none;
+}
+
+/* "error" state (AJAX failed) — quick red track to signal it */
+.rd-pswitch.is-error .rd-pswitch__track {
+    background: #d63638;
+    animation: rd-pswitch-shake 0.3s ease-out;
+}
+
+@keyframes rd-pswitch-shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-2px); }
+    75% { transform: translateX(2px); }
+}
+
+/* -----------------------------------------------
+   Status banner (rd_panel_status) — action feedback
+   Colored strip with a left-border for result messages.
+   ----------------------------------------------- */
+.rd-pstatus {
+    margin: 12px 0;
+    padding: 10px 14px;
+    border-radius: 4px;
+    font-size: 0.92rem;
+    line-height: 1.5;
+}
+
+.rd-pstatus--info {
+    background: rgba(34, 113, 177, 0.08);
+    border-left: 4px solid #2271b1;
+    color: #1d2327;
+}
+
+.rd-pstatus--success {
+    background: rgba(0, 122, 57, 0.1);
+    border-left: 4px solid #007a39;
+    color: #1d2327;
+}
+
+.rd-pstatus--warning {
+    background: rgba(210, 153, 34, 0.12);
+    border-left: 4px solid #d29922;
+    color: #1d2327;
+}
+
+.rd-pstatus--danger {
+    background: rgba(214, 54, 56, 0.1);
+    border-left: 4px solid #d63638;
+    color: #1d2327;
+}
+
+/* -----------------------------------------------
+   Empty state (rd_panel_empty)
+   Centered italic text for "nothing to show here".
+   ----------------------------------------------- */
+.rd-pempty {
+    color: #757575;
+    font-style: italic;
+    margin: 0;
+    padding: 20px 0;
+    text-align: center;
+}
+
+/* -----------------------------------------------
+   Grid (rd-pgrid) — lays out fields/cards side by side
+   Mobile = always 1 column. Desktop = per modifier.
+   ----------------------------------------------- */
+.rd-pgrid {
+    display: grid;
+    gap: 20px;
+    grid-template-columns: 1fr;
+}
+
+@media (min-width: 1024px) {
+    .rd-pgrid--two-cols {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .rd-pgrid--three-cols {
+        grid-template-columns: 1fr 1fr 1fr;
+    }
+
+    .rd-pgrid--four-cols {
+        grid-template-columns: 1fr 1fr 1fr 1fr;
+    }
+
+    .rd-pgrid--five-cols {
+        grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+    }
+
+    /* Asymmetric layout — narrow sidebar + wide main (e.g. filters + list) */
+    .rd-pgrid--sidebar-main {
+        grid-template-columns: 1fr 2fr;
+    }
+}
+
+/* Intermediate breakpoints: at medium viewport (768-1023px) the dense grids
+   reduce columns so they don't compress too much. Mobile (<768px) falls back
+   to 1 column via the base rule. */
+@media (min-width: 768px) and (max-width: 1023px) {
+    .rd-pgrid--four-cols {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .rd-pgrid--five-cols {
+        grid-template-columns: 1fr 1fr 1fr;
+    }
+}
+
+/* A grid item can span the whole row on desktop via a modifier */
+@media (min-width: 1024px) {
+    .rd-pgrid__item--full {
+        grid-column: 1 / -1;
+    }
+}
+
+/* -----------------------------------------------
+   Section header (rd_panel_section_header)
+   Consistent header for add_settings_section() callbacks.
+   Used in sections that want more than WP's default title-only.
+   ----------------------------------------------- */
+.rd-psection-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 24px 0 16px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid #dcdcde;
+    flex-wrap: wrap;
+}
+
+.rd-psection-header__icon {
+    color: #2271b1;
+    font-size: 24px;
+    width: 24px;
+    height: 24px;
+    flex-shrink: 0;
+}
+
+/* The title is an <h2> — to harmonize with the rest of the WP admin, we fix
+   size/weight and zero out paddings (WP admin has <h2> rules with large
+   padding/font-size that blew out the header layout). */
+.rd-psection-header__title {
+    margin: 0;
+    padding: 0;
+    color: #1d2327;
+    font-size: 1.1rem;
+    font-weight: 600;
+    line-height: 1.4;
+    flex: 1;
+    min-width: 0;
+    background: none; /* defense against a theme/plugin styling <h2> with a background */
+}
+
+.rd-psection-header__desc {
+    flex-basis: 100%;
+    margin: 4px 0 0;
+    color: #50575e;
+    font-size: 0.9rem;
+    line-height: 1.5;
+}
+
+.rd-psection-header__desc code {
+    background: #f0f0f1;
+    padding: 1px 5px;
+    border-radius: 3px;
+    font-size: 0.85rem;
+}
+
+/* ╔════════════════════════════════════════════════════════════════════════════╗
+   ║                                                                            ║
+   ║   2. LEGACY COMPONENTS (pre-Wave 11)                                       ║
+   ║                                                                            ║
+   ║   Ad-hoc markup of the 3 custom-rendered sections (Stats / CSP / Backup).  ║
+   ║   Each has its own prefix with nearly identical rules.                     ║
+   ║   Will be refactored to use the section-1 components above in Phase E      ║
+   ║   of Wave 11. Kept here during the transition for zero regression.         ║
+   ║                                                                            ║
+   ╚════════════════════════════════════════════════════════════════════════════╝ */
+
+/* ============================================================
+   META BOX in the post editor (rd_post_options)
+   ============================================================ */
+.rd-post-options-label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+.rd-post-options-divider {
+    margin: 12px 0;
+}
+
+.rd-post-options-select {
+    width: 100%;
+}
+
+/* ============================================================
+   DASHBOARD — panel "Overview" tab (Wave 11 Phase F)
+   Tab-specific classes; the general structure comes from the rd-p* components.
+   ============================================================ */
+
+/* Status line inside the Site Status section cards.
+   2 groups: [switch OR gear] on the left + [badge + detail] on the right.
+   justify-content: space-between stabilizes the left control — when the
+   badge changes from ON to OFF (~5px difference), the adjustment lands in
+   the central gap, not in the switch/gear position. */
+.rd-dashboard-status-line {
+    margin: 0;
+    color: #1d2327;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+/* Left group wrapper (switch + gear). Joins the 2 controls into a single
+   flex item — without the wrapper, the parent's space-between would spread
+   them into 3 columns. When there's only a switch OR only a gear, the wrapper
+   is inert but preserves the layout. */
+.rd-dashboard-status-controls {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* Right group wrapper (badge + detail). Keeps the inner gap consistent
+   between badge and detail (e.g. "ON" chip + <code>slug</code>). */
+.rd-dashboard-status-info {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.rd-dashboard-status-line code {
+    background: #f0f0f1;
+    padding: 1px 6px;
+    border-radius: 3px;
+    font-size: 0.85rem;
+    color: #50575e;
+}
+
+/* "Configure" icon button below the badge (CSP / Login Protection / Next-gen
+   Images). Only the icon (dashicons gear) is visible; the text is hidden but
+   accessible via aria-label. Styled tooltip on hover/focus via data-tooltip
+   (:after pseudo-element — look similar to the Chart.js tooltip). */
+.rd-dashboard-card-link {
+    position: relative; /* anchor for the absolute tooltip */
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    color: #2271b1;
+    text-decoration: none;
+    border-radius: 4px;
+    transition: background 0.15s ease, color 0.15s ease;
+}
+
+.rd-dashboard-card-link:hover,
+.rd-dashboard-card-link:focus {
+    color: #135e96;
+    background: #f0f0f1;
+    text-decoration: none;
+    outline: none;
+}
+
+.rd-dashboard-card-link:focus-visible {
+    box-shadow: 0 0 0 2px #2271b1;
+}
+
+.rd-dashboard-card-link .dashicons {
+    font-size: 20px;
+    width: 20px;
+    height: 20px;
+    line-height: 1;
+}
+
+/* Styled tooltip — appears on hover/focus, same look as the Chart.js
+   tooltip (semi-transparent dark background, small white text, positioned
+   above the element with a little arrow pointing down). Applied to:
+   - .rd-dashboard-card-link (deep-link gears)
+   - .rd-pswitch (Dashboard sliding buttons) — dynamic tooltip
+     "Enable"/"Disable" per current state, updated by JS after the flip. */
+.rd-dashboard-card-link[data-tooltip]:hover::after,
+.rd-dashboard-card-link[data-tooltip]:focus::after,
+.rd-pswitch[data-tooltip]:hover::after,
+.rd-pswitch[data-tooltip]:focus::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: calc(100% + 8px);
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 5px 10px;
+    background: rgba(0, 0, 0, 0.75);
+    color: #fff;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    white-space: nowrap;
+    pointer-events: none;
+    z-index: 100;
+}
+
+/* Tooltip arrow pointing down (the bubble's tip).
+   Uses the border-style trick to make a CSS-only triangle. */
+.rd-dashboard-card-link[data-tooltip]:hover::before,
+.rd-dashboard-card-link[data-tooltip]:focus::before,
+.rd-pswitch[data-tooltip]:hover::before,
+.rd-pswitch[data-tooltip]:focus::before {
+    content: '';
+    position: absolute;
+    bottom: calc(100% + -2px);
+    left: 50%;
+    transform: translateX(-50%);
+    border: 5px solid transparent;
+    border-top-color: rgba(0, 0, 0, 0.75);
+    pointer-events: none;
+    z-index: 100;
+}
+
+/* Horizontal list of buttons in the Quick Actions section. */
+.rd-dashboard-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 0;
+}
+
+.rd-dashboard-actions .button .dashicons {
+    margin-right: 4px;
+    font-size: 18px;
+    line-height: 1;
+    vertical-align: middle;
+}
+
+/* Footer with theme · WP · PHP version — discreet and centered. */
+.rd-dashboard-footer-info {
+    margin-top: 24px;
+    text-align: center;
+    color: #757575;
+    font-size: 0.9rem;
+}
+
+.rd-dashboard-footer-info code {
+    background: transparent;
+    padding: 0 2px;
+    color: #50575e;
+    font-weight: 600;
+}
+
+/* ============================================================
+   OPTIONS PANEL (rd_options) — Header + Form wrapper
+   ============================================================ */
+.rd-panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #ccd0d4;
+}
+
+.rd-panel-title {
+    margin: 0;
+    padding: 0;
+}
+
+.rd-panel-logo {
+    max-height: 50px;
+    width: auto;
+}
+
+.rd-panel-form {
+    background: #fff;
+    padding: 20px;
+    border: 1px solid #ccd0d4;
+    border-top: none;
+    margin-top: 0;
+}
+
+/* ============================================================
+   PANEL — Media upload ("media" type fields)
+   ============================================================ */
+body .rd-media-container {
+    background: #f0f0f1 !important;
+    padding: 10px !important;
+    border: 1px solid #c3c4c7 !important;
+    border-radius: 4px !important;
+    /* width: fit-content shrinks the container to the natural width of the
+       content (preview + buttons), instead of stretching to fill the
+       form-table cell. max-width still works as a ceiling for wide images. */
+    width: fit-content !important;
+    max-width: 450px !important;
+    /* Vertical layout: preview on top, buttons below side by side. Works
+       uniformly for any image ratio (horizontal banner / square QR /
+       square OG). */
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 10px !important;
+}
+
+body .rd-media-preview {
+    margin-bottom: 0;
+}
+
+body .rd-media-preview:not(:empty) {
+    padding: 8px !important;
+    background: #ffffff !important;
+    border: 2px dashed #c3c4c7 !important;
+    border-radius: 4px !important;
+    display: inline-block !important;
+}
+
+/* Buttons wrapper (Select + Remove) — stays a flex row to keep the two
+   side by side, below the preview. */
+body .rd-media-actions {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+body .rd-media-preview img {
+    max-width: 200px;
+    height: auto;
+    display: block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+/* Select button — Blue. Spacing between buttons via the flex parent's `gap`. */
+body .rd-upload-button {
+    color: #2271b1 !important;
+    border-color: #2271b1 !important;
+}
+
+body .rd-upload-button:hover,
+body .rd-upload-button:focus {
+    background: #2271b1 !important;
+    color: #fff !important;
+    border-color: #2271b1 !important;
+}
+
+/* Remove button — Red */
+body .rd-remove-button {
+    color: #d63638 !important;
+    border-color: #d63638 !important;
+}
+
+body .rd-remove-button:hover,
+body .rd-remove-button:focus {
+    background: #d63638 !important;
+    color: #fff !important;
+    border-color: #d63638 !important;
+}
+
+/* ==========================================================================
+   STATS DASHBOARD — ReloadeD panel Statistics tab (Wave 7 K)
+   Palette uses neutral WP admin colors to blend with the native look.
+   ========================================================================== */
+
+/* .rd-stats-dashboard, .rd-stats-header*, .rd-stats-grid migrated to the
+   rd-p* design system in Wave 11 Phase E. What remains is .rd-stats-card and
+   dashboard-specific modifiers/internals (ranking, tabs, chart, big-number,
+   etc.) that have no generalizable equivalent. */
+
+.rd-stats-card {
+    background: #fff;
+    border: 1px solid #c3c4c7;
+    border-radius: 4px;
+    padding: 20px 24px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+    min-width: 0; /* CRITICAL in grid items: without it, intrinsic content (text) forces the card to grow beyond the grid cell, causing horizontal overflow */
+}
+
+/* Modifier for cards that should span the whole row on desktop (K3 and K4
+   look better full-width to fit long lists and the horizontal chart).
+   On mobile (1-column grid) they already span everything naturally.
+   Breakpoint aligned with .rd-pgrid--sidebar-main (1024px) to avoid a gap
+   between when the grid becomes 2-cols and when --full starts spanning all. */
+@media (min-width: 1024px) {
+    .rd-stats-card--full {
+        grid-column: 1 / -1;
+    }
+}
+
+.rd-stats-card__title {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    color: #50575e;
+    margin: 0 0 12px;
+    font-weight: 600;
+}
+
+.rd-stats-card__big-number {
+    font-size: 2.6rem;
+    font-weight: 700;
+    color: #2271b1;
+    line-height: 1;
+    margin-bottom: 18px;
+    /* tabular-nums aligns digits by column — big numbers become more legible */
+    font-variant-numeric: tabular-nums;
+}
+
+.rd-stats-card__breakdown {
+    border-top: 1px solid #f0f0f1;
+    padding-top: 12px;
+}
+
+.rd-stats-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 5px 0;
+    font-size: 0.92rem;
+}
+
+.rd-stats-row__label {
+    color: #50575e;
+    min-width: 100px;
+}
+
+.rd-stats-row__value {
+    font-weight: 600;
+    color: #1d2327;
+    flex: 1;
+    font-variant-numeric: tabular-nums;
+}
+
+.rd-stats-row__trend {
+    font-size: 0.8rem;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 3px;
+    white-space: nowrap;
+    cursor: help; /* hover shows the previous period's value via title */
+}
+
+.rd-stats-row__trend--up {
+    color: #007a39;
+    background: rgba(0, 122, 57, 0.1);
+}
+
+.rd-stats-row__trend--down {
+    color: #b32d2e;
+    background: rgba(179, 45, 46, 0.1);
+}
+
+.rd-stats-row__trend--flat {
+    color: #757575;
+    background: rgba(0, 0, 0, 0.05);
+}
+
+.rd-stats-row__trend--new {
+    color: #2271b1;
+    background: rgba(34, 113, 177, 0.1);
+    font-style: italic;
+}
+
+/* -----------------------------------------------
+   K1/K3 — Ranking widgets (top posts)
+   Grid positioning is now via grid-template-areas (above).
+   ----------------------------------------------- */
+
+/* Time-window sub-tabs inside the card (All-time / Year / Month / Week) */
+.rd-stats-tabs {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 16px;
+    border-bottom: 1px solid #dcdcde;
+}
+
+.rd-stats-tabs__item {
+    padding: 8px 14px;
+    text-decoration: none;
+    color: #50575e;
+    font-size: 0.88rem;
+    font-weight: 500;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -1px; /* overlaps the .rd-stats-tabs border to stick to it */
+    transition: color 0.15s ease, border-color 0.15s ease;
+}
+
+.rd-stats-tabs__item:hover {
+    color: #2271b1;
+}
+
+.rd-stats-tabs__item.is-active {
+    color: #2271b1;
+    border-bottom-color: #2271b1;
+}
+
+.rd-stats-tabs__item:focus {
+    box-shadow: none;
+    outline: 1px dashed #2271b1;
+    outline-offset: 2px;
+}
+
+/* Numbered ranking list */
+.rd-stats-ranking {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    counter-reset: rd-rank;
+}
+
+.rd-stats-ranking__item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 4px;
+    border-bottom: 1px solid #f0f0f1;
+    font-size: 0.92rem;
+    flex-wrap: wrap; /* on narrow screens, the metric drops to the next line */
+}
+
+.rd-stats-ranking__item:last-child {
+    border-bottom: none;
+}
+
+.rd-stats-ranking__rank {
+    font-weight: 700;
+    color: #8c8f94;
+    min-width: 24px;
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+    font-size: 0.95rem;
+    flex-shrink: 0;
+}
+
+/* Top 3 get highlighted ("podium" style) */
+.rd-stats-ranking__item:nth-child(1) .rd-stats-ranking__rank { color: #d4a017; } /* gold */
+.rd-stats-ranking__item:nth-child(2) .rd-stats-ranking__rank { color: #7d7d7d; } /* silver */
+.rd-stats-ranking__item:nth-child(3) .rd-stats-ranking__rank { color: #a06b3a; } /* bronze */
+
+.rd-stats-ranking__chip {
+    display: inline-block;
+    font-size: 0.72rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    padding: 2px 8px;
+    border-radius: 3px;
+    white-space: nowrap;
+    max-width: 120px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    flex-shrink: 0;
+}
+
+.rd-stats-ranking__title {
+    flex: 1 1 0;
+    min-width: 0; /* CRITICAL in flex: without it, long text blows out the container and breaks layout (horizontal overflow). Classic flexbox bug. */
+    color: #1d2327;
+    text-decoration: none;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-weight: 500;
+}
+
+.rd-stats-ranking__title:hover {
+    color: #2271b1;
+    text-decoration: underline;
+}
+
+.rd-stats-ranking__view-link {
+    color: #8c8f94;
+    text-decoration: none;
+    transition: color 0.15s ease;
+    flex-shrink: 0;
+}
+
+.rd-stats-ranking__view-link:hover {
+    color: #2271b1;
+}
+
+.rd-stats-ranking__view-link .dashicons {
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
+}
+
+.rd-stats-ranking__metric {
+    font-weight: 600;
+    color: #2271b1;
+    font-variant-numeric: tabular-nums;
+    text-align: right;
+    min-width: 90px;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.rd-stats-ranking__metric small {
+    color: #757575;
+    font-weight: 400;
+    font-size: 0.78rem;
+    margin-left: 2px;
+}
+
+/* Engagement ratio (K3): secondary pill next to the comment count.
+   Neutral color so it doesn't compete with the main metric (blue). */
+.rd-stats-ranking__ratio {
+    display: inline-block;
+    margin-left: 6px;
+    padding: 1px 6px;
+    background: #f0f0f1;
+    color: #50575e;
+    font-size: 0.72rem;
+    font-weight: 600;
+    border-radius: 3px;
+    cursor: help; /* hover shows a tooltip via the parent .rd-stats-ranking__metric title */
+}
+
+/* When ratio is the active sort criterion, it gets a blue highlight
+   (visually signals "this is the number the list was sorted by"). */
+.rd-stats-ranking__ratio.is-highlighted {
+    background: rgba(34, 113, 177, 0.12);
+    color: #2271b1;
+}
+
+/* Mobile: reduces card padding and pushes the metric to a second line.
+   On narrow screens, [rank chip title] on one line and [metric] below is
+   better than everything compressed into a single clipped line. */
+@media (max-width: 600px) {
+    .rd-stats-card {
+        padding: 16px;
+    }
+
+    .rd-stats-ranking__metric {
+        margin-left: auto; /* aligns right on the 2nd line */
+        padding-left: 36px; /* visually aligns with the title (after the rank) */
+    }
+}
+
+/* Empty state (no data in the selected window) */
+.rd-stats-empty {
+    color: #757575;
+    font-style: italic;
+    padding: 20px 0;
+    text-align: center;
+}
+
+/* -----------------------------------------------
+   K4 — Monthly growth chart (Chart.js)
+   ----------------------------------------------- */
+
+/* Fixed height for the canvas (Chart.js needs a defined height when responsive
+   + maintainAspectRatio: false). 280px works to read 12 months well without
+   taking too much vertical space on the dashboard. */
+.rd-stats-chart-wrapper {
+    position: relative;
+    height: 280px;
+    margin-top: 8px;
+}
+
+.rd-stats-chart-wrapper canvas {
+    max-width: 100%;
+}
+
+/* Generic chart wrapper (Wave 11 Phase G — CSP doughnut, Dashboard 7d bar, etc).
+   Same strategy as .rd-stats-chart-wrapper: fixed height so Chart.js can be
+   responsive. 280px works for any medium-sized chart. */
+.rd-csp-chart-wrapper,
+.rd-dashboard-chart-wrapper {
+    position: relative;
+    height: 280px;
+    margin-top: 8px;
+}
+
+.rd-csp-chart-wrapper canvas,
+.rd-dashboard-chart-wrapper canvas {
+    max-width: 100%;
+}
+
+/* ==========================================================================
+   IMAGE FORMATS — Images & Media tab (Wave 11 Phase G refactor)
+   Wrappers use .rd-pdash + .rd-pgrid--sidebar-main; the specific classes
+   below cover what remains (capabilities list + regen button row).
+   ========================================================================== */
+
+.rd-img-caps-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.rd-img-caps-list li {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 0;
+    border-bottom: 1px solid #f0f0f1;
+    flex-wrap: wrap;
+}
+
+.rd-img-caps-list li:last-child {
+    border-bottom: none;
+}
+
+.rd-img-caps-list li strong {
+    color: #1d2327;
+    min-width: 70px;
+}
+
+.rd-img-caps-list li small {
+    color: #757575;
+    font-style: italic;
+}
+
+/* Layout (flex + justify-end) comes from .rd-pcard__action-row.
+   .rd-img-regen-row becomes just a hook for a specific margin below the
+   button (visually separates it from the progress bar shown after a click). */
+.rd-img-regen-row {
+    margin-bottom: 12px;
+}
+
+.rd-img-regen-row .button .dashicons {
+    line-height: 1;
+    font-size: 18px;
+    vertical-align: middle;
+    margin-right: 4px;
+}
+
+.rd-img-regen-count {
+    color: #50575e;
+    font-size: 0.9rem;
+}
+
+.rd-img-regen-progress {
+    margin-top: 16px;
+}
+
+.rd-img-regen-progress progress {
+    width: 100%;
+    height: 20px;
+}
+
+.rd-img-regen-progress p {
+    margin: 8px 0 0;
+    color: #50575e;
+    font-size: 0.9rem;
+}
+
+/* ==========================================================================
+   CSP REPORTS — ReloadeD panel Security tab
+   Wrappers/header/card/badges/empty migrated to the rd-p* design system in
+   Wave 11 Phase E. What remains here is ONLY the specific reports table (.rd-csp-table*).
+   ========================================================================== */
+
+/* Custom table (replaces WP's widefat striped with a look consistent with the theme) */
+.rd-csp-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+}
+
+.rd-csp-table thead th {
+    text-align: left;
+    padding: 8px 12px;
+    border-bottom: 2px solid #dcdcde;
+    color: #50575e;
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-weight: 600;
+}
+
+.rd-csp-table tbody td {
+    padding: 10px 12px;
+    border-bottom: 1px solid #f0f0f1;
+    vertical-align: top;
+    word-break: break-word;
+}
+
+.rd-csp-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.rd-csp-table tbody tr:hover {
+    background: #f6f7f7;
+}
+
+/* Fixed width for the short columns */
+.rd-csp-table__col-when {
+    width: 110px;
+}
+.rd-csp-table__col-dir {
+    width: 170px;
+}
+
+.rd-csp-table__when {
+    font-variant-numeric: tabular-nums;
+    color: #50575e;
+    white-space: nowrap;
+}
+
+.rd-csp-table__directive {
+    background: #f0f0f1;
+    color: #2271b1;
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-size: 0.82rem;
+    display: inline-block;
+}
+
+.rd-csp-table__uri {
+    color: #1d2327;
+    font-size: 0.82rem;
+    word-break: break-all;
+}
+
+/* ==========================================================================
+   BACKUP & RESTORE — dedicated ReloadeD panel tab (Wave 11)
+   Wrappers/cards/status migrated to the rd-p* design system in Phase E —
+   the classes remaining here are ONLY the feature-specific ones (export
+   sections fieldset, diff preview, etc.) with no rd-p* equivalent.
+   ========================================================================== */
+
+/* Fieldset with checkboxes to choose the export sections.
+   Mobile: vertical stack (1 col). Desktop ≥ 1024px: 3 columns side by side. */
+.rd-backup-sections {
+    border: 1px solid #dcdcde;
+    border-radius: 4px;
+    padding: 12px 16px;
+    margin: 0 0 16px;
+    background: #f9f9f9;
+    display: grid;
+    gap: 12px;
+    grid-template-columns: 1fr;
+}
+
+@media (min-width: 1024px) {
+    .rd-backup-sections {
+        grid-template-columns: 1fr 1fr 1fr;
+    }
+}
+
+.rd-backup-section {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 8px 0;
+    cursor: pointer;
+    /* no border-bottom — it only made sense in a vertical stack. In the 3-col
+       layout, each checkbox becomes card-like (visually separated by the grid gap). */
+}
+
+.rd-backup-section input[type="checkbox"] {
+    margin-top: 4px;
+    flex-shrink: 0;
+}
+
+.rd-backup-section__label {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.rd-backup-section__label strong {
+    color: #1d2327;
+    font-size: 0.95rem;
+}
+
+.rd-backup-section__label small {
+    color: #757575;
+    font-size: 0.82rem;
+}
+
+/* ===== Export action — inline text next to the Download button ===== */
+/* Layout (flex + justify-end) comes from .rd-pcard__action-row.
+   Here we only style the companion text (italic + code highlight). */
+
+.rd-backup-export-filename {
+    color: #50575e;
+    font-size: 0.9rem;
+    font-style: italic;
+}
+
+.rd-backup-export-filename code {
+    font-style: normal;
+    background: rgba(0, 0, 0, 0.04);
+    padding: 1px 6px;
+    border-radius: 3px;
+    font-size: 0.95em;
+}
+
+/* ===== robots.txt — block of WP defaults in the field description ===== */
+
+.rd-robots-defaults {
+    margin: 6px 0;
+    padding: 8px 12px;
+    background: #f6f7f7;
+    border-left: 3px solid #c3c4c7;
+    font-size: 12px;
+    line-height: 1.5;
+    white-space: pre-wrap;
+    overflow-x: auto;
+}
+
+/* ===== Import UI ===== */
+
+/* Defensive inline hint next to the "Choose backup JSON" button — warns about
+   the destructive behavior + points to the Restore card as a recovery hatch.
+   Layout (flex + justify-end) comes from .rd-pcard__action-row. */
+.rd-backup-import-explainer {
+    flex: 1 1 auto; /* takes the leftover space, pushing the button to the end */
+    min-width: 0;   /* allows text-wrap in flex without overflow */
+    color: #50575e;
+    font-size: 0.85rem;
+    font-style: italic;
+    text-align: right;
+}
+
+/* Filename feedback row ("file X.json selected") — appears after the user
+   chooses a file. Hidden entirely via :has() when the child span is empty
+   (pre-selection) so there's no visual gap below the button. */
+.rd-backup-filename-row {
+    margin-top: 12px;
+}
+
+.rd-backup-filename-row:has(.rd-backup-filename:empty) {
+    display: none;
+}
+
+.rd-backup-filename {
+    color: #50575e;
+    font-size: 0.9rem;
+    font-style: italic;
+}
+
+/* .rd-backup-status* migrated to .rd-pstatus in Wave 11 Phase E. */
+
+/* Preview box */
+.rd-backup-preview {
+    margin-top: 16px;
+    padding: 16px;
+    background: #f6f7f7;
+    border: 1px solid #dcdcde;
+    border-radius: 4px;
+}
+
+.rd-backup-preview__title {
+    margin: 0 0 8px;
+    color: #1d2327;
+    font-size: 0.95rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.rd-backup-preview__meta {
+    color: #757575;
+    margin-bottom: 12px;
+}
+
+.rd-backup-diff-section {
+    margin: 12px 0;
+    padding: 10px 12px;
+    background: #fff;
+    border: 1px solid #dcdcde;
+    border-radius: 4px;
+}
+
+.rd-backup-diff-section h5 {
+    margin: 0 0 8px;
+    color: #1d2327;
+    font-size: 0.88rem;
+}
+
+.rd-backup-diff-list {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 8px;
+}
+
+.rd-backup-diff-list li {
+    padding: 3px 0;
+    font-size: 0.92rem;
+    font-family: monospace;
+}
+
+.rd-backup-diff--update { color: #2271b1; }
+.rd-backup-diff--add    { color: #007a39; }
+.rd-backup-diff--keep   { color: #50575e; }
+.rd-backup-diff--skip   { color: #b32d2e; }
+
+.rd-backup-diff-details {
+    margin-top: 8px;
+}
+
+.rd-backup-diff-details summary {
+    cursor: pointer;
+    color: #2271b1;
+    font-size: 0.88rem;
+    user-select: none;
+}
+
+.rd-backup-diff-keys {
+    list-style: none;
+    padding: 8px 0 0 16px;
+    margin: 0;
+    max-height: 240px;
+    overflow-y: auto;
+    border-top: 1px solid #f0f0f1;
+    margin-top: 6px;
+}
+
+.rd-backup-diff-keys li {
+    padding: 4px 0;
+    font-size: 0.85rem;
+    border-bottom: 1px solid #f6f7f7;
+}
+
+.rd-backup-diff-keys li:last-child {
+    border-bottom: none;
+}
+
+.rd-backup-diff-keys code {
+    color: #1d2327;
+    background: #f0f0f1;
+    padding: 1px 6px;
+    border-radius: 3px;
+    font-size: 0.85rem;
+}
+
+.rd-backup-diff-keys small {
+    color: #757575;
+    margin-left: 8px;
+    word-break: break-all;
+}
+
+.rd-backup-preview__actions {
+    margin: 16px 0 0;
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+}
+
+/* .rd-backup-card--restore migrated to .rd-pcard--warning + .rd-pgrid__item--full
+   in Wave 11 Phase E (amber accent + full-width span). */
+
+/* === Theme Updates card (Dashboard) === */
+
+.rd-pcard.rd-self-update {
+    /* updates card container — no extra visual variation */
+}
+
+.rd-self-update__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin: 0 0 14px;
+}
+
+.rd-self-update__title {
+    margin: 0;
+    font-size: 14px;
+    font-weight: 600;
+    color: #1d2327;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+
+.rd-self-update__grid {
+    display: grid;
+    grid-template-columns: max-content 1fr;
+    gap: 8px 16px;
+    margin: 0 0 12px;
+    align-items: center;
+}
+
+.rd-self-update__grid dt {
+    font-weight: 600;
+    color: #50575e;
+    font-size: 13px;
+}
+
+.rd-self-update__grid dd {
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+}
+
+.rd-self-update__grid dd code {
+    padding: 2px 6px;
+    border-radius: 3px;
+    background: #f0f0f1;
+    font-size: 12px;
+}
+
+.rd-self-update__action {
+    margin: 0;
+    padding-top: 6px;
+    border-top: 1px solid #f0f0f1;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.rd-self-update__action:empty {
+    display: none;
+}
+
+#rd-self-update-check.is-loading {
+    opacity: 0.7;
+    cursor: wait;
+}
+
+#rd-self-update-check.is-loading .dashicons-update {
+    animation: rd-spin 0.8s linear infinite;
+}
+
+@keyframes rd-spin {
+    from { transform: rotate(0deg); }
+    to   { transform: rotate(360deg); }
+}
