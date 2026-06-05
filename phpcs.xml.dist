@@ -58,10 +58,11 @@
         <exclude name="WordPress.NamingConventions.PrefixAllGlobals.ShortPrefixPassed"/>
 
         <!--
-            Docblocks "manuais" (escrita de @param tipo $nome descrição) adiados
-            pra Wave 10 — pré-submissão wp.org. Reviewer humano espera docblocks
-            completos, então essas 3 regras voltam a ser ativas quando chegar
-            a hora. Anotado em BACKLOG → Wave 10.
+            Docblocks "manuais" (@param tipo $nome descrição) não obrigatórios.
+            Distribuição via GitHub Releases (decidido 2026-05-29) — sem submissão
+            wp.org nem reviewer humano exigindo isso, então estas 3 exclusões são
+            PERMANENTES. Docblocks completos ficam como melhoria opcional pra
+            contribuidores OSS, não bloqueante.
         -->
         <exclude name="Squiz.Commenting.FunctionComment.Missing"/>
         <exclude name="Squiz.Commenting.FunctionComment.MissingParamTag"/>
@@ -69,21 +70,19 @@
 
         <!--
             Pedantismo de pontuação em comentários — cosmético puro. Comentário
-            funciona igual com ou sem ponto final, bloco `/* foo */` em uma
-            linha é mais legível pra comentário curto. Reviewers humanos do
-            wp.org costumam ser flexíveis nesses 3 — mas caso queira reativar
-            pra "code style polish" pré-submissão, anotado na Wave 10.
+            funciona igual com ou sem ponto final, e bloco `/* foo */` em uma
+            linha é mais legível pra comentário curto. Exclusão permanente
+            (distribuição via GitHub Releases, sem reviewer wp.org).
         -->
         <exclude name="Squiz.Commenting.InlineComment.InvalidEndChar"/>
         <exclude name="Squiz.Commenting.BlockComment.CloserSameLine"/>
         <exclude name="Squiz.Commenting.FunctionComment.ParamCommentFullStop"/>
 
         <!--
-            File comments (docblock no topo de cada arquivo com @package). Reviewer
-            humano do wp.org exige, mas Wave 10 (pré-submissão) vai reescrever
-            TODOS os docblocks de funções de qualquer forma — adicionar @package
-            no header acontece naturalmente na mesma passada. Adiar agora evita
-            fix-em-cima-de-fix em ~30 arquivos. Anotado em BACKLOG → Wave 10.
+            File comments (docblock no topo de cada arquivo com @package) — exigência
+            típica do reviewer wp.org. Mas a distribuição é via GitHub Releases
+            (decidido 2026-05-29), sem submissão wp.org, então a exclusão é
+            permanente.
         -->
         <exclude name="Squiz.Commenting.FileComment"/>
     </rule>
