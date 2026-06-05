@@ -1,10 +1,10 @@
 <?php
 /**
- * Template: Page — Contact
+ * Template Name: Contact Page
  *
- * Specific template for the page with the "contato" slug.
- * WP uses this file automatically via the template hierarchy
- * (page-{slug}.php) — nothing needs to be selected in the editor.
+ * Named page template — assign it to any page via Page Attributes > Template
+ * (the page slug and language are irrelevant). Replaces the old slug-coupled
+ * page-contato.php so the theme stays language-agnostic.
  *
  * Differences vs the generic page.php:
  *   - No featured image (presentation focused on the contact channels)

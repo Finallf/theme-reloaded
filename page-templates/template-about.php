@@ -1,10 +1,10 @@
 <?php
 /**
- * Template: Page — About
+ * Template Name: About Page (author hero)
  *
- * Template specific to the page with the "sobre" slug.
- * WP picks this file automatically via the template hierarchy
- * (page-{slug}.php) — no selection is needed in the editor.
+ * Named page template — assign it to any page via Page Attributes > Template
+ * (the page slug and language are irrelevant). Replaces the old slug-coupled
+ * page-sobre.php so the theme stays language-agnostic.
  *
  * Differences vs the generic page.php:
  *   - Hardcoded hero at the top: avatar (author Gravatar) + name + tagline

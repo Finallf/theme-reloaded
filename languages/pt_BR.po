@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ReloadeD 0.1.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/theme/reloaded\n"
-"POT-Creation-Date: 2026-06-04T17:00:40-03:00\n"
-"PO-Revision-Date: 2026-06-04 17:04-0300\n"
+"POT-Creation-Date: 2026-06-04T21:39:30-03:00\n"
+"PO-Revision-Date: 2026-06-04 21:42-0300\n"
 "Last-Translator: Regis Vieira Delgado (Finallf) <finallf2@gmail.com>\n"
 "Language-Team: Brazilian Portuguese\n"
 "Language: pt_BR\n"
@@ -147,7 +147,7 @@ msgstr[1] "%s Comentários"
 msgid "Comments are closed."
 msgstr "Os comentários estão fechados."
 
-#: footer.php:13
+#: footer.php:18
 msgid ""
 "News, technology, games and the best of the open-source world. Where "
 "information is reloaded daily."
@@ -155,27 +155,19 @@ msgstr ""
 "Notícias, tecnologia, games e o melhor do mundo open-source. Onde a "
 "informação é recarregada diariamente."
 
-#: footer.php:17
-msgid "Navigation"
-msgstr "Navegação"
-
-#: footer.php:34
-msgid "Featured"
-msgstr "Em Destaque"
-
-#: footer.php:35
+#: footer.php:33
 msgid "Add a widget in Appearance > Widgets."
 msgstr "Adicione um widget em Aparência > Widgets."
 
-#: footer.php:43
+#: footer.php:44
 msgid "All rights reserved."
 msgstr "Todos os direitos reservados."
 
-#: footer.php:49
+#: footer.php:50
 msgid "Cookie Preferences"
 msgstr "Preferências de Cookies"
 
-#: footer.php:72
+#: footer.php:73
 msgid "Back to top"
 msgstr "Voltar ao topo"
 
@@ -316,19 +308,27 @@ msgstr "Barra Lateral Principal"
 msgid "Add widgets here to appear in the sidebar."
 msgstr "Adicione widgets aqui para aparecerem na lateral."
 
-#: inc/core.php:158
-msgid "Footer - Column 3 (Popular Posts)"
-msgstr "Rodapé - Coluna 3 (Posts Populares)"
+#: inc/core.php:159
+msgid "Footer Column 2"
+msgstr "Rodapé - Coluna 2"
 
 #: inc/core.php:160
-msgid "Add widgets here to appear in the footer."
-msgstr "Adicione widgets aqui para aparecerem no rodapé."
+msgid "Footer Column 3"
+msgstr "Rodapé - Coluna 3"
 
-#: inc/core.php:215
+#: inc/core.php:161
+msgid "Footer Column 4"
+msgstr "Rodapé - Coluna 4"
+
+#: inc/core.php:168
+msgid "Add widgets here to appear in this footer column."
+msgstr "Adicione widgets aqui para exibi-los nesta coluna do rodapé."
+
+#: inc/core.php:224
 msgid "Select fallback image"
 msgstr "Selecionar Imagem de Fallback"
 
-#: inc/core.php:216
+#: inc/core.php:225
 msgid "Use this image"
 msgstr "Usar esta imagem"
 
@@ -3283,20 +3283,33 @@ msgstr "Remover"
 msgid "No news found."
 msgstr "Nenhum post encontrado."
 
-#: page-contato.php:45 page-politica-de-privacidade.php:57 page-sobre.php:126
-#: page.php:55 single.php:89
+#. Template Name of the theme
+msgid "About Page (author hero)"
+msgstr "Página Sobre (Destaque do Autor)"
+
+#: page-templates/template-about.php:92
+msgid "View all posts"
+msgstr "Ver todos os posts"
+
+#: page-templates/template-about.php:126 page-templates/template-contact.php:45
+#: page-templates/template-legal.php:58 page.php:55 single.php:89
 msgid "Pages:"
 msgstr "Páginas:"
 
-#. translators: %s: last modified date of the privacy policy
-#: page-politica-de-privacidade.php:44
+# --- Busca ---
+#. Template Name of the theme
+msgid "Contact Page"
+msgstr "Página de Contato"
+
+#. Template Name of the theme
+msgid "Legal Page (Privacy / Terms)"
+msgstr "Página de Políticas (Privacidade / Termos)"
+
+#. translators: %s: last modified date of the legal document
+#: page-templates/template-legal.php:45
 #, php-format
 msgid "Last updated: %s"
 msgstr "Última atualização: %s"
-
-#: page-sobre.php:92
-msgid "View all posts"
-msgstr "Ver todos os posts"
 
 #. translators: %s: search query
 #: search.php:27
@@ -3316,6 +3329,12 @@ msgstr "Exibir:"
 msgid "No levels found for this term. Try using different keywords."
 msgstr ""
 "Nenhum nível encontrado com este termo. Tente usar outras palavras-chave."
+
+#~ msgid "Navigation"
+#~ msgstr "Navegação"
+
+#~ msgid "Featured"
+#~ msgstr "Em Destaque"
 
 #~ msgid "Backup & Restore"
 #~ msgstr "Backup & Restaurar"

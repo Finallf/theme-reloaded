@@ -2,14 +2,14 @@
 # This file is distributed under the GPL v2 or later.
 msgid ""
 msgstr ""
-"Project-Id-Version: ReloadeD 1.1.0-beta.6\n"
+"Project-Id-Version: ReloadeD 1.1.0-beta.9\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/theme/reloaded\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-06-04T17:00:40-03:00\n"
+"POT-Creation-Date: 2026-06-04T21:39:30-03:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: reloaded\n"
@@ -136,31 +136,23 @@ msgstr[1] ""
 msgid "Comments are closed."
 msgstr ""
 
-#: footer.php:13
+#: footer.php:18
 msgid "News, technology, games and the best of the open-source world. Where information is reloaded daily."
 msgstr ""
 
-#: footer.php:17
-msgid "Navigation"
-msgstr ""
-
-#: footer.php:34
-msgid "Featured"
-msgstr ""
-
-#: footer.php:35
+#: footer.php:33
 msgid "Add a widget in Appearance > Widgets."
 msgstr ""
 
-#: footer.php:43
+#: footer.php:44
 msgid "All rights reserved."
 msgstr ""
 
-#: footer.php:49
+#: footer.php:50
 msgid "Cookie Preferences"
 msgstr ""
 
-#: footer.php:72
+#: footer.php:73
 msgid "Back to top"
 msgstr ""
 
@@ -297,19 +289,27 @@ msgstr ""
 msgid "Add widgets here to appear in the sidebar."
 msgstr ""
 
-#: inc/core.php:158
-msgid "Footer - Column 3 (Popular Posts)"
+#: inc/core.php:159
+msgid "Footer Column 2"
 msgstr ""
 
 #: inc/core.php:160
-msgid "Add widgets here to appear in the footer."
+msgid "Footer Column 3"
 msgstr ""
 
-#: inc/core.php:215
+#: inc/core.php:161
+msgid "Footer Column 4"
+msgstr ""
+
+#: inc/core.php:168
+msgid "Add widgets here to appear in this footer column."
+msgstr ""
+
+#: inc/core.php:224
 msgid "Select fallback image"
 msgstr ""
 
-#: inc/core.php:216
+#: inc/core.php:225
 msgid "Use this image"
 msgstr ""
 
@@ -2526,22 +2526,34 @@ msgstr ""
 msgid "No news found."
 msgstr ""
 
-#: page-contato.php:45
-#: page-politica-de-privacidade.php:57
-#: page-sobre.php:126
+#. Template Name of the theme
+msgid "About Page (author hero)"
+msgstr ""
+
+#: page-templates/template-about.php:92
+msgid "View all posts"
+msgstr ""
+
+#: page-templates/template-about.php:126
+#: page-templates/template-contact.php:45
+#: page-templates/template-legal.php:58
 #: page.php:55
 #: single.php:89
 msgid "Pages:"
 msgstr ""
 
-#. translators: %s: last modified date of the privacy policy
-#: page-politica-de-privacidade.php:44
-#, php-format
-msgid "Last updated: %s"
+#. Template Name of the theme
+msgid "Contact Page"
 msgstr ""
 
-#: page-sobre.php:92
-msgid "View all posts"
+#. Template Name of the theme
+msgid "Legal Page (Privacy / Terms)"
+msgstr ""
+
+#. translators: %s: last modified date of the legal document
+#: page-templates/template-legal.php:45
+#, php-format
+msgid "Last updated: %s"
 msgstr ""
 
 #. translators: %s: search query
