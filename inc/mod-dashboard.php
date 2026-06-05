@@ -138,22 +138,70 @@ function rd_dashboard_render(): void {
 	}
 	echo '</div>';
 
-	// ============ Section 3: Activity Trend (Wave 11 Phase G) ============
-	// Bar chart of views per day over the last 7 days. Always renders —
-	// when there's no data (tracking never enabled or freshly installed), the
-	// get_views_7d function returns a zeroed array and the chart shows all
-	// bars at zero (preview of the future layout).
+	// ============ Section 3: Activity Trend (+ CSP doughnut) ============
+	// Activity Trend = bar chart of views per day over the last 7 days. Always
+	// renders (zeroed bars when there's no data).
+	//
+	// When CSP report-only is collecting violations, the "Violations by
+	// Directive" doughnut shows beside it (narrow left + Activity Trend wide
+	// right) via .rd-pgrid--sidebar-main — each block keeps its own header.
+	// Without violations, Activity Trend stays full-width.
+	$views_7d = rd_dashboard_get_views_7d();
+
+	$csp_by_directive = array();
+	if ( rd_get_option_bool( 'enable_csp_report_only' ) && function_exists( 'rd_csp_get_violations_by_directive' ) ) {
+		$csp_by_directive = rd_csp_get_violations_by_directive();
+	}
+	$has_csp_doughnut = ! empty( $csp_by_directive );
+
+	if ( $has_csp_doughnut ) {
+		echo '<div class="rd-pgrid rd-pgrid--sidebar-main">';
+
+		// Left (narrow): CSP "Violations by Directive" doughnut.
+		echo '<div>';
+		rd_panel_section_header(
+			array(
+				'icon'  => 'warning',
+				'title' => __( 'Violations by Directive', 'reloaded' ),
+			)
+		);
+		rd_panel_card_open(
+			array(
+				// Short summary of the Security tab's chart description — keeps this
+				// card the same height as the Activity Trend card beside it.
+				'desc' => __( 'Recorded violations grouped by CSP directive.', 'reloaded' ),
+			)
+		);
+		?>
+		<div class="rd-dashboard-chart-wrapper">
+			<canvas id="rd-dashboard-csp-chart"
+				data-rd-chart-type="doughnut"
+				data-labels="<?php echo esc_attr( wp_json_encode( array_keys( $csp_by_directive ) ) ); ?>"
+				data-values="<?php echo esc_attr( wp_json_encode( array_values( $csp_by_directive ) ) ); ?>"></canvas>
+		</div>
+		<?php
+		rd_panel_card_close();
+		echo '</div>';
+
+		// Right (wide): Activity Trend block opens here.
+		echo '<div>';
+	}
+
 	rd_panel_section_header(
 		array(
 			'icon'  => 'chart-bar',
 			'title' => __( 'Activity Trend', 'reloaded' ),
-			'desc'  => __( 'Views per day over the last 7 days. Useful to spot weekly patterns and traffic spikes.', 'reloaded' ),
 		)
 	);
 
-	$views_7d = rd_dashboard_get_views_7d();
-
-	rd_panel_card_open();
+	// Description goes inside the card (not the section header) so this header
+	// stays title-only — matching the doughnut header beside it and keeping the
+	// two cards' tops aligned in the side-by-side layout.
+	rd_panel_card_open(
+		array(
+			'desc' => __( 'Views per day over the last 7 days. Useful to spot weekly patterns and traffic spikes.', 'reloaded' ),
+		)
+	);
 	?>
 	<div class="rd-dashboard-chart-wrapper">
 		<canvas id="rd-dashboard-views-7d-chart"
@@ -164,6 +212,11 @@ function rd_dashboard_render(): void {
 	</div>
 	<?php
 	rd_panel_card_close();
+
+	if ( $has_csp_doughnut ) {
+		echo '</div>'; // .rd-pgrid__item (right column — Activity Trend)
+		echo '</div>'; // .rd-pgrid--sidebar-main
+	}
 
 	// ============ Section 4: Theme Updates ============
 	rd_dashboard_render_updates_card();
