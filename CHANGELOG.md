@@ -7,6 +7,25 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 <br>
 
 
+## [1.1.0-beta.10](https://github.com/Finallf/theme-reloaded/compare/v1.1.0-beta.9...v1.1.0-beta.10) (2026-06-05)
+
+### ✨ Features
+
+* **dashboard:** show the CSP violations doughnut beside Activity Trend ([db24f1e](https://github.com/Finallf/theme-reloaded/commit/db24f1ed8324b44f7cc5896f82cdbc2f61f07280))
+
+### ♻️ Code Refactoring
+
+* **footer:** drop the unused menu-footer nav-menu location ([2441abe](https://github.com/Finallf/theme-reloaded/commit/2441abe69d7984cc41f40493e380c3832b216c2a))
+* **templates:** convert slug-coupled page templates to named templates ([18953ba](https://github.com/Finallf/theme-reloaded/commit/18953bade7d953da42945a6709e9c06ae609c744))
+
+### 📝 Documentation
+
+* sync template-architecture migration and footer rework ([7f82242](https://github.com/Finallf/theme-reloaded/commit/7f822420609a42473aa17de916f273806b47b763))
+
+<br>
+
+---
+
 ## [1.1.0-beta.9](https://github.com/Finallf/theme-reloaded/compare/v1.1.0-beta.8...v1.1.0-beta.9) (2026-06-04)
 
 ### ✨ Features
