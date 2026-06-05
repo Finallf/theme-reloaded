@@ -779,7 +779,7 @@ A função `rd_dashboard_render()` (callback de `add_settings_section('sec_dashb
    - Posts Last 30 Days — query `get_posts` com `date_query` rolling: `now − 30 dias`
    - Pending Comments — `wp_count_comments()->moderated`; snapshot do estado atual; quando > 0 mostra link "Review queue"
 
-3. **Activity Trend** (Wave 11 Fase G) — bar chart de views por dia, últimos 7 dias. Função `rd_dashboard_get_views_7d()` parseia logs (`_rd_post_views_log`) sem cache (mesma filosofia do Views Last 24h — Dashboard sempre fresh). Render via canvas com `data-rd-chart-type="bar"`, auto-inicializado pelo módulo charts do bundle `admin-panel.js`. Sempre renderiza — sem dados, barras ficam zeradas (preview do layout futuro).
+3. **Activity Trend** (Wave 11 Fase G) — bar chart de views por dia, últimos 7 dias. Função `rd_dashboard_get_views_7d()` parseia logs (`_rd_post_views_log`) sem cache (mesma filosofia do Views Last 24h — Dashboard sempre fresh). Render via canvas com `data-rd-chart-type="bar"`, auto-inicializado pelo módulo charts do bundle `admin-panel.js`. Sempre renderiza — sem dados, barras ficam zeradas (preview do layout futuro). **Quando o CSP report-only tem violações** (2026-06-05), o doughnut "Violações por Diretiva" (`rd-dashboard-csp-chart`, reusa `rd_csp_get_violations_by_directive()`) aparece ao lado via `.rd-pgrid--sidebar-main` (estreito-esquerda + Activity Trend largo-direita); a descrição do Activity Trend foi pra dentro do card pra os dois headers ficarem title-only e alinharem.
 
 ### Toggle switches inline (adições pós-Fase H)
 

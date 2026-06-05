@@ -75,6 +75,8 @@ Grid de **15 cards** em 5 colunas (3 linhas × 5 cards em desktop; 3 colunas em 
 ### Activity Trend
 Bar chart de **views por dia nos últimos 7 dias**. Função `rd_dashboard_get_views_7d()` parseia logs (`_rd_post_views_log`) sem cache. Quando não há dados (tracking nunca ativo ou recém-instalado), o chart mostra todas as barras zeradas — preview do layout futuro.
 
+Quando o CSP report-only tem violações registradas, o **doughnut "Violações por Diretiva"** aparece ao lado (estreito à esquerda + Activity Trend largo à direita, via `.rd-pgrid--sidebar-main`) — resumo de relance; a tabela completa fica só na aba Security. Sem violações, o Activity Trend ocupa a largura toda.
+
 ### Quick Actions
 4-5 botões pra atalhar pras outras abas mais usadas:
 
@@ -234,13 +236,13 @@ Detalhes completos do sistema CSP em [10 — Content Security Policy](10-content
 
 ### Section: CSP Violation Reports (`sec_seg_csp_reports`) — *custom renderer*
 
-Renderizada por `rd_csp_render_reports_panel()` em `inc/mod-csp.php`. Quando há reports:
+Renderizada por `rd_csp_render_reports_panel()` em `inc/mod-csp.php`. Quando há reports, o **doughnut** (estreito) e a **tabela** (larga) ficam **lado a lado** via `.rd-pgrid--sidebar-main`:
 
-- **Doughnut chart** (Wave 11 Fase G) mostrando distribuição de violações por directive
+- **Doughnut chart** (Wave 11 Fase G) — distribuição de violações por directive (legenda embaixo)
 - **Tabela com 4 colunas:** When | Directive | Blocked URI | Document
 - **Botão "Clear reports"** (nonce-protected) zera o FIFO
 
-Quando não há reports, mostra empty state.
+Em telas <1024px empilha. Quando não há reports, mostra empty state.
 
 ---
 
