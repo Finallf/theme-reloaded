@@ -7,6 +7,20 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 <br>
 
 
+## [1.1.0-beta.11](https://github.com/Finallf/theme-reloaded/compare/v1.1.0-beta.10...v1.1.0-beta.11) (2026-06-05)
+
+### ✨ Features
+
+* **home:** configurable showcase layout ([7b5b33d](https://github.com/Finallf/theme-reloaded/commit/7b5b33d59d1ee3ba8ee57fa2abb2b8c65da34eb2))
+
+### 📝 Documentation
+
+* sync the CSP charts layout (Security side-by-side + Dashboard doughnut) ([069fdc3](https://github.com/Finallf/theme-reloaded/commit/069fdc307456162ca29ecd31fe7a733fe960219a))
+
+<br>
+
+---
+
 ## [1.1.0-beta.10](https://github.com/Finallf/theme-reloaded/compare/v1.1.0-beta.9...v1.1.0-beta.10) (2026-06-05)
 
 ### ✨ Features
