@@ -154,10 +154,10 @@
 .footer-widget {
 
 	// Styles the post list inside the WP "Latest Posts" block widget.
-	// Excludes .rd-popular-posts (the theme's own Popular Posts widget) so it
-	// keeps its native layout — otherwise these higher-specificity rules
-	// override .rd-popular-link's flex and break the absolute-positioned views.
-	ul:not(.rd-popular-posts) {
+	// Excludes .rd-popular-posts (Popular Posts widget) and .menu (nav-menu
+	// widgets like the Institucional menu) so they keep their own layout —
+	// otherwise these higher-specificity rules override them.
+	ul:not(.rd-popular-posts):not(.menu) {
 		list-style: none;
 		padding: 0;
 
@@ -201,6 +201,29 @@
 				font-size: 0.75rem;
 				color: $text-muted-dark;
 				margin-top: 4px;
+			}
+		}
+	}
+
+	// "Navigation Menu" widget (e.g. the Institucional menu) — render it as a
+	// clean link list instead of the post-list look above. Mirrors .footer-links.
+	.menu {
+		list-style: none;
+		padding: 0;
+		margin: 0;
+
+		li {
+			margin-bottom: 0.8rem;
+
+			a {
+				color: $text-label;
+				text-decoration: none;
+				transition: color 0.3s ease, padding-left 0.3s ease;
+
+				&:hover {
+					color: $brand-blue-light;
+					padding-left: 5px;
+				}
 			}
 		}
 	}
