@@ -67,7 +67,7 @@ function rd_render_social_icons( $user_id = null ) {
 
 	echo '<div class="rd-social-icons">';
 	foreach ( $redes as $rede ) {
-		// User-level (on /author/{slug}/) or global (footer, page-sobre, top bar)
+		// User-level (on /author/{slug}/) or global (footer, template-about, top bar)
 		$url = $user_id
 			? get_the_author_meta( 'social_' . $rede, $user_id )
 			: rd_get_option( 'social_' . $rede );

@@ -49,8 +49,7 @@ if ( ! function_exists( 'rd_setup' ) ) :
 		// Registers menu locations.
 		register_nav_menus(
 			array(
-				'menu-1'      => esc_html__( 'Primary Menu', 'reloaded' ),
-				'menu-footer' => esc_html__( 'Footer Menu', 'reloaded' ),
+				'menu-1' => esc_html__( 'Primary Menu', 'reloaded' ),
 			)
 		);
 	}
