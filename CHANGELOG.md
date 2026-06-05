@@ -7,6 +7,51 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 <br>
 
 
+## [1.1.0](https://github.com/Finallf/theme-reloaded/compare/v1.0.0...v1.1.0) (2026-06-05)
+
+### ✨ Features
+
+* **dashboard:** explain each Site Status card via a title tooltip ([27233ff](https://github.com/Finallf/theme-reloaded/commit/27233ffe7a43513363146caaf70d193aec283dcf))
+* **dashboard:** show the CSP violations doughnut beside Activity Trend ([db24f1e](https://github.com/Finallf/theme-reloaded/commit/db24f1ed8324b44f7cc5896f82cdbc2f61f07280))
+* **footer:** 4-column footer with three widget areas ([33b8509](https://github.com/Finallf/theme-reloaded/commit/33b8509c285a03ff5b6f8c2bbb341595ee4fdb82))
+* **home:** configurable showcase layout ([7b5b33d](https://github.com/Finallf/theme-reloaded/commit/7b5b33d59d1ee3ba8ee57fa2abb2b8c65da34eb2))
+* **i18n:** make admin media-picker strings translatable ([92e55cd](https://github.com/Finallf/theme-reloaded/commit/92e55cd0247ebc97835a84afebf163c913c8840b))
+* **i18n:** make navigation.js user-facing strings translatable ([461e782](https://github.com/Finallf/theme-reloaded/commit/461e78298728560834a51e218a37b24789a59d80))
+* **widgets:** add a Latest Video widget for the sidebar/footer ([ece965d](https://github.com/Finallf/theme-reloaded/commit/ece965d8b365b5dce3b8b3bd28e976bc5748c0a3))
+
+### 🐛 Bug Fixes
+
+* **backup:** preserve dots in the export filename hostname ([2f6ee8a](https://github.com/Finallf/theme-reloaded/commit/2f6ee8aad1e217271ec1b51d230aa60ab76ecca0))
+* **comments:** remove dead moderation-detection branch in AJAX submit ([8b618fa](https://github.com/Finallf/theme-reloaded/commit/8b618fa4b54591a94a253ca9fd216fa84ae4196f))
+* **comments:** remove dead moderation-detection branch in AJAX submit ([f9fa237](https://github.com/Finallf/theme-reloaded/commit/f9fa23784d57e9e416748a524aa879e6ed481321))
+* **i18n:** complete and polish pt_BR translation ([9129b7a](https://github.com/Finallf/theme-reloaded/commit/9129b7a47c4d557bf74d7f551080b1b5e26d32b0))
+* **search:** float compact-card views to the bottom-right corner ([406c2c2](https://github.com/Finallf/theme-reloaded/commit/406c2c28e081193457a8387ca5d79e4a076901c6))
+
+### ♻️ Code Refactoring
+
+* **admin-style:** extract WP-admin palette to SCSS variables and nest rd-p* components ([14bb7aa](https://github.com/Finallf/theme-reloaded/commit/14bb7aabfe293cf22b19d5ade03cf8fec26c1adc))
+* **admin-style:** merge two near-duplicate grays into the palette ([4fd7dea](https://github.com/Finallf/theme-reloaded/commit/4fd7dea291de37db7f28b4a724169686242e5717)), closes [#c3c4c7](https://github.com/Finallf/theme-reloaded/issues/c3c4c7) [#f9f9f9](https://github.com/Finallf/theme-reloaded/issues/f9f9f9) [#f6f7f7](https://github.com/Finallf/theme-reloaded/issues/f6f7f7)
+* **admin-style:** variables and BEM nesting for the Stats dashboard ([df81fef](https://github.com/Finallf/theme-reloaded/commit/df81fefa1e7b5fdbb21ac1f9816e54668fcf96cb)), closes [#8c8f94](https://github.com/Finallf/theme-reloaded/issues/8c8f94) [#b32d2](https://github.com/Finallf/theme-reloaded/issues/b32d2)
+* **admin-style:** variables and nesting for the dashboard, panel and media blocks ([8f3cc0e](https://github.com/Finallf/theme-reloaded/commit/8f3cc0ee4f253bcca6fb02d1cfcf1099dfae0c59)), closes [#ccd0d4](https://github.com/Finallf/theme-reloaded/issues/ccd0d4)
+* **admin-style:** variables and nesting for the images, CSP, backup and self-update blocks ([01b7ed9](https://github.com/Finallf/theme-reloaded/commit/01b7ed909495ef2b67320f68d9d337ad6ad7bd0d))
+* **admin:** compile admin-style.css from SCSS source ([96ad6d8](https://github.com/Finallf/theme-reloaded/commit/96ad6d86f13a66a87c18fa78c9dca69f395a9d06))
+* **admin:** consolidate 7 panel JS files into a single bundle ([80eddbe](https://github.com/Finallf/theme-reloaded/commit/80eddbe50e4fde897b6ad59302e8745f2c5ae61b))
+* **footer:** drop the unused menu-footer nav-menu location ([2441abe](https://github.com/Finallf/theme-reloaded/commit/2441abe69d7984cc41f40493e380c3832b216c2a))
+* **templates:** convert slug-coupled page templates to named templates ([18953ba](https://github.com/Finallf/theme-reloaded/commit/18953bade7d953da42945a6709e9c06ae609c744))
+
+### 📝 Documentation
+
+* **contributor:** contrib-readme-action has updated readme ([2c16aa4](https://github.com/Finallf/theme-reloaded/commit/2c16aa4ac3e796138245e258ca99a129c4ca2fd7))
+* document the Dashboard card tooltips and Latest Video widget ([0074e66](https://github.com/Finallf/theme-reloaded/commit/0074e6639dbbbc912bfb1b022cfa61f60f1d1a46))
+* note admin-style.scss as a separate SCSS source ([34c2783](https://github.com/Finallf/theme-reloaded/commit/34c27838b9fc3ac3878aa79a15e7fde477de0b83))
+* sync template-architecture migration and footer rework ([7f82242](https://github.com/Finallf/theme-reloaded/commit/7f822420609a42473aa17de916f273806b47b763))
+* sync the CSP charts layout (Security side-by-side + Dashboard doughnut) ([069fdc3](https://github.com/Finallf/theme-reloaded/commit/069fdc307456162ca29ecd31fe7a733fe960219a))
+* update references after admin JS consolidation ([6d0171e](https://github.com/Finallf/theme-reloaded/commit/6d0171e235f3ff245133dbf0a1956fb7efeaaaf0))
+
+<br>
+
+---
+
 ## [1.1.0-beta.11](https://github.com/Finallf/theme-reloaded/compare/v1.1.0-beta.10...v1.1.0-beta.11) (2026-06-05)
 
 ### ✨ Features
