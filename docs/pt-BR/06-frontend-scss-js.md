@@ -27,6 +27,7 @@ sass/
     ├── _buttons.scss       # Botões compartilhados
     ├── _comments.scss      # Lista de comentários + form
     ├── _facades.scss       # Facade YouTube/Discord (estado clickable)
+    ├── _home.scss          # Vitrine configurável da home (override Grid 3-col + spacing das seções; reusa wrappers do _search)
     ├── _latest-video.scss  # Widget "Último Vídeo" da sidebar/footer (reusa o facade)
     ├── _lgpd.scss          # Banner de cookies (expansível, 3 categorias de consent)
     ├── _markdown.scss      # Estilização de conteúdo Markdown (h_, code, blockquote, table, alerts GitHub-style)

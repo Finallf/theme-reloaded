@@ -134,6 +134,17 @@ Controle de comentários do site.
 | `comment_a11y` | ✅ | Labels + autocomplete attributes pra acessibilidade do form |
 | `comments_separator` | _vazio_ | Texto entre autor e post no link. Vazio = default WP; `&nbsp;` = esconde |
 
+### Section: Home Page (`sec_geral_home`)
+Layout configurável da home (`index.php`). A home é uma vitrine fixa: **2 cards grandes (hero)** sempre no topo, seguidos de até três seções opcionais que reúsam os layouts de card da busca (Grid/Vertical/Compact). Cada seção tem a quantidade escolhida pelo admin via dropdown; `Off` (0) remove a seção.
+
+| Opção | Default | O que faz |
+|---|---|---|
+| `home_layout_grid` | `3` | Nº de cards Grid (3 por linha) abaixo dos 2 hero. Opções: Off / 3 / 6 / 9 |
+| `home_layout_vertical` | `3` | Nº de cards Vertical (imagem grande + excerpt). Opções: Off / 1 / 2 / 3 |
+| `home_layout_compact` | `6` | Nº de cards Compact (thumbnail + título, 2 por linha). Opções: Off / 2 / 4 / 6 |
+
+**Comportamento:** `posts_per_page` da home = `2 (hero) + soma das quantidades ativas`, ajustado via `pre_get_posts` (`rd_home_modify_query`). Os posts são consumidos sequencialmente da loop principal, então os 2 hero caem em `current_post` 0-1 (LCP eager + high priority) e os cards das seções em 2+ (lazy). Sem paginação no layout configurável (vitrine fixa). **Com as 3 seções em Off**, a home cai no **fallback clássico**: grid único de cards grandes com a paginação nativa do WP (Configurações → Leitura). Totalmente independente da Search Page (opções, hooks e escopo CSS separados). Lógica em `inc/mod-home.php`.
+
 ### Section: Search Page (`sec_geral_search`)
 Layouts da página de resultados de busca.
 

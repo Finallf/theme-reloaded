@@ -1146,6 +1146,28 @@ Quando policy estiver madura (30+ dias de monitoramento sem violações inespera
 
 ---
 
+## 🏠 `inc/mod-home.php` — Layout configurável da home
+
+Controla o layout da home (`index.php`). A home é uma vitrine fixa: **2 cards grandes (hero)** sempre no topo + até três seções opcionais que reúsam os layouts de card da busca (Grid/Vertical/Compact, via `rd_render_post_card()` de `post-card.php`). Google não é usado aqui.
+
+### Configuração
+
+3 selects no painel (aba General → Home Page): `home_layout_grid` (0/3/6/9), `home_layout_vertical` (0/1/2/3), `home_layout_compact` (0/2/4/6). As quantidades são múltiplos da contagem de colunas de cada layout (3/1/2), pra preencher linhas completas.
+
+- `RD_HOME_HERO_COUNT` (= 2) e `RD_HOME_SECTION_CHOICES` — constantes com a ordem fixa (grid → vertical → compact) e as quantidades válidas.
+- `rd_home_get_active_sections()` — `[ layout => quantidade ]` só das seções ligadas (quantidade válida ≠ 0), na ordem fixa. Vazio = fallback clássico.
+- `rd_home_is_active()` / `rd_home_total_posts()` — atalho booleano e total de posts (`2 + soma das quantidades`).
+- `rd_home_modify_query()` — hook `pre_get_posts` que ajusta `posts_per_page` da home quando o layout está ativo. Guard estrito (`is_main_query` + `is_home` + front-end), mutuamente exclusivo com o hook da busca (`is_search`).
+- `rd_render_home_hero_card()` — markup do card grande (extraído do `index.php` histórico). Compartilhado pelo fallback clássico e pelo layout novo (DRY). Os 2 primeiros posts (`current_post < 2`) recebem `loading=eager` + `fetchpriority=high` (candidatos a LCP); o resto fica `lazy`.
+
+### Distribuição na home (vs. busca)
+
+Diferente da busca, a home **não** usa `rd_render_distribution()` nem AJAX: como não há escolha do visitante, tudo é decidido server-side e renderizado de uma vez. O `index.php` consome a loop principal em fatias sequenciais — 2 pros hero, depois cada seção ativa pega sua quantidade, na ordem fixa, pulando as desligadas (as de baixo "sobem"). Como o `posts_per_page` é exatamente `2 + soma`, nada sobra nem repete. Wrapper vazio é evitado com `if (! have_posts()) break;` antes de abrir cada seção.
+
+### Independência total da busca
+
+Namespaces separados (`home_layout_*` vs `search_layout_*`, `rd_home_*` vs `rd_search_*`), hooks `pre_get_posts` mutuamente exclusivos, e CSS escopado (`.rd-home-sections`). A busca não é tocada em nenhum arquivo — o D1 é puramente aditivo.
+
 ## 🔍 `inc/mod-search.php` — Sistema de busca multi-layout
 
 Maior módulo do tema. Resolve o problema de "como mostrar resultados em 4 formatos diferentes ao mesmo tempo".

@@ -38,6 +38,10 @@ function rd_get_default_options(): array {
 		'enable_theme_switch'         => 1,
 		'default_theme_mode'          => 'system',
 
+		'home_layout_grid'            => '3', // 0 (off) / 3 / 6 / 9 — hero + section showcase on the home.
+		'home_layout_vertical'        => '3', // 0 (off) / 1 / 2 / 3.
+		'home_layout_compact'         => '6', // 0 (off) / 2 / 4 / 6.
+
 		'search_layout_grid'          => 1,
 		'search_layout_vertical'      => 0,
 		'search_layout_compact'       => 1,
@@ -594,6 +598,63 @@ function rd_settings_init() {
 			'id'   => 'comments_separator',
 			'type' => 'text',
 			'desc' => __( 'Text between Author and Post (e.g., "commented on post:"). Leave <strong>empty</strong> for WP default or type <strong>&amp;nbsp;</strong> to hide.', 'reloaded' ),
+		)
+	);
+
+	// Section: Home Page — configurable showcase layout (hero + optional sections).
+	rd_panel_register_section( 'sec_geral_home', __( 'Home Page', 'reloaded' ), 'admin-home', 'rd_options_general' );
+	add_settings_field(
+		'home_layout_grid',
+		__( 'Grid Section', 'reloaded' ),
+		'rd_master_field_cb',
+		'rd_options_general',
+		'sec_geral_home',
+		array(
+			'id'      => 'home_layout_grid',
+			'type'    => 'select',
+			'options' => array(
+				'0' => __( 'Off', 'reloaded' ),
+				'3' => '3',
+				'6' => '6',
+				'9' => '9',
+			),
+			'desc'    => __( 'Number of Grid cards (3 per row) shown below the 2 hero cards on the home.', 'reloaded' ),
+		)
+	);
+	add_settings_field(
+		'home_layout_vertical',
+		__( 'Vertical Section', 'reloaded' ),
+		'rd_master_field_cb',
+		'rd_options_general',
+		'sec_geral_home',
+		array(
+			'id'      => 'home_layout_vertical',
+			'type'    => 'select',
+			'options' => array(
+				'0' => __( 'Off', 'reloaded' ),
+				'1' => '1',
+				'2' => '2',
+				'3' => '3',
+			),
+			'desc'    => __( 'Number of Vertical cards (large image + excerpt) shown after the Grid section.', 'reloaded' ),
+		)
+	);
+	add_settings_field(
+		'home_layout_compact',
+		__( 'Compact Section', 'reloaded' ),
+		'rd_master_field_cb',
+		'rd_options_general',
+		'sec_geral_home',
+		array(
+			'id'      => 'home_layout_compact',
+			'type'    => 'select',
+			'options' => array(
+				'0' => __( 'Off', 'reloaded' ),
+				'2' => '2',
+				'4' => '4',
+				'6' => '6',
+			),
+			'desc'    => __( 'Number of Compact cards (thumbnail + title, 2 per row) shown last. <strong>Note:</strong> with all three sections set to Off the home falls back to the classic grid of hero cards with pagination.', 'reloaded' ),
 		)
 	);
 

@@ -32,6 +32,7 @@
 @use 'components/latest-video';
 @use 'components/search';
 @use 'components/related-posts'; // after search — inherits .rd-wrapper-grid and overrides grid-template-columns
+@use 'components/home'; // after search — scoped .rd-wrapper-grid override for the home showcase
 @use 'components/toc';
 @use 'components/search-suggestions';
 @use 'components/print'; // @media print — last to ensure the override

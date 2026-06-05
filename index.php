@@ -1,80 +1,77 @@
 <?php
 defined( 'ABSPATH' ) || exit;
 get_header();
+
+// Active home sections (admin config). Empty array → classic fallback layout.
+$rd_home_sections = rd_home_get_active_sections();
 ?>
 	<main id="primary" class="site-main">
 		<div class="container">
 			<div class="content-area">
 				<?php if ( have_posts() ) : ?>
-					<div class="post-grid">
-						<?php
-						while ( have_posts() ) :
-							the_post();
+
+					<?php if ( empty( $rd_home_sections ) ) : ?>
+
+						<?php // Classic home: a single grid of hero cards + native pagination. ?>
+						<div class="post-grid">
+							<?php
+							while ( have_posts() ) :
+								the_post();
+								rd_render_home_hero_card();
+							endwhile;
 							?>
-							<article id="post-<?php the_ID(); ?>" <?php post_class( 'grid-item' ); ?>>
+						</div>
 
-								<div class="post-thumbnail">
+						<?php
+						the_posts_pagination(
+							array(
+								'prev_text' => __( '&larr; Previous', 'reloaded' ),
+								'next_text' => __( 'Next &rarr;', 'reloaded' ),
+							)
+						);
+						?>
+
+					<?php else : ?>
+
+						<?php
+						// Configurable showcase: 2 hero cards followed by the active
+						// sections (Grid/Vertical/Compact). Posts are consumed
+						// sequentially from the main loop, so the hero cards land on
+						// current_post 0-1 (LCP eager) and section cards on 2+ (lazy).
+						// No pagination — the home is a fixed vitrine.
+						?>
+						<div class="post-grid">
+							<?php
+							$rd_hero = 0;
+							while ( have_posts() && $rd_hero < RD_HOME_HERO_COUNT ) :
+								the_post();
+								rd_render_home_hero_card();
+								++$rd_hero;
+							endwhile;
+							?>
+						</div>
+
+						<div class="rd-home-sections">
+							<?php foreach ( $rd_home_sections as $rd_layout => $rd_qty ) : ?>
+								<?php
+								if ( ! have_posts() ) {
+									break; // No posts left — don't emit an empty section wrapper.
+								}
+								?>
+								<div class="rd-wrapper-<?php echo esc_attr( $rd_layout ); ?>">
 									<?php
-									if ( has_post_thumbnail() ) :
-										// The first 2 posts in the loop are LCP candidates — in the
-										// 2-column grid layout (.post-grid) they sit side-by-side
-										// above-the-fold on desktop. Marking only the first one
-										// would make the other slow, and Lighthouse may pick
-										// either one as the LCP metric.
-										$is_lcp_candidate = ( $wp_query->current_post < 2 );
-										$thumb_attrs      = $is_lcp_candidate
-											? array(
-												'loading' => 'eager',
-												'fetchpriority' => 'high',
-											)
-											: array( 'loading' => 'lazy' );
-										the_post_thumbnail( 'rd-card', $thumb_attrs );
-									endif;
+									$rd_n = 0;
+									while ( have_posts() && $rd_n < $rd_qty ) :
+										the_post();
+										rd_render_post_card( $rd_layout );
+										++$rd_n;
+									endwhile;
 									?>
-
-									<div class="post-categories">
-										<?php
-										$categories = get_the_category();
-										if ( ! empty( $categories ) ) {
-											foreach ( $categories as $category ) {
-												echo '<a href="' . esc_url( get_category_link( $category->term_id ) ) . '" class="post-tag tag-' . esc_attr( $category->slug ) . '">' . esc_html( $category->name ) . '</a>';
-											}
-										}
-										?>
-									</div>
 								</div>
+							<?php endforeach; ?>
+						</div>
 
-								<div class="post-content-area">
-									<header class="entry-header">
-										<?php
-										if ( function_exists( 'rd_render_post_overline' ) ) {
-											rd_render_post_overline( get_the_ID(), 'card' ); }
-										?>
-										<h2 class="entry-title">
-											<a href="<?php the_permalink(); ?>" class="main-link"><?php the_title(); ?></a>
-										</h2>
-									</header>
-
-									<div class="entry-content">
-										<?php echo esc_html( wp_trim_words( get_the_excerpt(), 15 ) ); ?>
-									</div>
-
-									<div class="entry-meta">
-										<?php echo rd_get_formatted_views( get_the_ID() ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- helper returns already-escaped HTML (esc_html + esc_attr in inc/post-card.php) ?>
-									</div>
-								</div>
-							</article>
-						<?php endwhile; ?>
-					</div>
-
-					<?php
-					the_posts_pagination(
-						array(
-							'prev_text' => __( '&larr; Previous', 'reloaded' ),
-							'next_text' => __( 'Next &rarr;', 'reloaded' ),
-						)
-					);
-					?>
+					<?php endif; ?>
 
 				<?php else : ?>
 					<p><?php esc_html_e( 'No news found.', 'reloaded' ); ?></p>
