@@ -219,7 +219,10 @@ jQuery(document).ready(function($){
 				maintainAspectRatio: false,
 				plugins: {
 					legend: {
-						position: 'right',
+						// 'bottom' so the doughnut fits a narrow column (CSP reports
+						// sidebar + the Dashboard summary card) without the legend
+						// squishing the chart horizontally.
+						position: 'bottom',
 						labels: {
 							font: { size: 12 },
 							padding: 12,

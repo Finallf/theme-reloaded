@@ -758,11 +758,21 @@ function rd_csp_render_reports_panel(): void {
 		)
 	);
 
-	// "Violations by Directive" doughnut chart — only renders if there are reports
-	// (with no data, an empty chart is visual clutter). Wave 11 Phase G.
-	if ( ! empty( $reports ) ) {
+	// Reports panel body. No reports → single full-width empty-state card.
+	// With reports → "Violations by Directive" doughnut (narrow) + the reports
+	// table (wide) side by side via .rd-pgrid--sidebar-main (1fr 2fr).
+	if ( empty( $reports ) ) {
+		rd_panel_card_open();
+		rd_panel_empty( __( 'No reports yet — either nothing violated the policy, or no one has loaded the frontend since the feature was enabled.', 'reloaded' ) );
+		rd_panel_card_close();
+	} else {
 		$by_directive = rd_csp_get_violations_by_directive();
-		if ( ! empty( $by_directive ) ) {
+		$has_chart    = ! empty( $by_directive );
+
+		if ( $has_chart ) {
+			echo '<div class="rd-pgrid rd-pgrid--sidebar-main">';
+
+			// Chart card — narrow (sidebar) column.
 			rd_panel_card_open(
 				array(
 					'title' => __( 'Violations by Directive', 'reloaded' ),
@@ -779,13 +789,9 @@ function rd_csp_render_reports_panel(): void {
 			<?php
 			rd_panel_card_close();
 		}
-	}
 
-	rd_panel_card_open();
-
-	if ( empty( $reports ) ) {
-		rd_panel_empty( __( 'No reports yet — either nothing violated the policy, or no one has loaded the frontend since the feature was enabled.', 'reloaded' ) );
-	} else {
+		// Reports table card — wide (main) column.
+		rd_panel_card_open();
 		?>
 		<table class="rd-csp-table">
 			<thead>
@@ -808,8 +814,11 @@ function rd_csp_render_reports_panel(): void {
 			</tbody>
 		</table>
 		<?php
-	}
+		rd_panel_card_close();
 
-	rd_panel_card_close();
+		if ( $has_chart ) {
+			echo '</div>'; // .rd-pgrid--sidebar-main
+		}
+	}
 	rd_panel_dash_close();
 }
