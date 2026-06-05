@@ -18,7 +18,7 @@ Não é "módulo de feature", mas a base de tudo. Hooks no `after_setup_theme`:
   - `rd-full-banner` 1200×675 — banner top do post single (16:9)
   - `rd-qr` 240×240 — QR codes de doação na sidebar (1:1, cobre retina sem desperdiçar banda)
 - Remove tamanhos nativos não usados (`medium_large`, `1536x1536`, `2048x2048`)
-- Registra 2 menus (`menu-1` Primary, `menu-footer` Footer)
+- Registra 1 menu (`menu-1` Primary). _(O `menu-footer` foi removido em 2026-06-04 — o menu do footer agora é por widget.)_
 - Registra 2 sidebars (`sidebar-1` Main, `footer-widget-area`)
 
 Helpers expostos:
@@ -478,7 +478,7 @@ Remover o callback do filter (apagar o mu-plugin ou comentar o snippet). URLs vo
 ### Helpers
 
 - `rd_render_social_icons( $user_id = null )` — itera pelas 8 redes (`discord`, `telegram`, `whatsapp`, `youtube`, `instagram`, `steam`, `twitter`, `facebook`) e renderiza um `<a>` com SVG embarcado pra cada rede com URL preenchida. **Dois modos:**
-  - **Sem argumento (default):** usa as URLs globais do portal (`rd_get_option('social_X')`). Comportamento clássico, usado em top bar, footer bottom bar, page-sobre hero.
+  - **Sem argumento (default):** usa as URLs globais do portal (`rd_get_option('social_X')`). Comportamento clássico, usado em top bar, footer bottom bar, template-about hero.
   - **Com `$user_id`:** usa redes pessoais do user específico via `get_the_author_meta('social_X', $user_id)`. Usado no `author.php` pra mostrar redes próprias do redator.
 - `rd_render_news_ticker()` — pega últimas N posts pra alimentar o ticker rolante da top bar
 - `rd_render_date()` — renderiza a data atual formatada na top bar (esquerda)
@@ -544,7 +544,7 @@ O `author` dentro do Article é um `Person` com `@id => get_author_posts_url($au
 
 Helper `rd_seo_print_jsonld()` faz o `wp_json_encode` com flags `UNESCAPED_SLASHES | UNESCAPED_UNICODE` pra source legível. Logo do publisher resolve via `rd_seo_resolve_site_logo()` (Custom Logo do Customizer → fallback logo do tema).
 
-Validado contra o **Google Rich Results Test**. O `BreadcrumbList` fica no módulo separado (`mod-breadcrumbs.php`). O `Person` standalone (`author.php` e `page-sobre.php`) é emitido nos templates correspondentes — Rich Results não destaca Person porque não tem rich snippet visual, mas Google lê e usa internamente pro Knowledge Graph.
+Validado contra o **Google Rich Results Test**. O `BreadcrumbList` fica no módulo separado (`mod-breadcrumbs.php`). O `Person` standalone (`author.php` e `template-about.php`) é emitido nos templates correspondentes — Rich Results não destaca Person porque não tem rich snippet visual, mas Google lê e usa internamente pro Knowledge Graph.
 
 ### Custom robots.txt
 

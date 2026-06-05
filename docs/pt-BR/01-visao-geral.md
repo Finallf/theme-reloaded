@@ -59,7 +59,7 @@ Todos os recursos são **nativos do tema**. Nada de:
 - 💬 **Widget Discord** pra comunidade (com facade ou iframe direto)
 - 💝 **Sistema de doações** integrado (PIX, PayPal, GitHub Sponsors)
 - 🔥 **Widget "Most Read"** — primeiro `WP_Widget` nativo do tema, lista posts mais visualizados por janela (semana/mês/ano/all-time), 3-15 itens, thumb 16/9 + título + views
-- 📄 **Templates específicos por slug** — `page-politica-de-privacidade.php` (LGPD), `page-contato.php`, `page-sobre.php` (com hero hardcoded + Schema.org Person). WP detecta automaticamente pela hierarquia
+- 📄 **Page templates nomeados** (`page-templates/`) — `template-legal.php` (Privacy/Terms), `template-contact.php`, `template-about.php` (hero do autor + Schema.org Person). Atribuíveis a qualquer página via Atributos → Modelo (slug-agnostic, padrão de tema distribuível)
 - 👤 **Multi-redator ready** — `author.php` evoluído com Schema.org Person + ícones sociais por user (campos no perfil via filter `user_contactmethods`). Cada redator novo ganha `/author/{slug}/` automaticamente sem configuração extra
 
 ### Recursos de admin
@@ -73,7 +73,7 @@ Todos os recursos são **nativos do tema**. Nada de:
 - 🌐 **Open Graph** completo (singular) + **Twitter Cards** com `summary_large_image`
 - 🔗 **Canonical URLs** em todas as superfícies indexáveis (home, archives, autor, datas, busca, paginação)
 - 📝 **Meta description** automática por contexto (excerpt, tagline, descrição do termo/autor, archive de data)
-- 📊 **Schema.org JSON-LD**: Article (singles, com `Person` `@id` matching) + WebSite com SearchAction (home) + BreadcrumbList + Person standalone em `author.php` e `page-sobre.php` (alimenta E-E-A-T do Google)
+- 📊 **Schema.org JSON-LD**: Article (singles, com `Person` `@id` matching) + WebSite com SearchAction (home) + BreadcrumbList + Person standalone em `author.php` e `template-about.php` (alimenta E-E-A-T do Google)
 - 🍞 **Breadcrumbs** visuais com toggle no painel (trilha contextual Home › Categoria › Post)
 
 ### LGPD / Compliance

@@ -69,42 +69,40 @@ Fallback genérico pra qualquer `post_type=page` que não tenha template especí
 
 Estilizado por `sass/components/_page-static.scss`.
 
-### Templates específicos por slug (Template Hierarchy)
+### Page templates nomeados (`page-templates/`)
 
-Quando uma página tem slug específico, o WP usa automaticamente `page-{slug}.php` em vez do `page.php` genérico. Convenção sobre código — sem precisar selecionar template no editor. Os 3 templates específicos atualmente shipados:
+> **Refator 2026-06-04:** os templates institucionais eram `page-{slug}.php` (casados ao slug PT pela Template Hierarchy). Isso acopla o **código** ao **slug** — anti-padrão pra tema distribuído. Migrados pra **named page templates** (header `Template Name:`) na pasta **`page-templates/`**, atribuíveis a qualquer página em **Página → Atributos → Modelo**, independente do slug/idioma (padrão dos temas profissionais). Slugs ficam em PT (conteúdo/SEO do site BR); código em EN. Template atribuído tem prioridade sobre `page-{slug}.php` na hierarquia → migração sem downtime.
 
-#### `page-politica-de-privacidade.php` — Página legal LGPD
+Os 3 templates shipados:
 
-- ❌ Imagem destacada (irrelevante em texto legal)
-- ❌ Comentários (texto legal não vira fórum)
-- ➕ Header com **"Last updated: {date}"** via `get_the_modified_date()` — boa prática LGPD (visitante sabe quando o texto foi revisado pela última vez). Aparece como `<p class="rd-page-updated">` em itálico discreto abaixo do `<h1>`
-- Tipografia ajustada já vem do `.rd-page-content` em `_page-static.scss` (font-size 1.05rem, line-height 1.75 — adequada pra texto legal denso)
-- Classe `rd-page-privacy` no `<article>` pra estilos específicos
-- **Sidebar mantida** (sem ela, em monitor 1440px o texto ficaria com linha muito longa, péssimo pra ler)
+#### `template-legal.php` — "Legal Page (Privacy / Terms)"
 
-Mesma estrutura serve futuramente pra `page-termos-de-uso.php` e similares.
+Genérico pra **qualquer página legal** (Política de Privacidade, Termos de Uso, etc.):
 
-#### `page-contato.php` — Página de contato
+- ❌ Imagem destacada (irrelevante em texto legal) · ❌ Comentários (não vira fórum)
+- ➕ Header com **"Last updated: {date}"** via `get_the_modified_date()` — boa prática LGPD. Aparece como `<p class="rd-page-updated">` em itálico discreto abaixo do `<h1>`
+- Tipografia densa já vem do `.rd-page-content` em `_page-static.scss` (font-size 1.05rem, line-height 1.75)
+- Classe `rd-page-legal` no `<article>` (era `rd-page-privacy`; generalizada pra servir Privacy + Terms)
+- **Sidebar mantida** (linha de leitura confortável em 1440px)
 
-- ❌ Imagem destacada (apresentação focada nos canais)
-- ❌ Comentários (CTAs precisam de destaque)
-- Todo o conteúdo (email, redes, Discord, etc) vai pelo editor — **sem bloco hardcoded auto-injetado**. Filosofia: máximo controle no editor
-- Classe `rd-page-contact` no `<article>`
-- Sidebar mantida
+#### `template-contact.php` — "Contact Page"
+
+- ❌ Imagem destacada (foco nos canais) · ❌ Comentários (CTAs precisam de destaque)
+- Conteúdo (email, redes, Discord, etc) vai pelo editor — **sem bloco hardcoded auto-injetado**
+- Classe `rd-page-contact` · Sidebar mantida
 - Formulário nativo (sem plugin) fica como item futuro do backlog se quiser
 
-#### `page-sobre.php` — Página "Sobre" institucional
+#### `template-about.php` — "About Page (author hero)"
 
 Hero hardcoded no topo + conteúdo via editor:
 
-- **Hero institucional**: avatar (Gravatar do autor da página) + display_name + biographical info (campo "Biographical Info" do user em **Usuários → Perfil**) + ícones sociais via `rd_render_social_icons()` (redes do **portal**, não do autor — esta é página institucional)
-- **Botão "View all posts →"** ao lado do `<h1>` com link pra `get_author_posts_url($author_id)` (= `/author/{slug}/`, renderizado pelo `author.php`). Estilo secondary com setinha animada no hover
-- **Schema.org Person JSON-LD** inline — `sameAs` populado pelas URLs do portal, `name` com fallback `display_name → user_nicename → user_login`. Alimenta E-E-A-T do Google
-- Imagem destacada e comentários respeitados igual `page.php` (opt-in via meta box)
-- Classe `rd-page-about` no `<article>`
-- Conteúdo principal (bio longa, projetos, fotos extras) continua via editor — hero é só o "topo institucional" padronizado
+- **Hero institucional**: avatar (Gravatar do autor) + display_name + biographical info (Usuários → Perfil) + ícones sociais via `rd_render_social_icons()` (redes do **portal**)
+- **Botão "View all posts →"** ao lado do `<h1>` linkando `get_author_posts_url($author_id)` (= `/author/{slug}/`, renderizado pelo `author.php`)
+- **Schema.org Person JSON-LD** inline — `sameAs` das URLs do portal, `name` com fallback `display_name → user_nicename → user_login`. Alimenta E-E-A-T
+- Imagem destacada e comentários opt-in igual `page.php`
+- Classe `rd-page-about`
 
-> **Importante — multi-redator:** `page-sobre.php` é UMA página institucional do site (só 1 por site). Pra cada redator ter sua "página de autor" com posts dele, o WP usa `author.php` automaticamente em `/author/{username}/` — não precisa criar template novo por redator.
+> **Importante — multi-redator:** o template About é UMA página institucional do site (só 1 por site). Pra cada redator ter sua "página de autor" com posts dele, o WP usa `author.php` automaticamente em `/author/{username}/` — não precisa criar template novo por redator.
 
 ---
 
@@ -131,7 +129,7 @@ Renderiza `/author/{username}/`. Template **automático do WP** — cada user co
 
 1. **Header (`.rd-author-header`)**:
    - Avatar (Gravatar 120x120) à esquerda
-   - **Linha do título (`.rd-author-info-header` flex):** `<h1>` com nome à esquerda + ícones sociais do user à direita (mesmo padrão visual da page-sobre)
+   - **Linha do título (`.rd-author-info-header` flex):** `<h1>` com nome à esquerda + ícones sociais do user à direita (mesmo padrão visual do template-about)
    - Bio (`get_the_author_meta('description')`)
    - Meta: número de posts publicados (`count_user_posts`) + "Member since {data}"
 2. Lista de posts do autor no layout **vertical** (reusa `rd_render_post_card('vertical')` do search)
@@ -290,13 +288,12 @@ Veja [06 — Frontend SCSS + JS](06-frontend-scss-js.md) pra detalhes de breakpo
 
 ## 🦶 `footer.php` — Rodapé
 
-3 colunas (responsive: empilha em mobile):
+**4 colunas** (grid `auto-fit`, empilha no mobile; separadores verticais sutis no desktop ≥1200px):
 
-1. **Coluna "Sobre"** — logo + descrição (`bloginfo('description')` ou texto custom)
-2. **Coluna "Navegação"** — menu `menu-footer` (registrado em core.php)
-3. **Coluna "Em Destaque"** — sidebar `footer-widget-area` (área de widgets dinâmicos)
+1. **Brand** (fixa) — logo (ou nome) + tagline via `get_bloginfo('description')` com frase de fallback se vazia
+2-4. **3 áreas de widget** — `footer-widget-area`, `footer-widget-area-2`, `footer-widget-area-3` ("Footer Column 2/3/4"), registradas em loop no `core.php`. Montadas via widgets em Aparência → Widgets (ex.: **Institucional** via "Menu de Navegação", **Mais Lidos**, **Último Vídeo**). Empty-state ("Add a widget…") só visível pra admin.
 
-Bloco "Apoie o Projeto" (Discord, GitHub Sponsors, PIX) renderizado abaixo das colunas.
+> O menu de navegação no footer agora é por widget (não mais o `menu-footer` hardcoded). CSS: `.footer-widget .menu` vira lista de links limpa (espelha `.footer-links`), excluído do estilo genérico de post-list.
 
 Bottom bar:
 - Copyright "© ano. Todos os direitos reservados."

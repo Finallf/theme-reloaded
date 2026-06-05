@@ -450,7 +450,7 @@ Cada user com role que publica posts (Author, Editor, Administrator) ganha `/aut
 
 `mod-social.php` registra um filter `user_contactmethods` que adiciona 8 campos de URL social em **Usuários → Perfil → Informações de contato** (`social_discord`, `social_telegram`, `social_whatsapp`, `social_youtube`, `social_instagram`, `social_steam`, `social_twitter`, `social_facebook`). Cada redator preenche os seus.
 
-O helper `rd_render_social_icons( $user_id )` puxa os meta do user específico em vez das URLs globais do portal. No `author.php` os ícones aparecem ao lado do `<h1>` do nome — visualmente igual ao padrão da page-sobre.
+O helper `rd_render_social_icons( $user_id )` puxa os meta do user específico em vez das URLs globais do portal. No `author.php` os ícones aparecem ao lado do `<h1>` do nome — visualmente igual ao padrão do template-about.
 
 ### Schema.org Person + E-E-A-T
 
@@ -475,9 +475,9 @@ O helper `rd_render_social_icons( $user_id )` puxa os meta do user específico e
 
 `display_name` pode estar vazio em users seedados/importados. Fallback chain: `display_name → user_nicename → user_login`. Evita "Item sem nome" no Google Rich Results.
 
-### Diferença entre `page-sobre.php` e `author.php`
+### Diferença entre `template-about.php` e `author.php`
 
-| Aspecto | `page-sobre.php` | `author.php` |
+| Aspecto | `template-about.php` | `author.php` |
 |---|---|---|
 | **O que é** | Página institucional do site | Archive de posts do autor |
 | **Quantos por site** | 1 (institucional única) | N (1 por user que publica) |

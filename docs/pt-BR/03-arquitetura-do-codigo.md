@@ -8,14 +8,15 @@ reloaded.com.br/
 ├── archive.php               # Listagem de categoria/tag/data
 ├── author.php                # Página do autor (multi-redator ready, com Schema Person)
 ├── comments.php              # Template do bloco de comentários
-├── footer.php                # Rodapé (3 colunas + bottom bar)
+├── footer.php                # Rodapé (4 colunas: Brand fixa + 3 widget, + bottom bar)
 ├── functions.php             # Entry point — só requires + bootstrap
 ├── header.php                # Header (top bar + branding + menu + scripts)
 ├── index.php                 # Fallback principal (home)
 ├── page.php                  # Páginas estáticas (fallback genérico)
-├── page-politica-de-privacidade.php  # Template legal LGPD (sem thumb/comments, com "Last updated")
-├── page-contato.php          # Template de contato (sem thumb/comments)
-├── page-sobre.php            # Template institucional com hero hardcoded + Schema Person
+├── page-templates/           # Page templates NOMEADOS (atribuíveis via Atributos → Modelo, slug-agnostic)
+│   ├── template-about.php    # "About Page (author hero)" — hero do autor + Schema Person
+│   ├── template-contact.php  # "Contact Page" — sem thumb/comments
+│   └── template-legal.php    # "Legal Page (Privacy / Terms)" — sem thumb/comments, "Last updated"
 ├── search.php                # Resultados de busca (4 layouts)
 ├── sidebar.php               # Sidebar registrada (Discord + ads + apoio)
 ├── single.php                # Post individual
@@ -209,7 +210,7 @@ Funções que você pode usar em templates ou módulos próprios:
 | `rd_render_post_card($type)` | `post-card.php` | Renderiza card no layout escolhido (grid/vertical/compact/google) |
 | `rd_render_distribution($distribution)` | `post-card.php` | Renderiza wrappers com posts distribuídos pelos layouts |
 | `rd_search_distribute_posts($posts, $layouts)` | `mod-search.php` | Algoritmo de distribuição de resultados de busca |
-| `rd_render_social_icons($user_id = null)` | `mod-social.php` | Renderiza 8 ícones sociais. Sem arg = URLs do portal (footer/page-sobre). Com `$user_id` = URLs pessoais do user (author archive) |
+| `rd_render_social_icons($user_id = null)` | `mod-social.php` | Renderiza 8 ícones sociais. Sem arg = URLs do portal (footer/template-about). Com `$user_id` = URLs pessoais do user (author archive) |
 | `rd_render_news_ticker()` | `mod-social.php` | Ticker rolante da top bar (últimos N posts) |
 | `rd_render_date()` | `mod-social.php` | Data atual formatada na top bar |
 | `rd_youtube_parse_timestamp($t)` | `mod-performance.php` | Parseia timestamps do YouTube nos 4 formatos (`30`, `30s`, `1m30s`, `1h2m30s`) → inteiro de segundos. Usado pelo facade pra preservar `?t=` no embed |
