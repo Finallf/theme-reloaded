@@ -1,11 +1,11 @@
 // sass/style.scss
 
-// 1. Variáveis e Configurações Base
+// 1. Base variables and configuration
 @use 'base/variables' as *;
 @use 'base/globals';
-@use 'base/tokens'; // Design Tokens (sistema de tokens global)
+@use 'base/tokens'; // Design Tokens (global token system)
 
-// 2. Layout (A Estrutura)
+// 2. Layout (the structure)
 @use 'layout/footer';
 @use 'layout/grid';
 @use 'layout/header';
@@ -13,7 +13,7 @@
 @use 'layout/single';
 @use 'layout/sidebar';
 
-// 3. Componentes (Os Pedacinhos)
+// 3. Components (the building blocks)
 @use 'components/buttons';
 @use 'components/comments';
 @use 'components/prism';
@@ -29,8 +29,10 @@
 @use 'components/page-archive';
 @use 'components/pagination';
 @use 'components/popular-widget';
+@use 'components/latest-video';
 @use 'components/search';
-@use 'components/related-posts'; // depois de search — herda .rd-wrapper-grid e overrideia o grid-template-columns
+@use 'components/related-posts'; // after search — inherits .rd-wrapper-grid and overrides grid-template-columns
+@use 'components/home'; // after search — scoped .rd-wrapper-grid override for the home showcase
 @use 'components/toc';
 @use 'components/search-suggestions';
-@use 'components/print'; // @media print — por último pra garantir override
+@use 'components/print'; // @media print — last to ensure the override

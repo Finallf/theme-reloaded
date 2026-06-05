@@ -24,10 +24,10 @@ $post_count = (int) count_user_posts( $author_id, 'post', true );
 $bio        = $author ? get_the_author_meta( 'description', $author_id ) : '';
 $registered = $author ? $author->user_registered : '';
 
-// Schema.org Person — alimenta E-E-A-T do Google (Experience, Expertise,
-// Authoritativeness, Trustworthiness). O @id é referenciado pelo mod-seo.php
-// quando renderiza Article schema em singles desse autor — Google amarra
-// os dois schemas como o mesmo Person.
+// Schema.org Person — feeds Google's E-E-A-T (Experience, Expertise,
+// Authoritativeness, Trustworthiness). The @id is referenced by mod-seo.php
+// when rendering Article schema on this author's singles — Google ties both
+// schemas together as the same Person.
 if ( $author ) {
 	$social_keys = array( 'discord', 'telegram', 'whatsapp', 'youtube', 'instagram', 'steam', 'twitter', 'facebook' );
 	$same_as     = array();
@@ -38,10 +38,10 @@ if ( $author ) {
 		}
 	}
 
-	// Fortificação defensiva: cai pro user_nicename → user_login se display_name
-	// estiver vazio (cenário raro mas possível em users seedados/importados).
-	// Schema.org Person exige `name` populado — sem isso, o Google lista como
-	// "Item sem nome" no Rich Results.
+	// Defensive fortification: falls back to user_nicename → user_login if
+	// display_name is empty (rare scenario but possible for seeded/imported
+	// users). Schema.org Person requires a populated `name` — without it,
+	// Google lists it as "Unnamed item" in Rich Results.
 	$person_name = $author->display_name;
 	if ( empty( $person_name ) ) {
 		$person_name = ! empty( $author->user_nicename ) ? $author->user_nicename : $author->user_login;
@@ -90,8 +90,8 @@ if ( $author ) {
 						<div class="rd-author-info-header">
 							<h1 class="rd-author-name"><?php echo esc_html( $author->display_name ); ?></h1>
 							<?php
-							// Ícones sociais do autor (não do portal). Renderiza só se o user
-							// preencheu alguma URL em Usuários → Perfil → Informações de contato.
+							// Author's social icons (not the portal's). Only renders if the user
+							// filled in any URL under Users → Profile → Contact Info.
 							if ( function_exists( 'rd_render_social_icons' ) ) :
 								?>
 								<div class="rd-author-socials">

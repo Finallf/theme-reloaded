@@ -6,41 +6,20 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<link rel="profile" href="https://gmpg.org/xfn/11">
 
-		<script<?php echo rd_csp_nonce_attr(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- nonce attribute already escaped by rd_csp_nonce_attr() internally via esc_attr(). ?>>
-			/**
-			 * Script Anti-Flash (ReloadeD)
-			 * Roda no <head> ANTES do CSS, evitando qualquer flash de tema errado.
-			 * Cascata de decisão:
-			 *   1. Escolha explícita do user (localStorage 'rd-theme')
-			 *   2. Admin escolheu 'dark' ou 'light' como default → respeita
-			 *   3. Admin escolheu 'system' → segue prefers-color-scheme
-			 *   4. Fallback: dark (também usado quando navegador não suporta matchMedia)
-			 *
-			 * Atributo no <html> (document.documentElement) porque <body> ainda não
-			 * existe nesse momento de execução. Seletores CSS [data-theme="light"]
-			 * funcionam igual em qualquer elemento.
-			 */
-			(function() {
-				const adminDefault = '<?php echo esc_js( rd_get_option( 'default_theme_mode', 'system' ) ); ?>';
-				const savedTheme = localStorage.getItem('rd-theme');
-				let theme;
-
-				if (savedTheme) {
-					theme = savedTheme;
-				} else if (adminDefault === 'dark' || adminDefault === 'light') {
-					theme = adminDefault;
-				} else {
-					// system mode — segue preferência do SO
-					let systemPrefersLight = false;
-					if (window.matchMedia) {
-						systemPrefersLight = window.matchMedia('(prefers-color-scheme: light)').matches;
-					}
-					theme = systemPrefersLight ? 'light' : 'dark';
-				}
-
-				document.documentElement.setAttribute('data-theme', theme);
-			})();
-		</script>
+		<?php
+		/*
+		 * Anti-Flash Script (ReloadeD) — emitted minified on the next line.
+		 * Runs in <head> BEFORE the CSS, preventing any flash of the wrong theme.
+		 * Decision cascade:
+		 *   1. User's explicit choice (localStorage 'rd-theme')
+		 *   2. Admin selected 'dark' or 'light' as default → honor it
+		 *   3. Admin selected 'system' → follow prefers-color-scheme
+		 *   4. Fallback: dark (also when the browser lacks matchMedia)
+		 * Set on <html> (documentElement) because <body> doesn't exist yet here.
+		 * Kept as a PHP comment (server-side only) so it never ships to the browser.
+		 */
+		?>
+		<script<?php echo rd_csp_nonce_attr(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- nonce attribute already escaped by rd_csp_nonce_attr() internally via esc_attr(). ?>>(function(){const adminDefault='<?php echo esc_js( rd_get_option( 'default_theme_mode', 'system' ) ); ?>';const savedTheme=localStorage.getItem('rd-theme');let theme;if(savedTheme){theme=savedTheme;}else if(adminDefault==='dark'||adminDefault==='light'){theme=adminDefault;}else{let systemPrefersLight=window.matchMedia?window.matchMedia('(prefers-color-scheme: light)').matches:false;theme=systemPrefersLight?'light':'dark';}document.documentElement.setAttribute('data-theme',theme);})();</script>
 
 		<?php wp_head(); ?>
 	</head>

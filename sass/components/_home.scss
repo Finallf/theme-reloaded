@@ -1,0 +1,43 @@
+// sass/components/_home.scss
+// Layout for the configurable home showcase (index.php, when at least one
+// section is enabled in the panel). The 2 hero cards keep the historical
+// .post-grid layout untouched; the optional sections below reuse the search
+// card layouts (.rd-wrapper-grid / -vertical / -compact from _search.scss).
+//
+// This file only adds the section spacing + the Grid column override: the
+// search Grid uses auto-fill minmax, but on the home we want fixed rows of 3.
+// The override is SCOPED under .rd-home-sections so it never leaks into the
+// Search page. IMPORTANT: must load AFTER _search.scss for the override to win
+// the cascade (same constraint as _related-posts.scss).
+
+@use '../base/variables' as *;
+
+.rd-home-sections {
+    margin-top: 40px;
+
+    // Even spacing between stacked sections; the search wrappers don't carry
+    // their own margin here (that lives on .rd-search-wrapper, unused on the home).
+    .rd-wrapper-grid,
+    .rd-wrapper-vertical,
+    .rd-wrapper-compact {
+        margin-bottom: 40px;
+
+        &:last-child {
+            margin-bottom: 0;
+        }
+    }
+
+    // Grid override: fixed rows of 3 on desktop instead of the search auto-fill.
+    // Mobile (default): 1 col • Tablet: 2 cols • Desktop: 3 cols.
+    .rd-wrapper-grid {
+        grid-template-columns: 1fr;
+
+        @media (min-width: 768px) {
+            grid-template-columns: 1fr 1fr;
+        }
+
+        @media (min-width: 1024px) {
+            grid-template-columns: 1fr 1fr 1fr;
+        }
+    }
+}

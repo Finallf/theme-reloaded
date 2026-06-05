@@ -59,6 +59,8 @@ Grid de **15 cards** em 5 colunas (3 linhas × 5 cards em desktop; 3 colunas em 
 
 **Toggle switches inline:** componente `.rd-pswitch` (track + thumb animado). Clicar flipa via AJAX (`wp_ajax_rd_dashboard_toggle`) sem reload. Defesa em profundidade: whitelist server-side de 11 keys permitidas + nonce + `current_user_can('manage_options')` + validação estrita de valor. Maintenance Mode mostra confirm dialog ao **ligar** (operação que bloqueia visitantes); desligar é sempre seguro, sem confirm.
 
+**Tooltips de nome:** passar o mouse no **nome** de cada card mostra uma explicação curta da feature, reusando o balão `[data-tooltip]` dos switches/engrenagens (fundo preto translúcido, centralizado sobre o card). As explicações vêm de `rd_dashboard_get_status_tooltips()` e são injetadas via o arg `tooltip` do `rd_panel_card_open()`.
+
 **Layout estável dos controles:** o switch/gear fica sempre na **esquerda** do card e o badge à **direita** via `justify-content: space-between` no `.rd-dashboard-status-line`. Sem isso, a posição do controle "jumpava" 1px lateralmente quando o badge mudava de "ON" pra "OFF" (texto ~5px mais largo). Agora o ajuste cai no gap central, controle fica plantado.
 
 **Deep link buttons:** ícone de engrenagem com tooltip estilizado (fundo escuro com setinha, visual igual ao Chart.js). Click abre a aba relevante e o browser scrolla nativo até a section via hash anchor — sem JS necessário.
@@ -72,6 +74,8 @@ Grid de **15 cards** em 5 colunas (3 linhas × 5 cards em desktop; 3 colunas em 
 
 ### Activity Trend
 Bar chart de **views por dia nos últimos 7 dias**. Função `rd_dashboard_get_views_7d()` parseia logs (`_rd_post_views_log`) sem cache. Quando não há dados (tracking nunca ativo ou recém-instalado), o chart mostra todas as barras zeradas — preview do layout futuro.
+
+Quando o CSP report-only tem violações registradas, o **doughnut "Violações por Diretiva"** aparece ao lado (estreito à esquerda + Activity Trend largo à direita, via `.rd-pgrid--sidebar-main`) — resumo de relance; a tabela completa fica só na aba Security. Sem violações, o Activity Trend ocupa a largura toda.
 
 ### Quick Actions
 4-5 botões pra atalhar pras outras abas mais usadas:
@@ -129,6 +133,17 @@ Controle de comentários do site.
 | `enable_comments_globally` | ✅ | Master switch — quando OFF, NENHUM comment renderiza no site (form, lista, count, widget) |
 | `comment_a11y` | ✅ | Labels + autocomplete attributes pra acessibilidade do form |
 | `comments_separator` | _vazio_ | Texto entre autor e post no link. Vazio = default WP; `&nbsp;` = esconde |
+
+### Section: Home Page (`sec_geral_home`)
+Layout configurável da home (`index.php`). A home é uma vitrine fixa: **2 cards grandes (hero)** sempre no topo, seguidos de até três seções opcionais que reúsam os layouts de card da busca (Grid/Vertical/Compact). Cada seção tem a quantidade escolhida pelo admin via dropdown; `Off` (0) remove a seção.
+
+| Opção | Default | O que faz |
+|---|---|---|
+| `home_layout_grid` | `3` | Nº de cards Grid (3 por linha) abaixo dos 2 hero. Opções: Off / 3 / 6 / 9 |
+| `home_layout_vertical` | `3` | Nº de cards Vertical (imagem grande + excerpt). Opções: Off / 1 / 2 / 3 |
+| `home_layout_compact` | `6` | Nº de cards Compact (thumbnail + título, 2 por linha). Opções: Off / 2 / 4 / 6 |
+
+**Comportamento:** `posts_per_page` da home = `2 (hero) + soma das quantidades ativas`, ajustado via `pre_get_posts` (`rd_home_modify_query`). Os posts são consumidos sequencialmente da loop principal, então os 2 hero caem em `current_post` 0-1 (LCP eager + high priority) e os cards das seções em 2+ (lazy). Sem paginação no layout configurável (vitrine fixa). **Com as 3 seções em Off**, a home cai no **fallback clássico**: grid único de cards grandes com a paginação nativa do WP (Configurações → Leitura). Totalmente independente da Search Page (opções, hooks e escopo CSS separados). Lógica em `inc/mod-home.php`.
 
 ### Section: Search Page (`sec_geral_search`)
 Layouts da página de resultados de busca.
@@ -232,13 +247,13 @@ Detalhes completos do sistema CSP em [10 — Content Security Policy](10-content
 
 ### Section: CSP Violation Reports (`sec_seg_csp_reports`) — *custom renderer*
 
-Renderizada por `rd_csp_render_reports_panel()` em `inc/mod-csp.php`. Quando há reports:
+Renderizada por `rd_csp_render_reports_panel()` em `inc/mod-csp.php`. Quando há reports, o **doughnut** (estreito) e a **tabela** (larga) ficam **lado a lado** via `.rd-pgrid--sidebar-main`:
 
-- **Doughnut chart** (Wave 11 Fase G) mostrando distribuição de violações por directive
+- **Doughnut chart** (Wave 11 Fase G) — distribuição de violações por directive (legenda embaixo)
 - **Tabela com 4 colunas:** When | Directive | Blocked URI | Document
 - **Botão "Clear reports"** (nonce-protected) zera o FIFO
 
-Quando não há reports, mostra empty state.
+Em telas <1024px empilha. Quando não há reports, mostra empty state.
 
 ---
 
@@ -495,7 +510,7 @@ Pra dar consistência visual ao painel admin, existe um conjunto de **componente
 
 **Grid** (sem helper PHP — use direto): `.rd-pgrid` com modifiers `--two-cols`, `--three-cols`, `--sidebar-main`. Item span full-width: `.rd-pgrid__item--full`.
 
-**Charts auto-render** (Wave 11 Fase G — `assets/js/admin-charts.js`): qualquer `<canvas data-rd-chart-type="doughnut|bar" data-labels="..." data-values="...">` no DOM é detectado e inicializado automaticamente. Chart.js precisa estar enfileirado na aba — gate em `mod-stats.php → rd_stats_admin_enqueue()`.
+**Charts auto-render** (Wave 11 Fase G — módulo charts no bundle `assets/js/admin-panel.js`): qualquer `<canvas data-rd-chart-type="doughnut|bar" data-labels="..." data-values="...">` no DOM é detectado e inicializado automaticamente. Chart.js precisa estar enfileirado na aba — gate em `mod-stats.php → rd_stats_admin_enqueue()`.
 
 ### Variantes de cor (badge + status)
 

@@ -1,18 +1,18 @@
 <?php
 /**
- * Template: Page — Contato
+ * Template Name: Contact Page
  *
- * Template específico para a página com slug "contato".
- * WP usa esse arquivo automaticamente via hierarquia de templates
- * (page-{slug}.php) — não precisa selecionar nada no editor.
+ * Named page template — assign it to any page via Page Attributes > Template
+ * (the page slug and language are irrelevant). Replaces the old slug-coupled
+ * page-contato.php so the theme stays language-agnostic.
  *
- * Diferenças vs page.php genérico:
- *   - Sem imagem destacada (apresentação focada nos canais de contato)
- *   - Sem comentários (CTAs precisam de destaque, não conversa)
- *   - Todo o conteúdo (email, redes, Discord, etc) vai pelo editor — sem
- *     bloco hardcoded auto-injetado. Filosofia: máximo controle no editor
+ * Differences vs the generic page.php:
+ *   - No featured image (presentation focused on the contact channels)
+ *   - No comments (CTAs need emphasis, not conversation)
+ *   - All the content (email, socials, Discord, etc.) goes through the editor — no
+ *     auto-injected hardcoded block. Philosophy: maximum control in the editor
  *
- * Formulário nativo (sem plugin) fica como item futuro do backlog se quiser.
+ * A native form (no plugin) is left as a future backlog item if wanted.
  *
  * @package ReloadeD
  */

@@ -1,22 +1,22 @@
 <?php
 defined( 'ABSPATH' ) || exit;
 /*******************************************************************************
- * Module: Donations - Pix, GitHub Sponsors e Paypal
+ * Module: Donations - Pix, GitHub Sponsors and Paypal
  *******************************************************************************/
 
 /*******************************************************************************
- * Helper: serve a versão `rd-qr` (240x240) do QR code quando possível         *
- *                                                                              *
- * Admin uploads via painel costumam ser 600px+, mas o display é ~160-200px.   *
- * `attachment_url_to_postid` resolve a URL armazenada de volta pro ID do      *
- * attachment; com ID em mãos, `wp_get_attachment_image` gera a tag com src    *
- * + srcset + width/height corretos pro tamanho `rd-qr`.                       *
- *                                                                              *
- * Fallback: se a URL não pertence ao Media Library local (caso edge), serve  *
- * o original com dims fixas pra não quebrar layout.                           *
- *                                                                              *
- * Nota: uploads ANTERIORES ao registro do tamanho `rd-qr` não têm a variante *
- * gerada — admin precisa rodar "Regenerate Thumbnails" (plugin) ou re-uploadar.*
+ * Helper: serves the `rd-qr` (240x240) version of the QR code when possible   *
+ *                                                                             *
+ * Admin uploads via the panel are usually 600px+, but display is ~160-200px.  *
+ * `attachment_url_to_postid` resolves the stored URL back to the attachment   *
+ * ID; with the ID in hand, `wp_get_attachment_image` builds the tag with the  *
+ * correct src + srcset + width/height for the `rd-qr` size.                   *
+ *                                                                             *
+ * Fallback: if the URL doesn't belong to the local Media Library (edge case), *
+ * serves the original with fixed dims so the layout doesn't break.            *
+ *                                                                             *
+ * Note: uploads PRIOR to the `rd-qr` size registration don't have the variant *
+ * generated — admin must run "Regenerate Thumbnails" (plugin) or re-upload.   *
  *******************************************************************************/
 function rd_render_qr_img( $stored_url, $alt ) {
 	if ( empty( $stored_url ) ) {
@@ -36,7 +36,7 @@ function rd_render_qr_img( $stored_url, $alt ) {
 		);
 	}
 
-	// Fallback pra URLs externas / uploads não-resolvíveis
+	// Fallback for external URLs / unresolvable uploads
 	return sprintf(
 		'<img src="%s" class="rd-qr-img" alt="%s" width="240" height="240">',
 		esc_url( $stored_url ),
@@ -45,13 +45,13 @@ function rd_render_qr_img( $stored_url, $alt ) {
 }
 
 /*******************************************************************************
- * Módulo de Apoio                                                 - (Doações) *
+ * Support Module                                                 - (Donations)*
  *******************************************************************************/
 function rd_render_support_block() {
 	$github     = rd_get_option( 'github_sponsors' );
 	$pix_key    = rd_get_option( 'pix_chave' );
 	$pix_img    = rd_get_option( 'pix_qrcode' );
-	$pix_url    = rd_get_option( 'pix_url' ); // O novo campo de link
+	$pix_url    = rd_get_option( 'pix_url' ); // The new link field
 	$paypal_url = rd_get_option( 'paypal_url' );
 	$paypal_qr  = rd_get_option( 'paypal_qrcode' );
 
@@ -70,16 +70,16 @@ function rd_render_support_block() {
 		echo '</a>';
 	}
 
-	// PIX (Nacional)
+	// PIX (Domestic)
 	if ( $pix_key || $pix_img ) {
 		echo '<div class="rd-support-subitem">';
 
-		// Imagem do PIX com Link Dinâmico
+		// PIX image with Dynamic Link
 		if ( $pix_img ) {
 			if ( $pix_url ) {
 
 				echo '<a href="' . esc_url( $pix_url ) . '" target="_blank" class="rd-qr-link">';
-				echo '  <img src="' . esc_url( get_template_directory_uri() . '/assets/img/logo-pix.svg' ) . '" alt="PIX Logo" width="100" height="36">';
+				echo '  <img src="' . esc_url( get_template_directory_uri() . '/assets/img/logo-pix.svg' ) . '" alt="PIX Logo" width="60" height="36">';
 				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- rd_render_qr_img returns wp_get_attachment_image() output (already escaped) or pre-escaped <img> fallback
 				echo '  ' . rd_render_qr_img( $pix_img, esc_attr__( 'QR Code PIX', 'reloaded' ) );
 				echo '  <small>' . esc_html__( '(Click or Scan to donate)', 'reloaded' ) . '</small>';
@@ -90,12 +90,12 @@ function rd_render_support_block() {
 			}
 		}
 
-		// Chave PIX com Botão de Copiar Moderno
+		// PIX Key with Modern Copy Button
 		if ( $pix_key ) {
 			echo '<div class="rd-pix-copy-area">';
 			echo '  <span class="rd-key-label">' . esc_html__( 'PIX Key:', 'reloaded' ) . '</span>';
-			// Usa o handler genérico data-rd-copy (definido em navigation.js).
-			// Por convenção, o feedback de "Copiado!" vai pro .rd-copy-text (fallback).
+			// Uses the generic data-rd-copy handler (defined in navigation.js).
+			// By convention, the "Copied!" feedback goes to .rd-copy-text (fallback).
 			echo '  <button class="rd-copy-btn" data-rd-copy="' . esc_attr( $pix_key ) . '" aria-label="' . esc_attr__( 'Copy PIX key', 'reloaded' ) . '" title="' . esc_attr__( 'Click to copy', 'reloaded' ) . '">';
 			echo '    <span class="rd-copy-text">' . esc_html( $pix_key ) . '</span>';
 			echo '    <i class="fas fa-copy"></i>';
@@ -106,14 +106,14 @@ function rd_render_support_block() {
 		echo '</div>';
 	}
 
-	// PayPal (Internacional)
+	// PayPal (International)
 	if ( $paypal_url || $paypal_qr ) {
 		echo '<div class="rd-support-subitem rd-paypal-container">';
 
 		if ( $paypal_qr ) {
 			if ( $paypal_url ) {
 				echo '<a href="' . esc_url( $paypal_url ) . '" target="_blank" class="rd-qr-link">';
-				echo '  <img src="' . esc_url( get_template_directory_uri() . '/assets/img/logo-paypal.svg' ) . '" alt="PayPal Logo" width="100" height="36">';
+				echo '  <img src="' . esc_url( get_template_directory_uri() . '/assets/img/logo-paypal.svg' ) . '" alt="PayPal Logo" width="70" height="36">';
 				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- rd_render_qr_img returns wp_get_attachment_image() output (already escaped) or pre-escaped <img> fallback
 				echo '  ' . rd_render_qr_img( $paypal_qr, esc_attr__( 'PayPal Donate', 'reloaded' ) );
 				echo '  <small>' . esc_html__( '(Click or Scan to donate)', 'reloaded' ) . '</small>';

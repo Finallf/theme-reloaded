@@ -2,48 +2,48 @@
 defined( 'ABSPATH' ) || exit;
 
 /*******************************************************************************
- * Module: Backup — Export/Import de configurações do tema (Wave 7 L)          *
+ * Module: Backup — Export/Import of theme settings (Wave 7 L)                 *
  *                                                                             *
- * Permite exportar a configuração do tema em JSON pra download e (em etapas   *
- * futuras) importar de volta em outro install ou no mesmo. Útil pra:          *
- *   - Migrar configs sandbox → produção sem refazer tudo na mão               *
- *   - Snapshot antes de mexer em config arriscada (rollback em 1 click)       *
- *   - Replicar tema configurado em outro site                                 *
- *   - Versionar config no git (JSON legível diff-friendly)                    *
+ * Allows exporting the theme configuration as JSON for download and (in       *
+ * future stages) importing it back on another install. Useful for:            *
+ *   - Migrate sandbox → production configs without redoing everything by hand *
+ *   - Snapshot before touching risky config (1-click rollback)                *
+ *   - Replicate a configured theme on another site                            *
+ *   - Version config in git (readable, diff-friendly JSON)                    *
  *                                                                             *
- * Localização: sub-seção dentro da aba Manutenção do painel.                  *
+ * Location: sub-section inside the panel's Maintenance tab.                   *
  *                                                                             *
  * Roadmap:                                                                    *
- *   Etapa 1 (atual): L1 — Export simples só de settings                       *
- *   Etapa 2: Export inclui category_colors (term meta)                        *
- *   Etapa 3: L2 — Import com preview + auto-backup pre-import                 *
- *   Etapa 4: Restore do auto-backup (1-click rollback)                        *
- *   Etapa 5: L3 — Export opcional de ad_banners                               *
+ *   Stage 1 (current): L1 — Simple export of settings only                    *
+ *   Stage 2: Export includes category_colors (term meta)                      *
+ *   Stage 3: L2 — Import with preview + pre-import auto-backup                *
+ *   Stage 4: Restore from auto-backup (1-click rollback)                      *
+ *   Stage 5: L3 — Optional export of ad_banners                               *
  *******************************************************************************/
 
 const RD_BACKUP_SCHEMA_VERSION = 1;
-const RD_BACKUP_AUTO_OPTION    = 'rd_settings_backup_before_import'; // usado na Etapa 4
+const RD_BACKUP_AUTO_OPTION    = 'rd_settings_backup_before_import'; // used in Stage 4
 
 /*
 =============================================================================
- *  COLLECT — monta a estrutura de dados pra exportar
+ *  COLLECT — builds the data structure to export
  * ============================================================================= */
 
 /**
- * Coleta dados das seções solicitadas em formato JSON-ready com _meta envelope.
+ * Collects data for the requested sections in JSON-ready format with a _meta envelope.
  *
- * Seções suportadas:
- *   - 'settings'        → tudo de rd_settings EXCETO keys com prefixo `ad_`
- *   - 'category_colors' → cores customizadas das categorias (term meta)
- *   - 'ad_banners'      → APENAS keys com prefixo `ad_` de rd_settings
+ * Supported sections:
+ *   - 'settings'        → everything in rd_settings EXCEPT keys with the `ad_` prefix
+ *   - 'category_colors' → custom category colors (term meta)
+ *   - 'ad_banners'      → ONLY keys with the `ad_` prefix from rd_settings
  *
- * Por que separar settings/ad_banners?
- *   - Permite "exportar só ads" (pra replicar banners em outro site)
- *   - Permite "exportar tudo MENOS ads" (pra migrar tema sem banners do dev)
- *   - Marcando ambos = export equivalente ao rd_settings completo
+ * Why separate settings/ad_banners?
+ *   - Allows "export ads only" (to replicate banners on another site)
+ *   - Allows "export everything EXCEPT ads" (to migrate the theme without the dev's banners)
+ *   - Checking both = export equivalent to the full rd_settings
  *
- * @param array $sections Lista de seções a incluir
- * @return array Estrutura { _meta, settings?, category_colors?, ad_banners? }
+ * @param array $sections List of sections to include
+ * @return array Structure { _meta, settings?, category_colors?, ad_banners? }
  */
 function rd_backup_collect_data( array $sections = array( 'settings' ) ): array {
 	global $wp_version;
@@ -56,7 +56,7 @@ function rd_backup_collect_data( array $sections = array( 'settings' ) ): array 
 	}
 
 	if ( in_array( 'settings', $sections, true ) ) {
-		// Settings = tudo MENOS keys ad_*
+		// Settings = everything EXCEPT ad_* keys
 		$payload['settings'] = array_filter(
 			$rd_settings,
 			fn( $k ) => strpos( $k, 'ad_' ) !== 0,
@@ -71,7 +71,7 @@ function rd_backup_collect_data( array $sections = array( 'settings' ) ): array 
 	}
 
 	if ( in_array( 'ad_banners', $sections, true ) ) {
-		// Ad banners = APENAS keys ad_*
+		// Ad banners = ONLY ad_* keys
 		$payload['ad_banners'] = array_filter(
 			$rd_settings,
 			fn( $k ) => strpos( $k, 'ad_' ) === 0,
@@ -80,7 +80,7 @@ function rd_backup_collect_data( array $sections = array( 'settings' ) ): array 
 		$included[]            = 'ad_banners';
 	}
 
-	// _meta sempre presente — facilita validação na importação futura
+	// _meta always present — eases validation on future import
 	$meta = array(
 		'schema_version'    => RD_BACKUP_SCHEMA_VERSION,
 		'theme_version'     => wp_get_theme()->get( 'Version' ),
@@ -90,19 +90,19 @@ function rd_backup_collect_data( array $sections = array( 'settings' ) ): array 
 		'sections_included' => $included,
 	);
 
-	// _meta vai no topo pra inspeção visual fácil quando alguém abre o JSON
+	// _meta goes on top for easy visual inspection when someone opens the JSON
 	return array_merge( array( '_meta' => $meta ), $payload );
 }
 
 /**
- * Coleta cores customizadas de TODAS as categorias que têm `rd_category_color`
- * definido (term meta do `mod-category-colors.php`).
+ * Collects custom colors from ALL categories that have `rd_category_color`
+ * set (term meta from `mod-category-colors.php`).
  *
- * Identificador é `slug` (não `term_id`) — slugs são portáveis entre instalações,
- * term_ids são internos do DB de cada site. Na importação, o slug é usado pra
- * encontrar a categoria correspondente no destino.
+ * The identifier is `slug` (not `term_id`) — slugs are portable across installs,
+ * term_ids are internal to each site's DB. On import, the slug is used to
+ * find the matching category at the destination.
  *
- * @return array Array de { slug, name, color } — só categorias COM cor configurada
+ * @return array Array of { slug, name, color } — only categories WITH a color configured
  */
 function rd_backup_collect_category_colors(): array {
 	$terms = get_terms(
@@ -134,12 +134,12 @@ function rd_backup_collect_category_colors(): array {
 
 /*
 =============================================================================
- *  EXPORT HANDLER — serve o JSON como download via admin-post.php
+ *  EXPORT HANDLER — serves the JSON as a download via admin-post.php
  * ============================================================================= */
 
 /**
- * Handler do admin-post.php pra download do backup JSON.
- * Acionado pelo form POST no painel com checkboxes de seções.
+ * Handler for the admin-post.php JSON backup download.
+ * Triggered by the POST form in the panel with section checkboxes.
  */
 function rd_backup_handle_export() {
 	// Permission + nonce checks
@@ -151,9 +151,9 @@ function rd_backup_handle_export() {
 	}
 	check_admin_referer( 'rd_backup_export' );
 
-	// Lê seções selecionadas (aceita GET ou POST — usamos GET via link <a> pra
-	// evitar conflito de forms aninhados no callback de section do painel).
-	// Whitelist defensiva. Fallback pra 'settings' se nada válido foi passado.
+	// Read the selected sections (accepts GET or POST — we use GET via <a> link to
+	// avoid nested-form conflicts in the panel's section callback).
+	// Defensive whitelist. Falls back to 'settings' if nothing valid was passed.
 	$allowed_sections = array( 'settings', 'category_colors', 'ad_banners' );
 
 	if ( isset( $_GET['sections'] ) && is_array( $_GET['sections'] ) ) {
@@ -166,15 +166,18 @@ function rd_backup_handle_export() {
 
 	$sections = array_values( array_intersect( $raw_sections, $allowed_sections ) );
 	if ( empty( $sections ) ) {
-		$sections = array( 'settings' ); // fallback defensivo
+		$sections = array( 'settings' ); // defensive fallback
 	}
 
 	$data = rd_backup_collect_data( $sections );
 
-	// Nome do arquivo: reloaded-backup-{host}-{date}.json
-	// Host limpo (sem pontos/portas) pra evitar issues em filesystems variados
+	// Filename: reloaded-backup-{host}-{date}.json
+	// Domain-safe host sanitization: keep dots/hyphens, strip anything else.
+	// We avoid sanitize_file_name() here because its multi-extension guard
+	// appends "_" to dot-separated segments that look like a non-allowed
+	// extension, turning "theme.reloaded.com.br" into "theme.reloaded.com_.br".
 	$host     = wp_parse_url( home_url(), PHP_URL_HOST );
-	$host     = $host ? sanitize_file_name( $host ) : 'site';
+	$host     = $host ? preg_replace( '/[^a-zA-Z0-9.\-]/', '', $host ) : 'site';
 	$filename = 'reloaded-backup-' . $host . '-' . gmdate( 'Y-m-d' ) . '.json';
 
 	// Send headers + body
@@ -193,17 +196,17 @@ add_action( 'admin_post_rd_backup_export', 'rd_backup_handle_export' );
  * ============================================================================= */
 
 /**
- * Valida estrutura do JSON importado. Retorna $data sanitizado ou WP_Error.
+ * Validates the imported JSON structure. Returns sanitized $data or WP_Error.
  *
  * Checks:
- *   - é array (json_decode com assoc=true)
- *   - tem _meta com schema_version
- *   - schema_version <= RD_BACKUP_SCHEMA_VERSION (não pode importar de versão futura)
- *   - tem pelo menos uma seção conhecida
- *   - cada seção tem estrutura esperada
+ *   - is an array (json_decode with assoc=true)
+ *   - has _meta with schema_version
+ *   - schema_version <= RD_BACKUP_SCHEMA_VERSION (can't import from a future version)
+ *   - has at least one known section
+ *   - each section has the expected structure
  *
- * @param mixed $data Dado já decodificado (array). Strings/JSON cru devem ser decodificados antes
- * @return array|WP_Error Dado validado/sanitizado ou erro descritivo
+ * @param mixed $data Already-decoded data (array). Raw strings/JSON must be decoded first
+ * @return array|WP_Error Validated/sanitized data or a descriptive error
  */
 function rd_backup_validate( $data ) {
 	if ( ! is_array( $data ) ) {
@@ -233,14 +236,14 @@ function rd_backup_validate( $data ) {
 		return new WP_Error( 'empty_payload', __( 'Backup file contains no recognized sections (settings, category_colors, ad_banners).', 'reloaded' ) );
 	}
 
-	// Sanitiza seção por seção
+	// Sanitize section by section
 	$clean = array( '_meta' => $data['_meta'] );
 
 	if ( isset( $data['settings'] ) ) {
 		if ( ! is_array( $data['settings'] ) ) {
 			return new WP_Error( 'invalid_settings', __( 'Settings section must be an object.', 'reloaded' ) );
 		}
-		// Reusa o sanitize do painel — garante consistência total com o save normal
+		// Reuse the panel's sanitize — ensures full consistency with the normal save
 		$clean['settings'] = rd_options_sanitize( $data['settings'] );
 	}
 
@@ -251,11 +254,11 @@ function rd_backup_validate( $data ) {
 		$clean['category_colors'] = array();
 		foreach ( $data['category_colors'] as $item ) {
 			if ( ! is_array( $item ) || empty( $item['slug'] ) || empty( $item['color'] ) ) {
-				continue; // skip itens malformados em vez de falhar tudo
+				continue; // skip malformed items instead of failing everything
 			}
 			$color = sanitize_hex_color( $item['color'] );
 			if ( ! $color ) {
-				continue; // hex inválido, skip
+				continue; // invalid hex, skip
 			}
 			$clean['category_colors'][] = array(
 				'slug'  => sanitize_title( $item['slug'] ),
@@ -269,8 +272,8 @@ function rd_backup_validate( $data ) {
 		if ( ! is_array( $data['ad_banners'] ) ) {
 			return new WP_Error( 'invalid_ad_banners', __( 'Ad banners section must be an object.', 'reloaded' ) );
 		}
-		// Sanitize via rd_options_sanitize (zonas de anúncio caem na regra 1 — preserva HTML)
-		// Force prefixo ad_ pra evitar contaminação de outras keys passadas por engano
+		// Sanitize via rd_options_sanitize (ad zones fall under rule 1 — preserves HTML)
+		// Force the ad_ prefix to avoid contamination from other keys passed by mistake
 		$ad_only             = array_filter( $data['ad_banners'], fn( $k ) => strpos( $k, 'ad_' ) === 0, ARRAY_FILTER_USE_KEY );
 		$clean['ad_banners'] = rd_options_sanitize( $ad_only );
 	}
@@ -279,10 +282,10 @@ function rd_backup_validate( $data ) {
 }
 
 /**
- * Calcula diff entre o estado atual e o estado importado.
- * NÃO aplica nada — só monta o relatório pra preview.
+ * Computes the diff between the current state and the imported state.
+ * Does NOT apply anything — just builds the report for preview.
  *
- * @param array $data Dado já validado (saída de rd_backup_validate)
+ * @param array $data Already-validated data (output of rd_backup_validate)
  * @return array {
  *   settings: { will_update: [...], will_add: [...], will_keep: [...], total_in_file: int },
  *   category_colors: { will_update: [...], will_add: [...], skipped_no_match: [...], total_in_file: int },
@@ -298,18 +301,18 @@ function rd_backup_preview_diff( array $data ): array {
 			$current = array();
 		}
 
-		// Se o arquivo TEM seção ad_banners, ad_* do current são processados
-		// lá — não devem aparecer como "will_keep" no diff de settings (seriam
-		// double-contadas com o diff de ad_banners). Quando o arquivo NÃO tem
-		// ad_banners, ad_* atuais aparecem como "will_keep" (correto: serão
-		// preservadas porque o import não toca em ads).
+		// If the file HAS an ad_banners section, the current ad_* are processed
+		// there — they shouldn't appear as "will_keep" in the settings diff (they'd be
+		// double-counted with the ad_banners diff). When the file does NOT have
+		// ad_banners, the current ad_* appear as "will_keep" (correct: they'll be
+		// preserved because the import doesn't touch ads).
 		if ( isset( $data['ad_banners'] ) ) {
 			$current = array_filter( $current, fn( $k ) => strpos( $k, 'ad_' ) !== 0, ARRAY_FILTER_USE_KEY );
 		}
 
 		$will_update = array();
 		$will_add    = array();
-		$will_keep   = array_diff_key( $current, $data['settings'] ); // keys atuais não presentes no import
+		$will_keep   = array_diff_key( $current, $data['settings'] ); // current keys not present in the import
 
 		foreach ( $data['settings'] as $key => $new_val ) {
 			if ( ! array_key_exists( $key, $current ) ) {
@@ -320,7 +323,7 @@ function rd_backup_preview_diff( array $data ): array {
 					'to'   => $new_val,
 				);
 			}
-			// se valor igual, nem aparece no diff (não muda nada)
+			// if the value is equal, it doesn't even appear in the diff (nothing changes)
 		}
 
 		$diff['settings'] = array(
@@ -331,13 +334,13 @@ function rd_backup_preview_diff( array $data ): array {
 		);
 	}
 
-	// AD_BANNERS — comparação similar a settings, mas só keys ad_*
+	// AD_BANNERS — comparison similar to settings, but only ad_* keys
 	if ( isset( $data['ad_banners'] ) ) {
 		$current = get_option( 'rd_settings', array() );
 		if ( ! is_array( $current ) ) {
 			$current = array();
 		}
-		// Filtra só ad_* do estado atual pra comparar com mesma natureza
+		// Filter only ad_* from the current state to compare like with like
 		$current_ads = array_filter( $current, fn( $k ) => strpos( $k, 'ad_' ) === 0, ARRAY_FILTER_USE_KEY );
 
 		$will_update = array();
@@ -395,10 +398,10 @@ function rd_backup_preview_diff( array $data ): array {
 }
 
 /**
- * Aplica importação. ANTES de aplicar, salva snapshot do estado atual em
- * RD_BACKUP_AUTO_OPTION pra permitir rollback (etapa 4).
+ * Applies the import. BEFORE applying, saves a snapshot of the current state in
+ * RD_BACKUP_AUTO_OPTION to allow rollback (stage 4).
  *
- * @param array $data Dado já validado/sanitizado
+ * @param array $data Already-validated/sanitized data
  * @return array { applied: { settings: bool, category_colors: int }, snapshot_saved: bool }
  */
 function rd_backup_apply_import( array $data ): array {
@@ -411,9 +414,9 @@ function rd_backup_apply_import( array $data ): array {
 		'snapshot_saved' => false,
 	);
 
-	// 1. Snapshot atual (auto-rollback) — só pra rd_settings por enquanto.
-	// Cores de categoria não entram no snapshot (são term meta, não option).
-	// Se quisermos rollback completo na etapa 4, expandimos.
+	// 1. Current snapshot (auto-rollback) — only for rd_settings for now.
+	// Category colors don't go into the snapshot (they're term meta, not an option).
+	// If we want full rollback in stage 4, we expand it.
 	$current_settings = get_option( 'rd_settings', array() );
 	update_option(
 		RD_BACKUP_AUTO_OPTION,
@@ -425,16 +428,16 @@ function rd_backup_apply_import( array $data ): array {
 	);
 	$result['snapshot_saved'] = true;
 
-	// 2. Settings + Ad banners — ambos vão pro mesmo option rd_settings via merge
+	// 2. Settings + Ad banners — both go to the same rd_settings option via merge
 	if ( isset( $data['settings'] ) || isset( $data['ad_banners'] ) ) {
 		$current = get_option( 'rd_settings', array() );
 		if ( ! is_array( $current ) ) {
 			$current = array();
 		}
-		// MERGE: aplica settings + ad_banners por cima do estado atual.
-		// Preserva keys atuais não presentes em nenhum dos dois (ex: se importou
-		// só "settings" sem ads, ads atuais ficam intactos. Se importou só ads,
-		// settings ficam intactos).
+		// MERGE: applies settings + ad_banners on top of the current state.
+		// Preserves current keys not present in either (e.g. if you imported
+		// only "settings" without ads, current ads stay intact. If you imported only ads,
+		// settings stay intact).
 		$merged = array_merge(
 			$current,
 			$data['settings'] ?? array(),
@@ -454,7 +457,7 @@ function rd_backup_apply_import( array $data ): array {
 		foreach ( $data['category_colors'] as $item ) {
 			$term = get_term_by( 'slug', $item['slug'], 'category' );
 			if ( ! $term || is_wp_error( $term ) ) {
-				continue; // categoria não existe nesse install — skip silencioso
+				continue; // category doesn't exist on this install — silent skip
 			}
 			update_term_meta( $term->term_id, 'rd_category_color', $item['color'] );
 			++$result['applied']['category_colors'];
@@ -466,13 +469,13 @@ function rd_backup_apply_import( array $data ): array {
 
 /*
 =============================================================================
- *  AUTO-SNAPSHOT — gerenciamento do estado salvo antes do último import
+ *  AUTO-SNAPSHOT — management of the state saved before the last import
  * ============================================================================= */
 
 /**
- * Retorna o snapshot salvo automaticamente antes do último import.
+ * Returns the snapshot automatically saved before the last import.
  *
- * @return array|null { saved_at: int, settings: array } ou null se não existe
+ * @return array|null { saved_at: int, settings: array } or null if none exists
  */
 function rd_backup_get_last_snapshot(): ?array {
 	$snap = get_option( RD_BACKUP_AUTO_OPTION, null );
@@ -483,11 +486,11 @@ function rd_backup_get_last_snapshot(): ?array {
 }
 
 /**
- * Restaura o estado salvo no snapshot. Consume o snapshot após uso (delete
- * pra evitar duplo-restore acidental e dar feedback claro de "não há mais
- * undo disponível").
+ * Restores the state saved in the snapshot. Consumes the snapshot after use (delete
+ * to avoid an accidental double-restore and give clear feedback that "there's no more
+ * undo available").
  *
- * @return bool true se restaurou, false se não havia snapshot
+ * @return bool true if restored, false if there was no snapshot
  */
 function rd_backup_restore_snapshot(): bool {
 	$snap = rd_backup_get_last_snapshot();
@@ -496,21 +499,21 @@ function rd_backup_restore_snapshot(): bool {
 	}
 
 	update_option( 'rd_settings', $snap['settings'] );
-	delete_option( RD_BACKUP_AUTO_OPTION ); // snapshot consumido
+	delete_option( RD_BACKUP_AUTO_OPTION ); // snapshot consumed
 
 	return true;
 }
 
 /*
 =============================================================================
- *  REST ENDPOINTS — preview e import (consumidos pelo admin-backup.js)
+ *  REST ENDPOINTS — preview and import (consumed by admin-panel.js, backup module)
  * ============================================================================= */
 
 /**
- * Registra os endpoints REST do módulo Backup.
+ * Registers the Backup module's REST endpoints.
  */
 function rd_backup_register_endpoints() {
-	// Preview: recebe JSON, valida, retorna diff (não aplica nada)
+	// Preview: receives JSON, validates, returns diff (applies nothing)
 	register_rest_route(
 		'rd/v1',
 		'/backup/preview',
@@ -523,7 +526,7 @@ function rd_backup_register_endpoints() {
 		)
 	);
 
-	// Import: recebe JSON validado, aplica (com auto-snapshot antes)
+	// Import: receives validated JSON, applies it (with auto-snapshot before)
 	register_rest_route(
 		'rd/v1',
 		'/backup/import',
@@ -536,7 +539,7 @@ function rd_backup_register_endpoints() {
 		)
 	);
 
-	// Restore: restaura o último snapshot automático (gerado antes do último import)
+	// Restore: restores the last automatic snapshot (generated before the last import)
 	register_rest_route(
 		'rd/v1',
 		'/backup/restore',
@@ -552,7 +555,7 @@ function rd_backup_register_endpoints() {
 add_action( 'rest_api_init', 'rd_backup_register_endpoints' );
 
 /**
- * Endpoint POST /wp-json/rd/v1/backup/preview — valida JSON e devolve diff.
+ * Endpoint POST /wp-json/rd/v1/backup/preview — validates JSON and returns the diff.
  */
 function rd_backup_rest_preview( WP_REST_Request $request ) {
 	$data = $request->get_json_params();
@@ -582,11 +585,11 @@ function rd_backup_rest_preview( WP_REST_Request $request ) {
 }
 
 /**
- * Endpoint POST /wp-json/rd/v1/backup/restore — restaura o último snapshot.
+ * Endpoint POST /wp-json/rd/v1/backup/restore — restores the last snapshot.
  *
- * @param WP_REST_Request $request Request body (unused — endpoint sem args).
+ * @param WP_REST_Request $request Request body (unused — endpoint takes no args).
  */
-// phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found -- $request faz parte da assinatura obrigatória do callback REST do WP, mesmo quando o endpoint não consome args.
+// phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found -- $request is part of WP's mandatory REST callback signature, even when the endpoint consumes no args.
 function rd_backup_rest_restore( WP_REST_Request $request ) {
 	$restored = rd_backup_restore_snapshot();
 	if ( ! $restored ) {
@@ -602,7 +605,7 @@ function rd_backup_rest_restore( WP_REST_Request $request ) {
 }
 
 /**
- * Endpoint POST /wp-json/rd/v1/backup/import — aplica importação (com snapshot).
+ * Endpoint POST /wp-json/rd/v1/backup/import — applies the import (with snapshot).
  */
 function rd_backup_rest_import( WP_REST_Request $request ) {
 	$data = $request->get_json_params();
@@ -632,33 +635,28 @@ function rd_backup_rest_import( WP_REST_Request $request ) {
 
 /*
 =============================================================================
- *  ADMIN ENQUEUE — JS do import só na aba Backup do painel
+ *  ADMIN ENQUEUE — backup JS data only on the panel's Backup tab
  * ============================================================================= */
 
 /**
- * Enfileira o JS de import só na aba Backup do painel.
+ * Localizes the backup import/export data, only on the panel's Backup tab.
+ * The JS itself ships in the consolidated admin-panel.js bundle.
  */
 function rd_backup_admin_enqueue( $hook ) {
 	if ( $hook !== 'toplevel_page_rd_options' ) {
 		return;
 	}
-	// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only gate em admin_enqueue_scripts: decide se enfileira o JS do backup, não processa form.
+	// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only gate in admin_enqueue_scripts: decides whether to enqueue the backup JS, doesn't process a form.
 	$active_tab = isset( $_GET['tab'] ) ? sanitize_key( wp_unslash( $_GET['tab'] ) ) : 'general';
 	if ( $active_tab !== 'backup' ) {
 		return;
 	}
 
-	wp_enqueue_script(
-		'rd-admin-backup',
-		get_template_directory_uri() . '/assets/js/admin-backup.js',
-		array(),
-		rd_asset_version( '/assets/js/admin-backup.js' ),
-		true
-	);
-
-	// Dados pro JS: URL do REST + nonce (header X-WP-Nonce)
+	// The backup import/export JS now ships in the consolidated admin-panel.js
+	// bundle (enqueued in core.php at priority 5). Here we only attach its data
+	// (REST URL + nonce + i18n) to that handle, still gated to the Backup tab.
 	wp_localize_script(
-		'rd-admin-backup',
+		'rd-admin-panel',
 		'rdBackup',
 		array(
 			'restUrl' => esc_url_raw( rest_url( 'rd/v1/backup/' ) ),
@@ -675,7 +673,7 @@ function rd_backup_admin_enqueue( $hook ) {
 				'restoreSuccess'        => __( 'Previous state restored! Reloading...', 'reloaded' ),
 				'restoreFailed'         => __( 'Restore failed:', 'reloaded' ),
 				'confirmRestore'        => __( 'Restore the previous state (before the last import)? The current settings will be overwritten. This is a one-shot undo — the snapshot is deleted after restore.', 'reloaded' ),
-				// Preview UI strings (populadas por admin-backup.js após preview bem-sucedido)
+				// Preview UI strings (populated by admin-panel.js after a successful preview)
 				'previewTitle'          => __( 'Preview', 'reloaded' ),
 				'previewExportedFrom'   => __( 'Exported from:', 'reloaded' ),
 				/* translators: %s = theme version string like "0.4.0-beta.64" */
@@ -704,18 +702,18 @@ add_action( 'admin_enqueue_scripts', 'rd_backup_admin_enqueue' );
 
 /*
 =============================================================================
- *  RENDER — UI da sub-seção Backup em Manutenção
+ *  RENDER — UI of the Backup sub-section in Maintenance
  * ============================================================================= */
 
 /**
- * Renderiza UI da aba Backup & Restore. Callback de `sec_backup` em panel.php
- * (Wave 11 — promovido de sub-section da Manutenção pra aba própria).
+ * Renders the Backup & Restore tab UI. Callback for `sec_backup` in panel.php
+ * (Wave 11 — promoted from a Maintenance sub-section to its own tab).
  *
- * Etapa 2: Export com checkboxes pra escolher seções (settings + category_colors).
- * UI do Import vem na Etapa 3.
+ * Stage 2: Export with checkboxes to choose sections (settings + category_colors).
+ * The Import UI comes in Stage 3.
  */
 function rd_backup_render_panel(): void {
-	// Section header com ícone (title vazio em add_settings_section evita <h2> duplicado).
+	// Section header with icon (empty title in add_settings_section avoids a duplicate <h2>).
 	rd_panel_section_header(
 		array(
 			'icon'  => 'backup',
@@ -723,7 +721,7 @@ function rd_backup_render_panel(): void {
 		)
 	);
 
-	// Conta cores customizadas + ad banners pra mostrar no hint dos checkboxes.
+	// Count custom colors + ad banners to show in the checkbox hints.
 	$custom_colors_count   = count( rd_backup_collect_category_colors() );
 	$rd_settings_for_count = get_option( 'rd_settings', array() );
 	$ad_banners_count      = is_array( $rd_settings_for_count )
@@ -731,12 +729,12 @@ function rd_backup_render_panel(): void {
 		: 0;
 
 	/*
-	 * URL inicial do download (com as 3 seções marcadas por default).
-	 * Importante: usamos LINK <a> em vez de <form>+<button> porque este
-	 * callback de section roda DENTRO do <form action="options.php"> do
-	 * painel — forms HTML aninhados são ignorados pelo browser, fazendo
-	 * o submit ir parar no form pai (options.php). Link <a> não tem esse
-	 * problema. JS atualiza o href conforme checkboxes mudam.
+	 * Initial download URL (with the 3 sections checked by default).
+	 * Important: we use an <a> LINK instead of <form>+<button> because this
+	 * section callback runs INSIDE the panel's <form action="options.php"> —
+	 * nested HTML forms are ignored by the browser, making
+	 * the submit land on the parent form (options.php). An <a> link doesn't have that
+	 * problem. JS updates the href as the checkboxes change.
 	 */
 	$admin_post_url = admin_url( 'admin-post.php' );
 	$export_nonce   = wp_create_nonce( 'rd_backup_export' );
@@ -750,10 +748,10 @@ function rd_backup_render_panel(): void {
 	);
 
 	/*
-	 * Layout: 2 rows empilhadas dentro do mesmo .rd-pdash.
-	 *   Row 1: Export full-width (3 checkboxes lado a lado no desktop)
-	 *   Row 2: Import 33% | Restore 67% (Import sozinho ocupa 100% quando não há snapshot)
-	 * Spacing entre rows via CSS (.rd-pdash > .rd-pgrid + .rd-pgrid { margin-top: 20px; })
+	 * Layout: 2 rows stacked inside the same .rd-pdash.
+	 *   Row 1: Export full-width (3 checkboxes side by side on desktop)
+	 *   Row 2: Import 33% | Restore 67% (Import alone takes 100% when there's no snapshot)
+	 * Spacing between rows via CSS (.rd-pdash > .rd-pgrid + .rd-pgrid { margin-top: 20px; })
 	 */
 	echo '<div class="rd-pdash">';
 
@@ -764,13 +762,13 @@ function rd_backup_render_panel(): void {
 		array(
 			'title' => __( 'Export', 'reloaded' ),
 			'desc'  => esc_html__( 'Download a JSON file with the theme configuration from this install. Useful for migration (sandbox → production), snapshots before risky changes, or replicating the theme on another site.', 'reloaded' ),
-			// hint movido pra inline ao lado do botão Download (mais visível e
-			// contextualizado — usuário vê o template do nome no momento da ação).
+			// hint moved inline next to the Download button (more visible and
+			// contextual — the user sees the name template at the moment of action).
 		)
 	);
 
-	// Boundary clarity banner — deixa explícito que este NÃO é backup completo do site.
-	// Variant info (azul WP) — informacional, não bloqueante.
+	// Boundary clarity banner — makes explicit that this is NOT a full site backup.
+	// Info variant (WP blue) — informational, non-blocking.
 	rd_panel_status(
 		'info',
 		'<strong>' . esc_html__( 'Theme configuration backup only.', 'reloaded' ) . '</strong> '
@@ -845,9 +843,9 @@ function rd_backup_render_panel(): void {
 	 * === ROW 2: Import (full-width) ===
 	 * === ROW 3: Restore (full-width, condicional) ===
 	 *
-	 * Cards Import e Restore cada um em sua própria row (full-width). Side-by-side
-	 * ficava apertado quando o preview do diff carregava. Restore só renderiza se
-	 * há snapshot disponível (auto-snapshot criado pelo último import).
+	 * Import and Restore cards each in their own row (full-width). Side-by-side
+	 * got cramped when the diff preview loaded. Restore only renders if
+	 * there's a snapshot available (auto-snapshot created by the last import).
 	 */
 	$last_snapshot = rd_backup_get_last_snapshot();
 	echo '<div class="rd-pgrid">';
@@ -876,7 +874,7 @@ function rd_backup_render_panel(): void {
 	</div>
 
 	<div id="rd-backup-preview" class="rd-backup-preview" hidden>
-		<!-- Conteúdo populado por admin-backup.js após preview bem-sucedido. -->
+		<!-- Content populated by admin-panel.js after a successful preview. -->
 	</div>
 
 	<div id="rd-backup-status" class="rd-pstatus" hidden role="status" aria-live="polite"></div>
@@ -885,9 +883,9 @@ function rd_backup_render_panel(): void {
 
 	echo '</div>'; // .rd-pgrid (Row 2 — Import)
 
-	// === Card: Restore (só aparece se há snapshot disponível) ===
-	// Variant "warning" (amber accent). Renderizado em sua própria row,
-	// full-width abaixo do Import.
+	// === Card: Restore (only appears if a snapshot is available) ===
+	// "warning" variant (amber accent). Rendered in its own row,
+	// full-width below Import.
 	if ( $last_snapshot ) {
 		echo '<div class="rd-pgrid">';
 		$when     = (int) ( $last_snapshot['saved_at'] ?? 0 );

@@ -1,44 +1,44 @@
 <?php
 defined( 'ABSPATH' ) || exit;
 
-/*******************************************************************************
+/********************************************************************************
  * Module: Critical CSS injection + async stylesheet loading                    *
  *                                                                              *
- * Implementa o padrão "Critical CSS inline + defer" recomendado pelo Lighthouse *
- * pra eliminar render-blocking do `<link rel="stylesheet">` principal.         *
+ * Implements the "Critical CSS inline + defer" pattern Lighthouse recommends   *
+ * to eliminate render-blocking of the main `<link rel="stylesheet">`.          *
  *                                                                              *
- * Fluxo (quando ativado via toggle):                                            *
- *   1. wp_head priority 0 → injeta `<style id="rd-critical-css">{conteúdo}</style>`  *
- *      contendo o critical CSS pré-gerado pro template atual (5-20 KB inline). *
- *   2. style_loader_tag filter → transforma o `<link rel="stylesheet">` do     *
- *      handle `rd-main-style` em `<link rel="preload" as="style"               *
- *      onload="this.rel='stylesheet'">`, carregando assíncrono.                *
- *   3. <noscript> fallback → garante que browsers sem JS continuam pegando     *
- *      o CSS de forma síncrona (acessibilidade + Lynx/curl/etc).               *
+ * Flow (when enabled via toggle):                                              *
+ *   1. wp_head priority 0 → injects `<style id="rd-critical-css">…</style>`    *
+ *      containing the prebuilt critical CSS for this template (5-20 KB inline).*
+ *   2. style_loader_tag filter → turns the `<link rel="stylesheet">` of the    *
+ *      `rd-main-style` handle into `<link rel="preload" as="style"             *
+ *      onload="this.rel='stylesheet'">`, loading asynchronously.               *
+ *   3. <noscript> fallback → ensures browsers without JS still fetch           *
+ *      the CSS synchronously (accessibility + Lynx/curl/etc).                  *
  *                                                                              *
- * Critical CSS é gerado offline via `npm run critical:{template}` (script Node *
- * `tools/critical/extract.js` que usa o package `critical` + Puppeteer).       *
- * Arquivos: `assets/css/critical-{template}.css` — pré-versionados no repo.    *
+ * Critical CSS built offline via `npm run critical:{template}` (Node script    *
+ * `tools/critical/extract.js` using the `critical` package + Puppeteer).       *
+ * Files: `assets/css/critical-{template}.css` — pre-versioned in the repo.     *
  *                                                                              *
- * Templates suportados:                                                         *
+ * Supported templates:                                                         *
  *   - home (is_home() || is_front_page())                                      *
  *   - single (is_single() && get_post_type() === 'post')                       *
- *   - page (is_page())                                                          *
- *   - archive (is_archive() || is_home() com posts_per_page custom)            *
- *   - search (is_search())                                                      *
- *   - fallback: home                                                            *
+ *   - page (is_page())                                                         *
+ *   - archive (is_archive() || is_home() with custom posts_per_page)           *
+ *   - search (is_search())                                                     *
+ *   - fallback: home                                                           *
  *                                                                              *
- * Toggle: Painel → Performance → "Inline Critical CSS" (default OFF, opt-in).  *
+ * Toggle: Panel → Performance → "Inline Critical CSS" (default OFF, opt-in).   *
  *                                                                              *
- * Risco de FOUC: se você esquecer de regenerar o critical após mudança grande *
- * de SCSS above-the-fold, vai aparecer flash visual breve quando o CSS         *
- * completo terminar de carregar. Não quebra funcionalidade — só fica feio.    *
+ * FOUC risk: if you forget to regenerate the critical after a big              *
+ * above-the-fold SCSS change, a brief visual flash appears when the full       *
+ * CSS finishes loading. Doesn't break functionality — just looks ugly.         *
  *******************************************************************************/
 
 /**
- * Detecta o template atual e retorna a chave correspondente do critical CSS.
+ * Detects the current template and returns the corresponding critical CSS key.
  *
- * @return string Chave do template ('home', 'single', 'page', 'archive', 'search').
+ * @return string Template key ('home', 'single', 'page', 'archive', 'search').
  */
 function rd_critical_css_template_key() {
 	if ( is_singular( 'post' ) ) {
@@ -53,38 +53,38 @@ function rd_critical_css_template_key() {
 	if ( is_archive() || is_category() || is_tag() || is_author() || is_date() || is_tax() ) {
 		return 'archive';
 	}
-	// is_home() / is_front_page() / qualquer outro contexto cai no fallback de home.
+	// is_home() / is_front_page() / any other context falls back to home.
 	return 'home';
 }
 
 /**
- * Lê o arquivo de critical CSS do template atual e retorna seu conteúdo.
- * Retorna string vazia se o arquivo não existir (degrada pra carga normal).
+ * Reads the current template's critical CSS file and returns its content.
+ * Returns an empty string if the file doesn't exist (degrades to normal loading).
  *
- * @return string Critical CSS pronto pra injeção inline (já minificado).
+ * @return string Critical CSS ready for inline injection (already minified).
  */
 function rd_critical_css_get_content() {
 	$template = rd_critical_css_template_key();
 	$path     = get_template_directory() . '/assets/css/critical-' . $template . '.css';
 
 	if ( ! file_exists( $path ) ) {
-		// Fallback: tenta home se o template específico não existe.
+		// Fallback: try home if the specific template doesn't exist.
 		$path = get_template_directory() . '/assets/css/critical-home.css';
 		if ( ! file_exists( $path ) ) {
 			return '';
 		}
 	}
 
-	// phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents -- path controlado por get_template_directory(), arquivo local do tema.
+	// phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents -- path controlled by get_template_directory(), local theme file.
 	$content = file_get_contents( $path );
 
 	return false !== $content ? (string) $content : '';
 }
 
 /**
- * Injeta o critical CSS inline no <head> em prioridade 0 (antes de tudo,
- * inclusive do preload de fontes em prioridade 1). Garante que regras de
- * above-the-fold já estejam disponíveis assim que o browser parsear o head.
+ * Injects the critical CSS inline in <head> at priority 0 (before everything,
+ * including the font preload at priority 1). Ensures above-the-fold rules
+ * are available as soon as the browser parses the head.
  */
 function rd_critical_css_inject_inline() {
 	if ( ! rd_get_option_bool( 'inline_critical_css' ) ) {
@@ -100,22 +100,22 @@ function rd_critical_css_inject_inline() {
 	}
 
 	$nonce_attr = rd_csp_nonce_attr();
-	// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- conteúdo de CSS pré-gerado pelo extractor confiável (`critical` npm package). Escape HTML quebraria o CSS válido. Nonce attribute already escaped by rd_csp_nonce_attr().
+	// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- CSS content pre-generated by the trusted extractor (`critical` npm package). HTML-escaping would break valid CSS. Nonce attribute already escaped by rd_csp_nonce_attr().
 	echo "\n<style id=\"rd-critical-css\"" . $nonce_attr . '>' . $content . "</style>\n";
 }
 add_action( 'wp_head', 'rd_critical_css_inject_inline', 0 );
 
 /**
- * Transforma o `<link rel="stylesheet">` do handle `rd-main-style` em
- * preload async com fallback noscript. Só atua quando o toggle está ON.
+ * Turns the `rd-main-style` handle's `<link rel="stylesheet">` into
+ * async preload with a noscript fallback. Only acts when the toggle is ON.
  *
- * Pattern recomendado pela web.dev:
+ * Pattern recommended by web.dev:
  *   <link rel="preload" href="..." as="style" onload="this.rel='stylesheet'">
  *   <noscript><link rel="stylesheet" href="..."></noscript>
  *
- * @param string $tag    O HTML completo da tag <link>.
- * @param string $handle O handle do enqueue (registrado em `mod-performance.php`).
- * @return string A tag modificada (ou inalterada se handle != rd-main-style).
+ * @param string $tag    The full HTML of the <link> tag.
+ * @param string $handle The enqueue handle (registered in `mod-performance.php`).
+ * @return string The modified tag (or unchanged if handle != rd-main-style).
  */
 function rd_critical_css_defer_main_stylesheet( $tag, $handle ) {
 	if ( ! rd_get_option_bool( 'inline_critical_css' ) ) {
@@ -127,31 +127,31 @@ function rd_critical_css_defer_main_stylesheet( $tag, $handle ) {
 	if ( 'rd-main-style' !== $handle ) {
 		return $tag;
 	}
-	// Se o critical CSS estiver ausente (template sem arquivo gerado), não
-	// faz defer — manter síncrono pra evitar tela sem CSS.
+	// If the critical CSS is missing (template without a generated file), don't
+	// defer — keep it synchronous to avoid a CSS-less screen.
 	if ( '' === rd_critical_css_get_content() ) {
 		return $tag;
 	}
 
-	// Extrai o href da tag original via regex simples (atributo href="...").
+	// Extract the href from the original tag via a simple regex (href="..." attribute).
 	if ( ! preg_match( '/href=([\'"])([^\'"]+)\1/', $tag, $matches ) ) {
 		return $tag;
 	}
 	$href = $matches[2];
 
-	// Reconstroi como preload + script de swap + noscript fallback.
+	// Rebuild as preload + swap script + noscript fallback.
 	//
-	// Antes usávamos `onload="this.rel='stylesheet'"` inline no <link>, mas
-	// inline event handlers ('unsafe-hashes' no CSP) não são cobertos por
-	// nonce/strict-dynamic. Refatorado pra um <script nonce> que adiciona o
-	// listener via JS — mesmo comportamento, sem inline handler.
+	// We used to use inline `onload="this.rel='stylesheet'"` on the <link>, but
+	// inline event handlers ('unsafe-hashes' in CSP) aren't covered by
+	// nonce/strict-dynamic. Refactored to a <script nonce> that adds the
+	// listener via JS — same behavior, without an inline handler.
 	//
-	// O script é colocado imediatamente após o <link>, então a chance de o
-	// load disparar antes do listener registrar é mínima. O check `l.sheet`
-	// cobre o caso de cache HTTP (browser cacheou o CSS e populou sheet antes
-	// do script rodar).
+	// The script is placed immediately after the <link>, so the chance of the
+	// load firing before the listener registers is minimal. The `l.sheet` check
+	// covers the HTTP cache case (browser cached the CSS and populated sheet before
+	// the script ran).
 	$nonce_attr = rd_csp_nonce_attr();
-	// phpcs:disable WordPress.WP.EnqueuedResources.NonEnqueuedStylesheet -- substituindo via style_loader_tag filter o link já enfileirado por mod-performance.php; este é o pattern oficial web.dev pra critical-CSS deferred loading.
+	// phpcs:disable WordPress.WP.EnqueuedResources.NonEnqueuedStylesheet -- replacing, via the style_loader_tag filter, the link already enqueued by mod-performance.php; this is the official web.dev pattern for critical-CSS deferred loading.
 	$preload     = sprintf(
 		'<link rel="preload" href="%s" as="style" data-rd-defer-css>',
 		esc_url( $href )

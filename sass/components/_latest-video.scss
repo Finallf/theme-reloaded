@@ -1,0 +1,62 @@
+// sass/components/_latest-video.scss
+@use '../base/variables' as *;
+
+// Latest Video widget (RD_Latest_Video_Widget).
+// Facade ON  → the markup is .rd-facade, already styled in components/_facades.scss.
+// Facade OFF → .rd-lvideo__poster mirrors that look but as a plain <a> link to
+//              the post (the .rd-facade class is avoided so navigation.js does
+//              not hijack the click).
+.rd-lvideo {
+    // Breathing room after the widget title (the h2 ::after accent line),
+    // matching .rd-popular-posts.
+    margin: 12px 0 0;
+
+    &__poster {
+        position: relative;
+        display: block;
+        width: 100%;
+        aspect-ratio: 16 / 9;
+        border-radius: 5px;
+        overflow: hidden;
+        background-color: #000; // absolute black behind the cover, like the facade
+        box-shadow: 0 8px 20px var(--rd-glass-shadow);
+
+        img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            transition: transform 0.4s ease;
+        }
+
+        .play-button {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 68px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.2s ease;
+        }
+
+        &:hover .play-button {
+            transform: translate(-50%, -50%) scale(1.1);
+        }
+    }
+
+    &__title {
+        display: block;
+        margin-top: 10px;
+        color: var(--rd-text);
+        font-weight: 600;
+        line-height: 1.35;
+        text-decoration: none;
+
+        &:hover {
+            color: var(--rd-blue-light);
+        }
+    }
+}

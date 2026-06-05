@@ -4,18 +4,18 @@ defined( 'ABSPATH' ) || exit;
 /*******************************************************************************
  * Module: Search Suggestions / Autocomplete                                    *
  *                                                                              *
- * AJAX endpoint que recebe uma query parcial e retorna até 5 posts relevantes *
- * pra mostrar como dropdown de sugestões abaixo dos search inputs.            *
+ * AJAX endpoint that receives a partial query and returns up to 5 relevant     *
+ * posts to show as a suggestions dropdown below the search inputs.             *
  *                                                                              *
- * Triggered por assets/js/search-suggestions.js (vanilla fetch, debounce      *
- * 250ms, mínimo 3 chars). Cobre 2 inputs do tema:                             *
- *   - .search-field (busca expansível do header desktop)                      *
- *   - .menu-search-field (busca dentro do painel hambúrguer)                  *
+ * Triggered by assets/js/search-suggestions.js (vanilla fetch, 250ms           *
+ * debounce, minimum 3 chars). Covers 2 theme inputs:                           *
+ *   - .search-field (expandable search of the desktop header)                  *
+ *   - .menu-search-field (search inside the hamburger panel)                   *
  *                                                                              *
- * Cache: transient `rd_sugg_{md5(query)}` TTL 15min. Queries comuns repetem   *
- * muito — cache torna custo de servidor desprezível em alto tráfego.          *
+ * Cache: transient `rd_sugg_{md5(query)}` TTL 15min. Common queries repeat     *
+ * a lot — caching makes the server cost negligible under high traffic.         *
  *                                                                              *
- * Gate: feature controlada por `enable_search_suggestions` (default ON).      *
+ * Gate: feature controlled by `enable_search_suggestions` (default ON).        *
  *******************************************************************************/
 
 const RD_SUGG_MIN_CHARS    = 3;
@@ -25,8 +25,8 @@ const RD_SUGG_CACHE_TTL    = 15 * MINUTE_IN_SECONDS;
 const RD_SUGG_CACHE_PREFIX = 'rd_sugg_';
 
 /**
- * AJAX handler — retorna JSON com até 5 posts relevantes pra query.
- * Disponível pra users anônimos + logados (nopriv + priv).
+ * AJAX handler — returns JSON with up to 5 relevant posts for the query.
+ * Available for anonymous + logged-in users (nopriv + priv).
  */
 function rd_search_suggestions_ajax() {
 	// Feature gate
@@ -34,7 +34,7 @@ function rd_search_suggestions_ajax() {
 		wp_send_json_success( array( 'results' => array() ) );
 	}
 
-	// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only endpoint público pra autocomplete; nenhum side effect destrutivo. Resultado já é cacheado por query.
+	// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only public endpoint for autocomplete; no destructive side effect. The result is already cached per query.
 	$raw_query = isset( $_GET['q'] ) ? sanitize_text_field( wp_unslash( $_GET['q'] ) ) : '';
 	$raw_query = trim( $raw_query );
 
@@ -53,8 +53,8 @@ function rd_search_suggestions_ajax() {
 		wp_send_json_success( array( 'results' => $cached ) );
 	}
 
-	// WP_Query nativo com s= — relevance ordering do WP é razoável pra
-	// portal de tamanho médio. Pra Reuters-scale, integraria Algolia/Meili.
+	// Native WP_Query with s= — WP's relevance ordering is reasonable for a
+	// medium-sized portal. For Reuters-scale, you'd integrate Algolia/Meili.
 	$query = new WP_Query(
 		array(
 			'post_type'           => 'post',
@@ -94,7 +94,7 @@ add_action( 'wp_ajax_rd_search_suggestions', 'rd_search_suggestions_ajax' );
 add_action( 'wp_ajax_nopriv_rd_search_suggestions', 'rd_search_suggestions_ajax' );
 
 /**
- * Enqueue do JS — só no frontend, fora do admin.
+ * Enqueue the JS — frontend only, outside the admin.
  */
 function rd_search_suggestions_enqueue() {
 	if ( is_admin() ) {
@@ -112,7 +112,7 @@ function rd_search_suggestions_enqueue() {
 		true
 	);
 
-	// Strings i18n + dados pro JS
+	// i18n strings + data for the JS
 	wp_localize_script(
 		'rd-search-suggestions',
 		'rdSearchSugg',
@@ -132,13 +132,13 @@ function rd_search_suggestions_enqueue() {
 add_action( 'wp_enqueue_scripts', 'rd_search_suggestions_enqueue' );
 
 /**
- * Limpa o cache de sugestões quando um post é salvo/editado/deletado.
- * Não tenta ser cirúrgico (qual query mudou) — deleta TODO o prefixo.
- * Em alto tráfego com Redis Object Cache, isto é trivial.
+ * Clears the suggestions cache when a post is saved/edited/deleted.
+ * Doesn't try to be surgical (which query changed) — deletes the WHOLE prefix.
+ * Under high traffic with Redis Object Cache, this is trivial.
  */
 function rd_search_suggestions_flush_cache() {
 	global $wpdb;
-	// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching -- batch delete de transients por prefixo: não há WP API equivalente; queries esparsas em save_post não afetam performance.
+	// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching -- batch delete of transients by prefix: there's no equivalent WP API; sparse queries on save_post don't affect performance.
 	$wpdb->query(
 		$wpdb->prepare(
 			"DELETE FROM {$wpdb->options} WHERE option_name LIKE %s OR option_name LIKE %s",

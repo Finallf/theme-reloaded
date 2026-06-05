@@ -2,30 +2,30 @@
 defined( 'ABSPATH' ) || exit;
 
 /*******************************************************************************
- * Module: Table of Contents (TOC)                                              *
- *                                                                              *
- * Auto-gera TOC no final do `the_content` do single. Renderiza como FAB        *
- * flutuante top-right (debaixo do header) que expande um painel glass         *
- * pra esquerda+baixo quando clicado.                                          *
- *                                                                              *
- * Algoritmo (no filter the_content priority 25 — após Markdown @6,             *
- * wpautop @10, picture wrap @20):                                              *
- *   1. Parse via DOMDocument, encontra todos h2/h3                            *
- *   2. Se < RD_TOC_MIN_HEADINGS, sai sem injetar TOC                          *
- *   3. Adiciona id="slug" único em cada heading (sluggify + collision counter)*
- *   4. Constrói lista nested (h2 = top level, h3 = nested)                    *
- *   5. Anexa TOC ao final do conteúdo (position:fixed = flutua livre)         *
- *                                                                              *
- * Gate: feature controlada por `enable_table_of_contents` (default ON).       *
- *******************************************************************************/
+ * Module: Table of Contents (TOC)                                             *
+ *                                                                             *
+ * Auto-generates a TOC at the end of the single's `the_content`. Renders as a *
+ * floating top-right FAB (below the header) that expands a glass panel        *
+ * to the left+down when clicked.                                              *
+ *                                                                             *
+ * Algorithm (on the_content filter priority 25 — after Markdown @6,           *
+ * wpautop @10, picture wrap @20):                                             *
+ *   1. Parse via DOMDocument, find all h2/h3                                  *
+ *   2. If < RD_TOC_MIN_HEADINGS, exit without injecting a TOC                 *
+ *   3. Add a unique id="slug" to each heading (sluggify + collision counter)  *
+ *   4. Build a nested list (h2 = top level, h3 = nested)                      *
+ *   5. Append the TOC to the end of the content (position:fixed = floats free)*
+ *                                                                             *
+ * Gate: feature controlled by `enable_table_of_contents` (default ON).        *
+ ******************************************************************************/
 
 const RD_TOC_MIN_HEADINGS = 3;
 
 /**
- * Parse + adiciona IDs únicos em h2/h3 do HTML. Retorna [HTML modificado, entries].
+ * Parse + add unique IDs to the HTML's h2/h3. Returns [modified HTML, entries].
  *
- * @param string $html HTML do conteúdo já processado (após Markdown/wpautop/etc).
- * @return array{0:string,1:array} [HTML com IDs, lista de entries].
+ * @param string $html HTML of the already-processed content (after Markdown/wpautop/etc).
+ * @return array{0:string,1:array} [HTML with IDs, list of entries].
  */
 function rd_toc_parse_and_add_ids( $html ) {
 	if ( strpos( $html, '<h2' ) === false && strpos( $html, '<h3' ) === false ) {
@@ -47,7 +47,7 @@ function rd_toc_parse_and_add_ids( $html ) {
 	$headings = $xpath->query( '//h2 | //h3' );
 
 	$used_slugs = array();
-	// Cada entry: level (2 ou 3), text (string) e slug (string).
+	// Each entry: level (2 or 3), text (string) and slug (string).
 	$entries = array();
 
 	foreach ( $headings as $heading ) {
@@ -88,10 +88,10 @@ function rd_toc_parse_and_add_ids( $html ) {
 }
 
 /**
- * Cache estático de dados pre-processados por post_id.
- * Evita re-parsear conteúdo entre rd_render_table_of_contents() e o filter.
+ * Static cache of pre-processed data per post_id.
+ * Avoids re-parsing the content between rd_render_table_of_contents() and the filter.
  *
- * @param int $post_id ID do post.
+ * @param int $post_id Post ID.
  * @return array{entries:array,modified_content:string}
  */
 function rd_toc_get_cached_data( $post_id ) {
@@ -100,9 +100,9 @@ function rd_toc_get_cached_data( $post_id ) {
 		return $cache[ $post_id ];
 	}
 
-	// Aplica TODOS os filtros the_content (markdown, wpautop, picture wrap...)
-	// EXCETO o nosso (rd_toc_filter_the_content), pra obter HTML "renderizado"
-	// sem recursão. Depois parseamos + adicionamos IDs.
+	// Apply ALL the_content filters (markdown, wpautop, picture wrap...)
+	// EXCEPT ours (rd_toc_filter_the_content), to get the "rendered" HTML
+	// without recursion. Then we parse + add IDs.
 	$raw = get_post_field( 'post_content', $post_id );
 	remove_filter( 'the_content', 'rd_toc_filter_the_content', 25 );
 	$processed = apply_filters( 'the_content', $raw );
@@ -118,12 +118,12 @@ function rd_toc_get_cached_data( $post_id ) {
 }
 
 /**
- * Template helper — renderiza o TOC HTML no markup do single.
- * Chamado de single.php DENTRO de .entry-title-row depois do post-tag.
+ * Template helper — renders the TOC HTML into the single's markup.
+ * Called from single.php INSIDE .entry-title-row after the post-tag.
  *
- * O HTML que renderiza é estruturado como:
+ * The rendered HTML is structured as:
  *   <div class="rd-toc-anchor">     ← absolute, scope sticky = entire <article>
- *     <div class="rd-toc">          ← sticky, segue scroll
+ *     <div class="rd-toc">          ← sticky, follows scroll
  *       [FAB + panel]
  *     </div>
  *   </div>
@@ -142,16 +142,16 @@ function rd_render_table_of_contents() {
 		return;
 	}
 
-	// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- HTML escapado internamente em rd_toc_render_html via esc_attr/esc_html.
+	// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- HTML escaped internally in rd_toc_render_html via esc_attr/esc_html.
 	echo rd_toc_render_html( $data['entries'] );
 }
 
 /**
- * Filter em the_content — retorna o conteúdo COM IDs adicionados nas headings.
- * Reusa cache populado por rd_toc_get_cached_data() — zero re-parse.
+ * Filter on the_content — returns the content WITH IDs added to the headings.
+ * Reuses the cache populated by rd_toc_get_cached_data() — zero re-parse.
  *
- * @param string $content HTML do conteúdo (vem após Markdown/wpautop/etc).
- * @return string Conteúdo com IDs em h2/h3.
+ * @param string $content HTML of the content (comes after Markdown/wpautop/etc).
+ * @return string Content with IDs on h2/h3.
  */
 function rd_toc_filter_the_content( $content ) {
 	if ( ! rd_get_option_bool( 'enable_table_of_contents', true ) ) {
@@ -171,19 +171,19 @@ function rd_toc_filter_the_content( $content ) {
 add_filter( 'the_content', 'rd_toc_filter_the_content', 25 );
 
 /**
- * Renderiza o HTML do TOC (FAB + painel collapsible).
+ * Renders the TOC HTML (FAB + collapsible panel).
  *
- * @param array $entries Lista de [ 'level' => 2|3, 'text' => '...', 'slug' => '...' ]
- * @return string HTML escapado pronto pra concat.
+ * @param array $entries List of [ 'level' => 2|3, 'text' => '...', 'slug' => '...' ]
+ * @return string Escaped HTML ready to concat.
  */
 function rd_toc_render_html( $entries ) {
 	$title_text = esc_html__( 'Table of contents', 'reloaded' );
 	$fab_label  = esc_attr__( 'Open table of contents', 'reloaded' );
 	$nav_label  = esc_attr__( 'Article navigation', 'reloaded' );
 
-	// Constrói a lista nested. Estratégia simples: h2 abre <li>, h3 fica
-	// dentro de <ul> aninhada no <li> do h2 anterior. Se h3 vier sem h2
-	// antes, vira top-level (raro, mas defensivo).
+	// Build the nested list. Simple strategy: h2 opens an <li>, h3 goes
+	// inside a <ul> nested in the previous h2's <li>. If an h3 comes without an h2
+	// before it, it becomes top-level (rare, but defensive).
 	$list_html      = '';
 	$h2_open        = false;
 	$nested_ul_open = false;
@@ -196,12 +196,12 @@ function rd_toc_render_html( $entries ) {
 		);
 
 		if ( 2 === $entry['level'] ) {
-			// Fecha h3 nested se estava aberto
+			// Close the nested h3 if it was open
 			if ( $nested_ul_open ) {
 				$list_html     .= '</ul>';
 				$nested_ul_open = false;
 			}
-			// Fecha h2 anterior
+			// Close the previous h2
 			if ( $h2_open ) {
 				$list_html .= '</li>';
 			}
@@ -210,7 +210,7 @@ function rd_toc_render_html( $entries ) {
 		} else { // level 3
 			if ( ! $nested_ul_open ) {
 				if ( ! $h2_open ) {
-					// Orfão: h3 sem h2 — abre <li> top-level pra ele
+					// Orphan: h3 without an h2 — open a top-level <li> for it
 					$list_html .= '<li class="rd-toc__item rd-toc__item--h2">';
 					$h2_open    = true;
 				}
@@ -220,7 +220,7 @@ function rd_toc_render_html( $entries ) {
 			$list_html .= '<li class="rd-toc__item rd-toc__item--h3">' . $link_html . '</li>';
 		}
 	}
-	// Fecha qualquer aberto
+	// Close anything still open
 	if ( $nested_ul_open ) {
 		$list_html .= '</ul>';
 	}
@@ -230,20 +230,20 @@ function rd_toc_render_html( $entries ) {
 
 	$svg_list = '<svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><circle cx="4" cy="6" r="1"/><circle cx="4" cy="12" r="1"/><circle cx="4" cy="18" r="1"/></svg>';
 
-	// Estrutura: anchor wrapper (position absolute, escopa o sticky pro
-	// <article> inteiro) + .rd-toc (sticky dentro do anchor).
+	// Structure: anchor wrapper (position absolute, scopes the sticky to the
+	// whole <article>) + .rd-toc (sticky inside the anchor).
 	//
-	// Anchor permite que sticky tenha scope = artigo inteiro sem deslocar
-	// o conteúdo (vs float:right que espremia o kicker do .entry-title-row).
+	// The anchor lets the sticky have scope = the whole article without shifting
+	// the content (vs float:right which squeezed the kicker in .entry-title-row).
 	//
-	// Padding-tracking: o anchor usa CSS custom property `--rd-single-padding`
-	// pra o `right`, definida em .single-post-content e compartilhada com o
-	// `padding` do article. Mudanças de padding no _single.scss são seguidas
-	// automaticamente pelo TOC sem alteração no _toc.scss.
-	// Sentinel = elemento invisível 1×1 px posicionado no top do anchor (= natural
-	// position do FAB antes do sticky kickar). IntersectionObserver no toc.js
-	// observa esse sentinel pra detectar quando o sticky ativa — quando o sentinel
-	// passa do top da viewport, adiciona .is-stuck no .rd-toc (que ativa box-shadow).
+	// Padding-tracking: the anchor uses the CSS custom property `--rd-single-padding`
+	// for `right`, defined in .single-post-content and shared with the
+	// article's `padding`. Padding changes in _single.scss are followed
+	// automatically by the TOC without changing _toc.scss.
+	// Sentinel = an invisible 1×1 px element positioned at the top of the anchor (= natural
+	// position of the FAB before the sticky kicks in). An IntersectionObserver in toc.js
+	// watches this sentinel to detect when the sticky activates — when the sentinel
+	// crosses the top of the viewport, it adds .is-stuck to .rd-toc (which enables box-shadow).
 	return sprintf(
 		'<div class="rd-toc-anchor">
 			<div class="rd-toc__sentinel" aria-hidden="true"></div>
@@ -264,7 +264,7 @@ function rd_toc_render_html( $entries ) {
 }
 
 /**
- * Enqueue do JS — só em singles de post.
+ * Enqueue the JS — only on post singles.
  */
 function rd_toc_enqueue_scripts() {
 	if ( ! is_singular( 'post' ) ) {

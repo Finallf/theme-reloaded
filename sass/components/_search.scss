@@ -1,5 +1,5 @@
 // ==========================================================
-// PÁGINA DE BUSCA (Fase 4)
+// SEARCH PAGE (Phase 4)
 // ==========================================================
 @use '../base/variables' as *;
 
@@ -25,7 +25,7 @@ mark.rd-highlight {
     border-radius: 5px;
     padding: 25px 30px;
     margin-bottom: 25px;
-    box-shadow: 0 8px 20px var(--rd-glass-shadow); // Adapta dark/light (plana no light)
+    box-shadow: 0 8px 20px var(--rd-glass-shadow); // Adapts dark/light (flat in light)
     position: relative;
     overflow: hidden;
 
@@ -59,7 +59,7 @@ mark.rd-highlight {
     }
 }
 
-/* Chips de Filtro (Glassmorphism) — right-aligned */
+/* Filter Chips (Glassmorphism) — right-aligned */
 .rd-search-toggles {
     display: flex;
     align-items: center;
@@ -89,7 +89,7 @@ mark.rd-highlight {
         }
 
         &.active {
-            background: rgba(0, 168, 255, 0.15); // brand-blue-light com transparência
+            background: rgba(0, 168, 255, 0.15); // brand-blue-light with transparency
             border-color: $brand-blue-light;
             color: $brand-blue-light;
         }
@@ -109,18 +109,18 @@ mark.rd-highlight {
 }
 
 // ==========================================================
-// Container de Resultados + Loading State (AJAX redistribuição)
+// Results Container + Loading State (AJAX redistribution)
 // ==========================================================
 .rd-search-results-containers {
     position: relative;
-    min-height: 200px; // espaço pro spinner durante AJAX em resultado vazio
+    min-height: 200px; // space for the spinner during AJAX on an empty result
     transition: opacity 0.2s ease;
 
     &.rd-loading {
         opacity: 0.4;
         pointer-events: none;
 
-        // Spinner centralizado no topo do container
+        // Spinner centered at the top of the container
         &::after {
             content: '';
             position: absolute;
@@ -143,9 +143,9 @@ mark.rd-highlight {
     to { transform: rotate(360deg); }
 }
 
-// Estruturas dos 4 Layouts (Garantir escalabilidade em telas diferentes)
+// Structures of the 4 Layouts (ensure scalability on different screens)
 
-// ----- GRID: efeito clonado dos cards "Níveis Recomendados" da página 404 -----
+// ----- GRID: effect cloned from the "Recommended Levels" cards of the 404 page -----
 .rd-wrapper-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -156,7 +156,7 @@ mark.rd-highlight {
         border: 1px solid $glass-border;
         border-radius: 5px;
         overflow: hidden;
-        box-shadow: 0 8px 20px var(--rd-glass-shadow); // Adapta dark/light (uniforme com os outros layouts)
+        box-shadow: 0 8px 20px var(--rd-glass-shadow); // Adapts dark/light (uniform with the other layouts)
         transition: all 250ms ease;
 
         &:hover {
@@ -195,7 +195,7 @@ mark.rd-highlight {
         }
 
         .rd-card-title {
-            // limita a 2 linhas com ellipsis (mesmo do 404)
+            // limits to 2 lines with ellipsis (same as the 404)
             display: -webkit-box;
             -webkit-line-clamp: 2;
             line-clamp: 2;
@@ -203,8 +203,8 @@ mark.rd-highlight {
             overflow: hidden;
         }
 
-        // Excerpt no grid — limite mais apertado que o vertical
-        // (cards são mais estreitos no layout grid)
+        // Grid excerpt — tighter limit than the vertical
+        // (cards are narrower in the grid layout)
         .rd-card-excerpt {
             color: $dark-text-muted;
             font-size: 0.9rem;
@@ -220,7 +220,7 @@ mark.rd-highlight {
     }
 }
 
-// ----- VERTICAL: mesmo efeito glass do Grid, layout horizontal (thumb + body) -----
+// ----- VERTICAL: same glass effect as the Grid, horizontal layout (thumb + body) -----
 .rd-wrapper-vertical {
     display: flex;
     flex-direction: column;
@@ -231,7 +231,7 @@ mark.rd-highlight {
         border: 1px solid $glass-border;
         border-radius: 5px;
         overflow: hidden;
-        box-shadow: 0 8px 20px var(--rd-glass-shadow); // Adapta dark/light (uniforme com os outros layouts)
+        box-shadow: 0 8px 20px var(--rd-glass-shadow); // Adapts dark/light (uniform with the other layouts)
         transition: all 250ms ease;
 
         &:hover {
@@ -240,8 +240,8 @@ mark.rd-highlight {
             box-shadow: 0 8px 25px rgba(0, 168, 255, 0.2);
         }
 
-        // Wrapper <a> que torna o card todo clicável (substitui os anchors
-        // internos da thumb e do título — HTML5 permite <a> envolvendo blocos).
+        // Wrapper <a> that makes the whole card clickable (replaces the internal
+        // thumb and title anchors — HTML5 allows <a> wrapping block elements).
         .rd-card-link {
             display: flex;
             color: inherit;
@@ -274,7 +274,7 @@ mark.rd-highlight {
             display: flex;
             flex-direction: column;
             justify-content: center;
-            min-width: 0; // permite o ellipsis funcionar dentro do flex
+            min-width: 0; // lets the ellipsis work inside the flex
         }
 
         .rd-card-excerpt {
@@ -283,7 +283,7 @@ mark.rd-highlight {
             line-height: 1.6;
             margin: 0 0 12px;
 
-            // limita a 3 linhas com ellipsis
+            // limits to 3 lines with ellipsis
             display: -webkit-box;
             -webkit-line-clamp: 3;
             line-clamp: 3;
@@ -291,7 +291,7 @@ mark.rd-highlight {
             overflow: hidden;
         }
 
-        // mobile: mantém horizontal pra não confundir com o Grid; só encolhe a thumb
+        // mobile: keeps horizontal so it doesn't confuse with the Grid; only shrinks the thumb
         @media (max-width: 600px) {
             .rd-card-thumb {
                 width: 120px;
@@ -315,10 +315,10 @@ mark.rd-highlight {
     }
 }
 
-// ----- COMPACT: efeito clonado dos blocos da sidebar (.widget_block) -----
-// Layout 2 colunas em desktop (cards são pequenos, deixar 1 por linha
-// gerava muito espaço vazio à direita). Mobile cai pra 1 coluna pra
-// preservar legibilidade.
+// ----- COMPACT: effect cloned from the sidebar blocks (.widget_block) -----
+// 2-column layout on desktop (cards are small, leaving 1 per row
+// left too much empty space on the right). Mobile drops to 1 column to
+// preserve legibility.
 .rd-wrapper-compact {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
@@ -328,17 +328,17 @@ mark.rd-highlight {
         grid-template-columns: 1fr;
     }
 
-    // Cards lado a lado igualam altura pelo maior. O grid já estica o
-    // <article> automaticamente (align-items: stretch default); aqui
-    // fazemos o <a> filho preencher essa altura via flex, pra que o
-    // background/borda do card cubra a área inteira em vez de só a
-    // altura natural do conteúdo.
+    // Side-by-side cards match height to the tallest. The grid already stretches
+    // the <article> automatically (align-items: stretch default); here
+    // we make the child <a> fill that height via flex, so the card's
+    // background/border covers the whole area instead of just the
+    // content's natural height.
     .rd-search-card.layout-compact {
         display: flex;
     }
 
     .rd-card-link-flex {
-        flex: 1; // preenche a altura do <article> estendido pelo grid
+        flex: 1; // fills the height of the <article> stretched by the grid
         display: flex;
         align-items: center;
         gap: 15px;
@@ -346,40 +346,44 @@ mark.rd-highlight {
         padding: 12px 15px;
         border-radius: 5px;
         border: 1px solid $glass-border;
-        box-shadow: 0 8px 20px var(--rd-glass-shadow); // Adapta dark/light (plana no light)
+        box-shadow: 0 8px 20px var(--rd-glass-shadow); // Adapts dark/light (flat in light)
         text-decoration: none;
         color: inherit;
         transition: all 0.25s ease;
 
         &:hover {
             border-color: $brand-blue-light;
-            transform: translateY(-4px); // Hover unificado com os outros cards interativos
-            box-shadow: 0 8px 25px rgba(0, 168, 255, 0.2); // Hover azul uniforme com os outros layouts
+            transform: translateY(-4px); // Hover unified with the other interactive cards
+            box-shadow: 0 8px 25px rgba(0, 168, 255, 0.2); // Uniform blue hover with the other layouts
         }
     }
 
-    // Linha de meta no compact: data + views inline, separados por gap.
-    // Sobrescreve a regra .rd-card-meta absoluta do shared (.rd-search-card)
-    // já que aqui o compact usa .rd-card-meta-compact (classe distinta) e
-    // queremos os campos no flow, não flutuando.
+    // Meta line in compact: only the date stays in the flow.
     .rd-card-meta-compact {
-        display: flex;
-        align-items: center;
-        gap: 12px;
         margin-top: 4px;
         font-size: 0.8rem;
         color: $text-muted-dark;
+    }
 
-        .rd-card-views {
-            display: inline-flex;
-            align-items: center;
-            gap: 5px;
+    // Views float in the card's bottom-right corner — consistent with the
+    // grid/vertical layouts' .rd-card-meta, instead of sitting inline right
+    // after the date. Anchored to the .layout-compact <article> (position: relative).
+    .rd-card-views {
+        position: absolute;
+        bottom: 12px;
+        right: 16px;
+        z-index: 3;
+        pointer-events: none; // doesn't block the card's link-wrapper
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        font-size: 0.8rem;
+        color: $text-muted-dark;
 
-            svg {
-                color: $brand-blue-light;
-                opacity: 0.85;
-                vertical-align: middle;
-            }
+        svg {
+            color: $brand-blue-light;
+            opacity: 0.85;
+            vertical-align: middle;
         }
     }
 }
@@ -396,9 +400,9 @@ mark.rd-highlight {
     }
 }
 
-// Estilos Compartilhados
+// Shared Styles
 .rd-search-card {
-    position: relative; // âncora pro .rd-card-meta absoluto
+    position: relative; // anchor for the absolute .rd-card-meta
 
     .rd-card-title {
         font-family: $font-heading;
@@ -406,9 +410,9 @@ mark.rd-highlight {
         margin: 0 0 8px 0;
     }
 
-    // Views "flutuam" no canto inferior direito do card sem ocupar espaço
-    // no flow — assim a altura do card depende só do título + excerpt.
-    // Se o excerpt for muito longo, o texto passa por baixo naturalmente.
+    // Views "float" in the bottom-right corner of the card without taking space
+    // in the flow — so the card height depends only on the title + excerpt.
+    // If the excerpt is very long, the text passes under it naturally.
     .rd-card-meta {
         position: absolute;
         bottom: 12px;
@@ -416,7 +420,7 @@ mark.rd-highlight {
         font-size: 0.8rem;
         color: $text-muted-dark;
         z-index: 3;
-        pointer-events: none; // não bloqueia o link-wrapper do card
+        pointer-events: none; // doesn't block the card's link-wrapper
 
         .rd-card-views {
             display: inline-flex;
@@ -432,7 +436,7 @@ mark.rd-highlight {
     }
 }
 
-// ----- Sem resultados: form de busca com look-and-feel do header -----
+// ----- No results: search form with the header's look-and-feel -----
 .rd-no-results {
     text-align: center;
     padding: 30px 0;
@@ -459,7 +463,7 @@ mark.rd-highlight {
             box-shadow: 0 0 0 3px rgba(0, 168, 255, 0.15);
         }
 
-        // Esconde o <label> "Search for:" do default do WP, mantendo só o input
+        // Hides WP's default "Search for:" <label>, keeping only the input
         label {
             flex: 1;
             display: flex;

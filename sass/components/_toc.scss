@@ -1,57 +1,57 @@
 // sass/components/_toc.scss
-// Table of Contents — FAB sticky + painel collapsible.
-// Renderizado por rd_toc_render_html() em inc/mod-table-of-contents.php.
-// JS em assets/js/toc.js gerencia toggle, click-outside, ESC.
+// Table of Contents — sticky FAB + collapsible panel.
+// Rendered by rd_toc_render_html() in inc/mod-table-of-contents.php.
+// JS in assets/js/toc.js handles toggle, click-outside, ESC.
 //
-// Posição: PREPEND no .entry-content + float:right + position:sticky.
-//   Resultado: FAB ancorado horizontalmente ao canto direito do post,
-//   movimenta SÓ na vertical (acompanha scroll), some quando o conteúdo acaba.
+// Position: PREPEND in .entry-content + float:right + position:sticky.
+// Result: FAB anchored horizontally to the right edge of the post,
+// moves ONLY vertically (follows scroll), disappears when the content ends.
 //
 // Visual:
-//   - FAB: estilo discreto seguindo .back-to-top (background sutil, sem azul
-//     agressivo) — não rouba atenção do conteúdo
-//   - Panel: glass sólido seguindo pattern do hamburger menu
-//     (rgba($color-menu-bg, 0.96)) — alta legibilidade SOBRE qualquer fundo
+// - FAB: discreet style following .back-to-top (subtle background, no aggressive
+// blue) — doesn't steal attention from the content
+// - Panel: solid glass following the hamburger menu pattern
+// (rgba($color-menu-bg, 0.96)) — high legibility OVER any background
 
 @use '../base/variables' as *;
 
 // ==========================================================
 // Anchor + sticky-inside-anchor
 //
-// O float:right deslocava o kicker do .entry-title-row (flex space-between).
-// Voltamos pro anchor wrapper (position: absolute, escopa sticky pro article
-// inteiro mas SEM alterar o fluxo do conteúdo).
+// The float:right shifted the .entry-title-row kicker (flex space-between).
+// We went back to the anchor wrapper (position: absolute, scopes sticky to the whole
+// article but WITHOUT changing the content flow).
 //
 // Padding auto-tracking:
-//   --rd-single-padding é definida em .single-post-content (_single.scss).
-//   O anchor lê a variável no `right`, então muda padding lá → muda right aqui
-//   automaticamente. Override em media query (mobile, etc.) precisa SÓ
-//   redeclarar `--rd-single-padding` dentro do breakpoint do .single-post-content.
+// --rd-single-padding is defined in .single-post-content (_single.scss).
+// The anchor reads the variable in `right`, so changing the padding there → changes right here
+// automatically. An override in a media query (mobile, etc.) only needs to
+// redeclare `--rd-single-padding` inside the .single-post-content breakpoint.
 // ==========================================================
 .rd-toc-anchor {
     position: absolute;
     top: 52px;
-    right: var(--rd-single-padding, 1.25rem); // fallback: valor desktop atual
+    right: var(--rd-single-padding, 1.25rem); // fallback: current desktop value
     height: 100%;
     width: 40px;
-    pointer-events: none; // anchor é só "trilha" — não bloqueia cliques
+    pointer-events: none; // anchor is just a "track" — doesn't block clicks
     z-index: 100;
 }
 
 .rd-toc {
-    // Sticky dentro do anchor. top:20px = distância do topo da viewport quando
-    // sticky kicks in. Inicial position (sem scroll) = top do anchor.
+    // Sticky inside the anchor. top:20px = distance from the top of the viewport when
+    // sticky kicks in. Initial position (no scroll) = top of the anchor.
     position: sticky;
     top: 20px;
     width: 40px;
     height: 40px;
-    margin-left: auto; // alinha à direita dentro do anchor de 40px (no-op mas defensivo)
-    pointer-events: auto; // FAB clica normalmente
+    margin-left: auto; // aligns right inside the 40px anchor (no-op but defensive)
+    pointer-events: auto; // FAB clicks normally
 }
 
-// Sentinel invisível pra detectar o estado "sticky ativo" via IntersectionObserver.
-// Posicionado no top do anchor (= natural position do FAB antes do sticky kickar).
-// Quando o sentinel passa do top da viewport, o JS adiciona .is-stuck no .rd-toc.
+// Invisible sentinel to detect the "sticky active" state via IntersectionObserver.
+// Positioned at the top of the anchor (= natural FAB position before sticky kicks in).
+// When the sentinel passes the top of the viewport, the JS adds .is-stuck on .rd-toc.
 .rd-toc__sentinel {
     position: absolute;
     top: 0;
@@ -61,7 +61,7 @@
 }
 
 // ==========================================================
-// FAB — pattern visual do .back-to-top (discreto, neutro)
+// FAB — visual pattern of .back-to-top (discreet, neutral)
 // ==========================================================
 .rd-toc__fab {
     width: 100%;
@@ -77,9 +77,9 @@
     padding: 0;
     transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease, box-shadow 0.3s ease;
 
-    // Box-shadow só quando sticky ativou (.is-stuck adicionado pelo JS via
-    // IntersectionObserver). Visual de "lifted off the page" quando o FAB
-    // se descola da posição natural pra acompanhar o scroll.
+    // Box-shadow only when sticky activated (.is-stuck added by JS via
+    // IntersectionObserver). "Lifted off the page" look when the FAB
+    // detaches from its natural position to follow the scroll.
     .rd-toc.is-stuck & {
         box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
     }
@@ -103,19 +103,19 @@
 }
 
 // ==========================================================
-// Panel — pattern visual do hamburger menu (#212121 @ 96%, sólido)
+// Panel — visual pattern of the hamburger menu (#212121 @ 96%, solid)
 // ==========================================================
 .rd-toc__panel {
     position: absolute;
-    // Anchored no canto superior DIREITO do FAB. Panel cresce pra ESQUERDA
-    // (right: 100% + gap) e pra BAIXO (top: 0).
+    // Anchored to the top-RIGHT corner of the FAB. Panel grows to the LEFT
+    // (right: 100% + gap) and DOWN (top: 0).
     top: 0;
     right: calc(100% + 12px);
     width: 320px;
     max-height: 70vh;
     overflow-y: auto;
 
-    // Glass sólido como o hamburger — alta legibilidade sobre qualquer fundo
+    // Solid glass like the hamburger — high legibility over any background
     background-color: rgba($color-menu-bg, 0.96);
     border: 1px solid $glass-border;
     border-radius: 5px;
@@ -123,7 +123,7 @@
 
     padding: 18px 22px;
 
-    // Estado inicial: escondido, escala 0 ancorado no canto superior direito
+    // Initial state: hidden, scale 0 anchored to the top-right corner
     transform: scale(0);
     transform-origin: top right;
     opacity: 0;
@@ -132,24 +132,24 @@
         transform 0.25s cubic-bezier(0.4, 0, 0.2, 1),
         opacity 0.2s ease;
 
-    // Mobile (Decisão 3-B): card quase fullscreen, mas abrindo A PARTIR DO FAB
-    // (não do canto inferior — antes ficava esquisito, parecia que saía do
+    // Mobile (Decision 3-B): near-fullscreen card, but opening FROM THE FAB
+    // (not from the bottom corner — it used to look weird, like it came out of the
     // back-to-top).
     //
-    // FAB tá sticky em top:20px da viewport (height:40px → bottom em y=60).
-    // Painel position:fixed em top:70px (10px abaixo do FAB), right alinhado
-    // com a borda do FAB, transform-origin:top right → cresce do canto
-    // superior direito (onde o FAB está) pra baixo+esquerda.
+    // The FAB is sticky at top:20px of the viewport (height:40px → bottom at y=60).
+    // Panel position:fixed at top:70px (10px below the FAB), right aligned
+    // with the FAB edge, transform-origin:top right → grows from the top-right
+    // corner (where the FAB is) toward bottom+left.
     @media (max-width: 600px) {
         position: fixed;
         top: 70px;
         right: 20px;
-        width: calc(100vw - 40px); // 20px de margem em cada lado
-        max-height: calc(100vh - 90px); // resto da tela disponível
+        width: calc(100vw - 40px); // 20px margin on each side
+        max-height: calc(100vh - 90px); // rest of the available screen
         transform-origin: top right;
     }
 
-    // Quando aberto (.is-open no .rd-toc parent)
+    // When open (.is-open on the .rd-toc parent)
     .rd-toc.is-open & {
         transform: scale(1);
         opacity: 1;
@@ -158,9 +158,9 @@
 }
 
 // ==========================================================
-// Conteúdo do panel — cores HARDCODED dark (panel sempre tem bg #212121,
-// não pode usar variáveis theme-adaptive que mudam em light mode e ficam
-// ilegíveis sobre o fundo escuro). Mesmo pattern do hamburger menu.
+// Panel content — HARDCODED dark colors (the panel always has bg #212121,
+// can't use theme-adaptive variables that change in light mode and become
+// illegible over the dark background). Same pattern as the hamburger menu.
 // ==========================================================
 .rd-toc__title {
     margin: 0 0 14px;

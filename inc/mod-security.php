@@ -6,36 +6,36 @@ defined( 'ABSPATH' ) || exit;
  *******************************************************************************/
 
 /**
- * Lista canônica dos headers de segurança aplicados pelo tema.
+ * Canonical list of the security headers applied by the theme.
  *
- * Centralizada em uma única função pra garantir consistência entre o frontend
- * (action `send_headers`) e o REST API (filter `rest_pre_serve_request`) —
- * os dois code paths do WP que precisam emitir headers separadamente.
+ * Centralized in a single function to ensure consistency between the frontend
+ * (action `send_headers`) and the REST API (filter `rest_pre_serve_request`) —
+ * the two WP code paths that need to emit headers separately.
  *
- * @return array<string,string> Mapa cabeçalho → valor.
+ * @return array<string,string> Header → value map.
  */
 function rd_get_security_headers_map() {
 	return array(
-		// Anti-clickjacking — só permite iframes da própria origem
+		// Anti-clickjacking — only allows iframes from the same origin
 		'X-Frame-Options'        => 'SAMEORIGIN',
-		// Browser deve respeitar o Content-Type declarado, sem "adivinhar" pelo conteúdo
+		// Browser must respect the declared Content-Type, no "guessing" from content
 		'X-Content-Type-Options' => 'nosniff',
-		// Limita o referer cross-origin: só envia origin (sem path), nada em HTTPS→HTTP
+		// Limits the cross-origin referer: sends origin only (no path), nothing on HTTPS→HTTP
 		'Referrer-Policy'        => 'strict-origin-when-cross-origin',
-		// Bloqueia features sensíveis que o tema não usa (defesa em profundidade)
+		// Blocks sensitive features the theme doesn't use (defense in depth)
 		'Permissions-Policy'     => 'camera=(), microphone=(), geolocation=(), payment=(), usb=(), magnetometer=(), gyroscope=()',
 	);
 }
 
 /**
- * Envia os headers de segurança no frontend.
+ * Sends the security headers on the frontend.
  *
- * Aplica apenas no frontend pra não interferir com iframes internos,
- * inline scripts pesados e AJAX que o painel admin do WP usa intensamente.
+ * Applies only on the frontend so it doesn't interfere with internal iframes,
+ * heavy inline scripts and AJAX that the WP admin panel uses heavily.
  *
- * O toggle no painel segue o padrão de migração seguro: instalações
- * existentes ficam OFF até o admin habilitar conscientemente; novas
- * instalações ganham ON por default via rd_set_default_options().
+ * The panel toggle follows the safe migration pattern: existing
+ * installations stay OFF until the admin consciously enables it; new
+ * installations get ON by default via rd_set_default_options().
  */
 function rd_send_security_headers() {
 	if ( is_admin() ) {
@@ -52,14 +52,14 @@ function rd_send_security_headers() {
 add_action( 'send_headers', 'rd_send_security_headers' );
 
 /**
- * Aplica os mesmos headers de segurança nas respostas do REST API.
+ * Applies the same security headers to REST API responses.
  *
- * REST API usa code path próprio (WP_REST_Server::serve_request()) que NÃO
- * dispara a action `send_headers`. Sem este hook, endpoints `/wp-json/*` ficam
- * sem X-Frame-Options, Referrer-Policy e Permissions-Policy — só X-Content-Type
- * (que o WP core já adiciona) e HSTS (set pelo Nginx) restavam.
+ * The REST API uses its own code path (WP_REST_Server::serve_request()) that does
+ * NOT fire the `send_headers` action. Without this hook, `/wp-json/*` endpoints are
+ * left without X-Frame-Options, Referrer-Policy and Permissions-Policy — only X-Content-Type
+ * (which WP core already adds) and HSTS (set by Nginx) remained.
  *
- * Achado da Wave 9 C (OWASP ZAP scan 2026-05-22).
+ * Finding from Wave 9 C (OWASP ZAP scan 2026-05-22).
  *
  * @param bool $served Whether the request has already been served.
  * @return bool Unchanged.
@@ -78,22 +78,22 @@ function rd_send_security_headers_to_rest( $served ) {
 add_filter( 'rest_pre_serve_request', 'rd_send_security_headers_to_rest' );
 
 /*******************************************************************************
- * Desabilita o endpoint XML-RPC                                               *
+ * Disables the XML-RPC endpoint                                               *
  *                                                                             *
- * XML-RPC é a API legada do WordPress, usada por apps mobile antigos e pelo   *
- * sistema de pingbacks/trackbacks. Como praticamente ninguém usa hoje, ela    *
- * costuma ser alvo de brute-force e amplificação de DDoS (pingback.ping).     *
+ * XML-RPC is WordPress's legacy API, used by old mobile apps and by the       *
+ * pingback/trackback system. Since almost nobody uses it today, it tends      *
+ * to be a target for brute-force and DDoS amplification (pingback.ping).      *
  *                                                                             *
- * O filtro `xmlrpc_enabled` faz o WP responder com 405 Method Not Allowed     *
- * em /xmlrpc.php, mas mantém o arquivo acessível (alguns hosts roteiam por    *
- * lá pra healthchecks). Pra fechar tudo, bloqueia também o header de          *
- * descoberta (`X-Pingback`) e o link no <head>.                               *
+ * The `xmlrpc_enabled` filter makes WP respond with 405 Method Not Allowed    *
+ * on /xmlrpc.php, but keeps the file accessible (some hosts route through     *
+ * it for healthchecks). To close everything, it also blocks the discovery     *
+ * header (`X-Pingback`) and the link in <head>.                               *
  */
 if ( rd_get_option_bool( 'disable_xmlrpc' ) ) {
 
-	// 1. Bloqueia o acesso direto ao /xmlrpc.php (GET e POST) — devolve 403.
-	// Sem isso, um GET no arquivo mostra "XML-RPC server accepts POST
-	// requests only." (mensagem hardcoded do WP antes dos filtros).
+	// 1. Block direct access to /xmlrpc.php (GET and POST) — returns 403.
+	// Without this, a GET on the file shows "XML-RPC server accepts POST
+	// requests only." (WP's hardcoded message before the filters).
 	add_action(
 		'init',
 		function () {
@@ -107,11 +107,11 @@ if ( rd_get_option_bool( 'disable_xmlrpc' ) ) {
 		}
 	);
 
-	// 2. Camada extra: caso alguma rota chegue no servidor XML-RPC sem
-	// passar pelo arquivo, o filtro retorna false em todos os métodos.
+	// 2. Extra layer: in case some route reaches the XML-RPC server without
+	// going through the file, the filter returns false on all methods.
 	add_filter( 'xmlrpc_enabled', '__return_false' );
 
-	// 3. Remove o header X-Pingback que o WP envia em todas as páginas.
+	// 3. Remove the X-Pingback header that WP sends on every page.
 	add_filter(
 		'wp_headers',
 		function ( $headers ) {
@@ -120,30 +120,30 @@ if ( rd_get_option_bool( 'disable_xmlrpc' ) ) {
 		}
 	);
 
-	// 4. Remove o <link rel="EditURI"> (RSD) do <head> — pista de descoberta.
+	// 4. Remove the <link rel="EditURI"> (RSD) from <head> — discovery hint.
 	remove_action( 'wp_head', 'rsd_link' );
 }
 
 /*******************************************************************************
- * White Screen of Death (WSOD) — customização da mensagem de erro fatal       *
+ * White Screen of Death (WSOD) — customizing the fatal error message          *
  *                                                                             *
- * Quando o PHP fatala (out of memory, exception não tratada, etc), o          *
- * WordPress 5.2+ mostra uma página "There has been a critical error on this   *
- * website."                                                                   *
+ * When PHP fatals (out of memory, unhandled exception, etc), WordPress        *
+ * 5.2+ shows a "There has been a critical error on this website." page.       *
  *                                                                             *
- * Não dá pra customizar o LAYOUT (HTML/CSS) sem risco — em fatal o tema pode  *
- * não estar funcional, então o WP intencionalmente usa renderer minimalista.  *
- * Mas dá pra customizar o TEXTO via filters, deixando branded e em pt-BR.    *
  *                                                                             *
- * Pra uma página visualmente rica em erro 500 seria preciso configurar        *
- * `php_value display_errors Off` no servidor + página HTML estática separada *
- * apontada por ErrorDocument no .htaccess. Isso fica fora do escopo do tema. *
+ * The LAYOUT (HTML/CSS) can't be customized safely — on a fatal the theme     *
+ * may not be functional, so WP intentionally uses a minimalist renderer.      *
+ * But the TEXT can be customized via filters, making it branded.              *
+ *                                                                             *
+ * For a visually rich 500 error page you'd need to configure                  *
+ * `php_value display_errors Off` on the server + a separate static HTML       *
+ * page pointed to by ErrorDocument in .htaccess. That's outside theme scope.  *
  */
 
-// Customiza o título da aba do navegador na tela de erro fatal
+// Customizes the browser tab title on the fatal error screen
 add_filter(
 	'wp_php_error_args',
-	// phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed -- $error faz parte da assinatura do filter `wp_php_error_args`, mesmo quando só editamos o título.
+	// phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed -- $error is part of the `wp_php_error_args` filter signature, even when we only edit the title.
 	function ( $args, $error ) {
 		/* translators: %s: site name from WordPress general settings */
 		$args['title'] = sprintf( __( 'Critical Error - %s', 'reloaded' ), get_bloginfo( 'name' ) );
@@ -154,27 +154,27 @@ add_filter(
 );
 
 /**
- * Mensagem da WSOD totalmente brandeada — replica o visual do card de
- * manutenção (`mod-maintenance.php`) injetando <style> inline que sobrescreve
- * o template grayscale padrão do `_default_wp_die_handler`.
+ * Fully branded WSOD message — replicates the look of the maintenance
+ * card (`mod-maintenance.php`) by injecting an inline <style> that overrides
+ * the default grayscale template of `_default_wp_die_handler`.
  *
- * Por que inline e não enqueue: em fatal o tema pode estar quebrado, então
- * o handler renderiza ANTES do `wp_head` ter chance de rodar. CSS injetado
- * direto no body funciona em qualquer cenário.
+ * Why inline and not enqueue: on a fatal the theme may be broken, so
+ * the handler renders BEFORE `wp_head` has a chance to run. CSS injected
+ * directly into the body works in any scenario.
  *
- * Por que não usar o helper do mod-maintenance: aquele tem markup específico
- * (h1 com pulse animation, formulário de login). WSOD precisa de algo
- * estático e isolado pra não introduzir dependência cross-module em código
- * que roda durante crash.
+ * Why not use the mod-maintenance helper: that one has specific markup
+ * (h1 with pulse animation, login form). WSOD needs something
+ * static and isolated to avoid introducing a cross-module dependency in code
+ * that runs during a crash.
  */
 add_filter(
 	'wp_php_error_message',
-	// phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed -- $message e $error fazem parte da assinatura do filter `wp_php_error_message`, mas reescrevemos a mensagem do zero (não usamos a default).
+	// phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed -- $message and $error are part of the `wp_php_error_message` filter signature, but we rewrite the message from scratch (we don't use the default).
 	function ( $message, $error ) {
-		// Logo: tenta usar Custom Logo do WP, mas com fallback DEFENSIVO porque
-		// WSOD roda quando o PHP fatalou — o WP pode estar parcialmente quebrado.
-		// Se rd_get_site_logo() não estiver disponível (core.php não carregou
-		// ou helper indisponível), cai pro hardcoded sem quebrar.
+		// Logo: tries to use WP's Custom Logo, but with a DEFENSIVE fallback because
+		// WSOD runs when PHP fatalled — WP may be partially broken.
+		// If rd_get_site_logo() isn't available (core.php didn't load
+		// or the helper is unavailable), falls back to the hardcoded one without breaking.
 		$logo_url = esc_url( get_template_directory_uri() . '/assets/img/logo-reloaded-panel.webp' );
 		if ( function_exists( 'rd_get_site_logo' ) ) {
 			$logo_data = rd_get_site_logo( 'medium' );
@@ -187,14 +187,14 @@ add_filter(
 		$body1    = esc_html__( 'The server returned an unexpected error. The site administrator has been automatically notified by email and will investigate as soon as possible.', 'reloaded' );
 		$body2    = esc_html__( 'In the meantime, please try refreshing the page in a few minutes.', 'reloaded' );
 
-		// CSP nonce — WSOD handler roda via _default_wp_die_handler, fora do
-		// fluxo normal de wp_head, então escapa do output buffer do mod-csp.
+		// CSP nonce — the WSOD handler runs via _default_wp_die_handler, outside
+		// the normal wp_head flow, so it escapes mod-csp's output buffer.
 		$nonce_attr = function_exists( 'rd_csp_nonce_attr' ) ? rd_csp_nonce_attr() : '';
 
-		// Logo HTML envolvido em <picture> se houver next-gen sources no disco.
-		// Fallback defensivo pro <img> cru se mod-image-formats não carregou
-		// (cenário relevante — WSOD roda quando PHP fatalou, pode ser exatamente
-		// no mod-image-formats).
+		// Logo HTML wrapped in <picture> if there are next-gen sources on disk.
+		// Defensive fallback to the raw <img> if mod-image-formats didn't load
+		// (relevant scenario — WSOD runs when PHP fatalled, which could be exactly
+		// in mod-image-formats).
 		$logo_img_html = '<img src="' . $logo_url . '" alt="' . $site . '" class="rd-wsod-logo" width="250" height="58">';
 		$logo_html     = function_exists( 'rd_img_wrap_url_in_picture' )
 			? rd_img_wrap_url_in_picture( $logo_url, $logo_img_html )

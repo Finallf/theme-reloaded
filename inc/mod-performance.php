@@ -1,68 +1,68 @@
 <?php
 defined( 'ABSPATH' ) || exit;
 /*******************************************************************************
- * Module: Performance - Otimizações e Limpeza do WordPress
+ * Module: Performance - WordPress Optimizations and Cleanup
  *******************************************************************************/
 
 /*******************************************************************************
- * Suporte a Markdown, Alertas (GFM), Âncoras Dinâmicas        - (Performance) *
+ * Markdown Support, Alerts (GFM), Dynamic Anchors             - (Performance) *
  *******************************************************************************/
 function rd_markdown_support( $content ) {
 
 	if ( ! is_admin() && rd_get_option_bool( 'markdown_enabled' ) ) {
 
-		// OTIMIZAÇÃO: Carrega a biblioteca pesada apenas quando realmente for usar
+		// OPTIMIZATION: Load the heavy library only when it will actually be used
 		if ( ! class_exists( 'Parsedown' ) ) {
 			require_once get_template_directory() . '/lib/Parsedown.php';
 		}
 
 		$parsedown = new Parsedown();
 		$parsedown->setSafeMode( false );
-		$html = $parsedown->text( $content ); // Converte o Markdown básico
+		$html = $parsedown->text( $content ); // Converts the basic Markdown
 
-		// 1. Intercepta os blocos de citação que contêm os alertas
+		// 1. Intercept the blockquotes that contain the alerts
 		$html = preg_replace(
 			'/<blockquote>\s*<p>\s*\[!(NOTE|TIP|IMPORTANT|WARNING|CAUTION)\]\s*(?:<br\s*\/?>|<\/p>)?/i',
 			'<blockquote class="gh-alert gh-alert-$1"><p>',
 			$html
 		);
 
-		// 2. Adiciona IDs automáticos e limpos a todos os cabeçalhos (h1 até h6)
+		// 2. Add automatic, clean IDs to all headings (h1 through h6)
 		$html = preg_replace_callback(
 			'/<h([1-6])>(.*?)<\/h\1>/is',
 			function ( $matches ) {
 				$level          = $matches[1];
 				$texto_original = $matches[2];
 
-				// 1. Remove tags HTML de dentro do título
+				// 1. Strip HTML tags from inside the title
 				$texto_puro = wp_strip_all_tags( $texto_original );
 
-				// 2. Converte para minúsculas (suportando acentuação)
+				// 2. Convert to lowercase (with accent support)
 				$id = mb_strtolower( $texto_puro, 'UTF-8' );
 
-				// 3. A REFINAÇÃO FINAL DO GITHUB:
-				// Mantém Letras (\p{L}), Marcadores de cor (\p{M}), Formatadores/Colas invisíveis (\p{Cf}),
-				// Números (\p{Nd}), Espaços (\s) e Hifens (-). Apaga os Símbolos base.
+				// 3. GITHUB'S FINAL REFINEMENT:
+				// Keep Letters (\p{L}), combining Marks (\p{M}), invisible Formatters/joiners (\p{Cf}),
+				// Numbers (\p{Nd}), Spaces (\s) and Hyphens (-). Drop the base Symbols.
 				$id = preg_replace( '/[^\p{L}\p{M}\p{Cf}\p{Nd}\s-]/u', '', $id );
 
-				// 4. O SEGREDO DO GITHUB: Troca CADA espaço individual por um hífen.
+				// 4. GITHUB'S SECRET: Replace EACH individual space with a hyphen.
 				$id = preg_replace( '/\s/u', '-', $id );
 
-				// 5. Codifica para URL (Transforma a "cola" e o "fantasma" invisíveis em %E2...%EF...)
+				// 5. URL-encode (turns the invisible "joiner" and "ghost" chars into %E2...%EF...)
 				$id = rawurlencode( $id );
 
-				// Proteção extra: se o título sumir completamente
+				// Extra safety: if the title disappears entirely
 				if ( empty( $id ) || $id === '-' ) {
 					$id = 'secao-' . uniqid();
 				}
 
-				// Reconstrói a tag HTML com o novo ID inserido
+				// Rebuild the HTML tag with the new ID inserted
 				return "<h{$level} id=\"{$id}\">{$texto_original}</h{$level}>";
 			},
 			$html
 		);
 
-		// 3. Remove as tags <p> extras em volta de <br> isolados
+		// 3. Remove the extra <p> tags around isolated <br> elements
 		$html = preg_replace( '/<p>\s*(<br\s*\/?>)\s*<\/p>/i', '$1', $html );
 
 		return $html;
@@ -72,25 +72,31 @@ function rd_markdown_support( $content ) {
 add_filter( 'the_content', 'rd_markdown_support', 6 );
 
 /*******************************************************************************
- * Enfileira scripts e estilos (CSS e JS)                      - (Performance) *
+ * Enqueues scripts and styles (CSS and JS)                    - (Performance) *
  *******************************************************************************/
 function rd_scripts() {
 	wp_enqueue_style( 'rd-main-style', get_template_directory_uri() . '/assets/css/style.css', array(), rd_asset_version( '/assets/css/style.css' ) );
-	wp_enqueue_script( 'rd-navigation', get_template_directory_uri() . '/assets/js/navigation.js', array(), rd_asset_version( '/assets/js/navigation.js' ), true ); // Carrega no footer
+	wp_enqueue_script( 'rd-navigation', get_template_directory_uri() . '/assets/js/navigation.js', array(), rd_asset_version( '/assets/js/navigation.js' ), true ); // Load in the footer
 
-	// INJETA AS TRADUÇÕES DO JS LOGO ABAIXO DO SCRIPT PRINCIPAL
+	// INJECT THE JS TRANSLATIONS RIGHT BELOW THE MAIN SCRIPT
 	wp_localize_script(
 		'rd-navigation',
 		'reloaded_i18n',
 		array(
-			'copied'     => esc_html__( 'Key Copied!', 'reloaded' ),
-			'copy_error' => esc_html__( 'Error copying: ', 'reloaded' ),
+			'copied'          => esc_html__( 'Key Copied!', 'reloaded' ),
+			'copy_error'      => esc_html__( 'Error copying: ', 'reloaded' ),
+			'menu_close'      => esc_html__( 'Close navigation menu', 'reloaded' ),
+			'menu_open'       => esc_html__( 'Open navigation menu', 'reloaded' ),
+			'comment_sending' => esc_html__( 'Sending…', 'reloaded' ),
+			'comment_sent'    => esc_html__( 'Comment sent! Loading…', 'reloaded' ),
+			'comment_error'   => esc_html__( 'Unexpected error submitting the comment. Reload the page and try again.', 'reloaded' ),
+			'network_error'   => esc_html__( 'Network error: ', 'reloaded' ),
 		)
 	);
 
-	// Trava do Painel: Só carrega o Prism.js se a chave estiver ligada
+	// Panel gate: only load Prism.js if the toggle is enabled
 	if ( rd_get_option_bool( 'prism_js' ) ) {
-		// Carrega o Prism.js apenas nas páginas de artigo.
+		// Load Prism.js only on article pages.
 		if ( is_single() || is_page() ) {
 			wp_enqueue_script( 'rd-prism-js', get_template_directory_uri() . '/lib/prism.js', array(), '1.30.0', true );
 		}
@@ -98,15 +104,15 @@ function rd_scripts() {
 }
 
 /*******************************************************************************
- * Adiciona `defer` aos scripts do tema                        - (Performance) *
+ * Adds `defer` to the theme scripts                           - (Performance) *
  *                                                                             *
- * Defer = baixa em paralelo com HTML, executa só depois do DOM parsed e ANTES *
- * do DOMContentLoaded. Como nossos scripts rodam em DOMContentLoaded mesmo,   *
- * é seguro. Lighthouse detecta o atributo e ajusta a prioridade de download   *
- * (mais baixa, libera bandwidth pra recursos críticos primeiro).              *
+ * Defer = downloads in parallel with HTML, runs only after the DOM is parsed  *
+ * and BEFORE DOMContentLoaded. Since our scripts run on DOMContentLoaded      *
+ * anyway, it's safe. Lighthouse detects the attribute and lowers the download *
+ * priority (frees bandwidth for critical resources first).                    *
  *                                                                             *
- * Usa o filter `script_loader_tag` em vez da API moderna `'strategy' =>       *
- * 'defer'` (WP 6.3+) pra manter compatibilidade com a versão mínima.          *
+ * Uses the `script_loader_tag` filter instead of the modern `'strategy' =>    *
+ * 'defer'` (WP 6.3+) to keep compatibility with the minimum version.          *
  *******************************************************************************/
 function rd_defer_theme_scripts( $tag, $handle ) {
 	$deferred = array( 'rd-navigation', 'rd-prism-js' );
@@ -118,18 +124,18 @@ function rd_defer_theme_scripts( $tag, $handle ) {
 add_filter( 'script_loader_tag', 'rd_defer_theme_scripts', 10, 2 );
 
 /*******************************************************************************
- * Otimiza thumbnails do bloco "Últimos Posts" do Gutenberg    - (Performance) *
- *                                                                              *
- * O `core/latest-posts` block usa por default o size `thumbnail` do WP        *
- * (150x150 cropado), que no nosso layout do widget é exibido ~128x78 — fora  *
- * de aspect ratio, e dependendo do source o WP serve a imagem ORIGINAL        *
- * (414x622, 514x512 etc.) porque nenhum size próximo bate.                    *
+ * Optimizes the Gutenberg "Latest Posts" block thumbnails     - (Performance) *
  *                                                                             *
- * Injetamos o atributo `featuredImageSizeSlug` na renderização do bloco       *
- * forçando uso do nosso `rd-micro` (150x84, 16:9 hardcrop) — bate com o       *
- * aspect ratio do widget, fica leve.                                          *
+ * The `core/latest-posts` block uses WP's `thumbnail` size by default         *
+ * (150x150 cropped), which in our widget layout renders ~128x78 — off         *
+ * aspect ratio, and depending on the source WP serves the ORIGINAL image      *
+ * (414x622, 514x512 etc.) because no nearby size matches.                     *
  *                                                                             *
- * Só vale se `image_resizing` está ativo (sizes custom registrados).          *
+ * We inject the `featuredImageSizeSlug` attribute into the block render       *
+ * forcing use of our `rd-micro` (150x84, 16:9 hardcrop) — matches the         *
+ * widget's aspect ratio, stays lightweight.                                   *
+ *                                                                             *
+ * Only applies if `image_resizing` is active (custom sizes registered).       *
  *******************************************************************************/
 function rd_override_latest_posts_size( $parsed_block ) {
 	if ( ! rd_get_option_bool( 'image_resizing' ) ) {
@@ -144,22 +150,22 @@ function rd_override_latest_posts_size( $parsed_block ) {
 add_filter( 'render_block_data', 'rd_override_latest_posts_size' );
 
 /*******************************************************************************
- * Override do `sizes` attribute pro size `rd-card`            - (Performance) *
- *                                                                              *
- * O WP gera `sizes="(max-width: 600px) 100vw, 600px"` por default, dizendo   *
- * pro browser "vou ocupar 600px em desktop". Mas no nosso grid 2-col com      *
- * sidebar, cada card mede ~461px em desktop ≥1025px. Browser acaba pegando o *
- * variant 600px ao invés de algo menor.                                       *
+ * Override the `sizes` attribute for the `rd-card` size       - (Performance) *
  *                                                                             *
- * Corrigimos pro browser saber a largura real por breakpoint:                  *
- *   - Desktop (≥1025px com sidebar): ~461px por card                          *
- *   - Tablet (769-1024px): 50vw (2 cards por linha sem sidebar)               *
- *   - Mobile (≤768px): 100vw (1 coluna)                                       *
+ * WP generates `sizes="(max-width: 600px) 100vw, 600px"` by default, telling  *
+ * the browser "I'll take 600px on desktop". But in our 2-col grid with a      *
+ * sidebar, each card measures ~461px on desktop ≥1025px. The browser ends     *
+ * up picking the 600px variant instead of something smaller.                  *
+ *                                                                             *
+ * We fix it so the browser knows the real width per breakpoint:               *
+ *   - Desktop (≥1025px with sidebar): ~461px per card                         *
+ *   - Tablet (769-1024px): 50vw (2 cards per row, no sidebar)                 *
+ *   - Mobile (≤768px): 100vw (1 column)                                       *
  *******************************************************************************/
 function rd_calculate_card_sizes( $sizes, $size ) {
-	// $size pode chegar como string slug ('rd-card') OU como array
-	// [width, height] — o WP converte a slug pras dimensões em alguns paths
-	// antes de disparar esse filter. Detectamos os dois formatos.
+	// $size may arrive as a slug string ('rd-card') OR as an array
+	// [width, height] — WP converts the slug to dimensions in some paths
+	// before firing this filter. We detect both formats.
 	$is_card = ( $size === 'rd-card' )
 		|| ( is_array( $size ) && isset( $size[0], $size[1] ) && (int) $size[0] === 600 && (int) $size[1] === 338 );
 
@@ -172,7 +178,7 @@ add_filter( 'wp_calculate_image_sizes', 'rd_calculate_card_sizes', 10, 2 );
 add_action( 'wp_enqueue_scripts', 'rd_scripts' );
 
 /*******************************************************************************
- * Desativa emojis e estilos automáticos do WP                 - (Performance) *
+ * Disables WP's automatic emojis and styles                   - (Performance) *
  *******************************************************************************/
 function rd_disable_emojis() {
 
@@ -191,7 +197,7 @@ function rd_disable_emojis() {
 add_action( 'init', 'rd_disable_emojis' );
 
 /*******************************************************************************
- * Melhora a segurança, remove a versão do WP                  - (Performance) *
+ * Improves security, removes the WP version                   - (Performance) *
  */
 add_filter(
 	'the_generator',
@@ -201,28 +207,28 @@ add_filter(
 );
 
 /*******************************************************************************
- * Intercepta iframes (Youtube Facade)                         - (Performance) *
+ * Intercepts iframes (YouTube Facade)                         - (Performance) *
  *******************************************************************************/
 
 /**
- * Parseia um valor de timestamp do YouTube e retorna inteiro em segundos.
+ * Parses a YouTube timestamp value and returns an integer in seconds.
  *
- * Formatos aceitos (todos válidos no YouTube):
+ * Accepted formats (all valid on YouTube):
  *   "30"        → 30s
  *   "30s"       → 30s
  *   "1m30s"     → 90s
  *   "1h2m30s"   → 3750s
- *   ""/null/inválido → 0
+ *   ""/null/invalid → 0
  */
 function rd_youtube_parse_timestamp( $t ) {
 	if ( $t === '' || $t === null ) {
 		return 0;
 	}
-	// Caso "número puro" (ex: "?t=90") — YouTube interpreta como segundos
+	// "Pure number" case (e.g. "?t=90") — YouTube interprets it as seconds
 	if ( ctype_digit( (string) $t ) ) {
 		return (int) $t;
 	}
-	// Caso com sufixos h/m/s (ex: "1h2m30s") — soma cada componente presente
+	// Case with h/m/s suffixes (e.g. "1h2m30s") — sum each present component
 	$seconds = 0;
 	if ( preg_match( '/(\d+)h/i', $t, $m ) ) {
 		$seconds += (int) $m[1] * 3600;
@@ -236,17 +242,60 @@ function rd_youtube_parse_timestamp( $t ) {
 	return $seconds;
 }
 
-// phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed -- $attr faz parte da assinatura do filter `embed_oembed_html`, mesmo quando não usado.
+/**
+ * Extracts the first YouTube video ID found in a string — a single oEmbed URL
+ * or a whole post content. Returns '' when there is none.
+ *
+ * Shared by the facade (oEmbed filter) and the Latest Video widget, which
+ * scans post_content for the first embedded video.
+ */
+function rd_youtube_extract_id( $text ) {
+	if ( ! is_string( $text ) || '' === $text ) {
+		return '';
+	}
+	if ( preg_match( '~(?:youtube\.com/(?:watch\?v=|embed/|shorts/|v/)|youtu\.be/|youtube-nocookie\.com/embed/)([a-zA-Z0-9_-]{11})~', $text, $matches ) ) {
+		return $matches[1];
+	}
+	return '';
+}
+
+/**
+ * Thumbnail + play button used inside the facade. Extracted so the Latest
+ * Video widget can reuse the exact same cover for its "facade off" poster.
+ * `alt` stays a literal to keep the facade output byte-for-byte unchanged.
+ */
+function rd_youtube_cover_html( $video_id ) {
+	return '<img src="https://img.youtube.com/vi/' . esc_attr( $video_id ) . '/sddefault.jpg" alt="Video cover" loading="lazy" width="640" height="480">
+                        <div class="play-button">
+                            <svg viewBox="0 0 68 48">
+                                <path d="M66.52 7.74c-.78-2.93-2.49-5.41-5.42-6.19C55.79.13 34 0 34 0S12.21.13 6.9 1.55c-2.93.78-4.64 3.26-5.42 6.19C.06 13.05 0 24 0 24s.06 10.95 1.48 16.26c.78 2.93 2.49 5.41 5.42 6.19C12.21 47.87 34 48 34 48s21.79-.13 27.1-1.55c2.93-.78 4.64-3.26 5.42-6.19C67.94 34.95 68 24 68 24s-.06-10.95-1.48-16.26z" fill="#FF0000"/>
+                                <path d="M27.26 33.15V14.85L44.5 24z" fill="#fff"/>
+                            </svg>
+                        </div>';
+}
+
+/**
+ * Wraps the cover in the .rd-facade click-to-load container (navigation.js
+ * swaps in the real iframe on click). Used by the oEmbed filter and the
+ * Latest Video widget when the facade is enabled.
+ */
+function rd_youtube_facade_markup( $video_id, $timestamp = 0 ) {
+	$data_t = $timestamp > 0 ? ' data-t="' . esc_attr( $timestamp ) . '"' : '';
+	return '<div class="rd-facade" data-type="youtube" data-id="' . esc_attr( $video_id ) . '"' . $data_t . '>
+                        ' . rd_youtube_cover_html( $video_id ) . '
+                    </div>';
+}
+
+// phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed -- $attr is part of the `embed_oembed_html` filter signature, even when unused.
 function rd_youtube_facade( $cache, $url, $attr ) {
 
 	if ( ! rd_get_option_bool( 'facade_youtube' ) ) {
 		return $cache; }
 
 	if ( strpos( $url, 'youtube.com' ) !== false || strpos( $url, 'youtu.be' ) !== false || strpos( $url, 'youtube-nocookie.com' ) !== false ) {
-		preg_match( '~(?:youtube\.com/(?:watch\?v=|embed/|shorts/|v/)|youtu\.be/|youtube-nocookie\.com/embed/)([a-zA-Z0-9_-]{11})~', $url, $matches );
-		$video_id = isset( $matches[1] ) ? $matches[1] : '';
+		$video_id = rd_youtube_extract_id( $url );
 
-		// Timestamp: tenta `t=` primeiro (formato user-facing); cai pra `start=` (formato embed)
+		// Timestamp: try `t=` first (user-facing format); fall back to `start=` (embed format)
 		$timestamp = 0;
 		if ( preg_match( '/[?&]t=([^&]+)/', $url, $t_matches ) ) {
 			$timestamp = rd_youtube_parse_timestamp( $t_matches[1] );
@@ -256,16 +305,7 @@ function rd_youtube_facade( $cache, $url, $attr ) {
 		}
 
 		if ( $video_id ) {
-			$data_t = $timestamp > 0 ? ' data-t="' . esc_attr( $timestamp ) . '"' : '';
-			return '<div class="rd-facade" data-type="youtube" data-id="' . esc_attr( $video_id ) . '"' . $data_t . '>
-                        <img src="https://img.youtube.com/vi/' . esc_attr( $video_id ) . '/sddefault.jpg" alt="Video cover" loading="lazy" width="640" height="480">
-                        <div class="play-button">
-                            <svg viewBox="0 0 68 48">
-                                <path d="M66.52 7.74c-.78-2.93-2.49-5.41-5.42-6.19C55.79.13 34 0 34 0S12.21.13 6.9 1.55c-2.93.78-4.64 3.26-5.42 6.19C.06 13.05 0 24 0 24s.06 10.95 1.48 16.26c.78 2.93 2.49 5.41 5.42 6.19C12.21 47.87 34 48 34 48s21.79-.13 27.1-1.55c2.93-.78 4.64-3.26 5.42-6.19C67.94 34.95 68 24 68 24s-.06-10.95-1.48-16.26z" fill="#FF0000"/>
-                                <path d="M27.26 33.15V14.85L44.5 24z" fill="#fff"/>
-                            </svg>
-                        </div>
-                    </div>';
+			return rd_youtube_facade_markup( $video_id, $timestamp );
 		}
 	}
 	return $cache;
@@ -273,7 +313,7 @@ function rd_youtube_facade( $cache, $url, $attr ) {
 add_filter( 'embed_oembed_html', 'rd_youtube_facade', 10, 3 );
 
 /*******************************************************************************
- * Desativa o CSS do Gutenberg e Global Syles                  - (Performance) *
+ * Disables the Gutenberg CSS and Global Styles                - (Performance) *
  *******************************************************************************/
 function rd_disable_gutenberg_assets() {
 	if ( ! rd_get_option_bool( 'disable_gutenberg_css' ) ) {
@@ -301,21 +341,21 @@ function rd_disable_gutenberg_assets() {
 add_action( 'after_setup_theme', 'rd_disable_gutenberg_assets' );
 
 /*******************************************************************************
- * Limita revisões de posts                                    - (Performance) *
+ * Limits post revisions                                       - (Performance) *
  *                                                                             *
- * WP guarda revisões ilimitadas por padrão (cada salvamento + autosave).      *
- * Em sites antigos, a tabela wp_posts incha com centenas de revisões por      *
- * post. Esse filter cap'a o número configurado pelo admin.                    *
+ * WP stores unlimited revisions by default (each save + autosave).            *
+ * On old sites, the wp_posts table bloats with hundreds of revisions per      *
+ * post. This filter caps the number configured by the admin.                  *
  *                                                                             *
- * Comportamento por valor:                                                    *
- *   - 0: nenhuma revisão é guardada (saves direto no post sem histórico)      *
- *   - 1+: mantém apenas as N revisões mais recentes; antigas são removidas    *
- *         automaticamente quando o post é salvo                               *
+ * Behavior by value:                                                          *
+ *   - 0: no revision is stored (saves straight to the post, no history)       *
+ *   - 1+: keeps only the N most recent revisions; older ones are removed      *
+ *         automatically when the post is saved                                *
  *                                                                             *
- * Nota: revisões antigas que já existem no banco NÃO são apagadas             *
- * retroativamente. O cap só vale dos próximos saves em diante.                *
+ * Note: old revisions already in the database are NOT deleted                 *
+ * retroactively. The cap only applies to future saves onward.                 *
  *******************************************************************************/
-// phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed -- $num e $post fazem parte da assinatura do filter `wp_revisions_to_keep`, mesmo quando o valor final só depende da config do painel.
+// phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed -- $num and $post are part of the `wp_revisions_to_keep` filter signature, even though the final value only depends on the panel config.
 function rd_limit_post_revisions( $num, $post ) {
 	$configured = (int) rd_get_option( 'post_revisions_limit', 5 );
 	return max( 0, min( 50, $configured ) );
@@ -323,23 +363,23 @@ function rd_limit_post_revisions( $num, $post ) {
 add_filter( 'wp_revisions_to_keep', 'rd_limit_post_revisions', 10, 2 );
 
 /*******************************************************************************
- * Otimiza o Heartbeat API do WordPress                        - (Performance) *
+ * Optimizes the WordPress Heartbeat API                       - (Performance) *
  *                                                                             *
- * Heartbeat dispara requests AJAX pra `admin-ajax.php` em background:         *
- *   - Editor de post: 15s base, acelera pra 5s durante autosave ativo         *
- *   - Demais telas admin: 60s (default)                                       *
- *   - Frontend: NÃO é enqueue por default — só quando plugins pedem           *
+ * Heartbeat fires AJAX requests to `admin-ajax.php` in the background:        *
+ *   - Post editor: 15s base, ramps to 5s during active autosave               *
+ *   - Other admin screens: 60s (default)                                      *
+ *   - Frontend: NOT enqueued by default — only when plugins ask               *
  *     (WooCommerce mini-cart, BuddyPress notifications, etc.)                 *
  *                                                                             *
- * Otimização (toggle ON):                                                     *
- *   - Editor de post: intocado (autosave + lock de edição preservados)        *
- *   - Demais admin: 60s → 120s (máximo permitido pelo WP, -50% requests)     *
- *     Trade-off: notificações em tempo real (locks, contadores) chegam mais  *
- *     lentas, mas é aceitável pra blog/portal típico                          *
- *   - Frontend: deregister total (defensivo — se um plugin futuro adicionar  *
- *     heartbeat lá, fica bloqueado de antemão)                                *
+ * Optimization (toggle ON):                                                   *
+ *   - Post editor: untouched (autosave + edit lock preserved)                 *
+ *   - Other admin: 60s → 120s (max allowed by WP, -50% requests)              *
+ *     Trade-off: real-time notifications (locks, counters) arrive             *
+ *     slower, but it's acceptable for a typical blog/portal                   *
+ *   - Frontend: full deregister (defensive — if a future plugin adds          *
+ *     heartbeat there, it's blocked ahead of time)                            *
  *                                                                             *
- * Toggle default OFF — não introduz mudança sem opt-in do admin.              *
+ * Toggle default OFF — introduces no change without admin opt-in.             *
  *******************************************************************************/
 function rd_optimize_heartbeat_frontend() {
 	if ( ! rd_get_option_bool( 'optimize_heartbeat' ) ) {
@@ -354,45 +394,45 @@ function rd_optimize_heartbeat_settings( $settings ) {
 		return $settings;
 	}
 
-	// No editor de post mantém o default (autosave depende do interval curto)
+	// In the post editor keep the default (autosave relies on the short interval)
 	global $pagenow;
 	if ( isset( $pagenow ) && in_array( $pagenow, array( 'post.php', 'post-new.php' ), true ) ) {
 		return $settings;
 	}
 
-	// 120s é o máximo permitido pelo WP (qualquer valor maior é capado)
+	// 120s is the maximum allowed by WP (any higher value is capped)
 	$settings['interval'] = 120;
 	return $settings;
 }
 add_filter( 'heartbeat_settings', 'rd_optimize_heartbeat_settings' );
 
 /*******************************************************************************
- * DNS Prefetch + Preconnect pra domínios externos             - (Performance) *
+ * DNS Prefetch + Preconnect for external domains              - (Performance) *
  *                                                                             *
- * Usa o filter nativo `wp_resource_hints` pra injetar hints no <head>:        *
+ * Uses the native `wp_resource_hints` filter to inject hints in <head>:       *
  *                                                                             *
- *   - preconnect: resolve DNS + handshake TCP + TLS antecipadamente. Custa    *
- *     ~1-2KB de banda mas economiza ~300ms quando o recurso é solicitado.    *
- *     Usado pra domínios que sabemos que vão carregar (ex: YouTube quando    *
- *     user clica no facade).                                                  *
+ *   - preconnect: resolves DNS + TCP + TLS handshake ahead of time. Costs     *
+ *     ~1-2KB of bandwidth but saves ~300ms when the resource is requested.    *
+ *     Used for domains we know will load (e.g. YouTube when the               *
+ *     user clicks the facade).                                                *
  *                                                                             *
- *   - dns-prefetch: resolve só o DNS antecipadamente, mais conservador.       *
- *     Custa quase nada e economiza ~150ms. Usado pra domínios "talvez"       *
- *     (thumbnails CDN, Gravatar, GA).                                         *
+ *   - dns-prefetch: resolves only the DNS ahead of time, more conservative.   *
+ *     Costs almost nothing and saves ~150ms. Used for "maybe" domains         *
+ *     (CDN thumbnails, Gravatar, GA).                                         *
  *                                                                             *
- * Cada hint só é injetado se a feature correspondente estiver ativa — não    *
- * vale a pena anunciar domínio que o tema não usa naquela instalação.        *
+ * Each hint is only injected if its matching feature is active — we don't     *
+ * want to advertise a domain the theme doesn't use on that install.           *
  *                                                                             *
- * Sem opção no painel: é otimização baseline, zero downside.                  *
+ * No panel option: it's a baseline optimization, zero downside.               *
  *******************************************************************************/
 function rd_add_resource_hints( $hints, $relation_type ) {
 
 	if ( $relation_type === 'preconnect' ) {
-		// YouTube iframe — carregado quando user clica no facade. Só vale
-		// pré-conectar quando há chance real de ter embed na página: singular
-		// (post/page com conteúdo) e search (resultados podem ter posts com YT).
-		// Em home/archive de listagem o preconnect fica "wasted" e Lighthouse
-		// reclama — então condicionamos.
+		// YouTube iframe — loaded when the user clicks the facade. It's only
+		// worth preconnecting when there's a real chance of an embed on the page:
+		// singular (post/page with content) and search (results may have YT posts).
+		// On listing home/archive the preconnect is "wasted" and Lighthouse
+		// complains — so we make it conditional.
 		if ( rd_get_option_bool( 'facade_youtube' ) && ( is_singular() || is_search() ) ) {
 			$hints[] = array(
 				'href'        => 'https://www.youtube.com',
@@ -406,25 +446,25 @@ function rd_add_resource_hints( $hints, $relation_type ) {
 	}
 
 	if ( $relation_type === 'dns-prefetch' ) {
-		// YouTube thumbnails — usadas no markup do facade (carregam logo)
+		// YouTube thumbnails — used in the facade markup (load early)
 		if ( rd_get_option_bool( 'facade_youtube' ) ) {
 			$hints[] = 'https://img.youtube.com';
 			$hints[] = 'https://i.ytimg.com';
 		}
 
-		// Discord widget — iframe carregado direto na sidebar quando widget
-		// está habilitado (mesmo sem facade, o domínio é o mesmo)
+		// Discord widget — iframe loaded directly in the sidebar when the widget
+		// is enabled (even without a facade, the domain is the same)
 		if ( rd_get_option_bool( 'discord_widget' ) ) {
 			$hints[] = 'https://ptb.discord.com';
 		}
 
-		// Google Tag Manager — só quando GA está configurado no painel
+		// Google Tag Manager — only when GA is configured in the panel
 		$ga_id = rd_get_option( 'ga_id' );
 		if ( ! empty( $ga_id ) ) {
 			$hints[] = 'https://www.googletagmanager.com';
 		}
 
-		// Gravatar — avatars dos comentários (parte do WP padrão)
+		// Gravatar — comment avatars (part of WP core)
 		$hints[] = 'https://secure.gravatar.com';
 	}
 
@@ -433,24 +473,24 @@ function rd_add_resource_hints( $hints, $relation_type ) {
 add_filter( 'wp_resource_hints', 'rd_add_resource_hints', 10, 2 );
 
 /*******************************************************************************
- * Preload de fontes críticas                                  - (Performance) *
+ * Preload critical fonts                                      - (Performance) *
  *                                                                             *
- * O browser só descobre as @font-face depois de parsear o CSS. `<link         *
- * rel="preload" as="font">` no <head> inicia o download da fonte em paralelo  *
- * com o stylesheet, eliminando o gap entre "CSS chegou" e "fonte chegou".    *
+ * The browser only discovers the @font-face after parsing the CSS. `<link     *
+ * rel="preload" as="font">` in <head> starts the font download in parallel    *
+ * with the stylesheet, closing the gap between CSS and font arrival.          *
  *                                                                             *
- * Preload é caro — bloqueia recursos críticos por proritizar essas fontes.    *
- * Por isso só pre-loadamos as **duas mais usadas em above-the-fold**:         *
+ * Preload is expensive — it blocks critical resources to prioritize these     *
+ * fonts. So we only preload the **two most used above-the-fold**:             *
  *                                                                             *
- *   - Inter Regular (400): texto base — parágrafos, sidebar, body geral       *
- *   - Poppins Bold (700): cabeçalhos — títulos de post, logo, navegação      *
+ *   - Inter Regular (400): base text — paragraphs, sidebar, general body      *
+ *   - Poppins Bold (700): headings — post titles, logo, navigation            *
  *                                                                             *
- * As outras 14 variantes (Inter italic/500/600/700, Poppins 500/600/800/900, *
- * todas Mono) carregam normalmente via @font-face conforme necessárias.       *
+ * The other 14 variants (Inter italic/500/600/700, Poppins 500/600/800/900,   *
+ * all Mono) load normally via @font-face as needed.                           *
  *                                                                             *
- * `crossorigin="anonymous"` é obrigatório pra preload de fonte (CORS spec).  *
- * Prioridade 1 no wp_head pra sair antes do stylesheet — embora o browser    *
- * processe preload em paralelo, posição precoce ajuda em navegadores antigos.*
+ * `crossorigin="anonymous"` is required for font preload (CORS spec).         *
+ * Priority 1 in wp_head to emit before the stylesheet — although the browser  *
+ * processes preload in parallel, an early position helps in old browsers.     *
  *******************************************************************************/
 function rd_preload_critical_fonts() {
 	if ( ! rd_get_option_bool( 'preload_critical_fonts' ) ) {
@@ -458,19 +498,19 @@ function rd_preload_critical_fonts() {
 	}
 
 	$base = get_template_directory_uri() . '/assets/fonts/';
-	// Lista validada por auditoria do Network (DevTools, cache desabilitado):
-	// todas essas variantes aparecem em prioridade "Highest" assim que o browser
-	// parseia o style.css. Preload antecipa o download em paralelo com o CSS,
-	// reduzindo FOIT/FOUT no first paint. Itens que sobraram em prioridade
-	// "Mais Alta" no parse (poppins-500/800, inter-600/italic, jetbrains-mono)
-	// ficam de fora — item de auditoria no Background do BACKLOG vai decidir
-	// se são realmente usadas above-the-fold ou se o SCSS pode reduzir o uso.
+	// List validated by a Network audit (DevTools, cache disabled):
+	// all these variants show up at "Highest" priority as soon as the browser
+	// parses style.css. Preload anticipates the download in parallel with the CSS,
+	// reducing FOIT/FOUT on first paint. Items left at "Highest" priority
+	// during parse (poppins-500/800, inter-600/italic, jetbrains-mono)
+	// are left out — an audit item in the BACKLOG Background will decide
+	// whether they're really used above-the-fold or if the SCSS can reduce usage.
 	$fonts = array(
-		'inter-regular.woff2',  // texto base — Inter 400
-		'inter-500.woff2',      // ênfase / links — Inter Medium
-		'inter-700.woff2',      // bold inline — Inter Bold
-		'poppins-600.woff2',    // subtítulos / headings secundários — Poppins SemiBold
-		'poppins-700.woff2',    // títulos principais — Poppins Bold
+		'inter-regular.woff2',  // base text — Inter 400
+		'inter-500.woff2',      // emphasis / links — Inter Medium
+		'inter-700.woff2',      // inline bold — Inter Bold
+		'poppins-600.woff2',    // subtitles / secondary headings — Poppins SemiBold
+		'poppins-700.woff2',    // main titles — Poppins Bold
 	);
 
 	foreach ( $fonts as $file ) {
@@ -483,20 +523,20 @@ function rd_preload_critical_fonts() {
 add_action( 'wp_head', 'rd_preload_critical_fonts', 1 );
 
 /*******************************************************************************
- * Garante lazy loading em iframes do conteúdo                 - (Performance) *
+ * Ensures lazy loading on content iframes                     - (Performance) *
  *                                                                             *
- * WP 5.9+ já adiciona `loading="lazy"` automaticamente em iframes do          *
- * `the_content()`, exceto o primeiro iframe acima da dobra (heurística do WP *
- * pra não atrapalhar LCP). Esse filter é DEFENSIVO — caso algum plugin       *
- * desative `wp_lazy_loading_enabled`, garantimos que iframes continuem lazy. *
+ * WP 5.9+ already adds `loading="lazy"` automatically on iframes from         *
+ * `the_content()`, except the first iframe above the fold (WP heuristic       *
+ * to avoid hurting LCP). This filter is DEFENSIVE — in case some plugin       *
+ * disables `wp_lazy_loading_enabled`, we ensure iframes stay lazy.            *
  *                                                                             *
- * Iframes fora do_the_content() (ex: Discord widget no sidebar) são tratados *
- * caso a caso no markup (atributo `loading="lazy"` direto na tag), porque    *
- * esse filter só atua em conteúdo passado por wp_filter_content_tags().      *
+ * Iframes outside the_content() (e.g. Discord widget in the sidebar) are      *
+ * handled case by case in the markup (`loading="lazy"` directly on the tag),  *
+ * because this filter only acts on content via wp_filter_content_tags().      *
  *                                                                             *
- * Sem opção no painel — lazy iframe é HTML5 nativo, zero downside.           *
+ * No panel option — lazy iframe is native HTML5, zero downside.               *
  *******************************************************************************/
-// phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed -- $context faz parte da assinatura do filter `wp_lazy_loading_enabled`, mesmo quando só checamos o tag_name.
+// phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed -- $context is part of the `wp_lazy_loading_enabled` filter signature, even when we only check the tag_name.
 function rd_force_iframe_lazy( $enabled, $tag_name, $context ) {
 	if ( $tag_name === 'iframe' ) {
 		return true;

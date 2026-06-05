@@ -4,19 +4,19 @@ defined( 'ABSPATH' ) || exit;
 /*******************************************************************************
  * Module: Popular Posts Widget                                                *
  *                                                                             *
- * Widget WP nativo (extends WP_Widget) que lista os posts mais visualizados   *
- * por janela temporal. Aparece em Aparência → Widgets sob o nome              *
- * "ReloadeD: Popular Posts" e pode ser arrastado pra qualquer sidebar do      *
- * tema (no momento, só "Main Sidebar").                                       *
+ * Native WP widget (extends WP_Widget) that lists the most-viewed posts       *
+ * by time window. Appears in Appearance → Widgets under the name              *
+ * "ReloadeD: Popular Posts" and can be dragged into any theme sidebar         *
+ * (currently only "Main Sidebar").                                            *
  *                                                                             *
- * Diferente dos blocos hardcoded em sidebar.php (Discord, Donations, Ads),    *
- * esse aqui é controlado 100% pela UI nativa de widgets do WP — o admin       *
- * decide se/onde colocar e configura título + janela + quantidade direto      *
- * no widget config.                                                           *
+ * Unlike the hardcoded blocks in sidebar.php (Discord, Donations, Ads),       *
+ * this one is controlled 100% by WP's native widgets UI — the admin           *
+ * decides whether/where to place it and configures title + window + count     *
+ * directly in the widget config.                                              *
  *                                                                             *
- * Dependências:                                                               *
- *   - rd_stats_top_posts_by_views() em mod-stats.php (cache transient 1h)     *
- *   - rd_format_views_number() em mod-views.php (respeita full/compact)       *
+ * Dependencies:                                                               *
+ *   - rd_stats_top_posts_by_views() in mod-stats.php (1h transient cache)     *
+ *   - rd_format_views_number() in mod-views.php (respects full/compact)       *
  *******************************************************************************/
 class RD_Popular_Posts_Widget extends WP_Widget {
 
@@ -32,16 +32,16 @@ class RD_Popular_Posts_Widget extends WP_Widget {
 	}
 
 	/**
-	 * Frontend output — chamado por dynamic_sidebar() pra cada instância
-	 * configurada pelo admin.
+	 * Frontend output — called by dynamic_sidebar() for each instance
+	 * configured by the admin.
 	 */
 	public function widget( $args, $instance ) {
 		$title  = ! empty( $instance['title'] ) ? apply_filters( 'widget_title', $instance['title'] ) : __( 'Most Read', 'reloaded' );
 		$limit  = ! empty( $instance['limit'] ) ? absint( $instance['limit'] ) : 5;
 		$window = ! empty( $instance['window'] ) ? $instance['window'] : 'all';
 
-		// Defensiva: se o módulo de stats não estiver carregado (theme em
-		// setup inicial, modo manutenção etc), apenas não renderiza nada.
+		// Defensive: if the stats module isn't loaded (theme in
+		// initial setup, maintenance mode etc), just render nothing.
 		if ( ! function_exists( 'rd_stats_top_posts_by_views' ) ) {
 			return;
 		}
@@ -71,13 +71,13 @@ class RD_Popular_Posts_Widget extends WP_Widget {
 	}
 
 	/**
-	 * Render de uma linha do ranking — thumb 16/9 + título + views.
+	 * Renders one ranking row — 16/9 thumb + title + views.
 	 */
 	private function render_item( $post_obj ) {
 		$permalink  = get_permalink( $post_obj->post_id );
 		$thumb_html = get_the_post_thumbnail(
 			$post_obj->post_id,
-			'rd-popular-thumb', // Custom size 200x113 registrado em core.php — display 100x56 com DPR 2x retina
+			'rd-popular-thumb', // Custom size 200x113 registered in core.php — display 100x56 with 2x DPR retina
 			array(
 				'loading' => 'lazy',
 				'class'   => 'rd-popular-thumb-img',
@@ -110,7 +110,7 @@ class RD_Popular_Posts_Widget extends WP_Widget {
 	}
 
 	/**
-	 * Form de configuração na tela Aparência → Widgets.
+	 * Configuration form on the Appearance → Widgets screen.
 	 */
 	public function form( $instance ) {
 		$title  = isset( $instance['title'] ) ? (string) $instance['title'] : __( 'Most Read', 'reloaded' );
@@ -162,8 +162,8 @@ class RD_Popular_Posts_Widget extends WP_Widget {
 	}
 
 	/**
-	 * Sanitiza os inputs antes de salvar. Whitelist nos enums (window),
-	 * clamp no range numérico (limit).
+	 * Sanitizes the inputs before saving. Whitelist on the enums (window),
+	 * clamp on the numeric range (limit).
 	 */
 	public function update( $new_instance, $old_instance ) {
 		$valid_windows = array( 'all', 'year', 'month', 'week' );
@@ -178,7 +178,7 @@ class RD_Popular_Posts_Widget extends WP_Widget {
 	}
 }
 
-// phpcs:ignore Universal.Files.SeparateFunctionsFromOO.Mixed -- mistura intencional: classe Widget + helper register na mesma unidade lógica. Wave 10 (pré-submissão wp.org) move pra `class-rd-popular-posts-widget.php`.
+// phpcs:ignore Universal.Files.SeparateFunctionsFromOO.Mixed -- intentional mix: Widget class + register helper in the same logical unit. Wave 10 (pre wp.org submission) moves it to `class-rd-popular-posts-widget.php`.
 function rd_register_popular_widget() {
 	register_widget( 'RD_Popular_Posts_Widget' );
 }

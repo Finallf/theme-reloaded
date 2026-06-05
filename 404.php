@@ -1,9 +1,9 @@
 <?php
 /**
- * Template: 404 - Página não encontrada
+ * Template: 404 - Page Not Found
  *
- * Exibe mensagem temática "Nível não encontrado" com posts populares
- * como sugestões de "Níveis Recomendados".
+ * Displays the themed "Level not found" message with popular posts
+ * shown as "Recommended Levels" suggestions.
  *
  * @package ReloadeD
  */
@@ -48,11 +48,11 @@ get_header(); ?>
 		</section>
 
 		<?php
-		// Posts populares (mais vistos all-time)
+		// Popular posts (most viewed all-time).
 		$popular = function_exists( 'rd_get_popular_posts' ) ? rd_get_popular_posts( 3 ) : null;
 
-		// Fallback: se módulo de views não existir ou não tiver posts ainda,
-		// mostra os 3 mais recentes
+		// Fallback: if the views module is unavailable or has no posts yet,
+		// show the 3 most recent ones.
 		if ( ! $popular || ! $popular->have_posts() ) {
 			$popular = new WP_Query(
 				array(
@@ -121,8 +121,8 @@ get_header(); ?>
 </main>
 
 <?php
-// Comportamento de focar o search-field ao clicar no botão "Buscar conteúdo"
-// vive em assets/js/navigation.js (SoC: zero JS em template PHP).
+// The behavior of focusing the search-field when the "Search content" button
+// is clicked lives in assets/js/navigation.js (SoC: zero JS in PHP templates).
 ?>
 
 <?php get_footer(); ?>

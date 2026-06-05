@@ -1,25 +1,25 @@
 <?php
 defined( 'ABSPATH' ) || exit;
 /*******************************************************************************
- * Module: SEO - Open Graph, Twitter Cards e Meta Tags
+ * Module: SEO - Open Graph, Twitter Cards and Meta Tags
  *******************************************************************************/
 
-// Mínimo aceito pelo Facebook (200x200). Imagens menores são rejeitadas.
+// Minimum accepted by Facebook (200x200). Smaller images are rejected.
 const RD_SEO_OG_IMAGE_MIN = 200;
 
 /*******************************************************************************
- * Validação interna de imagens para og:image                          - (SEO) *
+ * Internal image validation for og:image                              - (SEO) *
  *******************************************************************************/
 
 /**
- * Valida um attachment do Media Library para uso como og:image.
- * Rejeita SVGs (não suportados por redes sociais) e imagens abaixo de 200x200.
+ * Validates a Media Library attachment for use as og:image.
+ * Rejects SVGs (not supported by social networks) and images below 200x200.
  *
  * @param int $attachment_id
- * @return array|false ['url' => string, 'width' => int, 'height' => int] ou false se inválido
+ * @return array|false ['url' => string, 'width' => int, 'height' => int] or false if invalid
  */
 function rd_seo_validate_attachment_image( int $attachment_id ) {
-	// Rejeita SVG (Facebook, Twitter/X, WhatsApp e Discord não renderizam)
+	// Reject SVG (Facebook, Twitter/X, WhatsApp and Discord don't render it)
 	if ( get_post_mime_type( $attachment_id ) === 'image/svg+xml' ) {
 		return false;
 	}
@@ -31,7 +31,7 @@ function rd_seo_validate_attachment_image( int $attachment_id ) {
 
 	list( $url, $width, $height ) = $src;
 
-	// Rejeita imagens menores que o mínimo aceito pelo Facebook
+	// Reject images smaller than the minimum accepted by Facebook
 	if ( $width < RD_SEO_OG_IMAGE_MIN || $height < RD_SEO_OG_IMAGE_MIN ) {
 		return false;
 	}
@@ -44,13 +44,13 @@ function rd_seo_validate_attachment_image( int $attachment_id ) {
 }
 
 /**
- * Valida uma URL de imagem (do painel, possivelmente externa) para og:image.
- * Se a URL pertencer ao Media Library, delega à validação completa (com dimensões).
- * Para URLs externas, confia na extensão e omite as dimensões — sem fazer HTTP
- * request a cada page load.
+ * Validates an image URL (from the panel, possibly external) for og:image.
+ * If the URL belongs to the Media Library, delegates to the full validation (with dimensions).
+ * For external URLs, trusts the extension and omits the dimensions — without making an HTTP
+ * request on each page load.
  *
  * @param string $url
- * @return array|false ['url' => string, 'width' => int|null, 'height' => int|null] ou false se inválido
+ * @return array|false ['url' => string, 'width' => int|null, 'height' => int|null] or false if invalid
  */
 function rd_seo_validate_url_image( string $url ) {
 	if ( empty( $url ) ) {
@@ -60,19 +60,19 @@ function rd_seo_validate_url_image( string $url ) {
 	$path = wp_parse_url( $url, PHP_URL_PATH );
 	$ext  = $path ? strtolower( pathinfo( $path, PATHINFO_EXTENSION ) ) : '';
 
-	// Rejeita SVG e qualquer formato não-raster
+	// Reject SVG and any non-raster format
 	if ( ! in_array( $ext, array( 'jpg', 'jpeg', 'png', 'webp', 'gif' ), true ) ) {
 		return false;
 	}
 
-	// Se a URL for de um attachment local, usa a validação completa
-	// (respeita seu veredito; se falhar, NÃO cai pra modo "externa pura")
+	// If the URL is from a local attachment, use the full validation
+	// (respect its verdict; if it fails, do NOT fall to "pure external" mode)
 	$attachment_id = attachment_url_to_postid( $url );
 	if ( $attachment_id ) {
 		return rd_seo_validate_attachment_image( $attachment_id );
 	}
 
-	// URL externa — extensão raster válida, dimensões desconhecidas
+	// External URL — valid raster extension, unknown dimensions
 	return array(
 		'url'    => $url,
 		'width'  => null,
@@ -81,10 +81,10 @@ function rd_seo_validate_url_image( string $url ) {
 }
 
 /**
- * Resolve a melhor imagem disponível para og:image, em ordem de preferência:
- *   1. Featured image do post (validada)
- *   2. Imagem fallback configurada no painel (validada)
- *   3. Logo do tema (controlado pelo dev, sempre considerado válido)
+ * Resolves the best available image for og:image, in order of preference:
+ *   1. The post's featured image (validated)
+ *   2. Fallback image configured in the panel (validated)
+ *   3. The theme logo (dev-controlled, always considered valid)
  *
  * @param int $post_id
  * @return array ['url' => string, 'width' => int|null, 'height' => int|null]
@@ -99,7 +99,7 @@ function rd_seo_resolve_og_image( int $post_id ) {
 		}
 	}
 
-	// 2. og_fallback_image do painel (pode ser interna ou externa)
+	// 2. og_fallback_image from the panel (may be internal or external)
 	$fallback = rd_get_option( 'og_fallback_image' );
 	if ( ! empty( $fallback ) ) {
 		$resolved = rd_seo_validate_url_image( $fallback );
@@ -108,7 +108,7 @@ function rd_seo_resolve_og_image( int $post_id ) {
 		}
 	}
 
-	// 3. Fallback final: logo do tema
+	// 3. Final fallback: the theme logo
 	return array(
 		'url'    => get_template_directory_uri() . '/assets/img/logo-reloaded-panel.webp',
 		'width'  => null,
@@ -117,15 +117,15 @@ function rd_seo_resolve_og_image( int $post_id ) {
 }
 
 /*******************************************************************************
- * Extrai o handle (`@usuario`) de uma URL do Twitter/X                - (SEO) *
+ * Extracts the handle (`@user`) from a Twitter/X URL                  - (SEO) *
  *                                                                             *
- * Aceita formatos comuns:                                                     *
- *   https://x.com/usuario                                                     *
- *   https://twitter.com/usuario                                               *
- *   https://www.x.com/usuario/                                                *
+ * Accepts common formats:                                                     *
+ *   https://x.com/user                                                        *
+ *   https://twitter.com/user                                                  *
+ *   https://www.x.com/user/                                                   *
  *                                                                             *
- * Retorna string vazia se a URL não bater no padrão (ex.: o admin colou um    *
- * link de tweet específico, ou outro domínio).                                *
+ * Returns an empty string if the URL doesn't match the pattern (e.g. the      *
+ * admin pasted a link to a specific tweet, or another domain).                *
  *******************************************************************************/
 function rd_seo_extract_twitter_handle( string $url ): string {
 	if ( empty( $url ) ) {
@@ -140,10 +140,10 @@ function rd_seo_extract_twitter_handle( string $url ): string {
 }
 
 /*******************************************************************************
- * Resolve a descrição "punchy" de um post singular                    - (SEO) *
+ * Resolves the "punchy" description of a singular post                - (SEO) *
  *                                                                             *
- * Usado pelo og:description e pelo <meta name="description"> em singulares.   *
- * Ordem: excerpt manual → trim de 25 palavras do post_content.                *
+ * Used by og:description and by <meta name="description"> on singulars.       *
+ * Order: manual excerpt → 25-word trim of post_content.                       *
  *******************************************************************************/
 function rd_seo_resolve_post_description( WP_Post $post ): string {
 	$excerpt = wp_strip_all_tags( get_the_excerpt( $post ) );
@@ -173,7 +173,7 @@ function rd_add_open_graph_tags() {
 
 	$image = rd_seo_resolve_og_image( (int) $post->ID );
 
-	// --- IMPRESSÃO DAS META TAGS NA TELA ---
+	// --- PRINTING THE META TAGS TO THE PAGE ---
 	echo "\n\n";
 	echo '<meta property="og:type" content="article" />' . "\n";
 	echo '<meta property="og:title" content="' . esc_attr( $title ) . '" />' . "\n";
@@ -182,41 +182,41 @@ function rd_add_open_graph_tags() {
 
 	echo '<meta property="og:image" content="' . esc_url( $image['url'] ) . '" />' . "\n";
 
-	// Só declara dimensões se realmente as conhecermos — evita mentir
-	// pra rede social (que ajusta o crop com base nelas)
+	// Only declare dimensions if we actually know them — avoids lying
+	// to the social network (which adjusts the crop based on them)
 	if ( ! empty( $image['width'] ) && ! empty( $image['height'] ) ) {
 		echo '<meta property="og:image:width" content="' . (int) $image['width'] . '" />' . "\n";
 		echo '<meta property="og:image:height" content="' . (int) $image['height'] . '" />' . "\n";
 	}
 
 	// --- Twitter Cards ---
-	// O Twitter/X cai pra og:* quando não acha twitter:*, mas declarar
-	// explicitamente garante render consistente e desbloqueia `summary_large_image`
-	// como tipo de card (Twitter não infere isso do og:image).
+	// Twitter/X falls back to og:* when it can't find twitter:*, but declaring
+	// it explicitly ensures consistent render and unlocks `summary_large_image`
+	// as the card type (Twitter doesn't infer this from og:image).
 	echo '<meta name="twitter:card" content="summary_large_image" />' . "\n";
 	echo '<meta name="twitter:title" content="' . esc_attr( $title ) . '" />' . "\n";
 	echo '<meta name="twitter:description" content="' . esc_attr( $excerpt ) . '" />' . "\n";
 	echo '<meta name="twitter:image" content="' . esc_url( $image['url'] ) . '" />' . "\n";
 
-	// twitter:site — handle global do site, extraído da URL configurada em
-	// Painel → Redes Sociais → Twitter (X). Aceita x.com/usuario ou
-	// twitter.com/usuario. Omite se a URL não bater no padrão.
+	// twitter:site — the site's global handle, extracted from the URL configured in
+	// Panel → Social Networks → Twitter (X). Accepts x.com/user or
+	// twitter.com/user. Omits it if the URL doesn't match the pattern.
 	$site_handle = rd_seo_extract_twitter_handle( (string) rd_get_option( 'social_twitter' ) );
 	if ( ! empty( $site_handle ) ) {
 		echo '<meta name="twitter:site" content="' . esc_attr( $site_handle ) . '" />' . "\n";
 	}
 
-	// twitter:creator — handle pessoal do autor do post. Lê de um user meta
-	// `twitter_handle` que ainda não tem UI no perfil do WP (feature futura).
-	// Quando o campo for adicionado, esse bloco passa a emitir a tag
-	// automaticamente sem precisar tocar aqui.
+	// twitter:creator — the post author's personal handle. Read from a user meta
+	// `twitter_handle` that doesn't yet have a UI in the WP profile (future feature).
+	// When the field is added, this block starts emitting the tag
+	// automatically without needing to touch anything here.
 	//
-	// Fallback: se o autor não tem handle próprio, usa o `twitter:site` global.
-	// Pra blog single-author (ou time pequeno) isso é correto na prática — o
-	// handle do site E o autor são a mesma pessoa.
+	// Fallback: if the author has no own handle, use the global `twitter:site`.
+	// For a single-author blog (or small team) this is correct in practice — the
+	// site handle AND the author are the same person.
 	$author_handle = trim( (string) get_the_author_meta( 'twitter_handle', (int) $post->post_author ) );
 	if ( ! empty( $author_handle ) ) {
-		// Garante o @ no começo (admin pode preencher "usuario" ou "@usuario")
+		// Ensure the @ at the start (admin may fill in "user" or "@user")
 		if ( strpos( $author_handle, '@' ) !== 0 ) {
 			$author_handle = '@' . ltrim( $author_handle, '@' );
 		}
@@ -235,24 +235,24 @@ add_action( 'wp_head', 'rd_add_open_graph_tags', 5 );
 /*******************************************************************************
  * Canonical URLs                                                      - (SEO) *
  *                                                                             *
- * O WP nativo (`rel_canonical`) só imprime <link rel="canonical"> em páginas  *
- * singulares (post, page, CPT). Nossa versão estende pra todas as superfícies *
- * indexáveis:                                                                 *
+ * Native WP (`rel_canonical`) only prints <link rel="canonical"> on singular  *
+ * pages (post, page, CPT). Our version extends it to all indexable            *
+ * surfaces:                                                                   *
  *                                                                             *
- *   - Home / blog principal                                                   *
- *   - Archives de categoria, tag, taxonomia custom                            *
- *   - Archive de autor                                                        *
- *   - Archives de data (ano / mês / dia)                                      *
- *   - Página de busca (`?s=`)                                                 *
- *   - Páginas paginadas (`/page/N/`) preservadas em qualquer contexto         *
+ *   - Home / main blog                                                        *
+ *   - Category, tag, custom taxonomy archives                                 *
+ *   - Author archive                                                          *
+ *   - Date archives (year / month / day)                                      *
+ *   - Search page (`?s=`)                                                     *
+ *   - Paginated pages (`/page/N/`) preserved in any context                   *
  *                                                                             *
- * Pula 404 e feeds — eles não precisam (e não devem ter) canonical próprio.   *
+ * Skips 404 and feeds — they don't need their own canonical.                  *
  *                                                                             *
- * Sem opção no painel: canonical é um sinal padrão de SEO sem trade-off,      *
- * ligar/desligar não faz sentido.                                             *
+ * No panel option: canonical is a standard SEO signal with no trade-off,      *
+ * turning it on/off makes no sense.                                           *
  *******************************************************************************/
 function rd_add_canonical_url() {
-	// 404 e feeds não recebem canonical
+	// 404 and feeds don't get a canonical
 	if ( is_404() || is_feed() ) {
 		return;
 	}
@@ -260,8 +260,8 @@ function rd_add_canonical_url() {
 	$canonical = '';
 
 	if ( is_singular() ) {
-		// wp_get_canonical_url() já trata pagination interna (?cpage=N) e o
-		// protocolo correto. Falha graciosamente fora do loop.
+		// wp_get_canonical_url() already handles internal pagination (?cpage=N) and the
+		// correct protocol. Degrades gracefully outside the loop.
 		$canonical = wp_get_canonical_url();
 	} elseif ( is_front_page() || is_home() ) {
 		$canonical = home_url( '/' );
@@ -282,8 +282,8 @@ function rd_add_canonical_url() {
 		$canonical = home_url( '/?s=' . rawurlencode( get_search_query() ) );
 	}
 
-	// Paginação em archives: anexa /page/N/ (não se aplica a singular —
-	// `wp_get_canonical_url` já fez isso lá em cima).
+	// Pagination on archives: appends /page/N/ (doesn't apply to singular —
+	// `wp_get_canonical_url` already did that above).
 	if ( ! empty( $canonical ) && ! is_singular() && ! is_search() ) {
 		$paged = (int) get_query_var( 'paged' );
 		if ( $paged > 1 ) {
@@ -298,25 +298,25 @@ function rd_add_canonical_url() {
 	echo '<link rel="canonical" href="' . esc_url( $canonical ) . '" />' . "\n";
 }
 
-// Tira o canonical nativo do WP (cobre só singular) pra usar o nosso (cobre tudo)
+// Remove WP's native canonical (covers singular only) to use ours (covers everything)
 remove_action( 'wp_head', 'rel_canonical' );
 add_action( 'wp_head', 'rd_add_canonical_url', 1 );
 
 /*******************************************************************************
  * Meta Description default                                            - (SEO) *
  *                                                                             *
- * Imprime <meta name="description"> em todas as superfícies indexáveis. O     *
- * Google ainda lê essa tag pra montar o snippet quando ela é mais relevante   *
- * que o conteúdo extraído da página.                                          *
+ * Prints <meta name="description"> on all indexable surfaces.                 *
+ * Google still reads this tag to build the snippet when it's more relevant    *
+ * than the content extracted from the page.                                   *
  *                                                                             *
- *   - Singular: excerpt do post (helper compartilhado com OG)                 *
- *   - Home/Blog: tagline do site (Configurações Gerais → Descrição)           *
- *   - Category/Tag/Tax: descrição do termo, com fallback genérico             *
- *   - Author: bio do autor (campo "description"), com fallback genérico       *
- *   - Date archives: rótulo formatado tipo "Posts de Maio 2026"               *
- *   - Search e 404: pula (página dinâmica/inexistente)                        *
+ *   - Singular: the post's excerpt (helper shared with OG)                    *
+ *   - Home/Blog: the site tagline (General Settings → Tagline)                *
+ *   - Category/Tag/Tax: the term description, with a generic fallback         *
+ *   - Author: the author's bio ("description" field), with a generic fallback *
+ *   - Date archives: a formatted label like "Posts from May 2026"             *
+ *   - Search and 404: skipped (dynamic/non-existent page)                     *
  *                                                                             *
- * Sem opção no painel: meta description é baseline de SEO, sem trade-off.     *
+ * No panel option: meta description is an SEO baseline, no trade-off.         *
  *******************************************************************************/
 function rd_add_meta_description() {
 	if ( is_404() || is_search() || is_feed() ) {
@@ -353,20 +353,20 @@ function rd_add_meta_description() {
 			$description = sprintf( __( 'Posts by %s.', 'reloaded' ), get_the_author_meta( 'display_name', $author_id ) );
 		}
 	} elseif ( is_year() || is_month() || is_day() ) {
-		// Mesma string "Archive of posts from %s." usada em 3 contextos com
-		// formatos de data diferentes — comentário translators único e
-		// genérico cobre os 3 (evita warning de "different translator comments"
-		// do `wp i18n make-pot` quando a mesma string tem hints divergentes).
+		// The same "Archive of posts from %s." string used in 3 contexts with
+		// different date formats — a single, generic translators comment
+		// covers all 3 (avoids the "different translator comments" warning
+		// from `wp i18n make-pot` when the same string has divergent hints).
 		if ( is_year() ) {
 			$period = get_query_var( 'year' );
 		} elseif ( is_month() ) {
-			// Monta "F Y" localizado a partir das query vars (single_month_title
-			// do WP usa o arg como prefix duplicado, gerando espaço extra).
+			// Builds a localized "F Y" from the query vars (WP's single_month_title
+			// uses the arg as a duplicated prefix, generating an extra space).
 			$ts     = mktime( 0, 0, 0, (int) get_query_var( 'monthnum' ), 1, (int) get_query_var( 'year' ) );
 			$period = date_i18n( 'F Y', $ts );
 		} else { // is_day()
-			// Mesma lógica do month — query vars em vez de get_the_date() (que
-			// pegaria a data do primeiro post no loop, não a do archive).
+			// Same logic as month — query vars instead of get_the_date() (which
+			// would take the first post's date in the loop, not the archive's).
 			$ts     = mktime( 0, 0, 0, (int) get_query_var( 'monthnum' ), (int) get_query_var( 'day' ), (int) get_query_var( 'year' ) );
 			$period = date_i18n( get_option( 'date_format' ), $ts );
 		}
@@ -379,7 +379,7 @@ function rd_add_meta_description() {
 		return;
 	}
 
-	// Trunca em ~160 caracteres pra ficar dentro do limite do snippet do Google
+	// Truncate at ~160 characters to stay within Google's snippet limit
 	if ( mb_strlen( $description ) > 160 ) {
 		$description = mb_substr( $description, 0, 157 ) . '...';
 	}
@@ -391,23 +391,23 @@ add_action( 'wp_head', 'rd_add_meta_description', 2 );
 /*******************************************************************************
  * Resolve o logo do site pra uso em Schema.org (publisher.logo)       - (SEO) *
  *                                                                             *
- * Ordem de preferência:                                                       *
- *   1. Custom Logo (Aparência → Personalizar → Identidade do Site)            *
- *   2. Logo padrão do tema (assets/img/logo-reloaded-panel.webp)             *
+ * Order of preference:                                                        *
+ *   1. Custom Logo (Appearance → Customize → Site Identity)                   *
+ *   2. The theme's default logo (assets/img/logo-reloaded-panel.webp)         *
  *                                                                             *
- * Sempre retorna ['url', 'width', 'height']. Pro fallback do tema as          *
- * dimensões vão null (Google aceita imagem sem dimensões pra publisher).      *
+ * Always returns ['url', 'width', 'height']. For the theme fallback the       *
+ * dimensions go null (Google accepts a dimensionless image for publisher).    *
  *******************************************************************************/
 function rd_seo_resolve_site_logo(): array {
 	// Delega pro helper centralizado em core.php (DRY com mod-maintenance,
 	// mod-security e mod-integrations). Schema.org Organization logo usa 'full'
 	// pra ter o tamanho original (Google prefere imagens grandes pro Knowledge
-	// Panel — recomendação é mínimo 112x112, ideal 600x600+).
+	// Panel — recommendation is minimum 112x112, ideal 600x600+).
 	if ( function_exists( 'rd_get_site_logo' ) ) {
 		return rd_get_site_logo( 'full' );
 	}
 
-	// Fallback defensivo: se core.php não carregou (improvável), serve direto
+	// Defensive fallback: if core.php didn't load (unlikely), serve directly
 	return array(
 		'url'    => get_template_directory_uri() . '/assets/img/logo-reloaded-panel.webp',
 		'width'  => 430,
@@ -416,15 +416,15 @@ function rd_seo_resolve_site_logo(): array {
 }
 
 /*******************************************************************************
- * Imprime um bloco <script type="application/ld+json">                - (SEO) *
+ * Prints a <script type="application/ld+json"> block                  - (SEO) *
  *                                                                             *
- * Helper interno: serializa em JSON com flags seguras pra HTML e envolve no   *
- * <script>. Usa JSON_UNESCAPED_SLASHES e JSON_UNESCAPED_UNICODE pra preservar *
- * URLs e acentos legíveis no source — Google parsa qualquer um, mas legível  *
- * é mais fácil de debugar.                                                    *
+ * Internal helper: serializes to JSON with HTML-safe flags and wraps it in    *
+ * a <script>. Uses JSON_UNESCAPED_SLASHES and JSON_UNESCAPED_UNICODE to       *
+ * preserve URLs and accents readable in the source — Google parses either,    *
+ * but readable is easier to debug.                                            *
  *                                                                             *
  *
- * @param array $data Estrutura Schema.org pronta pra serializar.              *
+ * @param array $data Schema.org structure ready to serialize.                 *
  *******************************************************************************/
 function rd_seo_print_jsonld( array $data ): void {
 	$json = wp_json_encode( $data, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE );
@@ -439,21 +439,21 @@ function rd_seo_print_jsonld( array $data ): void {
 /*******************************************************************************
  * Schema.org JSON-LD                                                  - (SEO) *
  *                                                                             *
- * Emite estruturas Schema.org no <head> pra que mecanismos de busca entendam *
- * o conteúdo da página de forma estruturada. Implementado por contexto:      *
+ * Emits Schema.org structures in <head> so search engines understand          *
+ * the page content in a structured way. Implemented per context:              *
  *                                                                             *
- *   - Singles (is_single): Article com headline, descrição, imagem, datas,   *
- *     autor (Person), publisher (Organization com logo) e mainEntityOfPage.  *
+ *   - Singles (is_single): Article with headline, description, image, dates,  *
+ *     author (Person), publisher (Organization w/ logo) and mainEntityOfPage. *
  *                                                                             *
- *   - Home/Front (is_front_page): WebSite com SearchAction — habilita o      *
- *     "sitelinks search box" do Google nos resultados de pesquisa.           *
+ *   - Home/Front (is_front_page): WebSite with SearchAction — enables the     *
+ *     Google "sitelinks search box" in search results.                        *
  *                                                                             *
- * BreadcrumbList virá junto com o H7 (breadcrumbs visíveis).                 *
+ * BreadcrumbList will come along with H7 (visible breadcrumbs).               *
  *                                                                             *
- * Sem opção no painel — Schema é baseline de SEO técnico, sem trade-off.     *
+ * No panel option — Schema is a technical SEO baseline, no trade-off.         *
  *******************************************************************************/
 function rd_add_schema_jsonld() {
-	// --- Article (somente posts, não pages estáticas) ---
+	// --- Article (posts only, not static pages) ---
 	if ( is_single() ) {
 		global $post;
 		if ( ! $post instanceof WP_Post ) {
@@ -465,11 +465,11 @@ function rd_add_schema_jsonld() {
 		$author_id   = (int) $post->post_author;
 		$description = rd_seo_resolve_post_description( $post );
 
-		// Person com @id que matche o Person declarado em author.php — Google
-		// amarra os dois schemas como o MESMO Person (E-E-A-T entre Article e
-		// perfil do autor). Inclui image (avatar Gravatar) pra alimentar o
-		// "author info" no painel de Rich Results. Fallback name pro
-		// user_nicename/user_login se display_name estiver vazio.
+		// Person with an @id that matches the Person declared in author.php — Google
+		// ties the two schemas as the SAME Person (E-E-A-T between Article and
+		// author profile). Includes image (Gravatar avatar) to feed the
+		// "author info" in the Rich Results panel. Falls back to
+		// user_nicename/user_login if display_name is empty.
 		$author_display  = get_the_author_meta( 'display_name', $author_id );
 		$author_nicename = get_the_author_meta( 'user_nicename', $author_id );
 		$author_name     = ! empty( $author_display )
@@ -515,7 +515,7 @@ function rd_add_schema_jsonld() {
 		return;
 	}
 
-	// --- WebSite (somente home/front page) ---
+	// --- WebSite (home/front page only) ---
 	if ( is_front_page() || is_home() ) {
 		$website = array(
 			'@context'        => 'https://schema.org',
@@ -539,35 +539,35 @@ function rd_add_schema_jsonld() {
 add_action( 'wp_head', 'rd_add_schema_jsonld', 5 );
 
 /*******************************************************************************
- * Custom robots.txt                                                    - (SEO) *
- *                                                                              *
- * Substitui completamente o output gerado pelo `do_robots()` do WordPress     *
- * quando o admin preenche o campo no painel. Vazio = comportamento default WP *
- * preservado (User-agent, Disallow /wp-admin/, Allow admin-ajax, Sitemap).    *
- *                                                                              *
- * Usa o filter nativo `robots_txt($output, $public)`:                          *
- *   - $output: conteúdo atual gerado pelo WP                                   *
- *   - $is_public: true se Settings → Reading → "Discourage search engines" OFF
- *                                                                              *
- * Sanitização defensiva: strip de tags HTML (admins não devem colocar HTML    *
- * em robots.txt, mas wp_kses_post no save já garante isso). Trim de BOM       *
- * invisível e \r residuais pra evitar "invalid syntax" em validators strict.  *
+ * Custom robots.txt                                                   - (SEO) *
+ *                                                                             *
+ * Completely replaces the output generated by WordPress's `do_robots()`       *
+ * when the admin fills the field in the panel. Empty = WP default behavior    *
+ * preserved (User-agent, Disallow /wp-admin/, Allow admin-ajax, Sitemap).     *
+ *                                                                             *
+ * Uses the native `robots_txt($output, $public)` filter:                      *
+ *   - $output: current content generated by WP                                *
+ *   - $is_public: true if Settings → Reading → "Discourage search engines" OFF*
+ *                                                                             *
+ * Defensive sanitization: strip HTML tags (admins shouldn't put HTML          *
+ * in robots.txt, but wp_kses_post on save already ensures this). Trims an     *
+ * invisible BOM and residual \r to avoid "invalid syntax" in strict parsers.  *
  *******************************************************************************/
-// phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed -- $is_public faz parte da assinatura do filter `robots_txt`, mesmo quando o output custom independe da config "Discourage search engines".
+// phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed -- $is_public is part of the `robots_txt` filter signature, even when the custom output is independent of the "Discourage search engines" config.
 function rd_custom_robots_txt( $output, $is_public ) {
 	$custom = (string) rd_get_option( 'custom_robots_txt' );
 
 	if ( trim( $custom ) === '' ) {
-		return $output; // mantém o default do WP
+		return $output; // keeps WP's default
 	}
 
-	// Remove BOM UTF-8 invisível (alguns editores salvam com \xEF\xBB\xBF no início)
+	// Remove the invisible UTF-8 BOM (some editors save with \xEF\xBB\xBF at the start)
 	$custom = preg_replace( '/^\xEF\xBB\xBF/', '', $custom );
 
-	// Normaliza line endings (CRLF/CR → LF) — alguns validators reclamam de \r
+	// Normalize line endings (CRLF/CR → LF) — some validators complain about \r
 	$custom = str_replace( array( "\r\n", "\r" ), "\n", $custom );
 
-	// Trim defensivo + garante newline no final (parsers strict pedem)
+	// Defensive trim + ensures a trailing newline (strict parsers require it)
 	$custom = rtrim( $custom ) . "\n";
 
 	return $custom;
@@ -575,35 +575,35 @@ function rd_custom_robots_txt( $output, $is_public ) {
 add_filter( 'robots_txt', 'rd_custom_robots_txt', 10, 2 );
 
 /*******************************************************************************
- * Controle do Sitemap nativo WP 5.5+                                  - (SEO) *
- *                                                                              *
- * 3 níveis de controle, todos via filters nativos do WP:                       *
- *                                                                              *
- *   - enable_sitemap (toggle global): desativa /wp-sitemap.xml inteiro         *
- *     pra quem usa SEO plugin externo (Yoast, RankMath) com sitemap próprio   *
- *                                                                              *
- *   - sitemap_include_authors: remove o sub-sitemap /wp-sitemap-users-*.xml   *
- *     Default OFF — solo blogs raramente querem expor /author/* (duplica home)*
- *                                                                              *
- *   - sitemap_include_cpt: mantém apenas post + page no sitemap quando OFF.   *
- *     Útil pra esconder CPTs de uso interno (widgets, configurações) do índice*
+ * Control of the native WP 5.5+ Sitemap                               - (SEO) *
+ *                                                                             *
+ * 3 levels of control, all via native WP filters:                             *
+ *                                                                             *
+ *   - enable_sitemap (global toggle): disables the entire /wp-sitemap.xml     *
+ *     for those using an external SEO plugin (Yoast, RankMath) with its own   *
+ *                                                                             *
+ *   - sitemap_include_authors: removes the /wp-sitemap-users-*.xml sub-sitemap*
+ *     Default OFF — solo blogs rarely expose /author/* (duplicates home)      *
+ *                                                                             *
+ *   - sitemap_include_cpt: keeps only post + page in the sitemap when OFF.    *
+ *     Useful to hide internal-use CPTs (widgets, settings) from the index     *
  */
 
-// 1. Toggle global — desativa o sistema inteiro
+// 1. Global toggle — disables the entire system
 add_filter(
 	'wp_sitemaps_enabled',
-	// phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found -- $enabled faz parte da assinatura do filter; ignoramos o default e retornamos só o que está no painel.
+	// phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found -- $enabled is part of the filter signature; we ignore the default and return only what's in the panel.
 	function ( $enabled ) {
 		return rd_get_option_bool( 'enable_sitemap' );
 	}
 );
 
-// 2. Excluir provider de Authors quando desabilitado
+// 2. Exclude the Authors provider when disabled
 add_filter(
 	'wp_sitemaps_add_provider',
 	function ( $provider, $name ) {
 		if ( $name === 'users' && ! rd_get_option_bool( 'sitemap_include_authors' ) ) {
-			return false; // remove o sub-sitemap inteiro
+			return false; // removes the entire sub-sitemap
 		}
 		return $provider;
 	},
@@ -611,14 +611,14 @@ add_filter(
 	2
 );
 
-// 3. Filtrar post types — quando CPT é OFF, mantém apenas os builtin
+// 3. Filter post types — when CPT is OFF, keep only the builtin ones
 add_filter(
 	'wp_sitemaps_post_types',
 	function ( $post_types ) {
 		if ( rd_get_option_bool( 'sitemap_include_cpt' ) ) {
-			return $post_types; // mantém todos (post, page, e CPTs)
+			return $post_types; // keeps all (post, page, and CPTs)
 		}
-		// Mantém apenas post + page (os builtin), descarta CPTs
+		// Keeps only post + page (the builtin ones), discards CPTs
 		$allowed = array( 'post', 'page' );
 		return array_intersect_key( $post_types, array_flip( $allowed ) );
 	}

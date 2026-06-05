@@ -2,30 +2,30 @@
 @use '../base/variables' as *;
 
 /* ==========================================
-   BANNER DE COOKIES (LGPD) — consent granular
+   COOKIE BANNER (LGPD) — granular consent
    ==========================================
-   2 modos visuais controlados via [data-state]:
-     - "compact": texto + 3 botões (default)
-     - "expanded": + 3 toggles inline acima dos botões
-   Transição entre modos via max-height + opacity nas .rd-lgpd-options.
+   2 visual modes controlled via [data-state]:
+     - "compact": text + 3 buttons (default)
+     - "expanded": + 3 inline toggles above the buttons
+   Transition between modes via max-height + opacity on .rd-lgpd-options.
 */
 .rd-cookie-banner {
     // ============================================================
-    // TEMA DARK FIXADO (independente do light mode da página).
-    // CSS vars são redefinidas no escopo do banner — todos os
-    // descendentes herdam os tokens do dark mode automaticamente,
-    // sem precisar reescrever cada cor manualmente. Decisão de UX:
-    // LGPD/consent precisa de presença visual forte e identidade
-    // consistente mesmo quando o resto do site está claro.
+    // DARK THEME PINNED (independent of the page's light mode).
+    // CSS vars are redefined in the banner scope — all descendants
+    // inherit the dark mode tokens automatically, without rewriting
+    // each color manually. UX decision: LGPD/consent needs a strong
+    // visual presence and consistent identity even when the rest of
+    // the site is light.
     // ============================================================
     color-scheme: dark;
-    --rd-surface: #161b22; // GitHub Dark "canvas.subtle" — combina com os outros tokens GH (#0d1117 / #30363d) já usados no tema
+    --rd-surface: #161b22; // GitHub Dark "canvas.subtle" — matches the other GH tokens (#0d1117 / #30363d) already used in the theme
     --rd-text: #e0e0e0;
     --rd-text-light: #cccccc;
     --rd-text-muted: #999999;
     --rd-text-dimmed: #909090;
     --rd-border-subtle: #30363d;
-    color: var(--rd-text-light); // garante o texto base claro (não herda do body)
+    color: var(--rd-text-light); // ensures the light base text (doesn't inherit from body)
 
     position: fixed;
     bottom: 0;
@@ -42,16 +42,16 @@
     flex-direction: column;
     gap: 14px;
 
-    // Estado "fechando" — ativado por JS quando user salva consent
+    // "closing" state — activated by JS when the user saves consent
     &.rd-lgpd-closing {
         opacity: 0;
         transform: translateY(20px);
         pointer-events: none;
     }
 
-    // Estado inicial escondido — quando user já fez escolha em sessão anterior.
-    // O banner ainda existe no DOM (pra ser revelado pelo link "Cookie Preferences"
-    // no footer sem precisar reload), só não renderiza visualmente até pedirem.
+    // Initial hidden state — when the user already chose in a previous session.
+    // The banner still exists in the DOM (to be revealed by the "Cookie Preferences" link
+    // in the footer without needing a reload), it just doesn't render visually until asked.
     &.rd-lgpd-hidden {
         display: none;
     }
@@ -71,9 +71,9 @@
         }
     }
 
-    /* ============= Toggles de categoria (estado expandido) ============= */
+    /* ============= Category toggles (expanded state) ============= */
     .rd-lgpd-options {
-        // Default: colapsado (modo compacto do banner)
+        // Default: collapsed (banner's compact mode)
         max-height: 0;
         opacity: 0;
         overflow: hidden;
@@ -85,7 +85,7 @@
     }
 
     &[data-state="expanded"] .rd-lgpd-options {
-        max-height: 600px; // teto alto pro conteúdo caber em qualquer idioma
+        max-height: 600px; // high ceiling so the content fits in any language
         opacity: 1;
         margin: 6px 0;
     }
@@ -108,7 +108,7 @@
             background: rgba(0, 168, 255, 0.05);
         }
 
-        // Necessários: visualmente "travado"
+        // Necessary: visually "locked"
         &.rd-lgpd-option-locked {
             cursor: not-allowed;
             opacity: 0.85;
@@ -154,7 +154,7 @@
         }
     }
 
-    /* ============= Botões de ação ============= */
+    /* ============= Action buttons ============= */
     .rd-lgpd-actions {
         display: flex;
         gap: 12px;
@@ -197,12 +197,12 @@
         }
     }
 
-    /* ============= Layout desktop: texto + botões na mesma linha (compacto) ============= */
+    /* ============= Desktop layout: text + buttons on the same line (compact) ============= */
     @media (min-width: 769px) {
-        // No modo compacto, texto à esquerda + botões à direita na mesma linha.
-        // `flex-wrap: wrap` + `flex-basis: 100%` no .rd-lgpd-options empurra o
-        // bloco de toggles pra "linha 2" do flex — assim ele não conta como
-        // espaçador entre text e actions na linha principal (resolvia gap inflado).
+        // In compact mode, text on the left + buttons on the right on the same line.
+        // `flex-wrap: wrap` + `flex-basis: 100%` on .rd-lgpd-options pushes the
+        // toggles block to the flex's "row 2" — so it doesn't count as a
+        // spacer between text and actions on the main line (fixed the inflated gap).
         &[data-state="compact"] {
             flex-direction: row;
             align-items: center;
@@ -210,12 +210,12 @@
             gap: 0;
 
             .rd-lgpd-text {
-                flex: 1; // ocupa o espaço livre da linha
+                flex: 1; // takes the free space on the line
             }
 
             .rd-lgpd-options {
-                flex-basis: 100%; // força quebrar pra linha de baixo (some via max-height: 0)
-                order: 3;         // garante que fica depois do par text+actions
+                flex-basis: 100%; // forces a break to the line below (hidden via max-height: 0)
+                order: 3;         // ensures it stays after the text+actions pair
             }
 
             .rd-lgpd-actions {
@@ -224,7 +224,7 @@
         }
     }
 
-    /* ============= Mobile: tudo empilhado, botões 100% ============= */
+    /* ============= Mobile: all stacked, 100% buttons ============= */
     @media (max-width: 768px) {
         padding: 16px 14px;
 
@@ -246,13 +246,13 @@
     }
 }
 
-/* ============= Link "Cookie Preferences" no footer ============= */
+/* ============= "Cookie Preferences" link in the footer ============= */
 .rd-lgpd-reopen {
     background: none;
     border: none;
-    // Hierarquia visual sutil entre copyright (proeminente) e este utilitário
-    // (secundário) via opacity. 0.85 mantém o degradê de importância e bate
-    // WCAG AA 4.5:1 contra o footer #111 (~4.6:1).
+    // Subtle visual hierarchy between copyright (prominent) and this utility
+    // (secondary) via opacity. 0.85 keeps the importance gradient and meets
+    // WCAG AA 4.5:1 against the footer #111 (~4.6:1).
     color: inherit;
     opacity: 0.85;
     cursor: pointer;

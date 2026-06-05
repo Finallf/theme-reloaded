@@ -5,50 +5,45 @@ defined( 'ABSPATH' ) || exit;
  */
 
 /*******************************************************************************
- * Scripts no Head - (Analytics e Ads)                         - (Integrações) *
+ * Scripts in the Head - (Analytics and Ads)                  - (Integrations) *
  */
 add_action(
 	'wp_head',
 	function () {
 		$ga_id = rd_get_option( 'ga_id' );
 
-		// Gated por consent de "analytics" — só carrega se o user consentiu
+		// Gated by "analytics" consent — only loads if the user consented
 		if ( ! empty( $ga_id ) && preg_match( '/^(G-|UA-)[A-Z0-9-]+$/i', $ga_id ) && rd_consent_given( 'analytics' ) ) {
 			$nonce_attr = rd_csp_nonce_attr();
 			?>
-		<?php // phpcs:ignore WordPress.WP.EnqueuedResources.NonEnqueuedScript -- script oficial do gtag/Google Analytics injetado inline no wp_head — wp_enqueue_script não é apropriado aqui (precisa rodar exatamente nessa posição do <head>, antes de outros tracking scripts, com data layer setup correto). ?>
+		<?php // phpcs:ignore WordPress.WP.EnqueuedResources.NonEnqueuedScript -- official gtag/Google Analytics script injected inline in wp_head — wp_enqueue_script isn't appropriate here (must run at exactly this position in the <head>, before other tracking scripts, with correct data layer setup). ?>
 		<script<?php echo $nonce_attr; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- nonce attribute already escaped by rd_csp_nonce_attr() ?> async src="https://www.googletagmanager.com/gtag/js?id=<?php echo esc_attr( $ga_id ); ?>"></script>
-		<script<?php echo $nonce_attr; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- nonce attribute already escaped by rd_csp_nonce_attr() ?>>
-			window.dataLayer = window.dataLayer || [];
-			function gtag(){dataLayer.push(arguments);}
-			gtag('js', new Date());
-			gtag('config', '<?php echo esc_attr( $ga_id ); ?>');
-		</script>
+		<script<?php echo $nonce_attr; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- nonce attribute already escaped by rd_csp_nonce_attr() ?>>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','<?php echo esc_attr( $ga_id ); ?>');</script>
 			<?php
 		}
 
 		$ad_global = rd_get_option( 'ad_global' );
 		if ( ! empty( $ad_global ) ) {
-			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- BY DESIGN: global ad/tracking script (AdSense Auto Ads, custom head snippets). Admin with manage_options trusted under WP model. CSP nonce injetado automaticamente em <script> tags via rd_csp_inject_nonce().
+			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- BY DESIGN: global ad/tracking script (AdSense Auto Ads, custom head snippets). Admin with manage_options trusted under WP model. CSP nonce injected automatically into <script> tags via rd_csp_inject_nonce().
 			echo rd_csp_inject_nonce( $ad_global ) . "\n";
 		}
 	}
 );
 
 /*******************************************************************************
- * Meta tags de verificação de propriedade do site            - (Integrações) *
+ * Site ownership verification meta tags                       - (Integrations)*
  *                                                                             *
- * Cada motor de busca exige uma <meta> específica pra confirmar que você é   *
- * dono do domínio antes de liberar acesso ao painel de Webmaster Tools.      *
+ * Each search engine requires a specific <meta> to confirm you own            *
+ * the domain before granting access to the Webmaster Tools panel.             *
  *                                                                             *
- *   - Google: <meta name="google-site-verification" content="...">           *
- *   - Bing:   <meta name="msvalidate.01" content="...">                      *
+ *   - Google: <meta name="google-site-verification" content="...">            *
+ *   - Bing:   <meta name="msvalidate.01" content="...">                       *
  *                                                                             *
- * As tags são impressas apenas se o admin tiver preenchido o valor no painel.*
- * Sem opção on/off — vazio = não renderiza, é o controle natural.            *
+ * The tags are printed only if the admin filled in the value in the panel.    *
+ * No on/off option — empty = doesn't render, that's the natural control.      *
  *                                                                             *
- * Sanitização: extra leve via esc_attr (códigos são alfanuméricos + alguns   *
- * separadores). Não precisa wp_kses porque a string vai pra atributo HTML.   *
+ * Sanitization: extra-light via esc_attr (codes are alphanumeric + a few      *
+ * separators). No wp_kses needed because the string goes into an HTML attr.   *
  */
 add_action(
 	'wp_head',
@@ -64,32 +59,32 @@ add_action(
 		}
 
 		// Custom verification meta tags (Pinterest, Yandex, Naver, Facebook Domain,
-		// etc.). Já sanitizado no save via wp_kses com whitelist estrito de
-		// <meta> + atributos específicos (panel.php → rd_options_sanitize).
-		// Echo direto preservando line breaks pra leitura humana no view-source.
+		// etc.). Already sanitized on save via wp_kses with a strict whitelist of
+		// <meta> + specific attributes (panel.php → rd_options_sanitize).
+		// Direct echo preserving line breaks for human reading in view-source.
 		$custom_meta = trim( (string) rd_get_option( 'custom_verification_meta' ) );
 		if ( $custom_meta !== '' ) {
 			echo $custom_meta . "\n"; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- sanitized at save via wp_kses with strict <meta>-only allowlist.
 		}
 	},
 	1
-); // priority 1 — meta tags de verificação ficam no topo do <head> por convenção
+); // priority 1 — verification meta tags go at the top of the <head> by convention
 
 /*******************************************************************************
- * Scripts de Analytics e Tracking de Terceiros               - (Integrações) *
+ * Third-party Analytics and Tracking scripts                  - (Integrations)*
  *                                                                             *
- * Bloco único no wp_head que injeta os scripts oficiais de cada ferramenta   *
- * quando o ID respectivo está preenchido no painel:                          *
+ * Single block in wp_head that injects the official script of each tool       *
+ * when the respective ID is filled in the panel:                              *
  *                                                                             *
- *   - Microsoft Clarity (heatmaps + session recordings gratuitos)            *
- *   - Facebook Pixel (retargeting + conversões Meta)                         *
- *   - TikTok Pixel (retargeting + conversões TikTok Ads)                     *
- *   - Plausible Analytics (cloud, privacy-friendly)                          *
- *   - Umami Analytics (self-hosted, privacy-friendly)                        *
+ *   - Microsoft Clarity (free heatmaps + session recordings)                  *
+ *   - Facebook Pixel (retargeting + Meta conversions)                         *
+ *   - TikTok Pixel (retargeting + TikTok Ads conversions)                     *
+ *   - Plausible Analytics (cloud, privacy-friendly)                           *
+ *   - Umami Analytics (self-hosted, privacy-friendly)                         *
  *                                                                             *
- * Cada script é OFICIAL da plataforma — copiado direto da documentação. ID   *
- * passa por validação regex pra evitar XSS via campo do painel (mesmo sendo  *
- * input só pra admin com manage_options).                                    *
+ * Each script is the platform's OFFICIAL one — copied straight from the docs. *
+ * The ID goes through regex validation to prevent XSS via the panel field     *
+ * (even though it's input only for an admin with manage_options).             *
  */
 add_action(
 	'wp_head',
@@ -97,17 +92,11 @@ add_action(
 
 		$nonce_attr = rd_csp_nonce_attr();
 
-		// --- Microsoft Clarity --- (Estatísticas)
+		// --- Microsoft Clarity --- (Statistics)
 		$clarity_id = trim( (string) rd_get_option( 'clarity_id' ) );
 		if ( $clarity_id !== '' && preg_match( '/^[a-z0-9]+$/i', $clarity_id ) && rd_consent_given( 'analytics' ) ) :
 			?>
-		<script type="text/javascript"<?php echo $nonce_attr; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- nonce already escaped ?>>
-			(function(c,l,a,r,i,t,y){
-				c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
-				t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
-				y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
-			})(window, document, "clarity", "script", "<?php echo esc_js( $clarity_id ); ?>");
-		</script>
+		<script type="text/javascript"<?php echo $nonce_attr; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- nonce already escaped ?>>(function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);})(window,document,"clarity","script","<?php echo esc_js( $clarity_id ); ?>");</script>
 			<?php
 	endif;
 
@@ -137,7 +126,7 @@ add_action(
 			<?php
 	endif;
 
-		// --- Plausible Analytics (cloud) --- (Estatísticas)
+		// --- Plausible Analytics (cloud) --- (Statistics)
 		$plausible_domain = trim( (string) rd_get_option( 'plausible_domain' ) );
 		if ( $plausible_domain !== '' && rd_consent_given( 'analytics' ) ) :
 			?>
@@ -145,7 +134,7 @@ add_action(
 			<?php
 	endif;
 
-		// --- Umami Analytics (self-hosted) --- (Estatísticas)
+		// --- Umami Analytics (self-hosted) --- (Statistics)
 		$umami_id  = trim( (string) rd_get_option( 'umami_website_id' ) );
 		$umami_url = trim( (string) rd_get_option( 'umami_script_url' ) );
 		if ( $umami_id !== '' && $umami_url !== '' && filter_var( $umami_url, FILTER_VALIDATE_URL ) && rd_consent_given( 'analytics' ) ) :
@@ -158,21 +147,21 @@ add_action(
 );
 
 /*******************************************************************************
- * Renderiza o Widget do Discord (Sidebar)                     - (Integrações) *
+ * Renders the Discord Widget (Sidebar)                        - (Integrations)*
  *******************************************************************************/
 function rd_render_discord_widget() {
-	// 1. Verificação Mestre: O widget está ativado no painel?
+	// 1. Master check: is the widget enabled in the panel?
 	$show_discord = rd_get_option_bool( 'discord_widget' );
 
-	// Se estiver desligado, a função morre aqui e não renderiza nada
+	// If it's off, the function dies here and renders nothing
 	if ( ! $show_discord ) {
 		return;
 	}
 
-	// 2. Define qual ID usar (Painel ou Padrão ReloadeD)
+	// 2. Define which ID to use (Panel or ReloadeD Default)
 	$id_discord = rd_get_option( 'discord_id' ) ? rd_get_option( 'discord_id' ) : '408089552759029788';
 
-	// 3. Verifica o modo de performance (Fachada ou Iframe)
+	// 3. Check the performance mode (Facade or Iframe)
 	$use_facade = rd_get_option_bool( 'facade_discord' );
 
 	if ( $use_facade ) :
@@ -189,10 +178,10 @@ function rd_render_discord_widget() {
 				</div>
 				<div class="logo-int">
 					<?php
-					// Resolução em 3 níveis:
-					// 1. discord_facade_logo do painel (admin escolheu imagem dedicada)
-					// 2. Custom Logo do WP (rd_get_site_logo)
-					// 3. logo-reloaded-panel.webp (fallback hardcoded — dentro do rd_get_site_logo)
+					// 3-level resolution:
+					// 1. discord_facade_logo from the panel (admin chose a dedicated image)
+					// 2. WP's Custom Logo (rd_get_site_logo)
+					// 3. logo-reloaded-panel.webp (hardcoded fallback — inside rd_get_site_logo)
 					$facade_logo_url = rd_get_option( 'discord_facade_logo' );
 					if ( empty( $facade_logo_url ) ) {
 						$logo_data       = rd_get_site_logo( 'medium' );
@@ -203,9 +192,9 @@ function rd_render_discord_widget() {
 						esc_url( $facade_logo_url ),
 						esc_attr( get_bloginfo( 'name' ) )
 					);
-					// Envolve em <picture> se houver AVIF/WebP no filesystem.
-					// Function check defensivo — mod-image-formats pode estar desabilitado
-					// em algum cenário futuro (toggle, código separado). Fallback inerte.
+					// Wrap in <picture> if there's AVIF/WebP on the filesystem.
+					// Defensive function check — mod-image-formats may be disabled
+					// in some future scenario (toggle, separate code). Inert fallback.
 					if ( function_exists( 'rd_img_wrap_url_in_picture' ) ) {
 						// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- helper builds <picture> from already-escaped components ($facade_img_html composed with esc_url + esc_attr above; helper appends <source> tags with esc_url internally).
 						echo rd_img_wrap_url_in_picture( $facade_logo_url, $facade_img_html );

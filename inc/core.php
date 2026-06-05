@@ -1,24 +1,25 @@
 <?php
 defined( 'ABSPATH' ) || exit;
 /*******************************************************************************
- * Core do Tema - Funções Estruturais e Nativas (Hardcoded)
+ * Theme Core - Structural and Native Functions (Hardcoded)
  */
 
 /*******************************************************************************
- * Funções e definições do tema ReloadeD                         - (Hardcoded) *
+ * ReloadeD theme functions and definitions                      - (Hardcoded) *
  */
 if ( ! function_exists( 'rd_setup' ) ) :
 	function rd_setup() {
-		// Carrega o text domain do tema. WP procura por /languages/{locale}.mo
-		// (convenção pra arquivos DENTRO da pasta do tema — sem o prefixo do
-		// text domain). Se o .mo não existir, o WP cai pra string-fonte (en-US).
-		// Referência: https://developer.wordpress.org/themes/classic-themes/functionality/internationalization/
+		// Loads the theme text domain. WP looks for /languages/{locale}.mo
+		// (convention for files INSIDE the theme folder — no text-domain
+		// prefix). If the .mo is missing, WP falls back to the source string
+		// (en-US).
+		// Reference: https://developer.wordpress.org/themes/classic-themes/functionality/internationalization/
 		load_theme_textdomain( 'reloaded', get_template_directory() . '/languages' );
 
-		add_theme_support( 'html5', array( 'search-form', 'comment-form', 'comment-list', 'gallery', 'caption', 'style', 'script' ) ); // Adicione suporte a HTML5
-		add_theme_support( 'title-tag' ); // Adiciona suporte a títulos dinâmicos (gerenciados pelo WP)
-		add_theme_support( 'post-thumbnails' ); // Habilita Imagens Destacadas (essencial para portais)
-		add_theme_support( 'responsive-embeds' ); // Mantem a proporção correta dos vídeos inseridos via bloco de "Vídeo" ou "YouTube"
+		add_theme_support( 'html5', array( 'search-form', 'comment-form', 'comment-list', 'gallery', 'caption', 'style', 'script' ) ); // Adds HTML5 support.
+		add_theme_support( 'title-tag' ); // Adds support for dynamic titles (managed by WP).
+		add_theme_support( 'post-thumbnails' ); // Enables Featured Images (essential for portals).
+		add_theme_support( 'responsive-embeds' ); // Keeps the correct aspect ratio of videos inserted via the "Video" or "YouTube" block.
 		add_theme_support(
 			'custom-logo',
 			array(
@@ -27,29 +28,28 @@ if ( ! function_exists( 'rd_setup' ) ) :
 				'flex-height' => true,
 				'flex-width'  => true,
 			)
-		); // Habilita a troca de logotipo personalizada
-		add_theme_support( 'align-wide' ); // Habilita opção no editor para que imagens ocupem a largura total da tela (estilo ""Gutenberg"")
-		add_theme_support( 'automatic-feed-links' ); // Adiciona links de feeds RSS automaticamente ao <head>
-		add_theme_support( 'customize-selective-refresh-widgets' ); // Permite a atualização seletiva de widgets no Customizador (sem recarregar a página toda)
-		add_theme_support( 'editor-styles' ); // Exibe as fontes e estilos do tema no editor Gutenberg
-		add_editor_style( 'assets/css/style.css' ); // Aponta para o seu CSS principal
+		); // Enables the custom logo swap.
+		add_theme_support( 'align-wide' ); // Enables the editor option for images to span the full screen width (Gutenberg style).
+		add_theme_support( 'automatic-feed-links' ); // Automatically adds RSS feed links to <head>.
+		add_theme_support( 'customize-selective-refresh-widgets' ); // Allows selective widget refresh in the Customizer (without full page reload).
+		add_theme_support( 'editor-styles' ); // Displays the theme fonts and styles inside the Gutenberg editor.
+		add_editor_style( 'assets/css/style.css' ); // Points to the main CSS.
 
-		// TAMANHOS DE IMAGEM PERSONALIZADOS (HARD CROP)
-		// Mantido no core pois os tamanhos precisam ser registrados na inicialização do tema
+		// CUSTOM IMAGE SIZES (HARD CROP)
+		// Kept in core because the sizes need to be registered on theme init.
 		if ( rd_get_option_bool( 'image_resizing' ) ) {
-			add_image_size( 'rd-micro', 150, 84, true );          // Miniaturas para Widgets/Sidebar (16:9).
-			add_image_size( 'rd-popular-thumb', 200, 113, true ); // Widget "Most Read" — display 100x56 (16:9) com DPR 2x retina = 200x113. Antes usava 'medium' do WP (300x300, sem aspect-ratio fixo) que servia o original gigante (até 2560x1429) quando o medium não cobria.
-			add_image_size( 'rd-card-half', 400, 225, true );     // Cards do post-grid em viewport intermediário (display ~390x220). Aproveita o srcset auto do WP — browser escolhe esse quando o display fica entre rd-micro e rd-card. Antes o WP servia rd-card 600x338 (overkill em DPR 1x) ou o original.
-			add_image_size( 'rd-card', 600, 338, true );          // Tamanho para os cards da Home.
-			add_image_size( 'rd-full-banner', 1200, 675, true );  // Tamanho para o banner no topo da notícia.
-			add_image_size( 'rd-qr', 240, 240, true );            // QR codes do bloco de doações (sidebar). Display real ~160-200px; 240 cobre retina sem desperdiçar banda como o source de 635x635 que admins costumam subir.
+			add_image_size( 'rd-micro', 150, 84, true );          // Thumbnails for Widgets/Sidebar (16:9).
+			add_image_size( 'rd-popular-thumb', 200, 113, true ); // "Most Read" widget — display 100x56 (16:9) with DPR 2x retina = 200x113. Previously used WP's 'medium' (300x300, no fixed aspect-ratio), which served the giant original (up to 2560x1429) when medium did not cover it.
+			add_image_size( 'rd-card-half', 400, 225, true );     // Post-grid cards on intermediate viewports (display ~390x220). Leverages WP's auto srcset — browser picks this one when display falls between rd-micro and rd-card. Previously WP served rd-card 600x338 (overkill at DPR 1x) or the original.
+			add_image_size( 'rd-card', 600, 338, true );          // Size for the Home cards.
+			add_image_size( 'rd-full-banner', 1200, 675, true );  // Size for the banner at the top of the post.
+			add_image_size( 'rd-qr', 240, 240, true );            // Donation block QR codes (sidebar). Real display ~160-200px; 240 covers retina without wasting bandwidth like the 635x635 source admins usually upload.
 		}
 
-		// Registra os locais de menu
+		// Registers menu locations.
 		register_nav_menus(
 			array(
-				'menu-1'      => esc_html__( 'Primary Menu', 'reloaded' ),
-				'menu-footer' => esc_html__( 'Footer Menu', 'reloaded' ),
+				'menu-1' => esc_html__( 'Primary Menu', 'reloaded' ),
 			)
 		);
 	}
@@ -57,7 +57,7 @@ endif;
 add_action( 'after_setup_theme', 'rd_setup' );
 
 /*******************************************************************************
- * Remove tamanhos de imagem ocultos/nativos do WordPress        - (Hardcoded) *
+ * Removes hidden/native WordPress image sizes                   - (Hardcoded) *
  */
 add_action(
 	'init',
@@ -69,7 +69,7 @@ add_action(
 );
 
 /*******************************************************************************
- * Renderiza o Logotipo (Imagem ou Texto)                        - (Hardcoded) *
+ * Renders the Logo (Image or Text)                              - (Hardcoded) *
  *******************************************************************************/
 function rd_render_logo() {
 	if ( has_custom_logo() ) {
@@ -90,25 +90,25 @@ function rd_render_logo() {
 }
 
 /*******************************************************************************
- * Helper: URL do logo do site com fallback                        - (Hardcoded) *
+ * Helper: site logo URL with fallback                             - (Hardcoded) *
  *                                                                                *
- * Source of truth pra "qual logo usar fora do frontend regular".                *
- * Resolve na ordem:                                                              *
- *   1. Custom Logo do WP (Aparência → Personalizar → Identidade do Site)        *
- *   2. assets/img/logo-reloaded-panel.webp (fallback hardcoded do tema)        *
+ * Source of truth for "which logo to use outside the regular frontend".         *
+ * Resolves in order:                                                             *
+ *   1. WP Custom Logo (Appearance → Customize → Site Identity)                 *
+ *   2. assets/img/logo-reloaded-panel.webp (theme hardcoded fallback)          *
  *                                                                                *
- * Usado por: mod-maintenance.php (tela 503), mod-security.php (WSOD 500),       *
- * mod-integrations.php (Discord facade quando admin não cadastrou logo dedicado *
- * via discord_facade_logo), mod-seo.php (Schema.org Organization logo).         *
+ * Used by: mod-maintenance.php (503 screen), mod-security.php (WSOD 500),       *
+ * mod-integrations.php (Discord facade when admin did not register a dedicated  *
+ * logo via discord_facade_logo), mod-seo.php (Schema.org Organization logo).   *
  *                                                                                *
- * Por que não usar Custom Logo no painel admin (panel.php) nem no OG image      *
- * fallback (mod-seo.php → rd_seo_resolve_og_image): aqueles 2 casos são         *
- * intencionalmente hardcoded — o primeiro é UI do tema (branding do produto    *
- * "ReloadeD theme"), o segundo é fallback DE fallback de OG image (Custom Logo *
- * geralmente é horizontal, proporção errada pra preview social 1.91:1).         *
+ * Why not use Custom Logo in the admin panel (panel.php) nor in the OG image    *
+ * fallback (mod-seo.php → rd_seo_resolve_og_image): those 2 cases are           *
+ * intentionally hardcoded — the first is theme UI (branding of the product     *
+ * "ReloadeD theme"), the second is fallback-OF-fallback for OG image (Custom    *
+ * Logo is usually horizontal, wrong ratio for the 1.91:1 social preview).       *
  *                                                                                *
  *
- * @param string $size Size do attachment quando o Custom Logo é usado.          *
+ * @param string $size Attachment size when the Custom Logo is used.             *
  *                     'medium' (default), 'large', 'full', etc.                 *
  * @return array { url: string, width: int|null, height: int|null }              *
  *******************************************************************************/
@@ -125,7 +125,7 @@ function rd_get_site_logo( string $size = 'medium' ): array {
 		}
 	}
 
-	// Fallback: arquivo hardcoded em assets/img/logo-reloaded-panel.webp (430x100)
+	// Fallback: hardcoded file at assets/img/logo-reloaded-panel.webp (430x100).
 	return array(
 		'url'    => get_template_directory_uri() . '/assets/img/logo-reloaded-panel.webp',
 		'width'  => 430,
@@ -134,11 +134,11 @@ function rd_get_site_logo( string $size = 'medium' ): array {
 }
 
 /*******************************************************************************
- * Registro das áreas de Widgets (Sidebar e Rodapé)              - (Hardcoded) *
+ * Widget area registration (Sidebar and Footer)                 - (Hardcoded) *
  *******************************************************************************/
 function rd_widgets_init() {
 
-	// Barra Lateral Principal
+	// Main sidebar.
 	register_sidebar(
 		array(
 			'name'          => __( 'Main Sidebar', 'reloaded' ),
@@ -151,37 +151,46 @@ function rd_widgets_init() {
 		)
 	);
 
-	// Rodapé - Área Dinâmica
-	register_sidebar(
-		array(
-			'name'          => __( 'Footer - Column 3 (Popular Posts)', 'reloaded' ),
-			'id'            => 'footer-widget-area',
-			'description'   => __( 'Add widgets here to appear in the footer.', 'reloaded' ),
-			'before_widget' => '<div id="%1$s" class="widget footer-widget %2$s">',
-			'after_widget'  => '</div>',
-			'before_title'  => '<h3 class="footer-heading">',
-			'after_title'   => '</h3>',
-		)
+	// Footer — 3 dynamic columns (columns 2-4 of the footer grid; column 1 is the
+	// fixed brand block in footer.php). The first keeps the legacy id
+	// `footer-widget-area` so any widget already placed there is preserved.
+	$rd_footer_columns = array(
+		'footer-widget-area'   => __( 'Footer Column 2', 'reloaded' ),
+		'footer-widget-area-2' => __( 'Footer Column 3', 'reloaded' ),
+		'footer-widget-area-3' => __( 'Footer Column 4', 'reloaded' ),
 	);
+	foreach ( $rd_footer_columns as $rd_footer_id => $rd_footer_name ) {
+		register_sidebar(
+			array(
+				'name'          => $rd_footer_name,
+				'id'            => $rd_footer_id,
+				'description'   => __( 'Add widgets here to appear in this footer column.', 'reloaded' ),
+				'before_widget' => '<div id="%1$s" class="widget footer-widget %2$s">',
+				'after_widget'  => '</div>',
+				'before_title'  => '<h3 class="footer-heading">',
+				'after_title'   => '</h3>',
+			)
+		);
+	}
 }
 add_action( 'widgets_init', 'rd_widgets_init' );
 
 /***********************************************************************************
- * Carrega assets do admin                                            - (Hardcoded) *
+ * Loads admin assets                                                 - (Hardcoded) *
  *                                                                                  *
  * CSS:                                                                             *
- *   - Painel rd_options                                                            *
- *   - Editor de post (post.php / post-new.php) — pra estilizar os meta boxes       *
+ *   - rd_options panel                                                             *
+ *   - Post editor (post.php / post-new.php) — to style the meta boxes              *
  *                                                                                  *
  * JS + Media uploader:                                                             *
- *   - Apenas no painel rd_options (onde existe upload de mídia via campos)         *
+ *   - Only inside the rd_options panel (where media uploads via fields exist)      *
  ***********************************************************************************/
 function rd_admin_scripts( $hook ) {
 
 	$is_panel       = ( strpos( $hook, 'rd_options' ) !== false );
 	$is_post_editor = ( $hook === 'post.php' || $hook === 'post-new.php' );
 
-	// CSS — carrega em ambos os contextos
+	// CSS — loaded in both contexts.
 	if ( $is_panel || $is_post_editor ) {
 		wp_enqueue_style(
 			'rd-admin-css',
@@ -191,25 +200,40 @@ function rd_admin_scripts( $hook ) {
 		);
 	}
 
-	// JS + Media — apenas no painel rd_options
+	// JS + Media — only inside the rd_options panel.
 	if ( $is_panel ) {
 		wp_enqueue_media();
+		// Single consolidated admin-panel bundle (formerly 7 separate per-tab
+		// files). Loaded on every tab; each internal module self-guards. Enqueued
+		// at this hook's priority 5 so the per-tab modules (mod-stats, mod-backup,
+		// mod-dashboard, mod-image-formats) can attach their wp_localize_script
+		// data to the 'rd-admin-panel' handle at the default priority 10.
 		wp_enqueue_script(
-			'rd-admin-js',
-			get_template_directory_uri() . '/assets/js/admin-scripts.js',
+			'rd-admin-panel',
+			get_template_directory_uri() . '/assets/js/admin-panel.js',
 			array( 'jquery' ),
-			rd_asset_version( '/assets/js/admin-scripts.js' ),
+			rd_asset_version( '/assets/js/admin-panel.js' ),
 			true
+		);
+		wp_localize_script(
+			'rd-admin-panel',
+			'rdAdminScripts',
+			array(
+				'i18n' => array(
+					'selectImage' => __( 'Select fallback image', 'reloaded' ),
+					'useImage'    => __( 'Use this image', 'reloaded' ),
+				),
+			)
 		);
 	}
 }
-add_action( 'admin_enqueue_scripts', 'rd_admin_scripts' );
+add_action( 'admin_enqueue_scripts', 'rd_admin_scripts', 5 );
 
 /*******************************************************************************
- * Helper: Versão de asset com fallback seguro                  - (Performance) *
- * Útil para cache busting em wp_enqueue_*.                                     *
- * Usa hash do conteúdo + mtime para máxima precisão de invalidação de cache.   *
- * Imune a problemas de timestamp causados por uploads atômicos via SFTP.       *
+ * Helper: asset version with safe fallback                     - (Performance) *
+ * Useful for cache busting in wp_enqueue_*.                                    *
+ * Uses content hash + mtime for maximum cache-invalidation precision.          *
+ * Immune to timestamp issues caused by atomic SFTP uploads.                    *
  *******************************************************************************/
 function rd_asset_version( $relative_path, $fallback = '1.0.0' ) {
 	$full_path = get_template_directory() . $relative_path;
@@ -217,16 +241,16 @@ function rd_asset_version( $relative_path, $fallback = '1.0.0' ) {
 }
 
 /*******************************************************************************
- * IP do cliente — com proteção contra header spoofing             - (Segurança) *
+ * Client IP — with header-spoofing protection                       - (Security) *
  *                                                                              *
- * Modelo: REMOTE_ADDR (que vem do TCP, não-spoofável) é a fonte de verdade.   *
- * Headers de proxy (CF-Connecting-IP, X-Forwarded-For) só são confiados QUANDO *
- * REMOTE_ADDR está numa faixa de IP de proxy reconhecida — Cloudflare por      *
- * default + ranges custom configurados pelo admin em `trusted_proxy_ips`.      *
+ * Model: REMOTE_ADDR (which comes from TCP, non-spoofable) is the source of    *
+ * truth. Proxy headers (CF-Connecting-IP, X-Forwarded-For) are only trusted    *
+ * WHEN REMOTE_ADDR sits in a recognized proxy IP range — Cloudflare by         *
+ * default + custom ranges configured by the admin in `trusted_proxy_ips`.      *
  *                                                                              *
- * Consumido por mod-maintenance (rate-limit de senha) e mod-views (dedupe de  *
- * views). Função canônica — qualquer módulo que precise saber "quem é o user" *
- * deve chamar daqui em vez de reimplementar.                                   *
+ * Consumed by mod-maintenance (password rate-limit) and mod-views (view        *
+ * dedupe). Canonical function — any module that needs to know "who the user   *
+ * is" must call from here instead of reimplementing it.                        *
  *******************************************************************************/
 function rd_get_client_ip(): string {
 	$remote = isset( $_SERVER['REMOTE_ADDR'] )
@@ -234,14 +258,14 @@ function rd_get_client_ip(): string {
 		: '0.0.0.0';
 
 	if ( rd_remote_is_trusted_proxy( $remote ) ) {
-		// CF-Connecting-IP é single IP do visitante — fonte primária quando confiável
+		// CF-Connecting-IP is a single visitor IP — primary source when trusted.
 		if ( ! empty( $_SERVER['HTTP_CF_CONNECTING_IP'] ) ) {
 			$cf_ip = trim( sanitize_text_field( wp_unslash( $_SERVER['HTTP_CF_CONNECTING_IP'] ) ) );
 			if ( filter_var( $cf_ip, FILTER_VALIDATE_IP ) ) {
 				return $cf_ip;
 			}
 		}
-		// X-Forwarded-For é lista "client, proxy1, proxy2, ..." — primeiro = original
+		// X-Forwarded-For is a "client, proxy1, proxy2, ..." list — first = original.
 		if ( ! empty( $_SERVER['HTTP_X_FORWARDED_FOR'] ) ) {
 			$forwarded = sanitize_text_field( wp_unslash( $_SERVER['HTTP_X_FORWARDED_FOR'] ) );
 			$ips       = explode( ',', $forwarded );
@@ -252,18 +276,18 @@ function rd_get_client_ip(): string {
 		}
 	}
 
-	// Default: REMOTE_ADDR cru — não vem de header, atacante não falsifica
+	// Default: raw REMOTE_ADDR — does not come from a header, attacker cannot forge it.
 	return $remote;
 }
 
 /*******************************************************************************
- * REMOTE_ADDR está numa faixa de proxy reconhecida?               - (Segurança) *
+ * Is REMOTE_ADDR in a recognized proxy range?                       - (Security) *
  *                                                                              *
- * Combina:                                                                     *
- *   - Lista hardcoded do Cloudflare (https://www.cloudflare.com/ips/) — cobre *
- *     o caso mais comum out-of-the-box, sem o admin precisar configurar nada. *
- *   - Ranges custom do painel (`trusted_proxy_ips`, CIDR um por linha) — pra  *
- *     quem usa outro proxy/CDN (Nginx-front, AWS ALB, Sucuri, BunnyCDN etc).  *
+ * Combines:                                                                    *
+ *   - Cloudflare hardcoded list (https://www.cloudflare.com/ips/) — covers    *
+ *     the most common case out-of-the-box, no admin configuration needed.     *
+ *   - Custom panel ranges (`trusted_proxy_ips`, CIDR one per line) — for      *
+ *     anyone using another proxy/CDN (Nginx-front, AWS ALB, Sucuri, BunnyCDN). *
  *******************************************************************************/
 function rd_remote_is_trusted_proxy( string $ip ): bool {
 	static $cf_ranges = array(
@@ -312,14 +336,14 @@ function rd_remote_is_trusted_proxy( string $ip ): bool {
 }
 
 /*******************************************************************************
- * Verifica se um IP cai em qualquer um dos ranges CIDR fornecidos. - (Segurança) *
+ * Checks whether an IP falls inside any of the supplied CIDR ranges. - (Security) *
  *                                                                              *
- * Suporta IPv4 (`192.168.1.0/24`), IPv6 (`2001:db8::/32`) e IPs únicos (sem `/`). *
- * Ranges malformados são pulados silenciosamente — a função nunca falha por    *
- * input ruim do admin, só retorna false.                                       *
+ * Supports IPv4 (`192.168.1.0/24`), IPv6 (`2001:db8::/32`) and single IPs (no `/`). *
+ * Malformed ranges are silently skipped — the function never fails on bad     *
+ * admin input, just returns false.                                             *
  *******************************************************************************/
 function rd_ip_in_ranges( string $ip, array $ranges ): bool {
-	// phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged -- inet_pton emite warning em IP malformado; o @ + `false === $ip_bin` check abaixo é o pattern recomendado pra graceful failure.
+	// phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged -- inet_pton emits a warning on malformed IP; the @ + `false === $ip_bin` check below is the recommended pattern for graceful failure.
 	$ip_bin = @inet_pton( $ip );
 	if ( false === $ip_bin ) {
 		return false;
@@ -332,9 +356,9 @@ function rd_ip_in_ranges( string $ip, array $ranges ): bool {
 			continue;
 		}
 
-		// Single IP (sem prefix) — comparação binária direta
+		// Single IP (no prefix) — direct binary comparison.
 		if ( false === strpos( $range, '/' ) ) {
-			// phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged -- graceful failure em range malformado (admin pode digitar input ruim no painel); validação via `false !== $range_bin` abaixo.
+			// phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged -- graceful failure on malformed range (admin may type bad input in the panel); validated via `false !== $range_bin` below.
 			$range_bin = @inet_pton( $range );
 			if ( false !== $range_bin && $range_bin === $ip_bin ) {
 				return true;
@@ -344,13 +368,13 @@ function rd_ip_in_ranges( string $ip, array $ranges ): bool {
 
 		list( $subnet, $prefix ) = explode( '/', $range, 2 );
 		$prefix                  = (int) $prefix;
-		// phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged -- graceful failure em subnet malformada; validação via `false === $subnet_bin` abaixo.
+		// phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged -- graceful failure on malformed subnet; validated via `false === $subnet_bin` below.
 		$subnet_bin = @inet_pton( $subnet );
 		if ( false === $subnet_bin ) {
 			continue;
 		}
 
-		// Mismatch de família (IPv4 vs IPv6) — não pode bater
+		// Family mismatch (IPv4 vs IPv6) — cannot match.
 		$range_is_v6 = strlen( $subnet_bin ) === 16;
 		if ( $range_is_v6 !== $ip_is_v6 ) {
 			continue;

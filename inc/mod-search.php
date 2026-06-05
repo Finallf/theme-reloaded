@@ -2,14 +2,14 @@
 defined( 'ABSPATH' ) || exit;
 
 /*******************************************************************************
- * Módulo de Busca — funções específicas do contexto de busca.                 *
- * O renderer de card vive em inc/post-card.php (genérico, reusável por        *
+ * Search Module — functions specific to the search context.                    *
+ * The card renderer lives in inc/post-card.php (generic, reusable by           *
  * archive, author, widgets etc.).                                              *
  *                                                                              *
- * Sistema de distribuição (Fase 5.5):                                          *
- * Em vez de duplicar os resultados em cada layout, distribui posts            *
- * sequencialmente entre os layouts ativos (6 por layout, ordem grid →         *
- * vertical → compact → google). Compact funciona como bucket de overflow e    *
+ * Distribution system (Phase 5.5):                                             *
+ * Instead of duplicating the results in each layout, it distributes posts      *
+ * sequentially across the active layouts (6 per layout, order grid →           *
+ * vertical → compact → google). Compact acts as the overflow bucket and        *
  * safety net.                                                                  *
  *******************************************************************************/
 
@@ -17,11 +17,11 @@ const RD_SEARCH_LAYOUT_CAP   = 6;
 const RD_SEARCH_LAYOUT_ORDER = array( 'grid', 'vertical', 'compact', 'google' );
 
 /**
- * Aplica highlight (`<mark>`) no termo buscado dentro do texto.
- * Ignora trechos que estejam dentro de tags HTML ou entidades.
+ * Applies a highlight (`<mark>`) to the searched term within the text.
+ * Ignores stretches that are inside HTML tags or entities.
  *
- * Consumida pelo helper rd_post_card_text() em inc/post-card.php
- * quando is_search() é verdadeiro.
+ * Consumed by the rd_post_card_text() helper in inc/post-card.php
+ * when is_search() is true.
  */
 function rd_search_highlight( string $text ) {
 	$query = get_search_query();
@@ -36,9 +36,9 @@ function rd_search_highlight( string $text ) {
 }
 
 /**
- * Retorna a lista de layouts habilitados pelo admin no painel.
- * Fallback: ['compact'] se nenhum estiver ativo — consistente com o
- * comportamento de compact como safety net em todas as outras regras.
+ * Returns the list of layouts enabled by the admin in the panel.
+ * Fallback: ['compact'] if none is active — consistent with
+ * compact's behavior as a safety net in all the other rules.
  *
  * @return array<int, string>
  */
@@ -54,49 +54,49 @@ function rd_search_get_admin_active_layouts(): array {
 }
 
 /**
- * Distribui posts entre os layouts ativos seguindo regras (em ordem):
+ * Distributes posts across the active layouts following rules (in order):
  *
- *   1. Posts vazios → distribuição vazia (search.php cuida do "no results")
- *   2. Visitor tem só 1 layout ativo → ele pega TUDO (respeita preferência)
- *   3. Visitor desativou tudo → compact pega tudo (safety net catastrófico)
- *   4. Poucos resultados (< CAP) com múltiplos layouts ativos → compact
- *      (visual limpo — não compensa distribuir tão poucos)
- *   5. Distribuição normal: grid → vertical → compact → google, CAP por layout
- *   6. Overflow → vai pro ÚLTIMO LAYOUT ATIVO (em ordem fixa), respeitando
- *      a preferência do visitor em vez de forçar compact
+ *   1. Empty posts → empty distribution (search.php handles "no results")
+ *   2. Visitor has only 1 active layout → it gets EVERYTHING (respects preference)
+ *   3. Visitor disabled everything → compact gets everything (catastrophic safety net)
+ *   4. Few results (< CAP) with multiple active layouts → compact
+ *      (clean visuals — not worth distributing so few)
+ *   5. Normal distribution: grid → vertical → compact → google, CAP per layout
+ *   6. Overflow → goes to the LAST ACTIVE LAYOUT (in fixed order), respecting
+ *      the visitor's preference instead of forcing compact
  *
  * @param array<int, \WP_Post> $posts
- * @param array<int, string>   $effective Layouts efetivos (admin ∩ visitor)
+ * @param array<int, string>   $effective Effective layouts (admin ∩ visitor)
  * @return array<string, array<int, \WP_Post>>
  */
 function rd_search_distribute_posts( array $posts, array $effective ): array {
 	$cap          = RD_SEARCH_LAYOUT_CAP;
 	$distribution = array();
 
-	// Regra 1: vazio
+	// Rule 1: empty
 	if ( empty( $posts ) ) {
 		return $distribution;
 	}
 
-	// Regra 2: só 1 layout ativo → respeita 100% (recebe tudo)
+	// Rule 2: only 1 active layout → respects it 100% (receives everything)
 	if ( count( $effective ) === 1 ) {
 		$distribution[ $effective[0] ] = $posts;
 		return $distribution;
 	}
 
-	// Regra 3: nenhum layout ativo → compact safety net
+	// Rule 3: no active layout → compact safety net
 	if ( empty( $effective ) ) {
 		$distribution['compact'] = $posts;
 		return $distribution;
 	}
 
-	// Regra 4: poucos resultados com múltiplos ativos → compact (visual limpo)
+	// Rule 4: few results with multiple active → compact (clean visuals)
 	if ( count( $posts ) < $cap ) {
 		$distribution['compact'] = $posts;
 		return $distribution;
 	}
 
-	// Regra 5: distribuição normal
+	// Rule 5: normal distribution
 	$remaining   = $posts;
 	$last_active = null;
 
@@ -112,7 +112,7 @@ function rd_search_distribute_posts( array $posts, array $effective ): array {
 		}
 	}
 
-	// Regra 6: overflow → último layout ativo (preserva preferência do visitor)
+	// Rule 6: overflow → last active layout (preserves the visitor's preference)
 	if ( ! empty( $remaining ) && $last_active !== null ) {
 		$distribution[ $last_active ] = array_merge( $distribution[ $last_active ], $remaining );
 	}
@@ -121,12 +121,12 @@ function rd_search_distribute_posts( array $posts, array $effective ): array {
 }
 
 /**
- * Ajusta posts_per_page do main query de busca pra ter posts suficientes
- * pra distribuir entre os layouts ativos.
+ * Adjusts the search main query's posts_per_page to have enough posts
+ * to distribute across the active layouts.
  *
- * No initial load não conhecemos a preferência do visitor (ela vive em
- * localStorage no client), então usamos a config do admin. O JS dispara
- * AJAX depois pra re-renderizar se o visitor tiver toggles diferentes.
+ * On initial load we don't know the visitor's preference (it lives in
+ * client localStorage), so we use the admin config. The JS fires
+ * AJAX afterward to re-render if the visitor has different toggles.
  */
 function rd_search_modify_query( $query ) {
 	if ( is_admin() ) {
@@ -145,8 +145,8 @@ function rd_search_modify_query( $query ) {
 add_action( 'pre_get_posts', 'rd_search_modify_query' );
 
 /**
- * Expõe ao JS os dados pra fazer AJAX redistribuição.
- * Carrega só na página de busca.
+ * Exposes to the JS the data for AJAX redistribution.
+ * Loads only on the search page.
  */
 function rd_search_localize_script() {
 	if ( ! is_search() ) {
@@ -166,12 +166,12 @@ function rd_search_localize_script() {
 add_action( 'wp_enqueue_scripts', 'rd_search_localize_script', 20 );
 
 /**
- * Handler AJAX que recebe os layouts ativos do visitor, refaz a query,
- * redistribui e retorna o HTML das wrappers internas do
+ * AJAX handler that receives the visitor's active layouts, redoes the query,
+ * redistributes, and returns the HTML of the inner wrappers of
  * .rd-search-results-containers.
  *
- * Posts_per_page é fixo baseado no admin (não muda quando visitor toggla)
- * pra paginação continuar consistente em todos os cenários.
+ * Posts_per_page is fixed based on the admin (doesn't change when the visitor toggles)
+ * so pagination stays consistent across all scenarios.
  */
 function rd_ajax_search_redistribute() {
 	$nonce = isset( $_POST['nonce'] ) ? sanitize_text_field( wp_unslash( $_POST['nonce'] ) ) : '';
@@ -183,7 +183,7 @@ function rd_ajax_search_redistribute() {
 	$active_csv   = isset( $_POST['active_layouts'] ) ? sanitize_text_field( wp_unslash( $_POST['active_layouts'] ) ) : '';
 	$paged        = isset( $_POST['paged'] ) ? max( 1, absint( $_POST['paged'] ) ) : 1;
 
-	// Parse + valida layouts requested
+	// Parse + validate requested layouts
 	$requested = $active_csv ? explode( ',', $active_csv ) : array();
 	$requested = array_intersect( $requested, RD_SEARCH_LAYOUT_ORDER );
 
@@ -191,8 +191,8 @@ function rd_ajax_search_redistribute() {
 	$admin_active = rd_search_get_admin_active_layouts();
 	$effective    = array_values( array_intersect( $admin_active, $requested ) );
 
-	// posts_per_page CONSISTENTE (baseado em admin, não em effective)
-	// — paginação mantém estrutura mesmo quando visitor toggla
+	// CONSISTENT posts_per_page (based on admin, not on effective)
+	// — pagination keeps its structure even when the visitor toggles
 	$posts_per_page = count( $admin_active ) * RD_SEARCH_LAYOUT_CAP;
 
 	$wp_query = new \WP_Query(

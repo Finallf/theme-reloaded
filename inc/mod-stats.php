@@ -2,48 +2,48 @@
 defined( 'ABSPATH' ) || exit;
 
 /*******************************************************************************
- * Module: Stats — Dashboard de Estatísticas (aba Statistics do painel)        *
+ * Module: Stats — Statistics Dashboard (Statistics tab of the panel)          *
  *                                                                             *
- * Consome dados coletados pelo mod-views.php e agrega num dashboard read-only *
- * pro admin. Não substitui Google Analytics — foca em CONTEÚDO (que post      *
- * performa, que gera discussão, tendência mensal).                            *
+ * Consumes data collected by mod-views.php and aggregates it into a read-only *
+ * dashboard for the admin. Doesn't replace Google Analytics — focuses on      *
+ * CONTENT (which post performs, which drives discussion, monthly trend).      *
  *                                                                             *
- * Widgets (Wave 7, bloco K):                                                  *
- *   K1 — Top posts mais lidos (com filtro de janela temporal)                 *
- *   K2 — Total de views do site (all-time + breakdown por janela)             *
- *   K3 — Top posts por comentários (+ engagement ratio comments/views)        *
- *   K4 — Gráfico de crescimento mensal (últimos 12 meses, Chart.js)           *
+ * Widgets (Wave 7, block K):                                                  *
+ *   K1 — Top most-read posts (with a time-window filter)                      *
+ *   K2 — Total site views (all-time + per-window breakdown)                   *
+ *   K3 — Top posts by comments (+ engagement ratio comments/views)            *
+ *   K4 — Monthly growth chart (last 12 months, Chart.js)                      *
  *                                                                             *
- * Coleta de dados: independente, gateada por `enable_views_tracking` (toggle  *
- * no Dashboard tab + Statistics → Tracking Settings). Quando OFF, novas       *
- * views não são contadas, mas o histórico permanece visível neste dashboard.  *
+ * Data collection: independent, gated by `enable_views_tracking` (toggle      *
+ * in the Dashboard tab + Statistics → Tracking Settings). When OFF, new       *
+ * views aren't counted, but history stays visible in this dashboard.          *
  *******************************************************************************/
 
 /*
 =============================================================================
- *  CONSTANTES
+ *  CONSTANTS
  * ============================================================================= */
 
-const RD_STATS_CACHE_TTL    = 3600;  // 1 hora — TTL dos transients agregados
+const RD_STATS_CACHE_TTL    = 3600;  // 1 hour — TTL of the aggregated transients
 const RD_STATS_CACHE_PREFIX = 'rd_stats_';
 
 /*
 =============================================================================
- *  HELPERS DE QUERY — agregam dados pros widgets
+ *  QUERY HELPERS — aggregate data for the widgets
  * ============================================================================= */
 
 // phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.NotPrepared
-// Justificativa do bloco inteiro:
-// - DirectQuery: dashboard de stats agregadas — não há equivalente nativo do WP (WP_Query
-// não suporta SUM/COUNT/aggregations sobre post meta). Queries são intencionais.
-// - NoCaching: TODAS as funções deste arquivo já usam transients próprios (prefixo
-// `rd_stats_*`, TTL 1h) — cache aplicado no nível da função, não da query.
-// - PreparedSQL.NotPrepared: os `$wpdb->get_results( $sql )` recebem strings que JÁ
-// foram processadas por `$wpdb->prepare()` na linha anterior. PHPCS não rastreia
-// atribuição em variável intermediária; aceitamos o false positive.
+// Justification for the whole block:
+// - DirectQuery: aggregated stats dashboard — there's no native WP equivalent (WP_Query
+// doesn't support SUM/COUNT/aggregations over post meta). The queries are intentional.
+// - NoCaching: ALL functions in this file already use their own transients (prefix
+// `rd_stats_*`, TTL 1h) — caching applied at the function level, not the query.
+// - PreparedSQL.NotPrepared: the `$wpdb->get_results( $sql )` receive strings that were
+// ALREADY processed by `$wpdb->prepare()` on the previous line. PHPCS doesn't track
+// assignment to an intermediate variable; we accept the false positive.
 
 /**
- * Total de views do site (soma de todos os posts).
+ * Total site views (sum of all posts).
  *
  * @param string $window 'all', 'week', 'month', 'year'
  * @return int
@@ -51,7 +51,7 @@ const RD_STATS_CACHE_PREFIX = 'rd_stats_';
 function rd_stats_total_views( $window = 'all' ) {
 	global $wpdb;
 
-	// All-time: SUM direto na meta key — query única, rápida, indexada
+	// All-time: SUM directly on the meta key — single, fast, indexed query
 	if ( $window === 'all' ) {
 		$cache_key = RD_STATS_CACHE_PREFIX . 'total_all';
 		$cached    = get_transient( $cache_key );
@@ -69,7 +69,7 @@ function rd_stats_total_views( $window = 'all' ) {
 		return $total;
 	}
 
-	// Janelas (week/month/year): precisa parsear os logs em PHP — usa cache
+	// Windows (week/month/year): need to parse the logs in PHP — uses cache
 	$cache_key = RD_STATS_CACHE_PREFIX . 'total_' . $window;
 	$cached    = get_transient( $cache_key );
 	if ( $cached !== false ) {
@@ -99,7 +99,7 @@ function rd_stats_total_views( $window = 'all' ) {
 }
 
 /**
- * Top N posts por número de views numa janela.
+ * Top N posts by number of views in a window.
  *
  * @param int    $limit  Quantidade (default 10)
  * @param string $window 'all', 'week', 'month', 'year'
@@ -114,7 +114,7 @@ function rd_stats_top_posts_by_views( $limit = 10, $window = 'all' ) {
 		return $cached;
 	}
 
-	// All-time: query SQL direta ordenada por meta_value
+	// All-time: direct SQL query ordered by meta_value
 	if ( $window === 'all' ) {
 		$sql     = $wpdb->prepare(
 			"SELECT p.ID as post_id, p.post_title, CAST(pm.meta_value AS UNSIGNED) as views
@@ -130,7 +130,7 @@ function rd_stats_top_posts_by_views( $limit = 10, $window = 'all' ) {
 		);
 		$results = $wpdb->get_results( $sql );
 	} else {
-		// Janelas: precisa parsear logs em PHP
+		// Windows: need to parse logs in PHP
 		$logs = $wpdb->get_results(
 			$wpdb->prepare(
 				"SELECT pm.post_id, pm.meta_value, p.post_title
@@ -170,17 +170,17 @@ function rd_stats_top_posts_by_views( $limit = 10, $window = 'all' ) {
 }
 
 /**
- * Top N posts por comentários (all-time, query nativa WP).
- * Inclui engagement ratio (comments/views * 100).
+ * Top N posts by comments (all-time, native WP query).
+ * Includes engagement ratio (comments/views * 100).
  *
- * @param int    $limit Quantidade (default 10)
- * @param string $sort  'comments' (absoluto) ou 'ratio' (engagement). Default 'comments'.
- * @return array Array de objetos { post_id, post_title, comment_count, views, ratio }
+ * @param int    $limit Amount (default 10)
+ * @param string $sort  'comments' (absolute) or 'ratio' (engagement). Default 'comments'.
+ * @return array Array of objects { post_id, post_title, comment_count, views, ratio }
  */
 function rd_stats_top_posts_by_comments( $limit = 10, $sort = 'comments' ) {
 	global $wpdb;
 
-	// Whitelist defensiva
+	// Defensive whitelist
 	if ( ! in_array( $sort, array( 'comments', 'ratio' ), true ) ) {
 		$sort = 'comments';
 	}
@@ -192,7 +192,7 @@ function rd_stats_top_posts_by_comments( $limit = 10, $sort = 'comments' ) {
 	}
 
 	if ( $sort === 'comments' ) {
-		// Ordenação por número absoluto: SQL faz o ORDER BY + LIMIT direto (rápido)
+		// Sort by absolute number: SQL does the ORDER BY + LIMIT directly (fast)
 		$sql     = $wpdb->prepare(
 			"SELECT ID as post_id, post_title, comment_count
              FROM {$wpdb->posts}
@@ -213,10 +213,10 @@ function rd_stats_top_posts_by_comments( $limit = 10, $sort = 'comments' ) {
 				: 0;
 		}
 	} else {
-		// Ordenação por ratio: precisa calcular pra TODOS antes de ordenar
-		// (ratio não tá armazenado, é derivado). Cache de 1h absorve o custo.
-		// prepare() usado mesmo com valores hardcoded — convenção do tema:
-		// todas as queries passam por prepare, sem exceção (audit Wave 9 A).
+		// Sort by ratio: need to compute it for ALL before sorting
+		// (ratio isn't stored, it's derived). The 1h cache absorbs the cost.
+		// prepare() used even with hardcoded values — theme convention:
+		// all queries go through prepare, no exceptions (Wave 9 A audit).
 		$all_commented = $wpdb->get_results(
 			$wpdb->prepare(
 				"SELECT ID as post_id, post_title, comment_count
@@ -237,10 +237,10 @@ function rd_stats_top_posts_by_comments( $limit = 10, $sort = 'comments' ) {
 				: 0;
 		}
 
-		// Filtra posts sem views (ratio 0 não é interessante pro ranking de engagement)
+		// Filter out posts with no views (ratio 0 isn't interesting for the engagement ranking)
 		$all_commented = array_filter( $all_commented, fn( $r ) => $r->views > 0 );
 
-		// Ordena por ratio DESC; tiebreaker por comment_count DESC pra resultados estáveis
+		// Sort by ratio DESC; tiebreaker by comment_count DESC for stable results
 		usort(
 			$all_commented,
 			function ( $a, $b ) {
@@ -259,10 +259,10 @@ function rd_stats_top_posts_by_comments( $limit = 10, $sort = 'comments' ) {
 }
 
 /**
- * Views agregados por mês nos últimos N meses (pro gráfico K4).
+ * Views aggregated by month over the last N months (for the K4 chart).
  *
- * @param int $months_back Quantos meses pra trás (default 12)
- * @return array Array associativo [ 'YYYY-MM' => view_count, ... ] do mais antigo pro mais novo
+ * @param int $months_back How many months back (default 12)
+ * @return array Associative array [ 'YYYY-MM' => view_count, ... ] from oldest to newest
  */
 function rd_stats_views_by_month( $months_back = 12 ) {
 	global $wpdb;
@@ -273,7 +273,7 @@ function rd_stats_views_by_month( $months_back = 12 ) {
 		return $cached;
 	}
 
-	// Inicializa todos os meses com 0 (garante meses sem views aparecerem no gráfico)
+	// Initialize all months with 0 (ensures months with no views still appear in the chart)
 	$buckets = array();
 	for ( $i = $months_back - 1; $i >= 0; $i-- ) {
 		$key             = wp_date( 'Y-m', strtotime( "-{$i} months" ) );
@@ -311,8 +311,8 @@ function rd_stats_views_by_month( $months_back = 12 ) {
 }
 
 /**
- * Total de views numa janela ANTERIOR (pra comparações tipo "vs semana passada").
- * Ex: rd_stats_total_views_previous('week') = views entre 7 e 14 dias atrás.
+ * Total views in a PREVIOUS window (for comparisons like "vs last week").
+ * E.g. rd_stats_total_views_previous('week') = views between 7 and 14 days ago.
  *
  * @param string $window 'day', 'week', 'month', 'year'
  * @return int
@@ -338,8 +338,8 @@ function rd_stats_total_views_previous( $window = 'week' ) {
 	}
 
 	$now   = time();
-	$start = $now - ( $window_size * 2 ); // janela anterior começa aqui
-	$end   = $now - $window_size;          // termina aqui (= início da janela atual)
+	$start = $now - ( $window_size * 2 ); // previous window starts here
+	$end   = $now - $window_size;          // ends here (= start of the current window)
 
 	$logs = $wpdb->get_col(
 		$wpdb->prepare(
@@ -362,13 +362,13 @@ function rd_stats_total_views_previous( $window = 'week' ) {
 }
 
 /**
- * Retorna dados da categoria primária de um post (pra exibir chip colorido
- * nos rankings). Segue o padrão de mod-category-colors.php:
- *   1. Tenta `_rd_primary_category` meta (definida pelo admin no editor)
- *   2. Fallback pra primeira categoria do post
+ * Returns data for a post's primary category (to display a colored chip
+ * in the rankings). Follows the mod-category-colors.php pattern:
+ *   1. Tries the `_rd_primary_category` meta (set by the admin in the editor)
+ *   2. Falls back to the post's first category
  *
  * @param int $post_id
- * @return array|null { name, slug, color, term_id, link } ou null se sem categoria
+ * @return array|null { name, slug, color, term_id, link } or null if no category
  */
 function rd_stats_get_post_primary_category( int $post_id ): ?array {
 	$cats = get_the_category( $post_id );
@@ -407,15 +407,15 @@ function rd_stats_get_post_primary_category( int $post_id ): ?array {
 }
 
 /**
- * Calcula trend (variação % e direção) entre dois valores.
+ * Calculates the trend (% change and direction) between two values.
  *
- * @param int $current  Valor da janela atual
- * @param int $previous Valor da janela anterior
+ * @param int $current  Current window value
+ * @param int $previous Previous window value
  * @return array{ pct: float|null, direction: string, label: string }
  *               direction: 'up' | 'down' | 'flat' | 'new'
  */
 function rd_stats_calculate_trend( $current, $previous ) {
-	// Caso especial: período anterior teve 0 views. Não dá pra calcular %.
+	// Special case: the previous period had 0 views. Can't compute %.
 	if ( $previous === 0 ) {
 		return $current > 0
 			? array(
@@ -455,11 +455,11 @@ function rd_stats_calculate_trend( $current, $previous ) {
 
 /*
 =============================================================================
- *  HELPERS INTERNOS
+ *  INTERNAL HELPERS
  * ============================================================================= */
 
 /**
- * Retorna timestamp do início da janela (cutoff pra filtrar logs).
+ * Returns the timestamp of the window start (cutoff to filter logs).
  */
 function rd_stats_get_cutoff_timestamp( $window ) {
 	$now = time();
@@ -473,14 +473,14 @@ function rd_stats_get_cutoff_timestamp( $window ) {
 }
 
 /**
- * Força refresh dos transients de stats. Chamado pelo link "Refresh now"
- * no dashboard e por hooks futuros (ex: ao publicar/deletar post).
+ * Forces a refresh of the stats transients. Called by the "Refresh now" link
+ * in the dashboard and by future hooks (e.g. on publishing/deleting a post).
  */
 function rd_stats_refresh_cache() {
 	global $wpdb;
-	// prepare() + esc_like() pra consistência com o resto do tema (audit Wave 9 A).
-	// esc_like é defensivo: RD_STATS_CACHE_PREFIX ('rd_stats_') não tem wildcards
-	// hoje, mas se algum dia mudar pra ter `_` ou `%` literais, esc_like preserva.
+	// prepare() + esc_like() for consistency with the rest of the theme (Wave 9 A audit).
+	// esc_like is defensive: RD_STATS_CACHE_PREFIX ('rd_stats_') has no wildcards
+	// today, but if it ever changes to have literal `_` or `%`, esc_like preserves them.
 	$prefix_like  = '_transient_' . $wpdb->esc_like( RD_STATS_CACHE_PREFIX ) . '%';
 	$timeout_like = '_transient_timeout_' . $wpdb->esc_like( RD_STATS_CACHE_PREFIX ) . '%';
 	$wpdb->query(
@@ -495,8 +495,8 @@ function rd_stats_refresh_cache() {
 }
 
 /**
- * Intercepta o link "Refresh now" do dashboard. Hook em admin_init pra rodar
- * ANTES de qualquer output (precisa pra wp_safe_redirect funcionar).
+ * Intercepts the dashboard's "Refresh now" link. admin_init hook to run
+ * BEFORE any output (needed for wp_safe_redirect to work).
  */
 function rd_stats_handle_refresh_request() {
 	if ( empty( $_GET['rd_stats_refresh'] ) ) {
@@ -511,7 +511,7 @@ function rd_stats_handle_refresh_request() {
 
 	rd_stats_refresh_cache();
 
-	// Remove os params do query string e redireciona — evita refresh duplicado se o user der F5
+	// Remove the query string params and redirect — avoids a duplicate refresh if the user hits F5
 	wp_safe_redirect( remove_query_arg( array( 'rd_stats_refresh', '_wpnonce' ) ) );
 	exit;
 }
@@ -519,46 +519,45 @@ add_action( 'admin_init', 'rd_stats_handle_refresh_request' );
 
 /*
 =============================================================================
- *  ENQUEUE — Chart.js só na aba Statistics do painel
+ *  ENQUEUE — Chart.js only on the panel's Statistics tab
  * ============================================================================= */
 
 /**
- * Enfileira Chart.js nas abas que precisam (Stats / Dashboard / Security CSP).
+ * Enqueues the Chart.js library on the tabs that need it (Stats / Dashboard /
+ * Security CSP). The chart-init JS lives in the consolidated admin-panel.js
+ * bundle; this function only decides whether the lib itself must be present.
  *
- * Wave 11 Fase G expandiu o gate: além da aba Statistics original, Dashboard
- * (gráfico 7d de views) e Security (doughnut CSP por directive) também
- * carregam Chart.js + admin-charts.js (auto-render genérico via data attrs).
- * O admin-stats.js específico do K4 fica restrito à aba Statistics.
+ * Wave 11 Phase G expanded the gate: besides the original Statistics tab,
+ * Dashboard (7d views chart) and Security (CSP doughnut by directive) also
+ * render charts and therefore need Chart.js loaded.
  *
  * Hook: admin_enqueue_scripts.
  *
- * @param string $hook Hook suffix da página atual no admin.
+ * @param string $hook Hook suffix of the current admin page.
  */
 function rd_stats_admin_enqueue( $hook ) {
-	// Só roda na página do painel ReloadeD.
+	// Only runs on the ReloadeD panel page.
 	if ( $hook !== 'toplevel_page_rd_options' ) {
 		return;
 	}
 
-	// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only gate em admin_enqueue_scripts: decide se enfileira Chart.js, não processa form.
+	// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only gate in admin_enqueue_scripts: decides whether to enqueue Chart.js, doesn't process a form.
 	$active_tab = isset( $_GET['tab'] ) ? sanitize_key( wp_unslash( $_GET['tab'] ) ) : 'dashboard';
 
-	// Decisão por aba: qual gate (feature flag) + qual JS específico carregar.
-	$load_chartjs   = false;
-	$load_stats_js  = false; // admin-stats.js — só pra aba Estatísticas (K4 chart específico).
-	$load_charts_js = false; // admin-charts.js — auto-render via data attrs (Wave 11 Fase G).
+	// Per-tab decision: does this tab render any Chart.js canvas? The chart-init
+	// JS itself lives in the consolidated admin-panel.js bundle now; here we only
+	// decide whether the Chart.js library needs to be enqueued for this tab.
+	$load_chartjs = false;
 
 	if ( 'statistics' === $active_tab ) {
-		$load_chartjs  = true;
-		$load_stats_js = true;
+		// Statistics tab: K4 monthly chart.
+		$load_chartjs = true;
 	} elseif ( 'dashboard' === $active_tab ) {
-		// Dashboard mostra "Views per Day (7d)" — Chart.js sempre carregado nesta aba.
-		$load_chartjs   = true;
-		$load_charts_js = true;
+		// Dashboard shows "Views per Day (7d)".
+		$load_chartjs = true;
 	} elseif ( 'security' === $active_tab && rd_get_option_bool( 'enable_csp_report_only' ) ) {
-		// Security CSP doughnut só se feature CSP ativa (sem reports = sem gráfico).
-		$load_chartjs   = true;
-		$load_charts_js = true;
+		// Security CSP doughnut only if the CSP feature is active (no reports = no chart).
+		$load_chartjs = true;
 	}
 
 	if ( ! $load_chartjs ) {
@@ -573,52 +572,35 @@ function rd_stats_admin_enqueue( $hook ) {
 		true
 	);
 
-	if ( $load_stats_js ) {
-		// Inicialização do gráfico K4 — depende de Chart.js já estar carregado.
-		wp_enqueue_script(
-			'rd-admin-stats',
-			get_template_directory_uri() . '/assets/js/admin-stats.js',
-			array( 'rd-chartjs' ),
-			rd_asset_version( '/assets/js/admin-stats.js' ),
-			true
-		);
-	}
-
-	if ( $load_charts_js ) {
-		// Auto-render de canvas via data-rd-chart-type (Wave 11 Fase G).
-		wp_enqueue_script(
-			'rd-admin-charts',
-			get_template_directory_uri() . '/assets/js/admin-charts.js',
-			array( 'rd-chartjs' ),
-			rd_asset_version( '/assets/js/admin-charts.js' ),
-			true
-		);
-	}
+	// The chart-init code (K4 monthly chart + generic data-attr auto-render) now
+	// lives in the consolidated assets/js/admin-panel.js bundle, which guards on
+	// `typeof window.Chart`. Both are footer scripts, so Chart.js is defined by
+	// the time the bundle's DOMContentLoaded handler runs.
 }
 add_action( 'admin_enqueue_scripts', 'rd_stats_admin_enqueue' );
 
 /*
 =============================================================================
- *  RENDER — Dashboard inteiro (chamado pelo callback da section no panel.php)
+ *  RENDER — Entire dashboard (called by the section callback in panel.php)
  * ============================================================================= */
 
 /**
- * Renderiza o dashboard completo (K1, K2, K3, K4).
- * Implementado por etapas: K2 ✓ | K1 ⏳ | K3 ⏳ | K4 ⏳
+ * Renders the full dashboard (K1, K2, K3, K4).
+ * Implemented in stages: K2 ✓ | K1 ⏳ | K3 ⏳ | K4 ⏳
  */
 function rd_stats_render_dashboard() {
-	// URL do link "Refresh now" — nonce protegido, interceptado por rd_stats_handle_refresh_request()
+	// URL of the "Refresh now" link — nonce-protected, intercepted by rd_stats_handle_refresh_request()
 	$refresh_url = wp_nonce_url(
 		add_query_arg( 'rd_stats_refresh', '1' ),
 		'rd_stats_refresh'
 	);
 
-	// Wave 11 Fase E: wrappers/header rebrandados pro design system rd-p*
-	// (helpers em panel-helpers.php). Cards internos mantêm classes específicas
-	// (.rd-stats-card__title, __big-number, ranking, tabs, chart) — são patterns
-	// únicos do dashboard sem equivalente generalizável em rd-p*.
+	// Wave 11 Phase E: wrappers/header rebranded to the rd-p* design system
+	// (helpers in panel-helpers.php). Inner cards keep their specific classes
+	// (.rd-stats-card__title, __big-number, ranking, tabs, chart) — they're patterns
+	// unique to the dashboard with no generalizable equivalent in rd-p*.
 	$info_text = sprintf(
-		/* translators: %s = cache TTL em minutos (ex: "60") */
+		/* translators: %s = cache TTL in minutes (e.g. "60") */
 		esc_html__( 'Aggregated data cached for %s minutes.', 'reloaded' ),
 		(int) ( RD_STATS_CACHE_TTL / 60 )
 	);
@@ -637,22 +619,22 @@ function rd_stats_render_dashboard() {
 	);
 
 	/*
-	 * Onboarding banner — aparece em 2 cenários:
-	 *   A) Tracking OFF → variant warning, SEMPRE mostra (independente de ter
-	 *      dados passados). Sinaliza ao admin "você desligou, nada novo entra".
-	 *   B) Tracking ON mas total_views === 0 → variant default, "aguardando
-	 *      primeiros visitantes" (pré-launch ou logo após ligar).
-	 * Tracking ON com dados → sem banner (operação normal).
+	 * Onboarding banner — appears in 2 scenarios:
+	 *   A) Tracking OFF → warning variant, ALWAYS shows (regardless of having
+	 *      past data). Signals to the admin "you turned it off, nothing new comes in".
+	 *   B) Tracking ON but total_views === 0 → default variant, "waiting for
+	 *      first visitors" (pre-launch or right after enabling).
+	 * Tracking ON with data → no banner (normal operation).
 	 *
-	 * Cards K1/K2/K3/K4 abaixo continuam aparecendo com seus empty states
-	 * próprios (preview do layout futuro). Spacing entre este .rd-pgrid e o
-	 * seguinte é coberto pela regra genérica .rd-pdash > .rd-pgrid + .rd-pgrid
-	 * { margin-top: 20px; } em admin-style.css.
+	 * Cards K1/K2/K3/K4 below still show with their own empty states
+	 * (preview of the future layout). Spacing between this .rd-pgrid and the
+	 * next is covered by the generic rule .rd-pdash > .rd-pgrid + .rd-pgrid
+	 * { margin-top: 20px; } in admin-style.css.
 	 */
 	$tracking_on = rd_get_option_bool( 'enable_views_tracking' );
 
 	if ( ! $tracking_on ) {
-		// Estado A — Tracking OFF (sempre mostra, ignora dados passados)
+		// State A — Tracking OFF (always shows, ignores past data)
 		echo '<div class="rd-pgrid">';
 		rd_panel_card_open(
 			array(
@@ -664,7 +646,7 @@ function rd_stats_render_dashboard() {
 		rd_panel_card_close();
 		echo '</div>';
 	} elseif ( 0 === (int) rd_stats_total_views( 'all' ) ) {
-		// Estado B — Tracking ON mas zero dados
+		// State B — Tracking ON but zero data
 		echo '<div class="rd-pgrid">';
 		rd_panel_card_open(
 			array(
@@ -719,21 +701,21 @@ function rd_stats_render_dashboard() {
 
 			<?php // ================ K1 — Top Posts by Views ================ ?>
 			<?php
-			// Janela ativa via querystring (whitelist defensiva — só 4 valores aceitos)
+			// Active window via querystring (defensive whitelist — only 4 values accepted)
 			$allowed_windows = array( 'all', 'year', 'month', 'week' );
-			// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only filter pra UI do dashboard (visualização read-only de stats); whitelist defensiva via in_array logo abaixo.
+			// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only filter for the dashboard UI (read-only stats view); defensive whitelist via in_array just below.
 			$k1_window = isset( $_GET['k1_window'] ) ? sanitize_key( wp_unslash( $_GET['k1_window'] ) ) : 'all';
 			if ( ! in_array( $k1_window, $allowed_windows, true ) ) {
 				$k1_window = 'all';
 			}
 
-			// Quantos itens mostrar (config do painel)
+			// How many items to show (panel config)
 			$limit = (int) rd_get_option( 'stats_top_limit', 10 );
-			$limit = max( 1, min( 30, $limit ) ); // defensivo: clamp 1-30
+			$limit = max( 1, min( 30, $limit ) ); // defensive: clamp 1-30
 
 			$top_posts = rd_stats_top_posts_by_views( $limit, $k1_window );
 
-			// Labels traduzíveis das janelas pro tab nav
+			// Translatable window labels for the tab nav
 			$window_labels = array(
 				'all'   => __( 'All-time', 'reloaded' ),
 				'year'  => __( 'Year', 'reloaded' ),
@@ -794,9 +776,9 @@ function rd_stats_render_dashboard() {
 
 			<?php // ================ K3 — Top Posts by Comments ================ ?>
 			<?php
-			// Sort ativo via querystring (whitelist defensiva — só 2 valores aceitos)
+			// Active sort via querystring (defensive whitelist — only 2 values accepted)
 			$allowed_sorts = array( 'comments', 'ratio' );
-			// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only filter pra UI do dashboard (visualização read-only de stats); whitelist defensiva via in_array logo abaixo.
+			// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only filter for the dashboard UI (read-only stats view); defensive whitelist via in_array just below.
 			$k3_sort = isset( $_GET['k3_sort'] ) ? sanitize_key( wp_unslash( $_GET['k3_sort'] ) ) : 'comments';
 			if ( ! in_array( $k3_sort, $allowed_sorts, true ) ) {
 				$k3_sort = 'comments';
@@ -872,8 +854,8 @@ function rd_stats_render_dashboard() {
 			<?php
 			$monthly_data = rd_stats_views_by_month( 12 );
 
-			// Labels traduzíveis e curtas pros eixos (ex: "Jan/26").
-			// date_i18n respeita o locale carregado pelo WP — funciona pra pt-BR.
+			// Short, translatable labels for the axes (e.g. "Jan/26").
+			// date_i18n respects the locale loaded by WP — works for pt-BR.
 			$chart_labels = array();
 			$chart_values = array();
 			foreach ( $monthly_data as $year_month => $count ) {

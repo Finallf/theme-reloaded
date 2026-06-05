@@ -27,6 +27,7 @@ jobs:
           image_size: 80
           use_username: true
           collaborators: all
+          auto_detect_branch_protection: false
 
   # JOB 2: Release & Package
   release:

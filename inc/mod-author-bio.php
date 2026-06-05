@@ -4,27 +4,27 @@ defined( 'ABSPATH' ) || exit;
 /*******************************************************************************
  * Module: Author Bio Box                                                       *
  *                                                                              *
- * Renderiza um bloco com avatar + nome + bio + redes sociais do autor no final *
- * de cada single, entre o footer do artigo e o bloco de related posts.        *
- * Reforça E-E-A-T (Schema.org Person já existe em author.php) + facilita      *
- * descoberta de autores em portal multi-author.                                *
+ * Renders a block with avatar + name + bio + the author's social networks at   *
+ * the end of each single, between the article footer and the related posts.    *
+ * Reinforces E-E-A-T (Schema.org Person already exists in author.php) + eases  *
+ * author discovery on a multi-author portal.                                   *
  *                                                                              *
- * Markup reusa as classes .rd-author-* de _page-author.scss (visual idêntico  *
- * ao bloco do topo da página /author/{slug}/) — única adição é o link         *
- * "Ver todos os posts deste autor" no rodapé do box.                          *
+ * Markup reuses the .rd-author-* classes from _page-author.scss (visuals       *
+ * identical to the top block of the /author/{slug}/ page) — the only addition  *
+ * is the "View all posts by this author" link at the bottom of the box.        *
  *                                                                              *
- * Graceful degradation: se o autor tem bio VAZIA e ZERO redes sociais         *
- * configuradas, o box não renderiza (mostraria só "Sobre o autor" + nome,    *
- * o que já está no entry-meta do single — seria ruído visual).                *
+ * Graceful degradation: if the author has an EMPTY bio and ZERO social         *
+ * networks configured, the box doesn't render (it would show only "About the   *
+ * author" + name, which is already in the single entry-meta — visual noise).   *
  *                                                                              *
- * Gate: feature controlada por `enable_author_bio` (default ON).              *
+ * Gate: feature controlled by `enable_author_bio` (default ON).                *
  *******************************************************************************/
 
 /**
- * Renderiza o bloco de bio do autor no final do single. Sai cedo em vários
- * cenários pra evitar bloco vazio/redundante.
+ * Renders the author bio block at the end of the single. Exits early in several
+ * scenarios to avoid an empty/redundant block.
  *
- * @param int $post_id ID do post atual.
+ * @param int $post_id ID of the current post.
  */
 function rd_render_author_bio_box( $post_id ) {
 	if ( ! rd_get_option_bool( 'enable_author_bio', true ) ) {
@@ -39,8 +39,8 @@ function rd_render_author_bio_box( $post_id ) {
 	$bio      = trim( (string) get_the_author_meta( 'description', $author_id ) );
 	$has_socs = false;
 	if ( function_exists( 'rd_render_social_icons' ) ) {
-		// Detect se autor tem ALGUMA rede preenchida — usando mesmo padrão do
-		// helper (lista de redes hardcoded). Evita chamar render só pra esconder.
+		// Detect whether the author has ANY network filled — using the same pattern as
+		// the helper (hardcoded network list). Avoids calling render just to hide.
 		$redes = array( 'discord', 'telegram', 'whatsapp', 'youtube', 'instagram', 'steam', 'twitter', 'facebook' );
 		foreach ( $redes as $r ) {
 			if ( trim( (string) get_the_author_meta( 'social_' . $r, $author_id ) ) !== '' ) {
@@ -50,8 +50,8 @@ function rd_render_author_bio_box( $post_id ) {
 		}
 	}
 
-	// Graceful degradation: bio vazia + zero socials = box redundante (autor
-	// já aparece no entry-meta). Não renderiza.
+	// Graceful degradation: empty bio + zero socials = redundant box (author
+	// already appears in the entry-meta). Doesn't render.
 	if ( '' === $bio && ! $has_socs ) {
 		return;
 	}
@@ -71,7 +71,7 @@ function rd_render_author_bio_box( $post_id ) {
 
 	echo '<div class="rd-author-info">';
 
-	// Header com nome + socials
+	// Header with name + socials
 	echo '<div class="rd-author-info-header">';
 	printf(
 		'<h3 id="rd-author-bio-title" class="rd-author-name"><a href="%1$s">%2$s</a></h3>',
@@ -85,7 +85,7 @@ function rd_render_author_bio_box( $post_id ) {
 	}
 	echo '</div>'; // .rd-author-info-header
 
-	// Bio (só se tem conteúdo)
+	// Bio (only if it has content)
 	if ( '' !== $bio ) {
 		echo '<p class="rd-author-bio">' . esc_html( $bio ) . '</p>';
 	}

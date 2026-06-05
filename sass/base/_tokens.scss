@@ -1,9 +1,9 @@
 // sass/base/_tokens.scss
-// Design Tokens - Sistema de tokens para o tema Reloaded
-// Centraliza valores mágicos e padrões repetidos
+// Design Tokens - Token system for the Reloaded theme
+// Centralizes magic values and repeated patterns
 
 // ============================================
-// CORE SPOON - Cores da Marca
+// CORE SPOON - Brand Colors
 // ============================================
 $token-color-brand-dark: #031CFF;
 $token-color-brand-light: #00A8FF;
@@ -12,7 +12,7 @@ $token-color-warning: #f39c12;
 $token-color-danger: #e74c3c;
 
 // ============================================
-// GRADIENTES
+// GRADIENTS
 // ============================================
 $token-gradient-brand: linear-gradient(135deg, $token-color-brand-dark 0%, $token-color-brand-light 100%);
 
@@ -25,7 +25,7 @@ $token-radius-lg: 12px;
 $token-radius-full: 50%;
 
 // ============================================
-// SPACE - Espaçamentos
+// SPACE - Spacing
 // ============================================
 $token-space-xs: 0.25rem;  // 4px
 $token-space-sm: 0.5rem;   // 8px

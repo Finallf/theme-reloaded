@@ -1,13 +1,16 @@
 document.addEventListener('DOMContentLoaded', function () {
 
-	/* Voltar ao topo */
+	// Localized i18n strings (reloaded_i18n), with en-US fallbacks if absent
+	var t = (typeof reloaded_i18n !== 'undefined') ? reloaded_i18n : {};
+
+	/* Back to top */
 	const backToTopBtn = document.getElementById("back-to-top");
 
 	if (backToTopBtn) {
-		// `passive: true` informa ao browser que o handler não vai prevenir o scroll,
-		// permitindo otimização. requestAnimationFrame agrupa o write na próxima frame,
-		// evitando layout thrashing quando o scroll dispara dezenas de vezes por segundo
-		// e cada add/remove de classe invalida o style cache.
+		// `passive: true` tells the browser the handler won't prevent scrolling,
+		// allowing optimization. requestAnimationFrame batches the write into the next
+		// frame, avoiding layout thrashing when scroll fires dozens of times per second
+		// and each class add/remove invalidates the style cache.
 		let scrollTicking = false;
 		window.addEventListener("scroll", function() {
 			if (scrollTicking) return;
@@ -31,7 +34,7 @@ document.addEventListener('DOMContentLoaded', function () {
 		});
 	}
 
-	/* MENU (HAMBÚRGUER) + BUSCA INTEGRADA NO PAINEL */
+	/* MENU (HAMBURGER) + SEARCH INTEGRATED IN THE PANEL */
 	const menuPanel       = document.getElementById('primary-menu-panel');
 	const menuToggleBtn   = document.querySelector('.menu-toggle');
 	const searchToggleBtn = document.querySelector('.menu-search-toggle');
@@ -43,10 +46,10 @@ document.addEventListener('DOMContentLoaded', function () {
 		if (menuToggleBtn) {
 			menuToggleBtn.innerHTML = '<span class="hamburger-icon" aria-hidden="true">&#10006;</span>';
 			menuToggleBtn.setAttribute('aria-expanded', 'true');
-			menuToggleBtn.setAttribute('aria-label', 'Fechar menu de navegação');
+			menuToggleBtn.setAttribute('aria-label', t.menu_close || 'Close navigation menu');
 		}
 		if (focusSearch && menuSearchInput) {
-			// Pequeno delay pra esperar a transição do painel terminar
+			// Small delay to wait for the panel's transition to finish
 			setTimeout(function () { menuSearchInput.focus(); }, 250);
 		}
 	}
@@ -57,11 +60,11 @@ document.addEventListener('DOMContentLoaded', function () {
 		if (menuToggleBtn) {
 			menuToggleBtn.innerHTML = '<span class="hamburger-icon" aria-hidden="true">&#9776;</span>';
 			menuToggleBtn.setAttribute('aria-expanded', 'false');
-			menuToggleBtn.setAttribute('aria-label', 'Abrir menu de navegação');
+			menuToggleBtn.setAttribute('aria-label', t.menu_open || 'Open navigation menu');
 		}
 	}
 
-	// Expor pra outros handlers (ex.: o trigger do 404)
+	// Expose for other handlers (e.g. the 404 trigger)
 	window.rdOpenMenuPanel  = openMenuPanel;
 	window.rdCloseMenuPanel = closeMenuPanel;
 
@@ -81,13 +84,13 @@ document.addEventListener('DOMContentLoaded', function () {
 		});
 	}
 
-	// Resize → fecha o painel se passar pra desktop (>1440px),
-	// evitando que ele apareça aberto se o usuário voltar pro tablet/mobile.
-	// Também adiciona .rd-resizing no <body> durante o resize pra
-	// neutralizar transitions globalmente — evita o "flash" do .menu-panel
-	// quando troca de `display: contents` (desktop) pra `display: block`
-	// (mobile/tablet) e a transition de transform dispara visualmente.
-	// Debounce simples pra não rodar centenas de vezes.
+	// Resize → close the panel when crossing into desktop (>1440px),
+	// preventing it from showing open if the user goes back to tablet/mobile.
+	// Also adds .rd-resizing on <body> during the resize to neutralize
+	// transitions globally — avoids the .menu-panel "flash" when it switches
+	// from `display: contents` (desktop) to `display: block` (mobile/tablet)
+	// and the transform transition fires visually.
+	// Simple debounce so it doesn't run hundreds of times.
 	let resizeTimer;
 	window.addEventListener('resize', function () {
 		document.body.classList.add('rd-resizing');
@@ -100,7 +103,7 @@ document.addEventListener('DOMContentLoaded', function () {
 		}, 150);
 	});
 
-	/* FACHADAS(Facades) (YOUTUBE, DISCORD, ETC.) - OTIMIZADO */
+	/* FACADES (YOUTUBE, DISCORD, ETC.) - OPTIMIZED */
 	const facades = document.querySelectorAll('.rd-facade');
 	const isDiscordOpen = sessionStorage.getItem('rd_discord_open');
 
@@ -110,7 +113,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 		if (type === 'discord' && isDiscordOpen === 'true') {
 			const iframeUrl = `https://ptb.discord.com/widget?id=${id}&theme=dark`;
-			// loading="lazy" defensivo: session-restore pode acontecer com sidebar fora da viewport
+			// defensive loading="lazy": session-restore can happen with the sidebar off-viewport
 			facade.innerHTML = `<iframe src="${iframeUrl}" width="100%" height="500" allowtransparency="true" frameborder="0" loading="lazy" sandbox="allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts"></iframe>`;
 			facade.style.cursor = 'default';
 			return;
@@ -121,11 +124,11 @@ document.addEventListener('DOMContentLoaded', function () {
 			let iframeHtml = '';
 
 			if (type === 'youtube') {
-				// Timestamp preservado do oembed original (PHP parseou `?t=Xh Ym Zs` → segundos no data-t)
+				// Timestamp preserved from the original oembed (PHP parsed `?t=Xh Ym Zs` → seconds into data-t)
 				const t = parseInt(facade.getAttribute('data-t'), 10);
 				const startParam = (t > 0) ? `&start=${t}` : '';
 				iframeUrl = `https://www.youtube.com/embed/${id}?autoplay=1&rel=0${startParam}`;
-				// loading="lazy" mais por consistência — no click o iframe já tá in-viewport
+				// loading="lazy" more for consistency — on click the iframe is already in-viewport
 				iframeHtml = `<iframe src="${iframeUrl}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy" style="width:100%; height:100%; position:absolute; top:0; left:0;"></iframe>`;
 			}
 			else if (type === 'discord') {
@@ -142,21 +145,21 @@ document.addEventListener('DOMContentLoaded', function () {
 	});
 
     /* ============================================================
-       COPY TO CLIPBOARD — função genérica + auto-handler
+       COPY TO CLIPBOARD — generic function + auto-handler
 
-       Uso programático (de qualquer JS):
-           window.rdCopyToClipboard('texto', { feedbackEl, feedbackText, revertAfter, onSuccess, onError });
+       Programmatic use (from any JS):
+           window.rdCopyToClipboard('text', { feedbackEl, feedbackText, revertAfter, onSuccess, onError });
 
-       Uso declarativo (zero JS):
-           <button data-rd-copy="valor a copiar"
-                   data-rd-copy-feedback=".meu-span"  (opcional — selector ou 'self')
-                   data-rd-copy-text="Copiado!"        (opcional — sobrescreve reloaded_i18n.copied)
-                   data-rd-copy-revert="2000">         (opcional — ms até voltar ao texto original)
-               <span class="rd-copy-text">valor visível</span>
+       Declarative use (zero JS):
+           <button data-rd-copy="value to copy"
+                   data-rd-copy-feedback=".my-span"   (optional — selector or 'self')
+                   data-rd-copy-text="Copied!"         (optional — overrides reloaded_i18n.copied)
+                   data-rd-copy-revert="2000">         (optional — ms until reverting to the original text)
+               <span class="rd-copy-text">visible value</span>
            </button>
        ============================================================ */
 
-    // 1. Função utility — exposta globalmente pra uso de qualquer feature
+    // 1. Utility function — exposed globally for use by any feature
     window.rdCopyToClipboard = function (text, options) {
         options = options || {};
         var feedbackText = (options.feedbackText !== undefined)
@@ -165,7 +168,7 @@ document.addEventListener('DOMContentLoaded', function () {
         var feedbackClass = options.feedbackClass || 'copied';
         var revertAfter   = options.revertAfter   || 2000;
 
-        // Resolve feedbackEl — pode ser elemento DOM ou string-selector
+        // Resolve feedbackEl — can be a DOM element or a string selector
         var feedbackEl = null;
         if (options.feedbackEl) {
             feedbackEl = (typeof options.feedbackEl === 'string')
@@ -193,9 +196,9 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     };
 
-    // 2. Auto-handler — qualquer elemento com [data-rd-copy] é tratado automaticamente.
-    //    O feedback vai pro elemento apontado em data-rd-copy-feedback (selector),
-    //    ou 'self' (o próprio botão), ou o primeiro .rd-copy-text descendente como fallback.
+    // 2. Auto-handler — any element with [data-rd-copy] is handled automatically.
+    //    The feedback goes to the element pointed at by data-rd-copy-feedback (selector),
+    //    or 'self' (the button itself), or the first descendant .rd-copy-text as a fallback.
     document.querySelectorAll('[data-rd-copy]').forEach(function (el) {
         el.addEventListener('click', function () {
             var text = this.getAttribute('data-rd-copy');
@@ -208,14 +211,14 @@ document.addEventListener('DOMContentLoaded', function () {
             } else if (feedbackSelector) {
                 feedbackEl = this.querySelector(feedbackSelector) || document.querySelector(feedbackSelector);
             } else {
-                // Fallback: .rd-copy-text dentro do botão
+                // Fallback: .rd-copy-text inside the button
                 feedbackEl = this.querySelector('.rd-copy-text');
             }
 
             var customText   = this.getAttribute('data-rd-copy-text');
             var revertAttr   = parseInt(this.getAttribute('data-rd-copy-revert'), 10);
 
-            // O contêiner do botão fica com a classe `.copied` (pra estilizações como mudar bg)
+            // The button container gets the `.copied` class (for styling like changing bg)
             var self = this;
             window.rdCopyToClipboard(text, {
                 feedbackEl:   feedbackEl,
@@ -224,32 +227,32 @@ document.addEventListener('DOMContentLoaded', function () {
                 onSuccess: function () { self.classList.add('copied'); },
             });
 
-            // Remove a classe do botão depois do mesmo intervalo
+            // Remove the button's class after the same interval
             setTimeout(function () { self.classList.remove('copied'); }, isNaN(revertAttr) ? 2000 : revertAttr);
         });
     });
 
-	/* PRISM - Adiciona line-numbers em todos os <pre> */
+	/* PRISM - Add line-numbers to every <pre> */
 	document.querySelectorAll('pre').forEach(block => block.classList.add('line-numbers'));
 
 	// ============================================================
-	// AJAX comment submit — evita reload completo da página
+	// AJAX comment submit — avoids a full page reload
 	// ============================================================
-	// Comportamento:
-	//   1. Captura submit do form #commentform, previne envio nativo
-	//   2. Envia FormData via fetch pra /wp-comments-post.php
-	//   3. WP processa (Akismet, validations, save) e retorna 302
-	//      redirect (success) ou 200 com HTML de erro
-	//   4. Sucesso → mostra feedback + soft reload pra mostrar o
-	//      comment recém-criado (com a posição/anchor correta)
-	//   5. Erro → mostra mensagem extraída + form fica editável
+	// Behavior:
+	//   1. Captures the #commentform submit, prevents the native send
+	//   2. Sends FormData via fetch to /wp-comments-post.php
+	//   3. WP processes (Akismet, validations, save) and returns a 302
+	//      redirect (success) or 200 with error HTML
+	//   4. Success → shows feedback + soft reload to display the
+	//      just-created comment (with the correct position/anchor)
+	//   5. Error → shows the extracted message + form stays editable
 	// ============================================================
 	const commentForm = document.getElementById('commentform');
 	if (commentForm) {
 		const submitBtn = commentForm.querySelector('.submit, input[type="submit"], button[type="submit"]');
 		const formActions = commentForm.querySelector('.form-submit') || commentForm;
 
-		// Helper: cria/atualiza o bloco de feedback
+		// Helper: creates/updates the feedback block
 		function showFeedback(type, message) {
 			let box = commentForm.querySelector('.rd-comment-feedback');
 			if (!box) {
@@ -262,8 +265,8 @@ document.addEventListener('DOMContentLoaded', function () {
 		}
 
 		commentForm.addEventListener('submit', async function (e) {
-			// Só ataca se o form ainda for o nativo WP — se outro plugin já
-			// estiver controlando (Discourse, Disqus etc), não interfere.
+			// Only act if the form is still the native WP one — if another plugin
+			// is already controlling it (Discourse, Disqus, etc.), don't interfere.
 			if (!commentForm.action || commentForm.action.indexOf('wp-comments-post.php') === -1) {
 				return;
 			}
@@ -273,17 +276,18 @@ document.addEventListener('DOMContentLoaded', function () {
 			const originalLabel = submitBtn ? (submitBtn.value || submitBtn.textContent) : '';
 			if (submitBtn) {
 				submitBtn.disabled = true;
-				if ('value' in submitBtn) submitBtn.value = 'Enviando…';
-				else submitBtn.textContent = 'Enviando…';
+				var sendingLabel = t.comment_sending || 'Sending…';
+				if ('value' in submitBtn) submitBtn.value = sendingLabel;
+				else submitBtn.textContent = sendingLabel;
 			}
 
 			try {
-				// `redirect: 'manual'` — NÃO seguimos o 302 automaticamente.
-				// Quando WP retorna 302 (= comment criado com sucesso), o fetch
-				// devolve response.type === 'opaqueredirect'. Se seguirmos
-				// (redirect: 'follow'), o fragmento #comment-XXX do Location
-				// header se perde (HTTP não envia fragments), e fica impossível
-				// distinguir sucesso de qualquer 200 que volte.
+				// `redirect: 'manual'` — we do NOT follow the 302 automatically.
+				// When WP returns a 302 (= comment created successfully), the fetch
+				// returns response.type === 'opaqueredirect'. If we follow
+				// (redirect: 'follow'), the #comment-XXX fragment from the Location
+				// header is lost (HTTP doesn't send fragments), and it becomes impossible
+				// to tell success apart from any 200 that comes back.
 				const response = await fetch(commentForm.action, {
 					method: 'POST',
 					body: new FormData(commentForm),
@@ -291,16 +295,16 @@ document.addEventListener('DOMContentLoaded', function () {
 					redirect: 'manual',
 				});
 
-				// Redirect = comment criado. Recarrega a página atual pro user
-				// ver o comment na lista (a página já tem ele no DB).
+				// Redirect = comment created. Reload the current page so the user
+				// sees the comment in the list (the page already has it in the DB).
 				if (response.type === 'opaqueredirect') {
-					showFeedback('success', 'Comentário enviado! Carregando…');
+					showFeedback('success', t.comment_sent || 'Comment sent! Loading…');
 					setTimeout(function () { window.location.reload(); }, 600);
 					return;
 				}
 
-				// Não foi redirect → WP devolveu erro (400/403/500) ou wp_die.
-				// Tenta extrair a mensagem do wrapper #error-page ou .wp-die-message.
+				// Not a redirect → WP returned an error (400/403/500) or wp_die.
+				// Try to extract the message from the #error-page wrapper or .wp-die-message.
 				const html = await response.text();
 
 				let errMsg = '';
@@ -313,19 +317,16 @@ document.addEventListener('DOMContentLoaded', function () {
 				}
 
 				if (!errMsg) {
-					errMsg = 'Erro inesperado ao enviar comentário. Recarregue a página e tente novamente.';
+					errMsg = t.comment_error || 'Unexpected error submitting the comment. Reload the page and try again.';
 				}
 
-				// "moderation" / "aprovação" são casos de sucesso-com-aviso
-				const lower = errMsg.toLowerCase();
-				if (lower.indexOf('moderation') !== -1 || lower.indexOf('aprovação') !== -1) {
-					showFeedback('success', errMsg);
-					setTimeout(function () { window.location.reload(); }, 1500);
-				} else {
-					showFeedback('error', errMsg);
-				}
+				// Reaching here means a real error (200 + wp_die HTML). A successful
+				// comment — including one held for moderation — comes back as a 302
+				// redirect, handled by the opaqueredirect branch above, so it never
+				// lands here. No locale-specific moderation string matching needed.
+				showFeedback('error', errMsg);
 			} catch (err) {
-				showFeedback('error', 'Erro de rede: ' + err.message);
+				showFeedback('error', (t.network_error || 'Network error: ') + err.message);
 			} finally {
 				if (submitBtn) {
 					submitBtn.disabled = false;
@@ -340,21 +341,21 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
 // ============================================================
-// LGPD — Consent granular (banner expansível + cookie JSON)
+// LGPD — Granular consent (expandable banner + JSON cookie)
 // ============================================================
-// Fluxo:
-//   1. Banner renderiza em modo "compact" (texto + 3 botões)
-//   2. User clica "Personalizar" → banner expande, toggles aparecem
-//   3. User clica "Salvar/Rejeitar/Aceitar" → grava cookie JSON +
-//      apaga cookie legacy + dispara soft reload pra scripts
-//      gated lerem o novo consent
-//   4. Link "Cookie Preferences" no footer → apaga cookie e reload
+// Flow:
+//   1. Banner renders in "compact" mode (text + 3 buttons)
+//   2. User clicks "Customize" → banner expands, toggles appear
+//   3. User clicks "Save/Reject/Accept" → writes the JSON cookie +
+//      deletes the legacy cookie + triggers a soft reload so gated
+//      scripts read the new consent
+//   4. "Cookie Preferences" link in the footer → deletes the cookie and reloads
 // ============================================================
 document.addEventListener("DOMContentLoaded", function () {
 
     const banner = document.getElementById("rd-lgpd-banner");
 
-    // ------ Função utilitária: grava cookie JSON do consent ------
+    // ------ Utility function: writes the consent JSON cookie ------
     function rdLgpdSaveConsent(analytics, marketing) {
         const data = {
             necessary: true,
@@ -371,22 +372,22 @@ document.addEventListener("DOMContentLoaded", function () {
             "; expires=" + expires.toUTCString() +
             "; path=/; SameSite=Lax" + secure;
 
-        // Limpa o cookie legacy (banner antigo "1 botão só") se ainda existir
+        // Clear the legacy cookie (old "single button" banner) if it still exists
         document.cookie = "rd_lgpd_accepted=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/";
     }
 
-    // ------ Função utilitária: anima saída do banner e recarrega ------
+    // ------ Utility function: animates the banner out and reloads ------
     function rdLgpdCloseAndReload() {
         if (!banner) {
             location.reload();
             return;
         }
         banner.classList.add("rd-lgpd-closing");
-        // 350ms = transição do CSS + folga; depois reload pra scripts gated lerem o novo consent
+        // 350ms = CSS transition + slack; then reload so gated scripts read the new consent
         setTimeout(function () { location.reload(); }, 350);
     }
 
-    // ------ Handlers do banner (quando renderizado) ------
+    // ------ Banner handlers (when rendered) ------
     if (banner) {
         const btnReject    = document.getElementById("rd-lgpd-reject");
         const btnCustomize = document.getElementById("rd-lgpd-customize");
@@ -394,7 +395,7 @@ document.addEventListener("DOMContentLoaded", function () {
         const checkAnalytics = document.getElementById("rd-lgpd-analytics");
         const checkMarketing = document.getElementById("rd-lgpd-marketing");
 
-        // "Rejeitar tudo" — analytics + marketing = false (necessary fica true sempre)
+        // "Reject all" — analytics + marketing = false (necessary stays true always)
         if (btnReject) {
             btnReject.addEventListener("click", function () {
                 rdLgpdSaveConsent(false, false);
@@ -402,7 +403,7 @@ document.addEventListener("DOMContentLoaded", function () {
             });
         }
 
-        // "Aceitar tudo" — analytics + marketing = true
+        // "Accept all" — analytics + marketing = true
         if (btnAccept) {
             btnAccept.addEventListener("click", function () {
                 rdLgpdSaveConsent(true, true);
@@ -410,24 +411,24 @@ document.addEventListener("DOMContentLoaded", function () {
             });
         }
 
-        // "Personalizar" / "Salvar preferências" — comportamento dual:
-        //   Primeira click: expande banner pra mostrar toggles
-        //   Segunda click (após expand): salva consent com base nos toggles
+        // "Customize" / "Save preferences" — dual behavior:
+        //   First click: expands the banner to show the toggles
+        //   Second click (after expand): saves consent based on the toggles
         if (btnCustomize) {
             btnCustomize.addEventListener("click", function () {
                 const isExpanded = banner.getAttribute("data-state") === "expanded";
 
                 if (!isExpanded) {
-                    // Modo expanded — mostra toggles e troca label do botão.
-                    // `inert` removido pra ativar tab order + screen readers nos
-                    // checkboxes (resolve fail do Lighthouse "aria-hidden com
-                    // descendentes focáveis").
+                    // Expanded mode — show toggles and swap the button label.
+                    // `inert` removed to enable tab order + screen readers on the
+                    // checkboxes (fixes the Lighthouse "aria-hidden with focusable
+                    // descendants" failure).
                     banner.setAttribute("data-state", "expanded");
                     const optionsBlock = banner.querySelector(".rd-lgpd-options");
                     if (optionsBlock) optionsBlock.removeAttribute("inert");
                     btnCustomize.textContent = btnCustomize.getAttribute("data-label-expanded") || "Save";
                 } else {
-                    // Já expandido — salva com base nos toggles
+                    // Already expanded — save based on the toggles
                     const a = checkAnalytics ? checkAnalytics.checked : false;
                     const m = checkMarketing ? checkMarketing.checked : false;
                     rdLgpdSaveConsent(a, m);
@@ -437,12 +438,12 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
-    // ------ Link "Cookie Preferences" no footer ------
-    // Não deleta cookie, não recarrega. Apenas:
-    //   1. Revela o banner (que já estava no DOM, oculto pela classe .rd-lgpd-hidden)
-    //   2. Expande direto pro modo de toggles (user veio do "Customize", já quer ver)
-    //   3. Toggles já vêm pré-marcados pelo PHP com os valores atuais do cookie
-    // O reload só acontece quando o user salvar a NOVA escolha.
+    // ------ "Cookie Preferences" link in the footer ------
+    // Doesn't delete the cookie, doesn't reload. Only:
+    //   1. Reveals the banner (already in the DOM, hidden by the .rd-lgpd-hidden class)
+    //   2. Expands straight to toggle mode (user came from "Customize", already wants to see)
+    //   3. Toggles come pre-checked by PHP with the cookie's current values
+    // The reload only happens when the user saves the NEW choice.
     const reopenLink = document.getElementById("rd-lgpd-reopen");
     if (reopenLink && banner) {
         reopenLink.addEventListener("click", function (e) {
@@ -463,21 +464,21 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 });
 
-/* CONTROLE DE LAYOUT DA BUSCA — AJAX Redistribuição (Fase 5.5)
+/* SEARCH LAYOUT CONTROL — AJAX Redistribution (Phase 5.5)
  *
- * Em vez de só esconder seções, dispara AJAX pra redistribuir os
- * resultados da página atual entre os layouts ativos. Compact funciona
- * como bucket de overflow + safety net (lógica no backend).
+ * Instead of just hiding sections, fires AJAX to redistribute the
+ * current page's results across the active layouts. Compact acts as
+ * the overflow bucket + safety net (logic on the backend).
  *
- * Quando visitor está em página > 1 e clica chip, navega via full
- * reload pra page 1 (evita pagination dessincronizada). Quando já
- * está em page 1, AJAX puro.
+ * When the visitor is on page > 1 and clicks a chip, it navigates via a
+ * full reload to page 1 (avoids desynced pagination). When already on
+ * page 1, pure AJAX.
  */
 document.addEventListener('DOMContentLoaded', function() {
     const togglesContainer = document.getElementById('rd-search-toggles');
     const resultsContainer = document.querySelector('.rd-search-results-containers');
 
-    // Sai cedo se: fora da página de busca, sem chips, ou sem dados localizados
+    // Bail early if: off the search page, no chips, or no localized data
     if (!togglesContainer || !resultsContainer || typeof rd_search_data === 'undefined') return;
 
     const chips = togglesContainer.querySelectorAll('.rd-chip');
@@ -486,7 +487,7 @@ document.addEventListener('DOMContentLoaded', function() {
     function loadPrefs() {
         try {
             const raw = JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
-            // Migração: formato antigo 'rd-wrap-{layout}' → '{layout}' puro
+            // Migration: old format 'rd-wrap-{layout}' → plain '{layout}'
             const migrated = {};
             let needsSave = false;
             for (const k in raw) {
@@ -507,11 +508,11 @@ document.addEventListener('DOMContentLoaded', function() {
     function savePrefs(prefs) {
         try {
             localStorage.setItem(STORAGE_KEY, JSON.stringify(prefs));
-        } catch (e) { /* cheio ou bloqueado — silencia */ }
+        } catch (e) { /* full or blocked — silence it */ }
     }
 
     function getLayoutFromChip(chip) {
-        // data-target="rd-wrap-{layout}" — extrai só o nome do layout
+        // data-target="rd-wrap-{layout}" — extract just the layout name
         return chip.getAttribute('data-target').replace('rd-wrap-', '');
     }
 
@@ -528,7 +529,7 @@ document.addEventListener('DOMContentLoaded', function() {
     function applyChipState(prefs) {
         chips.forEach(chip => {
             const layout = getLayoutFromChip(chip);
-            const isActive = prefs[layout] !== false; // default true
+            const isActive = prefs[layout] !== false; // defaults to true
             chip.classList.toggle('active', isActive);
             chip.setAttribute('aria-pressed', isActive ? 'true' : 'false');
         });
@@ -572,8 +573,8 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Detecta página atual considerando AMBOS formatos do WP:
-    //   - Pretty permalink: /page/N/ no path
+    // Detect the current page considering BOTH WP formats:
+    //   - Pretty permalink: /page/N/ in the path
     //   - Query string:     ?paged=N
     function getCurrentPaged() {
         const url = new URL(window.location);
@@ -583,7 +584,7 @@ document.addEventListener('DOMContentLoaded', function() {
         return q > 0 ? q : 1;
     }
 
-    // Constrói URL pra page 1 removendo /page/N/ E ?paged=
+    // Build the page-1 URL by removing /page/N/ AND ?paged=
     function urlForPage1() {
         const url = new URL(window.location);
         url.pathname = url.pathname.replace(/\/page\/\d+\/?$/, '/');
@@ -591,8 +592,8 @@ document.addEventListener('DOMContentLoaded', function() {
         return url.toString();
     }
 
-    // INITIAL: aplica estado dos chips + redistribui se visitor tem prefs
-    // diferentes do default (preservando paged atual)
+    // INITIAL: apply chip state + redistribute if the visitor has prefs
+    // different from the default (preserving the current paged)
     const savedPrefs = loadPrefs();
     if (Object.keys(savedPrefs).length > 0) {
         applyChipState(savedPrefs);
@@ -602,7 +603,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // CLICK: toggle visual → salva prefs → redistribui (AJAX ou full reload)
+    // CLICK: visual toggle → save prefs → redistribute (AJAX or full reload)
     chips.forEach(chip => {
         chip.addEventListener('click', function() {
             this.classList.toggle('active');
@@ -614,18 +615,18 @@ document.addEventListener('DOMContentLoaded', function() {
             savePrefs(prefs);
 
             if (getCurrentPaged() > 1) {
-                // Página > 1 → full reload pra page 1 (pagination sincroniza naturalmente)
-                // Próxima carga: JS lê prefs e aplica via initial AJAX
+                // Page > 1 → full reload to page 1 (pagination syncs naturally)
+                // Next load: JS reads prefs and applies them via the initial AJAX
                 window.location.href = urlForPage1();
             } else {
-                // Já em page 1 → AJAX puro
+                // Already on page 1 → pure AJAX
                 redistribute(1);
             }
         });
     });
 
-    // KEYBOARD NAV: setas left/right pra navegar entre chips, Home/End pra
-    // primeiro/último (padrão WAI-ARIA pra role="toolbar").
+    // KEYBOARD NAV: left/right arrows to move between chips, Home/End for
+    // first/last (WAI-ARIA pattern for role="toolbar").
     togglesContainer.addEventListener('keydown', function(e) {
         const target = e.target;
         if (!target.classList || !target.classList.contains('rd-chip')) return;
@@ -652,7 +653,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 nextIndex = chipsArr.length - 1;
                 break;
             default:
-                return; // outras teclas (Space, Enter, Tab) — comportamento nativo do <button>
+                return; // other keys (Space, Enter, Tab) — native <button> behavior
         }
 
         e.preventDefault();
@@ -674,7 +675,7 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 });
 
-/* 404 PAGE — "Buscar conteúdo" foca a busca apropriada do breakpoint atual */
+/* 404 PAGE — "Search content" focuses the search appropriate to the current breakpoint */
 document.addEventListener('DOMContentLoaded', function () {
     const trigger = document.getElementById('rd-404-search-trigger');
     if (!trigger) return;
@@ -682,14 +683,14 @@ document.addEventListener('DOMContentLoaded', function () {
     trigger.addEventListener('click', function () {
         const desktopSearch = document.querySelector('.header-search-container .search-field');
 
-        // ≥1441px: busca expansível do header visível → foca direto
+        // ≥1441px: header's expandable search visible → focus directly
         if (desktopSearch && desktopSearch.offsetParent !== null) {
             desktopSearch.focus();
             desktopSearch.scrollIntoView({ behavior: 'smooth', block: 'center' });
             return;
         }
 
-        // ≤1440px: abre o painel do hambúrguer e foca a busca interna
+        // ≤1440px: open the hamburger panel and focus the inner search
         if (typeof window.rdOpenMenuPanel === 'function') {
             window.rdOpenMenuPanel(true);
         }
@@ -702,8 +703,8 @@ document.addEventListener('DOMContentLoaded', function() {
     if (!themeToggle) return;
 
     themeToggle.addEventListener('click', function() {
-        // Lê e escreve no <html> (documentElement) — consistente com o
-        // script anti-FOUC que roda no <head>.
+        // Reads and writes on <html> (documentElement) — consistent with the
+        // anti-FOUC script that runs in the <head>.
         const currentTheme = document.documentElement.getAttribute('data-theme') || 'dark';
         const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
 

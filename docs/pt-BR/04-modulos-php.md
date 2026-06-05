@@ -18,7 +18,7 @@ Não é "módulo de feature", mas a base de tudo. Hooks no `after_setup_theme`:
   - `rd-full-banner` 1200×675 — banner top do post single (16:9)
   - `rd-qr` 240×240 — QR codes de doação na sidebar (1:1, cobre retina sem desperdiçar banda)
 - Remove tamanhos nativos não usados (`medium_large`, `1536x1536`, `2048x2048`)
-- Registra 2 menus (`menu-1` Primary, `menu-footer` Footer)
+- Registra 1 menu (`menu-1` Primary). _(O `menu-footer` foi removido em 2026-06-04 — o menu do footer agora é por widget.)_
 - Registra 2 sidebars (`sidebar-1` Main, `footer-widget-area`)
 
 Helpers expostos:
@@ -162,6 +162,7 @@ Priority 5 no wp_head:
 
 - **YouTube Facade** (`facade_youtube`): hook em `embed_oembed_html` substitui iframes YT por `<div class="rd-facade">` com thumb. Swap pra iframe real ao clicar feito em `navigation.js`
   - **Timestamp preservation**: helper `rd_youtube_parse_timestamp($t)` parseia o parâmetro de tempo da URL original (4 formatos aceitos pelo YouTube: `30` puro, `30s` com sufixo, `1m30s`, `1h2m30s`) e devolve inteiro em segundos. Tenta `?t=` primeiro (formato user-facing das URLs de share), cai pra `?start=N` (embed). Injeta `data-t="N"` no `<div class="rd-facade">` quando > 0. O click handler em `navigation.js` lê o atributo e propaga como `&start=N` na URL do iframe — vídeo abre no tempo correto. Sem timestamp na URL = atributo não renderiza = comportamento idêntico ao anterior
+  - **Helpers reusáveis**: a extração de ID e a montagem do markup foram fatoradas em 3 funções — `rd_youtube_extract_id($text)` (acha o 1º ID de vídeo num texto, seja uma URL única ou um `post_content` inteiro), `rd_youtube_cover_html($id)` (thumbnail + botão play) e `rd_youtube_facade_markup($id, $t)` (wrapper `.rd-facade` completo). O filtro oEmbed e o widget "Latest Video" (sidebar/footer) compartilham os mesmos helpers — saída do facade inalterada
 
 ### Database / Server
 
@@ -477,7 +478,7 @@ Remover o callback do filter (apagar o mu-plugin ou comentar o snippet). URLs vo
 ### Helpers
 
 - `rd_render_social_icons( $user_id = null )` — itera pelas 8 redes (`discord`, `telegram`, `whatsapp`, `youtube`, `instagram`, `steam`, `twitter`, `facebook`) e renderiza um `<a>` com SVG embarcado pra cada rede com URL preenchida. **Dois modos:**
-  - **Sem argumento (default):** usa as URLs globais do portal (`rd_get_option('social_X')`). Comportamento clássico, usado em top bar, footer bottom bar, page-sobre hero.
+  - **Sem argumento (default):** usa as URLs globais do portal (`rd_get_option('social_X')`). Comportamento clássico, usado em top bar, footer bottom bar, template-about hero.
   - **Com `$user_id`:** usa redes pessoais do user específico via `get_the_author_meta('social_X', $user_id)`. Usado no `author.php` pra mostrar redes próprias do redator.
 - `rd_render_news_ticker()` — pega últimas N posts pra alimentar o ticker rolante da top bar
 - `rd_render_date()` — renderiza a data atual formatada na top bar (esquerda)
@@ -543,7 +544,7 @@ O `author` dentro do Article é um `Person` com `@id => get_author_posts_url($au
 
 Helper `rd_seo_print_jsonld()` faz o `wp_json_encode` com flags `UNESCAPED_SLASHES | UNESCAPED_UNICODE` pra source legível. Logo do publisher resolve via `rd_seo_resolve_site_logo()` (Custom Logo do Customizer → fallback logo do tema).
 
-Validado contra o **Google Rich Results Test**. O `BreadcrumbList` fica no módulo separado (`mod-breadcrumbs.php`). O `Person` standalone (`author.php` e `page-sobre.php`) é emitido nos templates correspondentes — Rich Results não destaca Person porque não tem rich snippet visual, mas Google lê e usa internamente pro Knowledge Graph.
+Validado contra o **Google Rich Results Test**. O `BreadcrumbList` fica no módulo separado (`mod-breadcrumbs.php`). O `Person` standalone (`author.php` e `template-about.php`) é emitido nos templates correspondentes — Rich Results não destaca Person porque não tem rich snippet visual, mas Google lê e usa internamente pro Knowledge Graph.
 
 ### Custom robots.txt
 
@@ -778,13 +779,15 @@ A função `rd_dashboard_render()` (callback de `add_settings_section('sec_dashb
    - Posts Last 30 Days — query `get_posts` com `date_query` rolling: `now − 30 dias`
    - Pending Comments — `wp_count_comments()->moderated`; snapshot do estado atual; quando > 0 mostra link "Review queue"
 
-3. **Activity Trend** (Wave 11 Fase G) — bar chart de views por dia, últimos 7 dias. Função `rd_dashboard_get_views_7d()` parseia logs (`_rd_post_views_log`) sem cache (mesma filosofia do Views Last 24h — Dashboard sempre fresh). Render via canvas com `data-rd-chart-type="bar"`, auto-inicializado pelo `admin-charts.js`. Sempre renderiza — sem dados, barras ficam zeradas (preview do layout futuro).
+3. **Activity Trend** (Wave 11 Fase G) — bar chart de views por dia, últimos 7 dias. Função `rd_dashboard_get_views_7d()` parseia logs (`_rd_post_views_log`) sem cache (mesma filosofia do Views Last 24h — Dashboard sempre fresh). Render via canvas com `data-rd-chart-type="bar"`, auto-inicializado pelo módulo charts do bundle `admin-panel.js`. Sempre renderiza — sem dados, barras ficam zeradas (preview do layout futuro). **Quando o CSP report-only tem violações** (2026-06-05), o doughnut "Violações por Diretiva" (`rd-dashboard-csp-chart`, reusa `rd_csp_get_violations_by_directive()`) aparece ao lado via `.rd-pgrid--sidebar-main` (estreito-esquerda + Activity Trend largo-direita); a descrição do Activity Trend foi pra dentro do card pra os dois headers ficarem title-only e alinharem.
 
 ### Toggle switches inline (adições pós-Fase H)
 
 3 cards do Site Status com **deep link buttons** (CSP, Login Protection, Next-gen Images) — ícone de engrenagem ao lado do badge com tooltip estilizado que abre a aba relevante e scrolla até a section via hash anchor.
 
 9 cards com **toggle switch inline** (Maintenance Mode, Statistics Tracking, Critical CSS Inline, Top Bar, Comments, Markdown, Discord Widget, YouTube Facade, Breadcrumbs) — admin flipa ON/OFF sem sair do Dashboard.
+
+**Tooltips de nome (Wave 12)** — passar o mouse no **nome** de qualquer card do Site Status mostra uma explicação curta do que a feature faz, reusando o mesmo balão `[data-tooltip]` dos switches/engrenagens (fundo preto translúcido). O balão fica centralizado sobre o card (âncora via `position: relative` no `.rd-pcard`) e o texto em caixa normal. As explicações vivem em `rd_dashboard_get_status_tooltips()` (keyed pelo option name de cada card) e são injetadas pelo novo arg `tooltip` do `rd_panel_card_open()`.
 
 **AJAX endpoint `wp_ajax_rd_dashboard_toggle`** (callback `rd_dashboard_ajax_toggle()`) — defesa em profundidade:
 
@@ -796,7 +799,7 @@ A função `rd_dashboard_render()` (callback de `add_settings_section('sec_dashb
 
 Retorna JSON `{ ok: true|false, key, value | error }`. Maintenance Mode é o único com confirm dialog (turning ON bloqueia visitantes); desligar é sempre seguro. Badge ON do Maintenance ganha prefix `⚠️` via `<span class="rd-pbadge__emoji">` (kept green for visual consistency com outros toggles).
 
-**JS handler** em `assets/js/admin-dashboard-toggle.js` (~115 linhas) — detecta clique em `.rd-pswitch[data-rd-toggle]`, dispara fetch, atualiza visual sem reload (aria-checked + badge variant + texto ON/OFF). Network/server errors trigger shake animation no switch (`is-error` class).
+**JS handler** no módulo dashboard-toggle do bundle `assets/js/admin-panel.js` — detecta clique em `.rd-pswitch[data-rd-toggle]`, dispara fetch, atualiza visual sem reload (aria-checked + badge variant + texto ON/OFF). Network/server errors trigger shake animation no switch (`is-error` class).
 
 **Componente CSS `.rd-pswitch`** — toggle deslizante moderno (track verde/cinza + thumb branca animada). `role="switch"` + `aria-checked` pra acessibilidade. Estados `.is-loading` (cursor wait, opacity reduzida) e `.is-error` (track vermelha + shake animation).
 
@@ -816,7 +819,8 @@ Retorna JSON `{ ok: true|false, key, value | error }`. Maintenance Mode é o ún
 
 ### Helpers internos
 
-- `rd_dashboard_get_status_data()` — coleta os 6 itens de status (lê 8 options diferentes via `rd_get_option_bool`)
+- `rd_dashboard_get_status_data()` — coleta os itens de status (lê os options via `rd_get_option_bool`)
+- `rd_dashboard_get_status_tooltips()` — mapa `option name → explicação curta` mostrada no tooltip do nome do card (mantido separado do status data pra não inchar aquele array)
 - `rd_dashboard_get_metrics_data()` — coleta as 3 métricas
 - `rd_dashboard_get_quick_actions()` — monta a lista de atalhos (URL/icon/label)
 
@@ -866,11 +870,11 @@ Agrega dados coletados pelo `mod-views.php` num dashboard read-only no painel ad
 
 ### Enqueue admin (gated)
 
-- `rd_stats_admin_enqueue($hook)` — só roda em `toplevel_page_rd_options` + `?tab=estatisticas` (ou Dashboard tab + Segurança tab pra Chart.js de outros gráficos). Carrega `chartjs.min.js` (v4.5.1, ~204KB) e `admin-stats.js` em sequência. **Zero impacto em outras telas do admin e no frontend.**
+- `rd_stats_admin_enqueue($hook)` — só roda em `toplevel_page_rd_options` + `?tab=estatisticas` (ou Dashboard tab + Segurança tab pra Chart.js de outros gráficos). Carrega só a lib `chartjs.min.js` (v4.5.1, ~204KB); o JS de init dos gráficos vive no bundle `admin-panel.js` (módulos stats/charts), que tem guard de `typeof window.Chart`. **Zero impacto em outras telas do admin e no frontend.**
 
 ### Render
 
-- `rd_stats_render_dashboard()` — callback da section `sec_stats_dashboard` do Settings API. Renderiza os 4 widgets (K2/K1/K3/K4) usando os helpers acima e os data-attributes que `admin-stats.js` consome no DOMContentLoaded pra desenhar o Chart.js.
+- `rd_stats_render_dashboard()` — callback da section `sec_stats_dashboard` do Settings API. Renderiza os 4 widgets (K2/K1/K3/K4) usando os helpers acima e os data-attributes que o módulo stats do `admin-panel.js` consome no DOMContentLoaded pra desenhar o Chart.js.
 
 ---
 
@@ -918,6 +922,42 @@ Lista vertical (`<ul class="rd-popular-posts">`) com item per-post (`<li class="
 ### CSS
 
 Estilos próprios em `sass/components/_popular-widget.scss`. Pra herdar o **card glass shell** da sidebar (background, border, padding, shadow, h2 com linha azul), o `_sidebar.scss` foi refatorado pra que o seletor do shell inclua `.widget_block, .widget_rd_popular_posts`. Pra inscrever futuros widgets clássicos do tema nesse shell, basta adicionar o classname ao seletor.
+
+---
+
+## 🎬 `inc/class-rd-latest-video-widget.php` — Widget "Latest Video" (Último Vídeo)
+
+**Segundo widget WP nativo do tema** (mesma convenção `class-{kebab-case}.php` do popular). Classe `RD_Latest_Video_Widget extends WP_Widget`, registrada em `widgets_init`. Aparece em **Aparência → Widgets** como "ReloadeD: Latest Video" e pode ser arrastado pra **qualquer área registrada** — Main Sidebar (`sidebar-1`) **ou** Footer (`footer-widget-area`). Esse é o ganho do modelo `WP_Widget`: posicionamento livre, sem toggle dedicado no painel.
+
+Mostra o **vídeo mais recente** de uma categoria escolhida: varre os últimos posts da categoria e pega o **primeiro embed do YouTube** encontrado no conteúdo.
+
+### Configuração no admin (`form()`)
+
+- **Title** (text) — default `"Latest Video"`
+- **Category** (select via `wp_dropdown_categories`) — categoria de onde puxar os vídeos. Per-instance: cada widget pode apontar pra uma categoria diferente
+
+### Output frontend (`widget()`)
+
+1. Lê categoria + título. Sem categoria escolhida → não renderiza nada.
+2. `get_latest_video($cat_id)` busca os últimos `SCAN_LIMIT` (10) posts publicados da categoria (data desc) e roda `rd_youtube_extract_id()` no `post_content` de cada um — o **primeiro com YouTube válido** vence (pula posts sem vídeo). Nenhum vídeo na categoria → widget não renderiza.
+3. Renderiza dentro de `<div class="rd-lvideo">`:
+   - **Facade ON** (`facade_youtube`) → reusa `rd_youtube_facade_markup()` (mesmo `.rd-facade` click-to-load; `navigation.js` troca pelo iframe no clique)
+   - **Facade OFF** → `<a class="rd-lvideo__poster">` com o mesmo thumbnail (`rd_youtube_cover_html()`) linkando pro **post** — a sidebar/footer nunca carrega um iframe pesado
+   - **+ título curto** (`.rd-lvideo__title`) linkando pro post
+
+### Cache
+
+Resultado (ou marcador `'none'`) guardado no transient `rd_latest_video_{cat_id}` (TTL 1h). Invalidado em `save_post` + `before_delete_post` (`rd_latest_video_flush_cache()`): varre as categorias do post e limpa o transient de cada uma. A varredura roda no máximo 1×/hora por categoria, e um vídeo novo aparece assim que publicado.
+
+### Dependências (todas em `mod-performance.php`)
+
+- `rd_youtube_extract_id($text)` — acha o 1º ID de vídeo num texto (URL ou `post_content`)
+- `rd_youtube_facade_markup($id, $t)` — wrapper `.rd-facade` (facade ON)
+- `rd_youtube_cover_html($id)` — thumbnail + botão play (facade OFF)
+
+### CSS
+
+`sass/components/_latest-video.scss`. O caminho facade-ON reusa `.rd-facade` (já estilizado em `_facades.scss`); o `.rd-lvideo__poster` (facade OFF) espelha o visual mas como `<a>` — a classe `.rd-facade` é **evitada** ali pra não brigar com o handler de clique do `navigation.js`. Inscrito no card glass shell da sidebar via `.widget_rd_latest_video` no `_sidebar.scss`.
 
 ---
 
@@ -1105,6 +1145,28 @@ Quando policy estiver madura (30+ dias de monitoramento sem violações inespera
 3. Adicionar `Reporting-Endpoints` header + `report-to` directive pra usar Reporting API moderna (CSP 3)
 
 ---
+
+## 🏠 `inc/mod-home.php` — Layout configurável da home
+
+Controla o layout da home (`index.php`). A home é uma vitrine fixa: **2 cards grandes (hero)** sempre no topo + até três seções opcionais que reúsam os layouts de card da busca (Grid/Vertical/Compact, via `rd_render_post_card()` de `post-card.php`). Google não é usado aqui.
+
+### Configuração
+
+3 selects no painel (aba General → Home Page): `home_layout_grid` (0/3/6/9), `home_layout_vertical` (0/1/2/3), `home_layout_compact` (0/2/4/6). As quantidades são múltiplos da contagem de colunas de cada layout (3/1/2), pra preencher linhas completas.
+
+- `RD_HOME_HERO_COUNT` (= 2) e `RD_HOME_SECTION_CHOICES` — constantes com a ordem fixa (grid → vertical → compact) e as quantidades válidas.
+- `rd_home_get_active_sections()` — `[ layout => quantidade ]` só das seções ligadas (quantidade válida ≠ 0), na ordem fixa. Vazio = fallback clássico.
+- `rd_home_is_active()` / `rd_home_total_posts()` — atalho booleano e total de posts (`2 + soma das quantidades`).
+- `rd_home_modify_query()` — hook `pre_get_posts` que ajusta `posts_per_page` da home quando o layout está ativo. Guard estrito (`is_main_query` + `is_home` + front-end), mutuamente exclusivo com o hook da busca (`is_search`).
+- `rd_render_home_hero_card()` — markup do card grande (extraído do `index.php` histórico). Compartilhado pelo fallback clássico e pelo layout novo (DRY). Os 2 primeiros posts (`current_post < 2`) recebem `loading=eager` + `fetchpriority=high` (candidatos a LCP); o resto fica `lazy`.
+
+### Distribuição na home (vs. busca)
+
+Diferente da busca, a home **não** usa `rd_render_distribution()` nem AJAX: como não há escolha do visitante, tudo é decidido server-side e renderizado de uma vez. O `index.php` consome a loop principal em fatias sequenciais — 2 pros hero, depois cada seção ativa pega sua quantidade, na ordem fixa, pulando as desligadas (as de baixo "sobem"). Como o `posts_per_page` é exatamente `2 + soma`, nada sobra nem repete. Wrapper vazio é evitado com `if (! have_posts()) break;` antes de abrir cada seção.
+
+### Independência total da busca
+
+Namespaces separados (`home_layout_*` vs `search_layout_*`, `rd_home_*` vs `rd_search_*`), hooks `pre_get_posts` mutuamente exclusivos, e CSS escopado (`.rd-home-sections`). A busca não é tocada em nenhum arquivo — o D1 é puramente aditivo.
 
 ## 🔍 `inc/mod-search.php` — Sistema de busca multi-layout
 
@@ -1396,7 +1458,7 @@ Card "Theme Updates" entre Activity Trend e Quick Actions (`rd_dashboard_render_
 - **Botão "Check for updates"** — canto superior direito do card, dispara AJAX que invalida cache + re-fetcha imediato + atualiza inline (sem reload)
 - **CTA condicional** — quando há update, mostra "Go to Themes → Update Now" + "View release on GitHub"
 
-JS handler em `assets/js/admin-self-update.js` (~145 linhas). i18n localizado via `wp_localize_script` (`rdSelfUpdate.i18n`).
+JS handler no módulo self-update do bundle `assets/js/admin-panel.js`. i18n localizado via `wp_localize_script` (`rdSelfUpdate.i18n`).
 
 ### Filosofia
 

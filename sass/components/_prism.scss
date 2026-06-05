@@ -1,17 +1,17 @@
 // sass/components/_prism.scss
 @use '../base/variables' as *;
 
-// Escopo GLOBAL: code blocks renderizados pelo Prism aparecem tanto no post
-// (.entry-content) quanto em comentários (.comment-body). Como Prism só age em
-// elementos com classe `language-*`, não há risco de vazar em outros lugares.
+// GLOBAL scope: code blocks rendered by Prism appear both in the post
+// (.entry-content) and in comments (.comment-body). Since Prism only acts on
+// elements with a `language-*` class, there's no risk of leaking elsewhere.
 
 // ==========================================================
-// 1. O Bloco de Código Principal (A "Caixa" Escura)
+// 1. The Main Code Block (The Dark "Box")
 // ==========================================================
 pre[class*="language-"] {
-	background: $dark-deeper; // Puxa nossa variável (Mesmo #0d1117 intacto)
-	border: 1px solid $border-subtle !important; // Puxa nossa variável (Mesmo #30363d intacto)
-	border-radius: 5px !important; // ALERTA: Unificado de 6px para os seus 5px!
+	background: $dark-deeper; // Pulls our variable (same #0d1117 intact)
+	border: 1px solid $border-subtle !important; // Pulls our variable (same #30363d intact)
+	border-radius: 5px !important; // HEADS UP: Unified from 6px to your 5px!
 	padding: 1.5rem;
 	margin: 0 !important;
 	overflow: auto !important;
@@ -21,43 +21,43 @@ pre[class*="language-"] {
 
 	code[class*="language-"] {
 		color: #c9d1d9 !important;
-		// Transição suave pro light mode
+		// Smooth transition for light mode
 		transition: color 0.3s ease, background-color 0.3s ease;
 		font-family: $font-mono !important;
 		text-shadow: none !important;
 		font-size: 0.9rem !important;
 		background: none !important;
-		white-space: pre; // Mantém a indentação original
+		white-space: pre; // Keeps the original indentation
 		line-height: inherit !important;
 	}
 }
 
 // ==========================================================
-// 2. Código Inline (ex: `docker run` solto no parágrafo)
+// 2. Inline Code (e.g. `docker run` loose in the paragraph)
 // ==========================================================
 code:not([class*="language-"]) {
-	background-color: rgba(110, 118, 129, 0.4) !important; // Mantido hardcoded do GitHub
+	background-color: rgba(110, 118, 129, 0.4) !important; // Kept hardcoded from GitHub
 	padding: 0.2em 0.4em !important;
-	border-radius: 5px !important; // ALERTA: Unificado de 6px para os seus 5px!
+	border-radius: 5px !important; // HEADS UP: Unified from 6px to your 5px!
 	font-family: $font-mono !important;
 	font-size: 85% !important;
 	color: #e6edf3 !important;
 }
 
 // ==========================================================
-// 3. Toolbar (Botão no Topo, Linguagem no Rodapé)
+// 3. Toolbar (Button at the Top, Language at the Bottom)
 // ==========================================================
 div.code-toolbar {
 	position: relative !important;
 	margin: 11px 0px 10px 0;
 
-	// A barra agora cobre o bloco de código inteiro de forma invisível
+	// The bar now covers the whole code block invisibly
 	&>.toolbar {
 		position: absolute !important;
 		top: 0 !important;
 		left: 0 !important;
 		right: 0 !important;
-		bottom: 0 !important; // Esticamos até o final da caixa!
+		bottom: 0 !important; // We stretch it to the end of the box!
 		display: block !important;
 		transition: opacity 0.3s ease !important;
 		z-index: 10 !important;
@@ -66,10 +66,10 @@ div.code-toolbar {
 		.toolbar-item {
 			pointer-events: auto !important;
 
-			// Etiqueta da Linguagem (YAML) -> Canto Inferior Direito
+			// Language Label (YAML) -> Bottom Right Corner
 			&>span {
 				position: absolute !important;
-				bottom: 5px !important; // 20px garante que não vai encostar na barra de rolagem (caso haja uma)
+				bottom: 5px !important; // 20px ensures it won't touch the scrollbar (if there is one)
 				right: 10px !important;
 				color: #8b949e !important;
 				border: none !important;
@@ -77,15 +77,15 @@ div.code-toolbar {
 				font-size: 11px !important;
 				font-weight: 600 !important;
 				text-transform: uppercase;
-				letter-spacing: 0.5px; // Dá uma carinha um pouco mais técnica
+				letter-spacing: 0.5px; // Gives it a slightly more technical feel
 			}
 
-			// Botão de Copiar -> Canto Superior Direito
+			// Copy Button -> Top Right Corner
 			button.copy-to-clipboard-button {
 				position: absolute !important;
 				top: 5px;
 				right: 5px;
-				background: $dark-deeper; // Usa a variável do fundo da caixa
+				background: $dark-deeper; // Uses the box background variable
 				color: #c9d1d9 !important;
 				border: none;
 				border-radius: 5px !important;
@@ -129,7 +129,7 @@ div.code-toolbar {
 				}
 
 				&:hover {
-					background: $border-subtle; // Puxa nossa variável (Mesmo #30363d intacto)
+					background: $border-subtle; // Pulls our variable (same #30363d intact)
 					border-color: #8b949e !important;
 					color: #ffffff !important;
 				}
@@ -139,7 +139,7 @@ div.code-toolbar {
 }
 
 // ==========================================================
-// 4. TOKEN COLORING (Syntax Highlighting do GitHub Dark)
+// 4. TOKEN COLORING (GitHub Dark Syntax Highlighting)
 // ==========================================================
 .token.comment,
 .token.prolog,
@@ -180,7 +180,7 @@ div.code-toolbar {
 	color: #7ee787;
 }
 
-// .key resolve o YAML
+// .key handles the YAML
 
 .token.function,
 .token.class-name {
@@ -193,14 +193,14 @@ div.code-toolbar {
 	color: #79c0ff;
 }
 
-// Tira qualquer conflito de fundo dos spans que o Prism gera
+// Removes any background conflict from the spans Prism generates
 pre[class*="language-"] code[class*="language-"] span[class*="token"] {
 	background: transparent !important;
 }
 
 // ==========================================================
-// 5. O SEU HACK: Correção de cor base para YAML
-// Usamos dois atributos [class*=""] para vencer a especificidade do CSS!
+// 5. YOUR HACK: Base color fix for YAML
+// We use two [class*=""] attributes to beat the CSS specificity!
 // ==========================================================
 pre[class*="language-yml"] code[class*="language-"],
 pre[class*="language-yaml"] code[class*="language-"] {
@@ -209,24 +209,24 @@ pre[class*="language-yaml"] code[class*="language-"] {
 
 // ==========================================================
 // 6. DARK/LIGHT MODE — Light Mode Overrides
-// Filosofia: blocos de código permanecem ESCUROS mesmo em light mode
-// (estilo "terminal embutido"). Preserva contraste dos tokens
-// coloridos sem precisar re-calibrar a paleta inteira pra fundo claro.
+// Philosophy: code blocks stay DARK even in light mode
+// ("embedded terminal" style). Preserves the contrast of the colored
+// tokens without re-calibrating the whole palette for a light background.
 // ==========================================================
 [data-theme="light"] pre[class*="language-"] {
-	background: #495057 !important; // slate escuro
+	background: #495057 !important; // dark slate
 }
 
-// Cor base do texto dentro do code block (tokens com !important não são afetados)
+// Base text color inside the code block (tokens with !important aren't affected)
 [data-theme="light"] pre[class*="language-"] code[class*="language-"] {
 	color: #e6edf3 !important;
 }
 
-// Código inline (ex: `docker run`): fundo precisa ser legível em light mode
-// (sem isso, o rgba(110,118,129,0.4) + texto #e6edf3 fica ilegível sobre fundo claro)
-// Um degrau mais claro que os blocos pra diferenciar visualmente inline vs block.
+// Inline code (e.g. `docker run`): the background needs to be legible in light mode
+// (without it, rgba(110,118,129,0.4) + #e6edf3 text is illegible over a light background)
+// One step lighter than the blocks to visually differentiate inline vs block.
 [data-theme="light"] code:not([class*="language-"]) {
-	background-color: #6c757d !important; // gray-600 (1 degrau acima do #495057 dos blocos)
+	background-color: #6c757d !important; // gray-600 (one step above the blocks' #495057)
 	color: #e6edf3 !important;
 }
 

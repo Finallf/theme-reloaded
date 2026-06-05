@@ -2,7 +2,7 @@
 @use '../base/variables' as *;
 
 /* ==========================================================================
-   404 - Página não encontrada
+   404 - Page not found
    ========================================================================== */
 
 .rd-404-page {
@@ -10,7 +10,7 @@
     min-height: 60vh;
 }
 
-/* ===== CARD PRINCIPAL ===== */
+/* ===== MAIN CARD ===== */
 
 .rd-404-card {
     position: relative;
@@ -18,13 +18,13 @@
     background: $glass-bg;
     border: 1px solid $glass-border;
     border-radius: 5px;
-    box-shadow: 0 8px 20px var(--rd-glass-shadow); // Adapta dark/light (plana no light)
+    box-shadow: 0 8px 20px var(--rd-glass-shadow); // Adapts dark/light (flat in light)
     padding: 60px 40px;
     text-align: center;
     box-sizing: border-box;
     margin-bottom: 50px;
 
-    // Borda superior com gradiente da marca (igual manutenção)
+    // Top border with the brand gradient (same as maintenance)
     &::before {
         content: "";
         position: absolute;
@@ -35,7 +35,7 @@
         background: $brand-gradient;
     }
 
-    // Animação de entrada suave
+    // Smooth entrance animation
     animation: rd404FadeUp 600ms ease-out;
 }
 
@@ -50,7 +50,7 @@
     }
 }
 
-/* ===== HEADER (404 + Título) ===== */
+/* ===== HEADER (404 + Title) ===== */
 
 .rd-404-header {
     margin-bottom: 30px;
@@ -66,7 +66,7 @@
     letter-spacing: -2px;
     margin-bottom: 10px;
 
-    // Glow sutil azul
+    // Subtle blue glow
     text-shadow: 0 0 30px rgba(0, 168, 255, 0.4);
 
     @media (max-width: 768px) {
@@ -89,7 +89,7 @@
     }
 }
 
-/* ===== BODY (Mensagem + Botões) ===== */
+/* ===== BODY (Message + Buttons) ===== */
 
 .rd-404-body {
     max-width: 600px;
@@ -139,10 +139,10 @@
 
 .rd-404-btn-primary {
     background: $brand-gradient;
-    // Branco constante sobre o gradient azul. Antes usava $dark-bg (var dinâmica)
-    // que produzia preto sobre azul em dark (visualmente estranho) e branco-quase
-    // sobre azul claro em light (falha WCAG AA, ~2.5:1). Branco bate ~3.2:1 contra
-    // o lado claro do gradient e ~8.6:1 contra o lado escuro — AA para large bold.
+    // Constant white over the blue gradient. It used $dark-bg before (dynamic var)
+    // which produced black over blue in dark (visually odd) and near-white
+    // over light blue in light (WCAG AA fail, ~2.5:1). White hits ~3.2:1 against
+    // the light side of the gradient and ~8.6:1 against the dark side — AA for large bold.
     color: #fff;
 
     &:hover {
@@ -164,7 +164,7 @@
     }
 }
 
-/* ===== NÍVEIS RECOMENDADOS ===== */
+/* ===== RECOMMENDED LEVELS ===== */
 
 .rd-404-recommended {
     animation: rd404FadeUp 800ms ease-out;
@@ -201,7 +201,7 @@
     border: 1px solid $glass-border;
     border-radius: 5px;
     overflow: hidden;
-    box-shadow: 0 8px 20px var(--rd-glass-shadow); // Sombra base unificada com os outros cards interativos
+    box-shadow: 0 8px 20px var(--rd-glass-shadow); // Base shadow unified with the other interactive cards
     transition: all 250ms ease;
 
     &:hover {
@@ -256,7 +256,7 @@
     margin: 0;
     line-height: 1.4;
 
-    // Limita a 2 linhas com ellipsis
+    // Limits to 2 lines with ellipsis
     display: -webkit-box;
     -webkit-line-clamp: 2;
 	line-clamp: 2;

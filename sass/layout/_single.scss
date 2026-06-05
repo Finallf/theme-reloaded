@@ -1,25 +1,25 @@
 // sass/layout/_single.scss
 @use '../base/variables' as *;
 
-// ESTRUTURA GLOBAL DO POST (SINGLE E HOME)
+// GLOBAL POST STRUCTURE (SINGLE AND HOME)
 
-// Garante que todas as imagens do post (no card e no single) sejam responsivas e preencham o container sem deformar
+// Ensures all post images (in the card and the single) are responsive and fill the container without distorting
 .post-thumbnail img {
 	width: 100%;
 	height: auto;
-	display: block; // Remove espaços vazios indesejados abaixo da imagem
-	object-fit: cover; // Preenche mantendo a proporção
+	display: block; // Removes unwanted empty space below the image
+	object-fit: cover; // Fills while keeping the aspect ratio
 }
 
 // ==========================================================
-// 2. Estilo para o conteúdo dentro do single.php (não afetado)
+// 2. Style for the content inside single.php (unaffected)
 // ==========================================================
 .single-post-content {
-	// CSS custom property compartilhada com o TOC anchor (em _toc.scss).
-	// O `right` do .rd-toc-anchor lê essa variável e fica auto-sincronizado:
-	// muda o padding aqui → o FAB segue o novo content-edge sem mexer no TOC.
-	// Override em media queries: redeclara `--rd-single-padding` dentro do
-	// breakpoint pra trocar ambos juntos.
+	// CSS custom property shared with the TOC anchor (in _toc.scss).
+	// The `right` of .rd-toc-anchor reads this variable and stays auto-synced:
+	// change the padding here → the FAB follows the new content-edge without touching the TOC.
+	// Override in media queries: redeclare `--rd-single-padding` inside the
+	// breakpoint to change both together.
 	--rd-single-padding: 1.25rem;
 
 	@media (max-width: 600px) {
@@ -28,38 +28,38 @@
 
 	background-color: $glass-bg;
 	padding: var(--rd-single-padding);
-	border-radius: 5px; // A sua regra de ouro (era 8px)!
-	border: 1px solid $glass-border; // Unificando a borda com a sidebar e grid
-	position: relative; // containing block pro .rd-toc-anchor (position: absolute)
+	border-radius: 5px; // Your golden rule (was 8px)!
+	border: 1px solid $glass-border; // Unifying the border with the sidebar and grid
+	position: relative; // containing block for .rd-toc-anchor (position: absolute)
 
 	.entry-header {
 		margin-bottom: 20px;
 
-		// Linha que agrupa [overline + título] à esquerda e kicker (chip de
-		// categoria) à direita. O kicker fica fixo no topo do row mesmo quando
-		// o overline empurra o título pra baixo, porque ambos os blocos
-		// (text-block e kicker) alinham por flex-start.
-		// Mantém row em todas as larguras — `min-width: 0` no text-block
-		// permite o título quebrar texto sem espremer o kicker.
+		// Row that groups [overline + title] on the left and the kicker (category
+		// chip) on the right. The kicker stays fixed at the top of the row even when
+		// the overline pushes the title down, because both blocks
+		// (text-block and kicker) align by flex-start.
+		// Keeps a row at all widths — `min-width: 0` on the text-block
+		// lets the title wrap text without squeezing the kicker.
 		.entry-title-row {
 			display: flex;
 			justify-content: space-between;
 			align-items: flex-start;
 			gap: 16px;
-			position: relative; // âncora pro kicker absoluto no mobile
+			position: relative; // anchor for the absolute kicker on mobile
 
 			.entry-title-block {
 				flex: 1;
-				min-width: 0; // permite truncamento de títulos longos sem quebrar o flex
+				min-width: 0; // allows truncation of long titles without breaking the flex
 
 				.entry-title {
 					margin: 0;
 				}
 			}
 
-			// Mobile: kicker "flutua" sobre o canto superior direito do row,
-			// permitindo o título usar a largura toda (texto pode passar por
-			// baixo do chip se for muito longo)
+			// Mobile: the kicker "floats" over the top-right corner of the row,
+			// letting the title use the full width (text can pass under
+			// the chip if it's too long)
 			@media (max-width: 600px) {
 				gap: 0;
 
@@ -69,14 +69,14 @@
 					right: 0;
 				}
 
-				// Quando NÃO há overline acima, a primeira linha do título
-				// poderia passar por baixo do chip. Inserimos um spacer
-				// invisível com float-right no início do title-block pra
-				// forçar a primeira linha a se acomodar ao lado do chip.
-				// Linhas seguintes voltam a usar a largura total naturalmente
-				// (vantagem do float sobre padding-right). Quando HÁ overline,
-				// ele já ocupa a primeira linha e o título começa na segunda,
-				// então o spacer não é necessário.
+				// When there's NO overline above, the title's first line
+				// could pass under the chip. We insert an invisible spacer
+				// with float-right at the start of the title-block to
+				// force the first line to fit next to the chip.
+				// Following lines go back to using the full width naturally
+				// (advantage of float over padding-right). When there IS an overline,
+				// it already occupies the first line and the title starts on the second,
+				// so the spacer isn't needed.
 				.entry-title-block:not(:has(.entry-overline))::before {
 					content: '';
 					float: right;
@@ -86,9 +86,9 @@
 			}
 		}
 
-		// Kicker — chip da categoria primária ao lado do título.
-		// Usa a classe `.post-tag.tag-{slug}` então herda automaticamente
-		// a cor configurada no admin (via mod-category-colors.php).
+		// Kicker — primary category chip next to the title.
+		// Uses the `.post-tag.tag-{slug}` class so it automatically inherits
+		// the color configured in the admin (via mod-category-colors.php).
 		.entry-kicker {
 			flex-shrink: 0;
 			align-self: flex-start;
@@ -117,31 +117,31 @@
 			display: flex;
 			flex-wrap: wrap;
 			align-items: center;
-			gap: 12px; /* Espaçamento uniforme entre os elementos */
-			color: $dark-text-muted; // #999 substituído
+			gap: 12px; /* Uniform spacing between the elements */
+			color: $dark-text-muted; // #999 replaced
 			font-size: 0.85rem;
 
 			span {
 				display: inline-flex;
 				align-items: center;
-				gap: 6px; /* Espaço entre o ícone SVG e o texto */
-				margin-right: 0; /* Limpa a margem antiga */
+				gap: 6px; /* Space between the SVG icon and the text */
+				margin-right: 0; /* Clears the old margin */
 			}
 
 			svg {
-				color: $brand-blue-light; /* Aplica o azul do portal nos ícones */
+				color: $brand-blue-light; /* Applies the portal blue to the icons */
 				opacity: 0.9;
 			}
 
 			.meta-separator {
-				color: $border-light; // #444 alinhado para a variável
-				font-size: 1.2rem; /* Deixa a bolinha um pouco mais evidente */
-				line-height: 0; // Evita que o bullet mude a altura da linha
+				color: $border-light; // #444 aligned to the variable
+				font-size: 1.2rem; /* Makes the bullet a bit more prominent */
+				line-height: 0; // Prevents the bullet from changing the line height
 			}
 
-			// Reading time empurrado pra direita da linha .entry-meta. No mobile
-			// (quando flex-wrap quebra os items), continua right-aligned no novo
-			// row — visual aceitável (clock no canto direito da última linha).
+			// Reading time pushed to the right of the .entry-meta line. On mobile
+			// (when flex-wrap breaks the items), it stays right-aligned on the new
+			// row — acceptable look (clock in the right corner of the last line).
 			.reading-time {
 				margin-left: auto;
 			}
@@ -152,7 +152,7 @@
 				font-weight: 500;
 
 				&:hover {
-					color: $brand-blue-light; /* Acende o nome do autor ao passar o mouse */
+					color: $brand-blue-light; /* Lights up the author's name on hover */
 				}
 			}
 		}
@@ -160,28 +160,28 @@
 
 	.post-thumbnail {
 		margin-bottom: 1rem;
-		border-radius: 5px; // A sua regra de ouro (era 8px)!
+		border-radius: 5px; // Your golden rule (was 8px)!
 		overflow: hidden;
-		background-color: $dark-bg; // #151515 substituído
+		background-color: $dark-bg; // #151515 replaced
 
 		img {
 			width: 100%;
 			height: auto;
-			aspect-ratio: 16 / 9; /* Trava a proporção exata dos recortes do portal */
+			aspect-ratio: 16 / 9; /* Locks the exact aspect ratio of the portal's crops */
 			display: block;
 
-			/* Serve como trava de segurança apenas se alguma imagem for "subida" fora do tamanho padrão */
+			/* Acts as a safety lock only if some image is "uploaded" outside the standard size */
 			object-fit: cover;
 		}
 	}
 
 	// ==========================================================
-	// Rodapé do Artigo (Tags)
+	// Article Footer (Tags)
 	// ==========================================================
 	.entry-footer {
 		margin-top: 3rem;
 		padding-top: 1.5rem;
-		border-top: 1px solid $border-dark; // #222 substituído
+		border-top: 1px solid $border-dark; // #222 replaced
 
 		.post-tags {
 			display: flex;
@@ -190,10 +190,10 @@
 			align-items: center;
 			justify-content: flex-end;
 
-			// Visual idêntico aos chips da busca (.rd-chip em _search.scss).
-			// line-height: normal força o mesmo comportamento do <button> nativo
-			// (que ignora o line-height: 1.5 herdado do body); sem isso, o <a>
-			// fica ~4px mais alto que o chip.
+			// Identical look to the search chips (.rd-chip in _search.scss).
+			// line-height: normal forces the same behavior as the native <button>
+			// (which ignores the line-height: 1.5 inherited from body); without it, the <a>
+			// is ~4px taller than the chip.
 			a {
 				background: $glass-bg;
 				border: 1px solid $glass-border;
@@ -206,7 +206,7 @@
 				text-decoration: none;
 				transition: all 0.3s ease;
 
-				// Hover replica o estado .active dos chips (azul transparente)
+				// Hover mirrors the chips' .active state (transparent blue)
 				&:hover {
 					background: rgba(0, 168, 255, 0.15);
 					border-color: $brand-blue-light;

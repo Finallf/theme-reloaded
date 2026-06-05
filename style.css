@@ -5,14 +5,17 @@ Theme URI: https://reloaded.com.br
 Author: Regis Vieira Delgado (Finallf)
 Author URI: https://github.com/finallf
 Description: High-performance custom theme for technology, gaming, and news portals.
-Version: 1.0.0
+Version: 1.1.0-beta.11
 Requires at least: 6.0
 Tested up to: 7.0
 Requires PHP: 8.0
 Text Domain: reloaded
+License: GPL v2 or later
+License URI: http://www.gnu.org/licenses/gpl-2.0.html
+Tags: custom-background, dark-mode, translation-ready, news, entertainment
 Update URI: https://github.com/Finallf/theme-reloaded
 */
 
-/* Nota: Este arquivo é apenas para identificação do tema.
-O estilo real é carregado de /assets/css/style.css
+/* Note: This file is for theme identification purposes only.
+The actual style is loaded from /assets/css/style.css
 */

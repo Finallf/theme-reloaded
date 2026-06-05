@@ -1,29 +1,29 @@
 <?php
 defined( 'ABSPATH' ) || exit;
 /*******************************************************************************
- * Module: Social & SEO - Open Graph, Redes Sociais
+ * Module: Social & SEO - Open Graph, Social Networks
  *******************************************************************************/
 
 /*******************************************************************************
- * Módulos da Top Bar (Data, Ticker de Notícias e Redes Sociais) (Redes Sociais)
+ * Top Bar modules (Date, News Ticker and Social Networks) (Social Networks)
  *******************************************************************************/
 /**
- * 1. Módulo de Data — usa o formato configurado em Configurações → Geral.
+ * 1. Date module — uses the format configured in Settings → General.
  */
 function rd_render_date() {
-	// Usa o formato de data nativo do WP (Configurações → Geral → Formato da Data).
-	// wp_date() traduz nomes de meses/dias automaticamente pro locale ativo.
+	// Uses WP's native date format (Settings → General → Date Format).
+	// wp_date() translates month/day names automatically to the active locale.
 	echo '<span class="rd-date-display">' . esc_html( wp_date( get_option( 'date_format' ) ) ) . '</span>';
 }
 
 /**
- * 2. Módulo de Ticker — lista os 5 posts mais recentes.
+ * 2. Ticker module — lists the 5 most recent posts.
  */
 function rd_render_news_ticker() {
 	$ticker_query = new WP_Query(
 		array(
 			'post_type'      => 'post',
-			'posts_per_page' => 5, // Pega os 5 últimos
+			'posts_per_page' => 5, // Gets the latest 5
 			'post_status'    => 'publish',
 		)
 	);
@@ -42,18 +42,18 @@ function rd_render_news_ticker() {
 }
 
 /**
- * 3. Módulo de Redes Sociais.
+ * 3. Social Networks module.
  *
- * $user_id (opcional): quando informado, puxa URLs das redes do user específico
- * via get_the_author_meta('social_X', $user_id) — campos adicionados pelo filter
- * rd_add_user_social_fields abaixo, que ficam editáveis em Usuários → Perfil.
- * Quando null (default), continua usando as URLs globais do portal definidas no
- * painel (rd_get_option('social_X')). Mesmo conjunto de redes nos dois modos.
+ * $user_id (optional): when provided, pulls the network URLs of the specific user
+ * via get_the_author_meta('social_X', $user_id) — fields added by the
+ * rd_add_user_social_fields filter below, which are editable in Users → Profile.
+ * When null (default), keeps using the portal's global URLs defined in the
+ * panel (rd_get_option('social_X')). Same set of networks in both modes.
  */
 function rd_render_social_icons( $user_id = null ) {
 	$redes = array( 'discord', 'telegram', 'whatsapp', 'youtube', 'instagram', 'steam', 'twitter', 'facebook' );
 
-	// Biblioteca de Vetores Matemáticos (SVGs Inline)
+	// Library of Mathematical Vectors (Inline SVGs)
 	$svgs = array(
 		'discord'   => '<svg viewBox="0 0 640 512" width="16" height="16"><path fill="currentColor" d="M524.531,69.836a1.5,1.5,0,0,0-.764-.7A485.065,485.065,0,0,0,404.081,32.03a1.816,1.816,0,0,0-1.923.91,337.461,337.461,0,0,0-14.9,30.6,447.848,447.848,0,0,0-134.426,0,309.541,309.541,0,0,0-15.135-30.6,1.89,1.89,0,0,0-1.924-.91A483.689,483.689,0,0,0,116.085,69.137a1.712,1.712,0,0,0-.788.676C39.068,183.651,18.186,294.69,28.43,404.354a2.016,2.016,0,0,0,.765,1.375A487.666,487.666,0,0,0,176.02,479.918a1.9,1.9,0,0,0,2.063-.276c8.3-11.232,16.068-22.951,23.235-35.1a1.884,1.884,0,0,0-1.026-2.658,309.117,309.117,0,0,1-40.428-19.167,1.821,1.821,0,0,1-.186-3.085c3.2-2.356,6.38-4.786,9.458-7.262a1.831,1.831,0,0,1,1.916-.276c83.562,38.163,173.812,38.163,256.334,0a1.848,1.848,0,0,1,1.924.276c3.085,2.476,6.265,4.906,9.489,7.262a1.825,1.825,0,0,1-.17,3.085,312.2,312.2,0,0,1-40.459,19.167,1.886,1.886,0,0,0-1.011,2.658c7.167,12.149,14.934,23.868,23.235,35.1a1.9,1.9,0,0,0,2.063.276A488.528,488.528,0,0,0,611.365,405.729a1.854,1.854,0,0,0,.765-1.375C624.167,280.9,595.6,170.835,524.531,69.836ZM222.491,337.58c-28.972,0-52.844-26.587-52.844-59.239S193.056,219.1,222.491,219.1c29.665,0,53.306,26.82,52.843,59.239C275.334,310.993,251.924,337.58,222.491,337.58Zm195.38,0c-28.971,0-52.843-26.587-52.843-59.239S388.437,219.1,417.871,219.1c29.667,0,53.307,26.82,52.844,59.239C470.715,310.993,447.538,337.58,417.871,337.58Z"/></svg>',
 		'telegram'  => '<svg viewBox="0 0 496 512" width="16" height="16"><path fill="currentColor" d="M248 8C111.033 8 0 119.033 0 256s111.033 248 248 248 248-111.033 248-248S384.967 8 248 8Zm114.952 168.66c-3.732 39.215-19.881 134.378-28.1 178.3-3.476 18.584-10.322 24.816-16.948 25.425-14.4 1.326-25.338-9.517-39.287-18.661-21.827-14.308-34.158-23.215-55.346-37.177-24.485-16.135-8.612-25 5.342-39.5 3.652-3.793 67.107-61.51 68.335-66.746.153-.655.3-3.1-1.154-4.384s-3.59-.849-5.135-.5q-3.283.746-104.608 69.142-14.845 10.194-26.894 9.934c-8.855-.191-25.888-5.006-38.551-9.123-15.531-5.048-27.875-7.717-26.8-16.291q.84-6.7 18.45-13.7 108.446-47.248 144.628-62.3c68.872-28.647 83.183-33.623 92.511-33.789 2.052-.034 6.639.474 9.61 2.885a10.452 10.452 0 0 1 3.53 6.716 43.765 43.765 0 0 1 .417 9.769Z"/></svg>',
@@ -67,7 +67,7 @@ function rd_render_social_icons( $user_id = null ) {
 
 	echo '<div class="rd-social-icons">';
 	foreach ( $redes as $rede ) {
-		// User-level (em /author/{slug}/) ou global (footer, page-sobre, top bar)
+		// User-level (on /author/{slug}/) or global (footer, template-about, top bar)
 		$url = $user_id
 			? get_the_author_meta( 'social_' . $rede, $user_id )
 			: rd_get_option( 'social_' . $rede );
@@ -84,12 +84,12 @@ function rd_render_social_icons( $user_id = null ) {
 }
 
 /*******************************************************************************
- * Campos de redes sociais por user (Usuários → Perfil)                        *
+ * Per-user social network fields (Users → Profile)                            *
  *                                                                             *
- * Adiciona os mesmos 8 campos de rede do painel global em cada perfil de user *
- * via filter `user_contactmethods`. Ficam acessíveis em                       *
- * get_the_author_meta('social_X', $user_id) e são usados pelo author.php pra  *
- * mostrar redes pessoais de cada redator (separadas das redes do portal).     *
+ * Adds the same 8 network fields from the global panel to each user profile   *
+ * via the `user_contactmethods` filter. They're accessible in                 *
+ * get_the_author_meta('social_X', $user_id) and used by author.php to         *
+ * show each writer's personal networks (separate from the portal's networks). *
  *******************************************************************************/
 function rd_add_user_social_fields( $methods ) {
 	$methods['social_discord']   = __( 'Discord (URL)', 'reloaded' );

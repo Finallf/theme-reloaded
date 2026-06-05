@@ -2,13 +2,14 @@
 
 ## 🎨 Arquitetura SCSS
 
-O CSS do tema é totalmente **escrito em SCSS** com sistema modular `@use`. O entry point é `sass/style.scss`, que importa todos os parciais.
+O CSS do tema é totalmente **escrito em SCSS** com sistema modular `@use`. O entry point do frontend é `sass/style.scss`, que importa todos os parciais → `assets/css/style.css`. O painel admin tem um source próprio standalone, `sass/admin-style.scss` → `assets/css/admin-style.css` (não usa `@use`, é um arquivo único; convertido de CSS-à-mão pra SCSS pra ganhar minificação + comentários stripados no build, igual ao frontend). A **Fase 2** do refactor reorganizou o arquivo inteiro: paleta nativa do wp-admin centralizada em ~22 variáveis `$rd-*` + nesting BEM (`&__elem`/`&--mod`) em todos os seletores. Continua standalone — **não** compartilha os tokens do frontend (`base/_tokens.scss`), porque a paleta do admin é a do wp-admin (azul `#2271b1`, cinzas `#1d2327`/`#50575e`, etc.), não a da marca.
 
 ### Estrutura de pastas
 
 ```
 sass/
-├── style.scss              # Entry point (só @use)
+├── style.scss              # Entry point do frontend (só @use)
+├── admin-style.scss        # Source do painel admin (standalone) → admin-style.css
 ├── base/
 │   ├── _variables.scss     # @font-face + SCSS vars + CSS vars (dark/light)
 │   ├── _globals.scss       # Reset, body, h_, .container, .post-tag, scrollbar
@@ -26,6 +27,8 @@ sass/
     ├── _buttons.scss       # Botões compartilhados
     ├── _comments.scss      # Lista de comentários + form
     ├── _facades.scss       # Facade YouTube/Discord (estado clickable)
+    ├── _home.scss          # Vitrine configurável da home (override Grid 3-col + spacing das seções; reusa wrappers do _search)
+    ├── _latest-video.scss  # Widget "Último Vídeo" da sidebar/footer (reusa o facade)
     ├── _lgpd.scss          # Banner de cookies (expansível, 3 categorias de consent)
     ├── _markdown.scss      # Estilização de conteúdo Markdown (h_, code, blockquote, table, alerts GitHub-style)
     ├── _overline.scss      # Chapéu/sobretítulo do post (dois contextos: single + card)
@@ -68,6 +71,7 @@ sass/
 @use 'components/page-archive';
 @use 'components/pagination';
 @use 'components/popular-widget';   // Widget "Most Read" da sidebar
+@use 'components/latest-video';     // Widget "Último Vídeo" da sidebar/footer
 @use 'components/search';
 @use 'components/related-posts';    // Depois de search — herda .rd-wrapper-grid
 @use 'components/toc';              // Sticky Table of Contents (FAB)
@@ -388,11 +392,11 @@ window.addEventListener('DOMContentLoaded', function () {
 
 Dados (`post_id`, `nonce`, `ajaxurl`) injetados via `wp_localize_script` no `mod-views.php`.
 
-### `assets/js/admin-scripts.js`
+### `assets/js/admin-panel.js`
 
-JS do painel admin (uploads de mídia via WP Media Library, abas, etc.).
+Bundle único do painel admin — consolida 7 módulos que antes eram arquivos separados por aba: uploads de mídia (WP Media Library), gráficos K4/auto-render (Chart.js), toggles inline do Dashboard, self-update do tema, import/export/restore de backup e regeneração WebP/AVIF. Enfileirado uma vez (`rd-admin-panel`, prioridade 5) em qualquer aba do painel; cada módulo interno tem escopo próprio e se auto-protege (sai cedo se o DOM/objeto localizado dele não existe), então o código fica inerte nas abas que não atende. Os módulos por aba (`mod-stats`/`mod-dashboard`/`mod-backup`/`mod-image-formats`) só injetam seus dados via `wp_localize_script` no handle `rd-admin-panel`.
 
-> Esse usa jQuery (porque o admin do WP carrega jQuery por padrão).
+> O módulo de upload de mídia usa jQuery (porque o admin do WP carrega jQuery por padrão); o resto é vanilla.
 
 ### `assets/js/admin-category-color.js`
 

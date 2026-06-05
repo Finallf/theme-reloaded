@@ -1,22 +1,22 @@
 <?php
 /**
- * Template: Page — Sobre
+ * Template Name: About Page (author hero)
  *
- * Template específico para a página com slug "sobre".
- * WP usa esse arquivo automaticamente via hierarquia de templates
- * (page-{slug}.php) — não precisa selecionar nada no editor.
+ * Named page template — assign it to any page via Page Attributes > Template
+ * (the page slug and language are irrelevant). Replaces the old slug-coupled
+ * page-sobre.php so the theme stays language-agnostic.
  *
- * Diferenças vs page.php genérico:
- *   - Hero hardcoded no topo: avatar (Gravatar do autor) + nome + tagline
- *     (biografia do user) + ícones de redes sociais (helper reusado).
- *     Garante consistência visual + auto-sync com config do painel.
- *   - Schema.org Person JSON-LD inline — alimenta E-E-A-T do Google
+ * Differences vs the generic page.php:
+ *   - Hardcoded hero at the top: avatar (author Gravatar) + name + tagline
+ *     (user biography) + social network icons (reused helper).
+ *     Ensures visual consistency + auto-sync with panel configuration.
+ *   - Inline Schema.org Person JSON-LD — feeds Google's E-E-A-T
  *     (Experience, Expertise, Authoritativeness, Trustworthiness).
- *     "sameAs" pega URLs das redes ativas no painel.
- *   - Imagem destacada e comentários respeitados igual ao page.php
+ *     "sameAs" picks URLs from the social networks active in the panel.
+ *   - Featured image and comments honored the same way as page.php.
  *
- * O conteúdo principal (bio longa, projetos, fotos extras) continua via
- * editor — hero é só o "topo institucional" padronizado.
+ * The main content (long bio, projects, extra photos) continues via the
+ * editor — the hero is only the standardized "institutional top".
  *
  * @package ReloadeD
  */
@@ -30,9 +30,9 @@ while ( have_posts() ) :
 
 	$author_id   = get_the_author_meta( 'ID' );
 	$author_name = get_the_author_meta( 'display_name', $author_id );
-	// Fallback defensivo: cai pro nicename/login se display_name estiver vazio
-	// (Schema.org Person exige name populado — sem isso, Rich Results mostra
-	// "Item sem nome").
+	// Defensive fallback: falls back to nicename/login if display_name is empty
+	// (Schema.org Person requires a populated name — without it, Rich Results
+	// shows "Unnamed item").
 	if ( empty( $author_name ) ) {
 		$author_name = get_the_author_meta( 'user_nicename', $author_id );
 	}
@@ -42,7 +42,7 @@ while ( have_posts() ) :
 	$author_bio = get_the_author_meta( 'description', $author_id );
 	$avatar_url = get_avatar_url( $author_id, array( 'size' => 240 ) );
 
-	// Coleta URLs das redes sociais ativas pro sameAs do Schema.org
+	// Collects URLs of the active social networks for Schema.org sameAs.
 	$social_keys = array( 'discord', 'telegram', 'whatsapp', 'youtube', 'instagram', 'steam', 'twitter', 'facebook' );
 	$same_as     = array();
 	foreach ( $social_keys as $key ) {
@@ -52,7 +52,7 @@ while ( have_posts() ) :
 		}
 	}
 
-	// Schema.org Person JSON-LD
+	// Schema.org Person JSON-LD.
 	$schema = array(
 		'@context'    => 'https://schema.org',
 		'@type'       => 'Person',
@@ -107,7 +107,7 @@ while ( have_posts() ) :
 					</header>
 
 					<?php
-					// Respeita a opção do meta box "Ocultar Imagem Destacada"
+					// Respects the "Hide Featured Image" meta box option.
 					$hide_thumbnail = get_post_meta( get_the_ID(), '_rd_hide_thumbnail', true );
 
 					if ( has_post_thumbnail() && $hide_thumbnail !== 'yes' ) :
@@ -133,7 +133,7 @@ while ( have_posts() ) :
 				</article>
 
 				<?php
-				// Comentários (apenas se admin habilitou pra esta página)
+				// Comments (only if the admin enabled them for this page).
 				if ( comments_open() || get_comments_number() ) :
 					comments_template();
 				endif;

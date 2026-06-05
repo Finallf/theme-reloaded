@@ -2,29 +2,29 @@
 defined( 'ABSPATH' ) || exit;
 
 /*******************************************************************************
- * Module: Reading Time Estimate                                                *
- *                                                                              *
- * Calcula e exibe um indicador "X min read" no entry-meta do single, baseado *
- * em contagem de palavras / 200 WPM (padrão internacional usado por Medium,  *
+ * Module: Reading Time Estimate                                               *
+ *                                                                             *
+ * Calculates and shows an "X min read" indicator in the single entry-meta,    *
+ * based on word count / 200 WPM (international standard used by Medium,       *
  * Substack, dev.to, etc).                                                     *
- *                                                                              *
- * Cache: valor é calculado e salvo em post meta `_rd_reading_time` no        *
- * save_post (1x por edição), lido instantâneo nas renderizações. Posts pré- *
- * instalação do módulo recalculam on-the-fly e cacheiam na primeira leitura. *
- *                                                                              *
- * Gate: feature controlada por `enable_reading_time` (default ON).            *
- *                                                                              *
- * Sem omissão pra posts curtos — sempre mostra (mínimo 1 min).                *
+ *                                                                             *
+ * Cache: the value is calculated and saved in the `_rd_reading_time` post     *
+ * meta on save_post (1x per edit), read instantly on renders. Posts from      *
+ * before the module recalculate on-the-fly and cache on first read.           *
+ *                                                                             *
+ * Gate: feature controlled by `enable_reading_time` (default ON).             *
+ *                                                                             *
+ * No omission for short posts — always shows (minimum 1 min).                 *
  *******************************************************************************/
 
 const RD_READING_WPM = 200;
 
 /**
- * Calcula tempo de leitura de um post (sempre on-the-fly, sem cache).
- * Usa preg_match_all com flag /u (UTF-8) — str_word_count falha com acentos.
+ * Calculates a post's reading time (always on-the-fly, no cache).
+ * Uses preg_match_all with the /u flag (UTF-8) — str_word_count fails with accents.
  *
- * @param int $post_id ID do post.
- * @return int Minutos (mínimo 1).
+ * @param int $post_id Post ID.
+ * @return int Minutes (minimum 1).
  */
 function rd_calculate_reading_time( $post_id ) {
 	$content    = (string) get_post_field( 'post_content', $post_id );
@@ -37,10 +37,10 @@ function rd_calculate_reading_time( $post_id ) {
 }
 
 /**
- * Retorna tempo de leitura (cacheado em post meta).
+ * Returns the reading time (cached in post meta).
  *
- * @param int $post_id ID do post.
- * @return int Minutos.
+ * @param int $post_id Post ID.
+ * @return int Minutes.
  */
 function rd_get_reading_time( $post_id ) {
 	$cached = get_post_meta( $post_id, '_rd_reading_time', true );
@@ -53,10 +53,10 @@ function rd_get_reading_time( $post_id ) {
 }
 
 /**
- * Renderiza o span do reading time pra inserir no .entry-meta do single.
- * Sai cedo se feature OFF — zero overhead.
+ * Renders the reading time span to insert into the single's .entry-meta.
+ * Exits early if the feature is OFF — zero overhead.
  *
- * @param int $post_id ID do post.
+ * @param int $post_id Post ID.
  */
 function rd_render_reading_time( $post_id ) {
 	if ( ! rd_get_option_bool( 'enable_reading_time', true ) ) {
@@ -80,9 +80,9 @@ function rd_render_reading_time( $post_id ) {
 }
 
 /**
- * Recalcula e atualiza o cache no save_post. Só pra post_type=post.
+ * Recalculates and updates the cache on save_post. Only for post_type=post.
  *
- * @param int $post_id ID do post salvo.
+ * @param int $post_id ID of the saved post.
  */
 function rd_reading_time_refresh_cache( $post_id ) {
 	if ( wp_is_post_revision( $post_id ) || wp_is_post_autosave( $post_id ) ) {

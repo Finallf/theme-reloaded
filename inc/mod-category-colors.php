@@ -1,58 +1,58 @@
 <?php
 defined( 'ABSPATH' ) || exit;
 /*******************************************************************************
- * Module: Category Colors — Cor por categoria configurável via admin           *
- *                                                                              *
- * Substitui o mapping hardcoded de `.tag-{slug}` em SCSS por um sistema        *
- * data-driven baseado em term meta. Cada categoria pode ter uma cor de fundo  *
- * própria; a cor do texto é calculada automaticamente (preto/branco) com base *
- * na luminância do fundo pra garantir contraste legível.                      *
+ * Module: Category Colors — Per-category color configurable via admin         *
  *                                                                             *
- * Fluxo:                                                                      *
- *   1. Admin escolhe cor via wp-color-picker na tela de edição da categoria  *
- *   2. Valor sanitizado e salvo em `term_meta` com key `rd_category_color`   *
- *   3. Frontend injeta um <style> no <wp_head> com uma regra CSS por         *
- *      categoria que tem cor definida                                        *
- *   4. SCSS mantém só o fallback `.post-tag { background-color: #555 }`      *
+ * Replaces the hardcoded `.tag-{slug}` mapping in SCSS with a data-driven     *
+ * system based on term meta. Each category can have its own background        *
+ * color; the text color is computed automatically (black/white) based         *
+ * on the background luminance to ensure readable contrast.                    *
+ *                                                                             *
+ * Flow:                                                                       *
+ *   1. Admin picks a color via wp-color-picker on the category edit screen    *
+ *   2. Value sanitized and saved in `term_meta` with the `rd_category_color` key
+ *   3. Frontend injects a <style> in <wp_head> with one CSS rule per          *
+ *      category that has a color set                                          *
+ *   4. SCSS keeps only the fallback `.post-tag { background-color: #555 }`    *
  *******************************************************************************/
 
 /*******************************************************************************
- * Cor default quando categoria não tem cor explícita configurada              *
+ * Default color when a category has no explicit color configured              *
  *******************************************************************************/
 const RD_CATEGORY_COLOR_DEFAULT = '#555555';
 
 /*******************************************************************************
- * Calcula a cor de texto ideal (#000 ou #fff) pra contraste sobre um fundo    *
+ * Computes the ideal text color (#000 or #fff) for contrast over a background *
  *                                                                             *
- * Usa a fórmula WCAG real (relative luminance + contrast ratio). Computa o   *
- * contraste do fundo contra branco E contra preto, devolve a cor que dá o    *
- * maior ratio — garante a melhor opção possível, sempre.                     *
+ * Uses the real WCAG formula (relative luminance + contrast ratio). Computes  *
+ * the background's contrast against white AND against black, returns the      *
+ * color with the higher ratio — always guarantees the best possible option.   *
  *                                                                             *
- * O método YIQ simples (threshold 128) que estava aqui antes falhava em      *
- * cores intermediárias como verde-grama (#00a859) e vermelho-vivo (#e52d27): *
- * ambos > 128 YIQ mas texto branco neles dá ratio < 4.5:1 (fail WCAG AA).    *
+ * The simple YIQ method (threshold 128) that was here before failed on        *
+ * intermediate colors like grass-green (#00a859) and vivid-red (#e52d27):     *
+ * both > 128 YIQ but white text on them gives a ratio < 4.5:1 (WCAG AA fail). *
  *                                                                             *
  *
- * @param string $hex Cor de fundo no formato `#rrggbb` ou `#rgb`              *
- * @return string `#000000` se preto contrasta melhor, `#ffffff` se branco     *
+ * @param string $hex Background color in `#rrggbb` or `#rgb` format           *
+ * @return string `#000000` if black contrasts better, `#ffffff` if white      *
  *******************************************************************************/
 function rd_get_contrast_text_color( string $hex ): string {
 	$hex = ltrim( trim( $hex ), '#' );
 
-	// Expande shorthand `#abc` pra `#aabbcc`
+	// Expand shorthand `#abc` to `#aabbcc`
 	if ( strlen( $hex ) === 3 ) {
 		$hex = $hex[0] . $hex[0] . $hex[1] . $hex[1] . $hex[2] . $hex[2];
 	}
 
 	if ( strlen( $hex ) !== 6 || ! ctype_xdigit( $hex ) ) {
-		return '#ffffff'; // hex inválido — chuta branco (assume fundo escuro)
+		return '#ffffff'; // invalid hex — guess white (assumes a dark background)
 	}
 
 	$r = hexdec( substr( $hex, 0, 2 ) );
 	$g = hexdec( substr( $hex, 2, 2 ) );
 	$b = hexdec( substr( $hex, 4, 2 ) );
 
-	// Luminância relativa WCAG (https://www.w3.org/WAI/GL/wiki/Relative_luminance)
+	// WCAG relative luminance (https://www.w3.org/WAI/GL/wiki/Relative_luminance)
 	$rs           = $r / 255;
 	$gs           = $g / 255;
 	$bs           = $b / 255;
@@ -61,8 +61,8 @@ function rd_get_contrast_text_color( string $hex ): string {
 	$bl           = $bs <= 0.03928 ? $bs / 12.92 : pow( ( $bs + 0.055 ) / 1.055, 2.4 );
 	$luminance_bg = 0.2126 * $rl + 0.7152 * $gl + 0.0722 * $bl;
 
-	// Luminância pré-calculada: white=1.0, black=0.0
-	// Contraste = (L_claro + 0.05) / (L_escuro + 0.05)
+	// Pre-computed luminance: white=1.0, black=0.0
+	// Contrast = (L_light + 0.05) / (L_dark + 0.05)
 	$contrast_white = ( 1.0 + 0.05 ) / ( $luminance_bg + 0.05 );
 	$contrast_black = ( $luminance_bg + 0.05 ) / ( 0.0 + 0.05 );
 
@@ -70,7 +70,7 @@ function rd_get_contrast_text_color( string $hex ): string {
 }
 
 /*******************************************************************************
- * Adiciona o campo "Cor" no formulário de criar nova categoria                *
+ * Adds the "Color" field to the new-category creation form                    *
  *******************************************************************************/
 function rd_category_color_add_form_field() {
 	?>
@@ -84,7 +84,7 @@ function rd_category_color_add_form_field() {
 add_action( 'category_add_form_fields', 'rd_category_color_add_form_field' );
 
 /*******************************************************************************
- * Adiciona o campo "Cor" no formulário de editar categoria existente          *
+ * Adds the "Color" field to the existing-category edit form                   *
  *******************************************************************************/
 function rd_category_color_edit_form_field( WP_Term $term ) {
 	$color = get_term_meta( $term->term_id, 'rd_category_color', true );
@@ -104,10 +104,10 @@ function rd_category_color_edit_form_field( WP_Term $term ) {
 add_action( 'category_edit_form_fields', 'rd_category_color_edit_form_field' );
 
 /*******************************************************************************
- * Salva o term meta quando o admin cria ou edita a categoria                  *
+ * Saves the term meta when the admin creates or edits the category            *
  *******************************************************************************/
 function rd_category_color_save( int $term_id ): void {
-	// phpcs:ignore WordPress.Security.NonceVerification.Missing -- WP verifica nonce upstream em wp_insert_term/wp_update_term antes de disparar os hooks created_category/edited_category. Capability check explícito abaixo como defesa em profundidade.
+	// phpcs:ignore WordPress.Security.NonceVerification.Missing -- WP verifies the nonce upstream in wp_insert_term/wp_update_term before firing the created_category/edited_category hooks. Explicit capability check below as defense in depth.
 	if ( ! isset( $_POST['rd_category_color'] ) ) {
 		return;
 	}
@@ -115,14 +115,14 @@ function rd_category_color_save( int $term_id ): void {
 		return;
 	}
 
-	// phpcs:ignore WordPress.Security.NonceVerification.Missing -- mesmo motivo acima (nonce upstream do WP).
+	// phpcs:ignore WordPress.Security.NonceVerification.Missing -- same reason as above (WP's upstream nonce).
 	$raw   = sanitize_text_field( wp_unslash( $_POST['rd_category_color'] ) );
 	$color = sanitize_hex_color( $raw );
 
 	if ( $color && $color !== RD_CATEGORY_COLOR_DEFAULT ) {
 		update_term_meta( $term_id, 'rd_category_color', $color );
 	} else {
-		// Default ou inválido → limpa pra cair no fallback do SCSS
+		// Default or invalid → clear it to fall back to the SCSS fallback
 		delete_term_meta( $term_id, 'rd_category_color' );
 	}
 }
@@ -130,15 +130,15 @@ add_action( 'created_category', 'rd_category_color_save' );
 add_action( 'edited_category', 'rd_category_color_save' );
 
 /*******************************************************************************
- * Enfileira o wp-color-picker nas telas de edição de categoria                *
+ * Enqueues the wp-color-picker on the category edit screens                   *
  *******************************************************************************/
 function rd_category_color_admin_enqueue( string $hook ): void {
 	if ( $hook !== 'edit-tags.php' && $hook !== 'term.php' ) {
 		return;
 	}
 
-	// Não basta o hook — checa a taxonomy via query var (term.php) ou GET (edit-tags.php)
-	// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only gate em admin_enqueue_scripts: decide se carrega o color picker baseado na taxonomy atual, não processa form.
+	// The hook isn't enough — check the taxonomy via query var (term.php) or GET (edit-tags.php)
+	// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only gate in admin_enqueue_scripts: decides whether to load the color picker based on the current taxonomy, doesn't process a form.
 	$taxonomy = isset( $_GET['taxonomy'] ) ? sanitize_key( wp_unslash( $_GET['taxonomy'] ) ) : '';
 	if ( $taxonomy !== 'category' ) {
 		return;
@@ -156,11 +156,11 @@ function rd_category_color_admin_enqueue( string $hook ): void {
 add_action( 'admin_enqueue_scripts', 'rd_category_color_admin_enqueue' );
 
 /*******************************************************************************
- * Injeta o <style> com regras dinâmicas no <wp_head>                          *
+ * Injects the <style> with dynamic rules into <wp_head>                       *
  *                                                                             *
- * Itera por todas as categorias que têm `rd_category_color` em term meta e   *
- * gera uma regra CSS pra cada. As que não têm meta seguem o fallback do      *
- * SCSS (.post-tag { background-color: #555 }).                               *
+ * Iterates over all categories that have `rd_category_color` in term meta and *
+ * generates one CSS rule for each. Those without meta follow the SCSS         *
+ * fallback (.post-tag { background-color: #555 }).                            *
  *******************************************************************************/
 function rd_category_color_render_styles(): void {
 	$cats = get_terms(
@@ -196,11 +196,11 @@ function rd_category_color_render_styles(): void {
 add_action( 'wp_head', 'rd_category_color_render_styles', 20 );
 
 /*******************************************************************************
- * Helper: renderiza o "kicker" (chip de categoria primária) no header do single*
+ * Helper: renders the "kicker" (primary category chip) in the single header   *
  *                                                                             *
- * Chamado de single.php logo acima do título. Reusa o meta                    *
- * `_rd_primary_category` (feature do mod-general) pra escolher qual exibir   *
- * quando o post tem múltiplas categorias.                                     *
+ * Called from single.php right above the title. Reuses the                    *
+ * `_rd_primary_category` meta (a mod-general feature) to choose which to show *
+ * when the post has multiple categories.                                      *
  *******************************************************************************/
 function rd_render_single_category_kicker(): void {
 	if ( ! is_singular( 'post' ) ) {
@@ -213,7 +213,7 @@ function rd_render_single_category_kicker(): void {
 		return;
 	}
 
-	// Primary category quando definida; fallback pra primeira
+	// Primary category when set; fallback to the first
 	$primary_id = (int) get_post_meta( $post_id, '_rd_primary_category', true );
 	$chosen     = null;
 

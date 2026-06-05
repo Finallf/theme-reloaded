@@ -1,7 +1,7 @@
 // ==========================================================
-// PÁGINA DE AUTOR (Fase 4)
-// Header com avatar, nome, bio e meta; lista de posts logo abaixo
-// usando o card .layout-vertical compartilhado de _search.scss
+// AUTHOR PAGE (Phase 4)
+// Header with avatar, name, bio and meta; post list right below
+// using the shared .layout-vertical card from _search.scss
 // ==========================================================
 @use '../base/variables' as *;
 
@@ -14,9 +14,9 @@
     border-radius: 5px;
     padding: 30px;
     margin-bottom: 40px;
-    box-shadow: 0 8px 20px var(--rd-glass-shadow); // Adapta dark/light (plana no light)
+    box-shadow: 0 8px 20px var(--rd-glass-shadow); // Adapts dark/light (flat in light)
 
-    // Borda superior com gradiente da marca (mesmo padrão do card 404)
+    // Top border with the brand gradient (same pattern as the 404 card)
     position: relative;
     overflow: hidden;
 
@@ -48,8 +48,8 @@
         min-width: 0;
     }
 
-    // Linha do título: H1 à esquerda + ícones sociais à direita (mesmo padrão
-    // do .rd-about-info-header da page-sobre).
+    // Title row: H1 on the left + social icons on the right (same pattern
+    // as page-sobre's .rd-about-info-header).
     .rd-author-info-header {
         display: flex;
         align-items: center;
@@ -67,7 +67,7 @@
         font-family: $font-heading;
         font-size: 1.8rem;
         font-weight: 700;
-        margin: 0; // espaçamento gerenciado pelo .rd-author-info-header
+        margin: 0; // spacing managed by .rd-author-info-header
         letter-spacing: 0.5px;
         background: $brand-gradient;
         -webkit-background-clip: text;
@@ -82,12 +82,12 @@
         margin: 0 0 14px;
     }
 
-    // Ícones sociais do autor (vem do rd_render_social_icons($author_id))
-    // — só renderiza se o user preencheu URLs em Usuários → Perfil.
-    // Posicionado ao lado direito do nome via .rd-author-info-header (flex).
+    // Author's social icons (come from rd_render_social_icons($author_id))
+    // — only renders if the user filled in URLs under Users → Profile.
+    // Positioned to the right of the name via .rd-author-info-header (flex).
     .rd-author-socials {
-        // Reset do margin-left:15px do primeiro ícone quando centralizado em mobile
-        // (mesmo fix usado no footer-bottom + page-sobre)
+        // Reset of the first icon's margin-left:15px when centered on mobile
+        // (same fix used in footer-bottom + page-sobre)
         @media (max-width: 600px) {
             .rd-social-icons {
                 justify-content: center;
@@ -109,7 +109,7 @@
             display: inline-flex;
             align-items: center;
 
-            // separador entre os items
+            // separator between the items
             & + .rd-author-meta-item::before {
                 content: "•";
                 margin-right: 20px;
@@ -119,7 +119,7 @@
         }
     }
 
-    // mobile: empilha avatar acima das infos e centraliza
+    // mobile: stacks the avatar above the info and centers
     @media (max-width: 600px) {
         flex-direction: column;
         text-align: center;
@@ -142,20 +142,20 @@
 }
 
 // ==========================================================
-// AUTHOR BIO BOX no final do single (Wave 13)
-// Renderizado por rd_render_author_bio_box() em mod-author-bio.php.
-// Reusa .rd-author-header + sub-classes (avatar, info, name, bio, socials).
-// Modifier --single ajusta espaçamento + adiciona link "View all posts".
+// AUTHOR BIO BOX at the end of the single (Wave 13)
+// Rendered by rd_render_author_bio_box() in mod-author-bio.php.
+// Reuses .rd-author-header + sub-classes (avatar, info, name, bio, socials).
+// The --single modifier adjusts spacing + adds a "View all posts" link.
 // ==========================================================
 
 .rd-author-header--single {
-    // Espaçamento próprio pro contexto single (margin-bottom 40px do archive
-    // não faz sentido aqui — depois vem o bloco de related posts).
+    // Own spacing for the single context (the archive's margin-bottom 40px
+    // makes no sense here — the related-posts block comes next).
     margin-top: 48px;
     margin-bottom: 0;
 
-    // Nome vira link no single (no archive é h1 puro). Garante que o gradient
-    // text-fill funciona dentro de <a>.
+    // The name becomes a link in the single (in the archive it's a pure h1). Ensures the gradient
+    // text-fill works inside an <a>.
     .rd-author-name a {
         background: $brand-gradient;
         -webkit-background-clip: text;
@@ -169,7 +169,7 @@
     }
 }
 
-// Link "View all posts by X →" no rodapé do box
+// "View all posts by X →" link at the bottom of the box
 .rd-author-archive-link {
     display: inline-block;
     margin-top: 4px;

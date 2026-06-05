@@ -2,16 +2,17 @@
 @use '../base/variables' as *;
 
 // ==========================================================
-// Breadcrumbs (Trilha de navegação contextual)
-// Renderizado abaixo do <header>, dentro do .container principal.
-// Não aparece na front page. Estilo discreto pra não competir
-// visualmente com o conteúdo principal.
+// Breadcrumbs (Contextual navigation trail)
+// Rendered below the <header>, inside the main .container.
+// Doesn't appear on the front page. Discreet style so it doesn't
+// visually compete with the main content.
 // ==========================================================
 .rd-breadcrumbs {
-    padding: 12px 0 4px;
+    padding: 10px 0 0;
     font-size: 0.875rem;
     color: $text-muted-dark;
     line-height: 1.5;
+    margin-bottom: -10px;
 
     .rd-breadcrumbs-list {
         list-style: none;
@@ -26,9 +27,9 @@
     .rd-breadcrumbs-item {
         display: inline-flex;
         align-items: center;
-        min-width: 0; // permite truncamento
+        min-width: 0; // allows truncation
 
-        // Separador antes de cada item exceto o primeiro
+        // Separator before each item except the first
         &:not(:first-child)::before {
             content: '/';
             margin-right: 6px;
@@ -48,11 +49,11 @@
             }
         }
 
-        // Item atual (página atual) — destaque sutil sem virar link
+        // Current item (current page) — subtle highlight without being a link
         span[aria-current="page"] {
             color: $text-light;
             font-weight: 500;
-            // Trunca títulos longos pra não quebrar o layout em mobile
+            // Truncates long titles so they don't break the layout on mobile
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
@@ -60,7 +61,7 @@
         }
     }
 
-    // Mobile: fonte um pouco menor, menos padding
+    // Mobile: slightly smaller font, less padding
     @media (max-width: 768px) {
         padding: 8px 0 2px;
         font-size: 0.8125rem;

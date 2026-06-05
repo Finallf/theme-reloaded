@@ -1,15 +1,15 @@
 /**
- * View Tracker — registra uma view do post via AJAX, 1.5s depois do
- * DOMContentLoaded. O server (mod-views.php) valida o nonce, deduplica
- * por IP por 30 minutos e filtra bots conhecidos pela User-Agent.
+ * View Tracker — registers a post view via AJAX, 1.5s after
+ * DOMContentLoaded. The server (mod-views.php) validates the nonce, dedupes
+ * by IP for 30 minutes and filters known bots by User-Agent.
  *
- * Dados dinâmicos injetados por wp_localize_script como `rd_views_data`:
- *   - ajaxurl: endpoint do admin-ajax
- *   - post_id: ID do post atual
- *   - nonce:   nonce de segurança específico do post
+ * Dynamic data injected by wp_localize_script as `rd_views_data`:
+ *   - ajaxurl: the admin-ajax endpoint
+ *   - post_id: current post ID
+ *   - nonce:   post-specific security nonce
  *
- * Este arquivo só é enfileirado em is_singular() pra posts/pages com
- * tracking ativo no painel — admins e bots conhecidos não chegam aqui.
+ * This file is only enqueued on is_singular() for posts/pages with
+ * tracking enabled in the panel — admins and known bots never reach here.
  */
 window.addEventListener('DOMContentLoaded', function () {
     if (typeof rd_views_data === 'undefined') return;

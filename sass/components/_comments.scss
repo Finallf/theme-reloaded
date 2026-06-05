@@ -2,7 +2,7 @@
 @use '../base/variables' as *;
 
 // ==========================================
-// 1. A LISTA DE COMENTÁRIOS (Os Cards)
+// 1. THE COMMENT LIST (The Cards)
 // ==========================================
 .comments-area {
 	margin-top: 3rem;
@@ -21,29 +21,29 @@
 	padding: 0;
 	list-style: none;
 
-	// Reset estrutural para evitar a "Caixa Dupla"
+	// Structural reset to avoid the "Double Box"
 	li.comment {
 		margin-bottom: 1.5rem;
 		display: block;
 	}
 
-	// O Card real do comentário (Agora com o Glassmorphism da Sidebar)
+	// The actual comment Card (Now with the Sidebar Glassmorphism)
 	.comment-body {
 		background: $glass-bg;
 		padding: 20px;
 		border-radius: 8px;
 		border: 1px solid $glass-border;
 
-		// Listas vindas do markdown (ex: usuário escreveu "- item" no comentário).
-		// O _markdown.scss só cobre .entry-content — aqui replicamos o respiro
-		// dos bullets. padding-left (não margin) garante que os bullets
-		// fiquem dentro do card.
+		// Lists coming from markdown (e.g. the user wrote "- item" in the comment).
+		// _markdown.scss only covers .entry-content — here we replicate the bullets'
+		// breathing room. padding-left (not margin) ensures the bullets
+		// stay inside the card.
 		ul,
 		ol {
 			padding-left: 20px;
 		}
 		
-		// Estrutura o cabeçalho do comentário (Avatar + Nome)
+		// Structures the comment header (Avatar + Name)
 		.comment-author {
 			display: flex;
 			align-items: center;
@@ -51,7 +51,7 @@
 			margin-bottom: 5px;
 			
 			img {
-				border-radius: 50%; // Avatar redondo
+				border-radius: 50%; // Round avatar
 				width: 40px;
 				height: 40px;
 			}
@@ -65,17 +65,17 @@
 				a { color: inherit; text-decoration: none; }
 			}
 			
-			// Esconde aquele "disse:" padrão e feio do WordPress
+			// Hides that default ugly WordPress "said:"
 			.says { display: none; } 
 		}
 
-		// A data do comentário
+		// The comment date
 		.comment-meta {
 			font-size: 0.8rem;
 			margin-bottom: 15px;
 			padding-left: 20px;
-			padding-bottom: 10px; // respiro entre o texto da data e a linha separadora
-			border-bottom: 1px solid var(--rd-glass-border); // separador sutil entre meta e texto do comentário
+			padding-bottom: 10px; // breathing room between the date text and the separator line
+			border-bottom: 1px solid var(--rd-glass-border); // subtle separator between meta and the comment text
 			
 			a {
 				color: $text-muted-dark;
@@ -84,18 +84,18 @@
 			}
 		}
 
-		// O texto em si
+		// The text itself
 		p {
 			line-height: 1.6;
 			margin-bottom: 15px;
 		}
 
-		// Botão de "Responder"
-		// Visual herdado do .rd-404-btn-secondary (página 404) — mesma família
-		// estética. Tamanho (padding/font-size) intencionalmente menor pra não
-		// dominar o card do comentário.
+		// The "Reply" button
+		// Look inherited from .rd-404-btn-secondary (404 page) — same aesthetic
+		// family. Size (padding/font-size) intentionally smaller so it doesn't
+		// dominate the comment card.
 		.reply {
-			text-align: right; // empurra o botão pra direita do .comment-body
+			text-align: right; // pushes the button to the right of the .comment-body
 
 			a {
 				display: inline-flex;
@@ -104,10 +104,10 @@
 				background: transparent;
 				color: $brand-blue-light;
 				border: 1px solid $brand-blue-light;
-				padding: 5px 12px;          // tamanho original mantido
+				padding: 5px 12px;          // original size kept
 				border-radius: 5px;
 				font-family: $font-heading;
-				font-size: 0.8rem;          // tamanho original mantido
+				font-size: 0.8rem;          // original size kept
 				font-weight: 600;
 				line-height: 1;
 				text-decoration: none;
@@ -120,7 +120,7 @@
 					color: $brand-blue-light;
 				}
 
-				// a11y: feedback de foco por teclado (WCAG 2.4.7)
+				// a11y: keyboard focus feedback (WCAG 2.4.7)
 				&:focus-visible {
 					outline: 2px solid $brand-blue-light;
 					outline-offset: 2px;
@@ -129,12 +129,12 @@
 		}
 	}
 
-	// Respostas Aninhadas (Filhos)
+	// Nested Replies (Children)
 	.children {
 		list-style: none;
 		margin: 1.5rem 0 1.5rem 1rem;
 		padding-left: 1rem;
-		border-left: 2px solid $border-light; // Uma linha sutil indicando a hierarquia
+		border-left: 2px solid $border-light; // A subtle line indicating the hierarchy
 
 		li.comment {
 			margin-bottom: 1rem;
@@ -143,10 +143,10 @@
 }
 
 // ==========================================
-// 2. O FORMULÁRIO DE COMENTÁRIOS (#respond)
+// 2. THE COMMENT FORM (#respond)
 // ==========================================
 #respond {
-	// Mesma transparência de elevação da sidebar!
+	// Same elevation transparency as the sidebar!
 	background: $glass-bg;
 	padding: 25px;
 	border-radius: 8px;
@@ -159,45 +159,45 @@
 		margin-bottom: 1rem;
 	}
 
-	// O texto de ajuda (Deixa discreto para não roubar a cena)
+	// The help text (Keep it discreet so it doesn't steal the scene)
 	.comment-notes {
 		color: $text-muted-dark;
 		font-size: 0.85rem;
 		margin-bottom: 1.5rem;
 	}
 
-	// A Mágica do Grid para organizar o formulário
+	// The Grid Magic to organize the form
 	form {
 		display: grid;
-		grid-template-columns: 1fr 1fr; // Cria duas colunas iguais
-		gap: 15px; // Espaçamento entre os campos
+		grid-template-columns: 1fr 1fr; // Creates two equal columns
+		gap: 15px; // Spacing between the fields
 		
-		p { margin: 0; } // Reseta as margens do WP
+		p { margin: 0; } // Resets the WP margins
 
-		// Força esses campos a ocuparem as duas colunas (100% da largura)
+		// Forces these fields to span both columns (100% width)
 		.comment-notes,
 		.comment-form-comment,
 		.comment-form-url {
 			grid-column: 1 / -1;
 		}
 
-		// No Desktop, Nome e E-mail ficam lado a lado!
+		// On Desktop, Name and E-mail sit side by side!
 		.comment-form-author { grid-column: 1 / 2; }
 		.comment-form-email { grid-column: 2 / 3; }
 
-		// Última linha: "salvar meus dados" (cookies) à esquerda, botão Submit à direita.
-		// Quando o user está LOGADO, o WP não renderiza o cookies-consent — o submit
-		// simplesmente fica sozinho na col 2, ainda à direita. Comportamento idêntico
-		// nos dois estados sem precisar de regra condicional.
+		// Last row: "save my data" (cookies) on the left, Submit button on the right.
+		// When the user is LOGGED IN, WP doesn't render the cookies-consent — the submit
+		// simply stays alone in col 2, still on the right. Identical behavior
+		// in both states without needing a conditional rule.
 		.comment-form-cookies-consent { grid-column: 1 / 2; }
 		.form-submit {
 			grid-column: 2 / 3;
 			justify-self: end;
 		}
 
-		// Dentro do campo de comentário: label à esquerda + hint à direita (mesma linha),
-		// textarea full-width abaixo. O hint é injetado pelo PHP (rd_comment_form_markdown_hint)
-		// logo após o </label>, como <span>, pra ser irmão direto do label aqui no DOM.
+		// Inside the comment field: label on the left + hint on the right (same line),
+		// full-width textarea below. The hint is injected by PHP (rd_comment_form_markdown_hint)
+		// right after the </label>, as a <span>, to be a direct sibling of the label here in the DOM.
 		.comment-form-comment {
 			display: grid;
 			grid-template-columns: auto 1fr;
@@ -213,7 +213,7 @@
 				grid-column: 2;
 				grid-row: 1;
 				justify-self: end;
-				margin-top: 0; // anula margin do estilo base (não está mais abaixo do textarea)
+				margin-top: 0; // cancels the base style's margin (no longer below the textarea)
 			}
 
 			textarea {
@@ -222,7 +222,7 @@
 			}
 		}
 
-		// No Mobile, quebra tudo para 1 coluna
+		// On Mobile, break everything to 1 column
 		@media (max-width: 768px) {
 			.comment-form-author,
 			.comment-form-email,
@@ -232,7 +232,7 @@
 				justify-self: stretch;
 			}
 
-			// Empilha label e hint (hint fica abaixo do label, antes do textarea)
+			// Stacks label and hint (hint goes below the label, before the textarea)
 			.comment-form-comment {
 				grid-template-columns: 1fr;
 
@@ -250,7 +250,7 @@
 		}
 	}
 
-	// Estilização das Caixas de Texto
+	// Text Box Styling
 	label {
 		display: block;
 		color: $text-label;
@@ -263,7 +263,7 @@
 	input[type="email"],
 	input[type="url"] {
 		width: 100%;
-		background: $dark-deep; // Fundo mais profundo que a superfície
+		background: $dark-deep; // Background deeper than the surface
 		border: 1px solid $border-light;
 		color: $dark-text;
 		padding: 12px 15px;
@@ -272,21 +272,21 @@
 		font-family: inherit;
 		transition: border-color 0.2s ease, box-shadow 0.2s ease;
 
-		// Focus state: borda azul + glow sutil pra reforçar foco do teclado
-		// (a11y) sem ser visualmente shouty.
+		// Focus state: blue border + subtle glow to reinforce keyboard focus
+		// (a11y) without being visually shouty.
 		&:focus {
 			border-color: $brand-blue-light;
 			box-shadow: 0 0 0 3px rgba(0, 168, 255, 0.15);
 		}
 
-		// Feedback de validação client-side (HTML5 native)
+		// Client-side validation feedback (HTML5 native)
 		&:user-invalid {
 			border-color: #e74c3c;
 		}
 	}
 
-	// Helper text: "Markdown suportado" abaixo do textarea (renderizado pelo
-	// PHP via comment_form filter — ver rd_comment_form_markdown_hint)
+	// Helper text: "Markdown supported" below the textarea (rendered by
+	// PHP via the comment_form filter — see rd_comment_form_markdown_hint)
 	.rd-comment-markdown-hint {
 		font-size: 0.78rem;
 		color: $text-muted-dark;
@@ -305,14 +305,14 @@
 
 	textarea {
 		min-height: 120px;
-		resize: vertical; // Permite aumentar só pra baixo
+		resize: vertical; // Allows resizing only downward
 	}
 
-	// Alinhamento perfeito do Checkbox
+	// Perfect Checkbox alignment
 	.comment-form-cookies-consent {
 		display: flex;
 		align-items: center;
-		gap: 10px; // Espaço exato entre o quadradinho e o texto
+		gap: 10px; // Exact space between the little box and the text
 		
 		input[type="checkbox"] {
 			margin: 0;
@@ -329,9 +329,9 @@
 		}
 	}
 
-	// O Botão de Enviar (Publicar Comentário)
-	// Visual herdado do .rd-404-btn-primary (página 404) — gradiente azul,
-	// sombra no hover, mesmo padrão visual de CTA principal do tema.
+	// The Submit Button (Publish Comment)
+	// Look inherited from .rd-404-btn-primary (404 page) — blue gradient,
+	// shadow on hover, same visual pattern as the theme's main CTA.
 	.submit {
 		display: inline-flex;
 		align-items: center;
@@ -357,7 +357,7 @@
 			color: $dark-bg;
 		}
 
-		// Estado "enviando" — JS adiciona disabled durante o AJAX submit
+		// "sending" state — JS adds disabled during the AJAX submit
 		&:disabled {
 			opacity: 0.6;
 			cursor: wait;
@@ -365,27 +365,27 @@
 			box-shadow: none;
 		}
 
-		// a11y: feedback de foco por teclado (WCAG 2.4.7)
+		// a11y: keyboard focus feedback (WCAG 2.4.7)
 		&:focus-visible {
 			outline: 2px solid $brand-blue-light;
 			outline-offset: 3px;
 		}
 	}
 
-	// Inputs no Light Mode: sem este override, ficam imperceptíveis (--rd-deep
-	// em light é #f1f3f5, quase igual ao background do form). Fundo branco
-	// puro + borda mais escura cria a separação visual necessária.
+	// Light Mode inputs: without this override, they're imperceptible (--rd-deep
+	// in light is #f1f3f5, almost the same as the form background). Pure white
+	// background + darker border creates the necessary visual separation.
 	[data-theme="light"] & {
 		textarea,
 		input[type="text"],
 		input[type="email"],
 		input[type="url"] {
 			background: #ffffff !important;
-			border-color: var(--rd-border) !important; // #dee2e6, mais visível que o --rd-border-light default
+			border-color: var(--rd-border) !important; // #dee2e6, more visible than the --rd-border-light default
 		}
 	}
 
-	// Feedback inline do AJAX submit (sucesso/erro) — JS injeta esse bloco
+	// Inline feedback from the AJAX submit (success/error) — JS injects this block
 	.rd-comment-feedback {
 		grid-column: 1 / -1;
 		margin-top: 12px;

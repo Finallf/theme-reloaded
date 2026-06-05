@@ -13,10 +13,10 @@
 	}
 }
 
-// Sidebar à esquerda (opt-in pelo admin via Painel → Geral → Sidebar Position).
-// A classe `rd-sidebar-left` é injetada no <body> por mod-general.php.
-// Aplica só em desktop (>1024px); no mobile a sidebar sempre vai abaixo
-// do conteúdo, então o flip não faz sentido lá.
+// Sidebar on the left (opt-in by the admin via Panel → General → Sidebar Position).
+// The `rd-sidebar-left` class is injected on <body> by mod-general.php.
+// Applies only on desktop (>1024px); on mobile the sidebar always goes below
+// the content, so the flip makes no sense there.
 body.rd-sidebar-left .site-main .container {
 	@media (min-width: 1025px) {
 		flex-direction: row-reverse;
@@ -29,30 +29,30 @@ body.rd-sidebar-left .site-main .container {
 	/* max-width: calc(100% - 370px); */
 
 	@media (max-width: 1024px) {
-		width: 100%; // align-items: flex-start do pai impede stretch automático em flex column
+		width: 100%; // the parent's align-items: flex-start prevents automatic stretch in a flex column
 		max-width: 100%;
 	}
 }
 
 .post-grid {
 	display: grid;
-	grid-template-columns: repeat(2, 1fr); /* Força exatamente 2 colunas iguais */
+	grid-template-columns: repeat(2, 1fr); /* Forces exactly 2 equal columns */
 	gap: 20px;
 	margin-bottom: 20px;
 
 	@media (max-width: 768px) {
-		grid-template-columns: 1fr; /* Em telas de celular, cai para 1 coluna */
+		grid-template-columns: 1fr; /* On phone screens, falls back to 1 column */
 	}
 }
 
 .grid-item {
 	position: relative;
-	/* Pai de todos para o link funcionar */
-	background: $glass-bg; // Fundo agora ancorado na paleta global
-	border-radius: 5px; // A sua regra de ouro já estava aqui!
+	/* Parent of all so the link works */
+	background: $glass-bg; // Background now anchored to the global palette
+	border-radius: 5px; // Your golden rule was already here!
 	overflow: hidden;
-	border: 1px solid $glass-border; // Borda translúcida padrão
-	box-shadow: 0 8px 20px var(--rd-glass-shadow); // Adapta dark/light (plana no light)
+	border: 1px solid $glass-border; // Default translucent border
+	box-shadow: 0 8px 20px var(--rd-glass-shadow); // Adapts dark/light (flat in light)
 	transition: all 250ms ease;
 	display: flex;
 	flex-direction: column;
@@ -66,15 +66,15 @@ body.rd-sidebar-left .site-main .container {
 			width: 100%;
 			height: 100%;
 			z-index: 1;
-			/* Cobre o card */
+			/* Covers the card */
 		}
 	}
 
-	// Hover unificado com os outros cards interativos do tema
+	// Hover unified with the theme's other interactive cards
 	// (search-card grid/vertical/compact, 404-recommended)
 	&:hover {
 		transform: translateY(-4px);
-		border-color: $brand-blue-light; // Azul oficial do portal
+		border-color: $brand-blue-light; // Official portal blue
 		box-shadow: 0 8px 25px rgba($brand-blue-light, 0.2);
 	}
 
@@ -83,7 +83,7 @@ body.rd-sidebar-left .site-main .container {
 		width: 100%;
 		aspect-ratio: 16 / 9;
 		overflow: hidden;
-		background-color: $dark-bg; // Fundo de carregamento da imagem
+		background-color: $dark-bg; // Image loading background
 
 		img {
 			width: 100%;
@@ -93,7 +93,7 @@ body.rd-sidebar-left .site-main .container {
 			transition: transform 0.5s ease;
 		}
 
-		/* Tags de categoria */
+		/* Category tags */
 		.post-categories {
 			position: absolute;
 			bottom: 10px;
@@ -103,9 +103,9 @@ body.rd-sidebar-left .site-main .container {
 			gap: 8px;
 
 			.post-tag {
-				// color: #000 removido — a cor do texto agora vem do <style>
-				// injetado por mod-category-colors.php, calculada via YIQ pra
-				// ter contraste correto (preto/branco) sobre a cor do fundo.
+				// color: #000 removed — the text color now comes from the <style>
+				// injected by mod-category-colors.php, computed via YIQ to
+				// have correct contrast (black/white) over the background color.
 				position: relative;
 				padding: 3px 8px 1px 8px;
 				font-size: 0.7rem;
@@ -117,7 +117,7 @@ body.rd-sidebar-left .site-main .container {
 				transition: filter 0.3s ease, transform 0.2s ease;
 
 				&:hover {
-					filter: brightness(1.2); /* Em vez de mudar pra branco, deixamos a cor da categoria mais acesa */
+					filter: brightness(1.2); /* Instead of switching to white, we brighten the category color */
 					transform: translateY(-2px);
 				}
 			}
@@ -125,11 +125,11 @@ body.rd-sidebar-left .site-main .container {
 	}
 
 	.post-content-area {
-		padding: 20px;
-		// Não adicionar `position: relative` aqui — o ::after invisível
-		// do .entry-title a.main-link precisa ancorar no .grid-item pra
-		// cobrir o thumbnail também (overlay clicável do card inteiro).
-		// O .entry-meta absoluto abaixo ancora direto no .grid-item.
+		padding: 5px 20px 20px;
+		// Don't add `position: relative` here — the invisible ::after
+		// of .entry-title a.main-link needs to anchor on the .grid-item to
+		// also cover the thumbnail (clickable overlay of the whole card).
+		// The absolute .entry-meta below anchors directly on the .grid-item.
 
 		.entry-title {
 			margin: 0 0 10px 0;
@@ -138,7 +138,7 @@ body.rd-sidebar-left .site-main .container {
 			a {
 				text-decoration: none;
 
-				/* O "MÁGICO": esse after cobre o card todo */
+				/* The "MAGIC": this after covers the whole card */
 				&::after {
 					content: "";
 					position: absolute;
@@ -147,29 +147,29 @@ body.rd-sidebar-left .site-main .container {
 					right: 0;
 					bottom: 0;
 					z-index: 2;
-					/* Fica acima da imagem, mas ABAIXO da categoria */
+					/* Stays above the image, but BELOW the category */
 				}
 			}
 		}
 
 		.entry-content {
-			color: $text-label; // Variável de texto suave
+			color: $text-label; // Soft text variable
 			font-size: 0.9rem;
 			line-height: 1.5;
 		}
 
-		// Views "flutuam" no canto inferior direito do .post-content-area
-		// sem ocupar espaço no flow — assim a altura do card depende só do
-		// título + excerpt. Se o excerpt for muito longo, o texto passa por
-		// baixo do chip de views naturalmente.
+		// Views "float" in the bottom-right corner of .post-content-area
+		// without taking space in the flow — so the card height depends only on
+		// the title + excerpt. If the excerpt is very long, the text passes
+		// under the views chip naturally.
 		.entry-meta {
 			position: absolute;
 			bottom: 14px;
 			right: 20px;
 			font-size: 0.8rem;
 			color: $text-muted-dark;
-			z-index: 3; // acima do link-overlay do título (z-index: 2)
-			pointer-events: none; // não bloqueia clique no overlay do card
+			z-index: 3; // above the title's link-overlay (z-index: 2)
+			pointer-events: none; // doesn't block clicks on the card overlay
 
 			.rd-card-views {
 				display: inline-flex;
@@ -186,16 +186,16 @@ body.rd-sidebar-left .site-main .container {
 }
 
 #secondary {
-	flex-basis: 30%; /* O ideal: tenta manter 30% da largura do container */
-    min-width: 300px; /* O piso: protege o banner de 300x250 e o layout do PIX */
-    max-width: 350px;
+	flex-basis: 30%; /* Ideal: tries to keep 30% of the container width */
+    min-width: 300px; /* The floor: protects the 300x250 banner and the PIX layout */
+    max-width: 300px;
 	/* margin-left: auto; */
 	flex-shrink: 0;
 
-	// Estica o aside até a altura do content-area pra dar "trilha" pro
-	// position: sticky do banner sticky-bottom acompanhar o scroll inteiro.
-	// O pai (`.site-main .container`) tem `align-items: flex-start` que
-	// mantém os outros itens no top — esse override é só pra sidebar.
+	// Stretches the aside to the content-area height to give a "track" for the
+	// sticky-bottom banner's position: sticky to follow the whole scroll.
+	// The parent (`.site-main .container`) has `align-items: flex-start` that
+	// keeps the other items at the top — this override is just for the sidebar.
 	align-self: stretch;
 
 	.wp-block-latest-comments {
@@ -208,7 +208,7 @@ body.rd-sidebar-left .site-main .container {
 			list-style: none;
 			padding: 12px 0;
 			&:not(:last-child) {
-				border-bottom: 1px solid $glass-border; // Translúcida visível em dark (mesma var do "Apoie o Projeto")
+				border-bottom: 1px solid $glass-border; // Translucent, visible in dark (same var as "Support the Project")
 			}
 		}
 

@@ -1,64 +1,64 @@
 <?php
 defined( 'ABSPATH' ) || exit;
 /**
- * Module: Maintenance - Modo de Manutenção do Portal (Versão Segura)
+ * Module: Maintenance - Portal Maintenance Mode (Secure Version)
  *
- * Implementa autenticação via formulário POST, hash de senha,
- * tokens de sessão e rate limiting para proteger contra brute force.
+ * Implements authentication via a POST form, password hashing,
+ * session tokens and rate limiting to protect against brute force.
  */
 
 /**
- * Configurações do módulo
+ * Module settings
  */
 const RD_MAINT_COOKIE_NAME       = 'rd_maint_token';
-const RD_MAINT_COOKIE_LIFETIME   = DAY_IN_SECONDS;        // 24 horas (era 7 dias)
-const RD_MAINT_RATE_LIMIT_MAX    = 5;                     // 5 tentativas
-const RD_MAINT_RATE_LIMIT_WINDOW = 900;                  // a cada 15 minutos
+const RD_MAINT_COOKIE_LIFETIME   = DAY_IN_SECONDS;        // 24 hours (was 7 days)
+const RD_MAINT_RATE_LIMIT_MAX    = 5;                     // 5 attempts
+const RD_MAINT_RATE_LIMIT_WINDOW = 900;                  // every 15 minutes
 const RD_MAINT_LOGIN_SLUG        = 'rd-dev-login';        // URL: /?rd-dev-login
 
 /**
- * Hook principal — verifica se deve mostrar manutenção
+ * Main hook — checks whether to show maintenance
  */
 function rd_maintenance_mode() {
 
-	// Se manutenção não está ativa, não faz nada
+	// If maintenance isn't active, do nothing
 	if ( ! rd_get_option_bool( 'maintenance_mode' ) ) {
 		return;
 	}
 
-	// Trata requisição de login (formulário do dev)
-	// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- dispatcher: só checa presença da query string pra rotear; o handler verifica nonce no POST.
+	// Handle the login request (dev form)
+	// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- dispatcher: only checks the query string presence to route; the handler verifies the nonce on POST.
 	if ( isset( $_GET[ RD_MAINT_LOGIN_SLUG ] ) ) {
 		rd_maintenance_handle_login();
-		// handle_login sempre faz exit, então não chega aqui
+		// handle_login always exits, so this is never reached
 	}
 
-	// Permite acesso pra: admin logado, dev com token válido, página de login WP
+	// Allow access for: logged-in admin, dev with a valid token, WP login page
 	if ( rd_maintenance_user_is_allowed() ) {
 		return;
 	}
 
-	// Caso contrário, exibe a tela de manutenção
+	// Otherwise, show the maintenance screen
 	rd_maintenance_render_screen();
 }
 add_action( 'template_redirect', 'rd_maintenance_mode' );
 
 /**
- * Verifica se o usuário atual tem permissão pra burlar a manutenção
+ * Checks whether the current user is allowed to bypass maintenance
  */
 function rd_maintenance_user_is_allowed() {
 
-	// Admin do WordPress logado (current_user_can já verifica sessão segura do WP)
+	// Logged-in WordPress admin (current_user_can already checks WP's secure session)
 	if ( current_user_can( 'manage_options' ) ) {
 		return true;
 	}
 
-	// Permite acesso à tela de login do WP, pra admins poderem entrar
+	// Allow access to the WP login screen, so admins can get in
 	if ( isset( $GLOBALS['pagenow'] ) && $GLOBALS['pagenow'] === 'wp-login.php' ) {
 		return true;
 	}
 
-	// Verifica token de dev no cookie
+	// Check the dev token in the cookie
 	if ( isset( $_COOKIE[ RD_MAINT_COOKIE_NAME ] ) ) {
 		$token  = sanitize_text_field( wp_unslash( $_COOKIE[ RD_MAINT_COOKIE_NAME ] ) );
 		$stored = get_transient( 'rd_maint_token_' . $token );
@@ -72,25 +72,25 @@ function rd_maintenance_user_is_allowed() {
 }
 
 /**
- * Processa o formulário de login do dev
+ * Processes the dev login form
  */
 function rd_maintenance_handle_login() {
 
-	// Só aceita método POST pra processar login
+	// Only accept the POST method to process login
 	$request_method = isset( $_SERVER['REQUEST_METHOD'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REQUEST_METHOD'] ) ) : '';
 	if ( 'POST' !== $request_method ) {
 		rd_maintenance_render_login_form();
 		exit;
 	}
 
-	// Verifica nonce (proteção CSRF)
+	// Verify the nonce (CSRF protection)
 	if ( ! isset( $_POST['rd_maint_nonce'] ) ||
 		! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['rd_maint_nonce'] ) ), 'rd_maint_login' ) ) {
 		rd_maintenance_render_login_form( __( 'Session expired. Please try again.', 'reloaded' ) );
 	}
 
-	// Rate limiting por IP — `rd_get_client_ip` valida REMOTE_ADDR antes de
-	// confiar em headers de proxy (evita bypass via CF-Connecting-IP spoofado).
+	// Per-IP rate limiting — `rd_get_client_ip` validates REMOTE_ADDR before
+	// trusting proxy headers (avoids bypass via a spoofed CF-Connecting-IP).
 	$ip       = rd_get_client_ip();
 	$rate_key = 'rd_maint_rate_' . md5( $ip );
 	$attempts = (int) get_transient( $rate_key );
@@ -100,51 +100,51 @@ function rd_maintenance_handle_login() {
 		exit;
 	}
 
-	// Pega senha enviada.
-	// Senha NÃO pode ser sanitizada — sanitize_text_field destruiria caracteres
-	// válidos em senhas (whitespace, control chars). password_verify aceita
-	// string raw e bcrypt trunca em 72 bytes. Nonce + capability + rate-limit +
-	// length cap (linha abaixo) aplicados como defesa em profundidade.
+	// Get the submitted password.
+	// The password must NOT be sanitized — sanitize_text_field would destroy
+	// valid password characters (whitespace, control chars). password_verify accepts
+	// a raw string and bcrypt truncates at 72 bytes. Nonce + capability + rate-limit +
+	// length cap (line below) applied as defense in depth.
 	// phpcs:disable WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 	$submitted = isset( $_POST['rd_maint_password'] ) ? wp_unslash( $_POST['rd_maint_password'] ) : '';
 	// phpcs:enable WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 
-	// Cap defensivo de comprimento. bcrypt trunca em 72 bytes internamente,
-	// então aceitar payloads gigantes só serve pra forçar PHP a alocar memória
-	// antes do password_verify (DoS marginal). Trata como tentativa falha pra
-	// incrementar o rate-limit normalmente — atacante não ganha "tentativas
-	// grátis" mandando string grande.
+	// Defensive length cap. bcrypt truncates at 72 bytes internally,
+	// so accepting giant payloads only serves to force PHP to allocate memory
+	// before password_verify (marginal DoS). Treat it as a failed attempt to
+	// increment the rate-limit normally — the attacker doesn't get "free
+	// attempts" by sending a large string.
 	if ( strlen( $submitted ) > 200 ) {
 		set_transient( $rate_key, $attempts + 1, RD_MAINT_RATE_LIMIT_WINDOW );
 		rd_maintenance_render_login_form( __( 'Incorrect password.', 'reloaded' ) );
 		exit;
 	}
 
-	// Pega hash armazenado (em rd_get_option)
+	// Get the stored hash (in rd_get_option)
 	$stored_hash = rd_get_option( 'maintenance_pass_hash' );
 
-	// Sem hash configurado: bloqueia (segurança por padrão)
+	// No hash configured: block (secure by default)
 	if ( empty( $stored_hash ) ) {
 		rd_maintenance_render_login_form( __( 'Developer access not configured.', 'reloaded' ) );
 		exit;
 	}
 
-	// Verifica senha com password_verify (resistente a timing attack)
+	// Verify the password with password_verify (resistant to timing attacks)
 	if ( ! password_verify( $submitted, $stored_hash ) ) {
-		// Incrementa contador de tentativas
+		// Increment the attempts counter
 		set_transient( $rate_key, $attempts + 1, RD_MAINT_RATE_LIMIT_WINDOW );
 
 		rd_maintenance_render_login_form( __( 'Incorrect password.', 'reloaded' ) );
 		exit;
 	}
 
-	// Senha correta: limpa rate limit, gera token, seta cookie
+	// Correct password: clear rate limit, generate token, set cookie
 	delete_transient( $rate_key );
 
-	$token = bin2hex( random_bytes( 32 ) );  // 64 chars hex, criptograficamente seguro
+	$token = bin2hex( random_bytes( 32 ) );  // 64 hex chars, cryptographically secure
 	set_transient( 'rd_maint_token_' . $token, '1', RD_MAINT_COOKIE_LIFETIME );
 
-	// Cookie com TODAS as flags de segurança
+	// Cookie with ALL the security flags
 	setcookie(
 		RD_MAINT_COOKIE_NAME,
 		$token,
@@ -152,19 +152,19 @@ function rd_maintenance_handle_login() {
 			'expires'  => time() + RD_MAINT_COOKIE_LIFETIME,
 			'path'     => '/',
 			'domain'   => '',
-			'secure'   => is_ssl(),    // Só por HTTPS
-			'httponly' => true,         // Inacessível ao JavaScript
-			'samesite' => 'Lax',        // Defesa contra CSRF
+			'secure'   => is_ssl(),    // HTTPS only
+			'httponly' => true,         // Inaccessible to JavaScript
+			'samesite' => 'Lax',        // Defense against CSRF
 		)
 	);
 
-	// Redireciona pra home (sem expor nada na URL)
+	// Redirect to home (without exposing anything in the URL)
 	wp_safe_redirect( home_url( '/' ) );
 	exit;
 }
 
 /**
- * Renderiza tela de manutenção (público)
+ * Renders the maintenance screen (public)
  */
 function rd_maintenance_render_screen() {
 	$custom_text = rd_get_option( 'maintenance_text' );
@@ -176,18 +176,18 @@ function rd_maintenance_render_screen() {
 			get_bloginfo( 'name' )
 		);
 
-	// Usa Custom Logo do WP se cadastrado, fallback pro logo hardcoded do tema.
+	// Uses WP's Custom Logo if set, falls back to the theme's hardcoded logo.
 	$logo_data = rd_get_site_logo( 'medium' );
 	$logo_url  = $logo_data['url'];
 	$html      = rd_maintenance_get_template_html( $logo_url, $mensagem );
 
 	/*
-	 * CSP: wp_die() chama _default_wp_die_handler() do WP core que injeta um
-	 * <style type="text/css"> nativo SEM nonce — escapa do nosso output buffer
-	 * do mod-csp (que opera em wp_head, e wp_die corta o fluxo). Abrir um
-	 * output buffer LOCAL aqui pra interceptar o output do wp_die e adicionar
-	 * nonce no <style> do core antes do response sair. PHP fecha o buffer no
-	 * shutdown e o callback aplica o nonce em qualquer <style> sem nonce.
+	 * CSP: wp_die() calls WP core's _default_wp_die_handler() which injects a
+	 * native <style type="text/css"> WITHOUT a nonce — it escapes our mod-csp
+	 * output buffer (which operates in wp_head, and wp_die cuts the flow). Open a
+	 * LOCAL output buffer here to intercept the wp_die output and add a
+	 * nonce to the core <style> before the response goes out. PHP closes the buffer on
+	 * shutdown and the callback applies the nonce to any nonce-less <style>.
 	 */
 	if ( function_exists( 'rd_csp_nonce' ) && '' !== rd_csp_nonce() ) {
 		ob_start( 'rd_maintenance_nonce_filter' );
@@ -208,11 +208,11 @@ function rd_maintenance_render_screen() {
 }
 
 /**
- * Output buffer callback — injeta nonce em <style> sem nonce no HTML do wp_die.
- * Idempotente (lookahead negativo pula tags já-nonce'adas).
+ * Output buffer callback — injects a nonce into nonce-less <style> in the wp_die HTML.
+ * Idempotent (negative lookahead skips already-nonce'd tags).
  *
- * @param string $html HTML acumulado no buffer.
- * @return string HTML com nonce em todos os <style>.
+ * @param string $html HTML accumulated in the buffer.
+ * @return string HTML with a nonce on every <style>.
  */
 function rd_maintenance_nonce_filter( $html ) {
 	$nonce = rd_csp_nonce();
@@ -226,10 +226,10 @@ function rd_maintenance_nonce_filter( $html ) {
 }
 
 /**
- * Renderiza formulário de login do dev
+ * Renders the dev login form
  */
 function rd_maintenance_render_login_form( $error_message = '' ) {
-	// Usa Custom Logo do WP se cadastrado, fallback pro logo hardcoded do tema.
+	// Uses WP's Custom Logo if set, falls back to the theme's hardcoded logo.
 	$logo_data = rd_get_site_logo( 'medium' );
 	$logo_url  = $logo_data['url'];
 	$nonce     = wp_create_nonce( 'rd_maint_login' );
@@ -277,8 +277,8 @@ function rd_maintenance_get_template_html( $logo_url, $mensagem = '', $extra_htm
 	}
 	$content_html .= $extra_html;
 
-	// CSP nonce — template renderiza via wp_die() fora do fluxo normal de
-	// wp_head, então escapa do output buffer do mod-csp. Injetamos manual.
+	// CSP nonce — the template renders via wp_die() outside the normal wp_head
+	// flow, so it escapes mod-csp's output buffer. We inject it manually.
 	$nonce_attr = function_exists( 'rd_csp_nonce_attr' ) ? rd_csp_nonce_attr() : '';
 
 	return '
@@ -377,9 +377,9 @@ function rd_maintenance_get_template_html( $logo_url, $mensagem = '', $extra_htm
 }
 
 /**
- * Helper: renderiza a tag <img> do logo, envolta em <picture> com next-gen
- * sources se o helper de imagens estiver disponível. Defensivo — fallback pro
- * <img> cru se mod-image-formats não carregou (cenário edge case).
+ * Helper: renders the logo's <img> tag, wrapped in <picture> with next-gen
+ * sources if the images helper is available. Defensive — falls back to the
+ * raw <img> if mod-image-formats didn't load (edge case scenario).
  */
 function rd_maintenance_render_logo( string $logo_url ): string {
 	$img_html = sprintf(
@@ -394,38 +394,38 @@ function rd_maintenance_render_logo( string $logo_url ): string {
 }
 
 /**
- * Salva senha como hash quando o admin atualiza no painel
+ * Saves the password as a hash when the admin updates it in the panel
  *
- * Hook: pre_update_option_rd_settings (roda antes de salvar opções)
+ * Hook: pre_update_option_rd_settings (runs before saving options)
  *
- * Comportamento:
- * - Senha digitada (nova): gera hash, limpa campo de texto puro
- * - Senha vazia (admin não mexeu): preserva hash existente do banco
+ * Behavior:
+ * - Password typed (new): generates a hash, clears the plain-text field
+ * - Empty password (admin didn't touch it): preserves the existing hash from the DB
  */
 function rd_maintenance_hash_password_on_save( $new_value, $old_value ) {
 
-	// Garante que $new_value seja um array (defensive)
+	// Ensure $new_value is an array (defensive)
 	if ( ! is_array( $new_value ) ) {
 		return $new_value;
 	}
 
-	// Recupera hash existente do banco (se houver)
+	// Retrieve the existing hash from the DB (if any)
 	$existing_hash = is_array( $old_value ) && isset( $old_value['maintenance_pass_hash'] )
 		? $old_value['maintenance_pass_hash']
 		: '';
 
-	// Pega senha digitada (texto puro, se houver)
+	// Get the typed password (plain text, if any)
 	$new_password = isset( $new_value['maintenance_pass'] ) ? trim( $new_value['maintenance_pass'] ) : '';
 
 	if ( ! empty( $new_password ) ) {
-		// Admin digitou nova senha → gera hash novo
+		// Admin typed a new password → generate a new hash
 		$new_value['maintenance_pass_hash'] = password_hash( $new_password, PASSWORD_DEFAULT );
 	} else {
-		// Admin não digitou → preserva hash existente
+		// Admin didn't type → preserve the existing hash
 		$new_value['maintenance_pass_hash'] = $existing_hash;
 	}
 
-	// SEMPRE limpa o campo de texto puro (nunca armazenar texto plano)
+	// ALWAYS clear the plain-text field (never store plain text)
 	$new_value['maintenance_pass'] = '';
 
 	return $new_value;

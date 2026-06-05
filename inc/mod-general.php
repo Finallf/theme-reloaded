@@ -1,16 +1,16 @@
 <?php
 defined( 'ABSPATH' ) || exit;
 /*******************************************************************************
- * Módulo Geral - Recursos de Interface e Comportamento Padrão
+ * General Module - Interface Features and Default Behavior
  */
 
 /***********************************************************************************
- * Controle de Exibição da Imagem Destacada (Single)       - (Interface) - (Geral) *
+ * Featured Image Display Control (Single)               - (Interface) - (General) *
  */
 
-// 1. Cria a caixinha (Meta Box) só se PELO MENOS uma das opções gate estiver
-// ativa no painel. Hoje: enable_thumb_control OU enable_primary_category.
-// Se ambas desligadas, a caixinha some por inteiro (não fica vazia).
+// 1. Create the box (Meta Box) only if AT LEAST one of the gate options is
+// active in the panel. Today: enable_thumb_control OR enable_primary_category.
+// If both are off, the box disappears entirely (doesn't sit empty).
 add_action( 'add_meta_boxes', 'rd_add_post_options_meta_box' );
 function rd_add_post_options_meta_box() {
 	if ( ! rd_get_option_bool( 'enable_thumb_control' ) &&
@@ -29,14 +29,14 @@ function rd_add_post_options_meta_box() {
 }
 
 /**
- * 2. Desenha o HTML dos controles dentro da caixinha.
+ * 2. Draws the HTML of the controls inside the box.
  *
- * @param WP_Post $post Post atual sendo editado.
+ * @param WP_Post $post The post currently being edited.
  */
 function rd_post_options_callback( $post ) {
 	wp_nonce_field( 'rd_save_post_options', 'rd_post_options_nonce' );
 
-	// --- Hide Featured Image (se a opção global estiver ativa) ---
+	// --- Hide Featured Image (if the global option is active) ---
 	if ( rd_get_option_bool( 'enable_thumb_control' ) ) :
 		$is_hidden = get_post_meta( $post->ID, '_rd_hide_thumbnail', true );
 		?>
@@ -50,7 +50,7 @@ function rd_post_options_callback( $post ) {
 		<hr class="rd-post-options-divider">
 	<?php endif; ?>
 
-	<?php // --- Primary Category (se a opção global estiver ativa) --- ?>
+	<?php // --- Primary Category (if the global option is active) --- ?>
 	<?php if ( rd_get_option_bool( 'enable_primary_category' ) ) : ?>
 	<p>
 		<label for="rd_primary_category" class="rd-post-options-label">
@@ -83,7 +83,7 @@ function rd_post_options_callback( $post ) {
 	</p>
 	<?php endif; // enable_primary_category ?>
 
-	<?php // --- Post Overline (se a opção global estiver ativa) --- ?>
+	<?php // --- Post Overline (if the global option is active) --- ?>
 	<?php
 	if ( rd_get_option_bool( 'enable_post_kicker' ) ) :
 		$overline = get_post_meta( $post->ID, '_rd_post_kicker', true );
@@ -102,7 +102,7 @@ function rd_post_options_callback( $post ) {
 	<?php
 }
 
-// 3. Salva as preferências individuais no banco de dados
+// 3. Saves the individual preferences in the database
 add_action( 'save_post', 'rd_save_post_options' );
 function rd_save_post_options( $post_id ) {
 	if ( ! isset( $_POST['rd_post_options_nonce'] ) ||
@@ -124,25 +124,25 @@ function rd_save_post_options( $post_id ) {
 		delete_post_meta( $post_id, '_rd_hide_thumbnail' );
 	}
 
-	// Primary Category — só salva se a opção global estiver ativa E o ID for
-	// de uma categoria realmente atribuída ao post
+	// Primary Category — only saves if the global option is active AND the ID is
+	// of a category actually assigned to the post
 	if ( rd_get_option_bool( 'enable_primary_category' ) && isset( $_POST['rd_primary_category'] ) ) {
 		$chosen_id = absint( $_POST['rd_primary_category'] );
 		if ( $chosen_id === 0 ) {
-			// "Auto" → limpa o meta pra usar o fallback da primeira categoria
+			// "Auto" → clears the meta to use the first-category fallback
 			delete_post_meta( $post_id, '_rd_primary_category' );
 		} else {
 			$post_cat_ids = wp_get_post_categories( $post_id );
 			if ( in_array( $chosen_id, $post_cat_ids, true ) ) {
 				update_post_meta( $post_id, '_rd_primary_category', $chosen_id );
 			} else {
-				// Categoria escolhida não pertence mais ao post — limpa
+				// Chosen category no longer belongs to the post — clear it
 				delete_post_meta( $post_id, '_rd_primary_category' );
 			}
 		}
 	}
 
-	// Post Overline — só salva se a opção global estiver ativa
+	// Post Overline — only saves if the global option is active
 	if ( rd_get_option_bool( 'enable_post_kicker' ) && isset( $_POST['rd_post_kicker'] ) ) {
 		$overline = sanitize_text_field( wp_unslash( $_POST['rd_post_kicker'] ) );
 		if ( ! empty( $overline ) ) {
@@ -154,14 +154,14 @@ function rd_save_post_options( $post_id ) {
 }
 
 /***********************************************************************************
- * Helper: retorna o HTML do "Overline" (chapéu) de um post como string. - (Geral) *
+ * Helper: returns the HTML of a post's "Overline" as a string.        - (General) *
  *                                                                                 *
- * Versão "get" pra ser consumida onde o markup é montado por concatenação         *
- * (ex.: `rd_render_post_card()` em `inc/post-card.php`). Mesma lógica do          *
- * `rd_render_post_overline()` que apenas envolve essa função com `echo`.          *
+ * The "get" version to be consumed where markup is built by concatenation         *
+ * (e.g. `rd_render_post_card()` in `inc/post-card.php`). Same logic as            *
+ * `rd_render_post_overline()` which just wraps this function with `echo`.         *
  *                                                                                 *
- * Retorna string vazia quando: feature global off, post_id inválido ou overline   *
- * não preenchido — chamador pode concatenar com segurança sem checagem extra.     *
+ * Returns an empty string when: global feature off, invalid post_id, or overline  *
+ * not filled — the caller can concatenate safely without an extra check.          *
  ***********************************************************************************/
 function rd_get_post_overline_html( int $post_id = 0, string $context = 'single' ): string {
 	if ( ! rd_get_option_bool( 'enable_post_kicker' ) ) {
@@ -193,10 +193,10 @@ function rd_get_post_overline_html( int $post_id = 0, string $context = 'single'
 }
 
 /***********************************************************************************
- * Helper: imprime o "Overline" (chapéu) acima do título de um post.     - (Geral) *
+ * Helper: prints the "Overline" (kicker) above a post's title.        - (General) *
  *                                                                                 *
- * Wrapper de echo sobre `rd_get_post_overline_html()`. Use direto em templates    *
- * (single.php, index.php) onde o markup é estruturado com tags PHP echo.          *
+ * Echo wrapper over `rd_get_post_overline_html()`. Use directly in templates      *
+ * (single.php, index.php) where the markup is structured with PHP echo tags.      *
  ***********************************************************************************/
 function rd_render_post_overline( int $post_id = 0, string $context = 'single' ): void {
 	// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- helper returns already-escaped HTML (esc_attr + esc_html applied internally)
@@ -204,16 +204,16 @@ function rd_render_post_overline( int $post_id = 0, string $context = 'single' )
 }
 
 /***********************************************************************************
- * Qualidade de imagens Dinâmica - OPÇÕES GERAIS                         - (Geral) *
+ * Dynamic image quality - GENERAL OPTIONS                             - (General) *
  ***********************************************************************************/
-// phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found -- $quality faz parte da assinatura dos filters `jpeg_quality`/`webp_quality`/etc; ignoramos o valor recebido e devolvemos o configurado no painel.
+// phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found -- $quality is part of the `jpeg_quality`/`webp_quality`/etc filter signatures; we ignore the received value and return the one configured in the panel.
 function rd_custom_image_quality( $quality ) {
 	$opt = get_option( 'rd_settings' );
 
-	// Comparação estrita com '' em vez de !empty() — evita que valores
-	// numéricos legítimos (que poderiam coincidir com falsy do PHP) sejam
-	// descartados. Range clamping defensivo (1-100) caso algum valor inválido
-	// chegue até aqui burlando o min/max do input do painel.
+	// Strict comparison with '' instead of !empty() — prevents legitimate
+	// numeric values (which could coincide with PHP falsy) from being
+	// discarded. Defensive range clamping (1-100) in case some invalid value
+	// reaches here bypassing the panel input's min/max.
 	if ( isset( $opt['jpeg_quality'] ) && $opt['jpeg_quality'] !== '' ) {
 		return max( 1, min( 100, intval( $opt['jpeg_quality'] ) ) );
 	}
@@ -225,19 +225,19 @@ add_filter( 'avif_quality', 'rd_custom_image_quality' );
 add_filter( 'wp_editor_set_quality', 'rd_custom_image_quality' );
 
 /*******************************************************************************
- * Kill switch global de comentários                                 - (Geral) *
+ * Global comments kill switch                                     - (General) *
  *                                                                             *
- * Quando `enable_comments_globally` está OFF:                                 *
- *   - `comments_open` retorna false → formulário e lista não renderizam      *
- *   - `pings_open` retorna false → pingbacks/trackbacks desabilitados        *
- *   - Aplica em TODOS os posts existentes instantaneamente (sem precisar    *
- *     bulk-edit no DB ou rodar SQL)                                          *
- *                                                                            *
- * Quando ON: comportamento WP nativo respeitado (per-post + Settings WP).    *
- *                                                                            *
- * Plugins que sobrescrevem `comments_template` (WP-Discourse, Disqus, etc)  *
- * continuam funcionando independente desse toggle — eles operam num hook    *
- * downstream que não é afetado por `comments_open`.                          *
+ * When `enable_comments_globally` is OFF:                                     *
+ *   - `comments_open` returns false → form and list don't render              *
+ *   - `pings_open` returns false → pingbacks/trackbacks disabled              *
+ *   - Applies to ALL existing posts instantly (no need to                     *
+ *     bulk-edit the DB or run SQL)                                            *
+ *                                                                             *
+ * When ON: native WP behavior is respected (per-post + WP Settings).          *
+ *                                                                             *
+ * Plugins that override `comments_template` (WP-Discourse, Disqus, etc)       *
+ * keep working regardless of this toggle — they operate on a hook             *
+ * downstream that isn't affected by `comments_open`.                          *
  *******************************************************************************/
 function rd_filter_comments_open( $open ) {
 	if ( ! rd_get_option_bool( 'enable_comments_globally' ) ) {
@@ -246,18 +246,18 @@ function rd_filter_comments_open( $open ) {
 	return $open;
 }
 add_filter( 'comments_open', 'rd_filter_comments_open' );
-add_filter( 'pings_open', 'rd_filter_comments_open' ); // mesma lógica pra pingbacks/trackbacks
+add_filter( 'pings_open', 'rd_filter_comments_open' ); // same logic for pingbacks/trackbacks
 
 /*******************************************************************************
- * Esconde a lista de comments existentes quando kill switch está OFF          *
- *                                                                              *
- * O `comments_open` filter sozinho impede NOVOS comments mas a lista de      *
- * existentes continua renderizando. Esse filter complementar retorna array    *
- * vazio pro `wp_list_comments()` — ninguém aparece no front (lista some       *
- * inteira). DB permanece intocado: religar o toggle restaura tudo na hora.    *
- *                                                                              *
- * Também zera o `comment_count` exibido (ícone "X comentários" na meta),     *
- * via filter `get_comments_number`, pra evitar inconsistência visual.         *
+ * Hides the list of existing comments when the kill switch is OFF             *
+ *                                                                             *
+ * The `comments_open` filter alone blocks NEW comments but the list of        *
+ * existing ones keeps rendering. This complementary filter returns an empty   *
+ * array to `wp_list_comments()` — nobody shows on the front (the whole list   *
+ * disappears). The DB stays untouched: flipping the toggle restores it all.   *
+ *                                                                             *
+ * Also zeroes the displayed `comment_count` ("X comments" icon in the meta),  *
+ * via the `get_comments_number` filter, to avoid visual inconsistency.        *
  *******************************************************************************/
 function rd_hide_comments_when_disabled( $comments ) {
 	if ( ! rd_get_option_bool( 'enable_comments_globally' ) ) {
@@ -276,17 +276,17 @@ function rd_zero_comments_count_when_disabled( $count ) {
 add_filter( 'get_comments_number', 'rd_zero_comments_count_when_disabled' );
 
 /*******************************************************************************
- * Zera queries de comments no frontend quando kill switch está OFF            *
- *                                                                              *
- * Os filters `comments_array` e `get_comments_number` cobrem a renderização   *
- * do template `comments.php` mas NÃO afetam queries diretas de comments       *
- * feitas por outros lugares — principalmente o widget "Comentários Recentes" *
- * (legado WP_Widget_Recent_Comments + block core/latest-comments) e qualquer  *
- * código de frontend que use `get_comments()` ou `WP_Comment_Query`.          *
- *                                                                              *
- * Injetamos `post__in = [0]` (post ID inexistente) → query sempre retorna     *
- * array vazio. Admin é preservado (`! is_admin()`) pra moderação funcionar    *
- * normal. Toggle religado = queries voltam ao normal na hora.                 *
+ * Zeroes frontend comment queries when the kill switch is OFF                 *
+ *                                                                             *
+ * The `comments_array` and `get_comments_number` filters cover rendering      *
+ * of the `comments.php` template but do NOT affect direct comment queries     *
+ * made elsewhere — mainly the "Recent Comments" widget                        *
+ * (legacy WP_Widget_Recent_Comments + core/latest-comments block) and any     *
+ * frontend code that uses `get_comments()` or `WP_Comment_Query`.             *
+ *                                                                             *
+ * We inject `post__in = [0]` (a non-existent post ID) → the query always      *
+ * returns an empty array. Admin is preserved (`! is_admin()`) so moderation   *
+ * keeps working. Toggle flipped back = queries return to normal instantly.    *
  *******************************************************************************/
 function rd_disable_frontend_comment_queries( $query ) {
 	if ( is_admin() ) {
@@ -301,16 +301,16 @@ function rd_disable_frontend_comment_queries( $query ) {
 add_action( 'pre_get_comments', 'rd_disable_frontend_comment_queries' );
 
 /*******************************************************************************
- * Esconde widgets de "Comentários Recentes" inteiros quando kill switch off   *
- *                                                                              *
- * Filtrar a query (acima) já zera o conteúdo do widget, mas ele ainda         *
- * renderiza o título e a mensagem "Nenhum comentário pra mostrar" — visual    *
- * de widget órfão. Aqui pulamos a renderização total dos 2 sabores:           *
- *                                                                              *
- *   - `WP_Widget_Recent_Comments` (widget legado, em sidebars antigas)        *
- *   - `core/latest-comments` (block widget, editor Gutenberg de widgets)      *
- *                                                                              *
- * Religou o toggle → widgets reaparecem na hora, sem perder configuração.    *
+ * Hides entire "Recent Comments" widgets when the kill switch is off          *
+ *                                                                             *
+ * Filtering the query (above) already zeroes the widget content, but it still *
+ * renders the title and the "No comments to show" message — orphan-widget     *
+ * look. Here we skip the full render of both flavors:                         *
+ *                                                                             *
+ *   - `WP_Widget_Recent_Comments` (legacy widget, in old sidebars)            *
+ *   - `core/latest-comments` (block widget, Gutenberg widgets editor)         *
+ *                                                                             *
+ * Toggle flipped back → widgets reappear instantly, without losing config.    *
  *******************************************************************************/
 function rd_hide_legacy_recent_comments_widget( $instance, $widget ) {
 	if ( ! rd_get_option_bool( 'enable_comments_globally' ) && $widget instanceof WP_Widget_Recent_Comments ) {
@@ -324,14 +324,14 @@ function rd_hide_block_latest_comments( $pre_render, $parsed_block ) {
 	if ( ! rd_get_option_bool( 'enable_comments_globally' )
 		&& isset( $parsed_block['blockName'] )
 		&& $parsed_block['blockName'] === 'core/latest-comments' ) {
-		return ''; // string vazia pula o render do block
+		return ''; // empty string skips the block render
 	}
 	return $pre_render;
 }
 add_filter( 'pre_render_block', 'rd_hide_block_latest_comments', 10, 2 );
 
 /*******************************************************************************
- * Corrige avisos de Acessibilidade no Formulário de Comentários     - (Geral) *
+ * Fixes Accessibility warnings in the Comment Form                - (General) *
  *******************************************************************************/
 function rd_fix_comment_form_labels( $fields ) {
 
@@ -343,25 +343,25 @@ function rd_fix_comment_form_labels( $fields ) {
 	$req       = get_option( 'require_name_email' );
 	$html_req  = ( $req ? " required='required'" : '' );
 
-	// Reescreve o campo NOME (Adicionado autocomplete="name")
+	// Rewrites the NAME field (added autocomplete="name")
 	$fields['author'] = '<p class="comment-form-author">' .
 						'<label for="author_name">' . esc_html__( 'Name', 'reloaded' ) . ( $req ? ' <span class="required">*</span>' : '' ) . '</label> ' .
 						'<input id="author_name" name="author" type="text" value="' . esc_attr( $commenter['comment_author'] ) . '" size="30" maxlength="245" autocomplete="name"' . $html_req . ' />' .
 						'</p>';
 
-	// Reescreve o campo EMAIL (Adicionado autocomplete="email")
+	// Rewrites the EMAIL field (added autocomplete="email")
 	$fields['email'] = '<p class="comment-form-email">' .
 						'<label for="author_email">' . esc_html__( 'Email', 'reloaded' ) . ( $req ? ' <span class="required">*</span>' : '' ) . '</label> ' .
 						'<input id="author_email" name="email" type="email" value="' . esc_attr( $commenter['comment_author_email'] ) . '" size="30" maxlength="100" aria-describedby="email-notes" autocomplete="email"' . $html_req . ' />' .
 						'</p>';
 
-	// Reescreve o campo SITE (Adicionado autocomplete="url")
+	// Rewrites the WEBSITE field (added autocomplete="url")
 	$fields['url'] = '<p class="comment-form-url">' .
 						'<label for="author_url">' . esc_html__( 'Website', 'reloaded' ) . '</label> ' .
 						'<input id="author_url" name="url" type="url" value="' . esc_attr( $commenter['comment_author_url'] ) . '" size="30" maxlength="200" autocomplete="url" />' .
 						'</p>';
 
-	// Reescreve o campo de COOKIES
+	// Rewrites the COOKIES field
 	$consent           = empty( $commenter['comment_author_email'] ) ? '' : ' checked="checked"';
 	$fields['cookies'] = '<p class="comment-form-cookies-consent">' .
 						'<input id="wp-comment-cookies-consent-id" name="wp-comment-cookies-consent" type="checkbox" value="yes"' . $consent . ' />' .
@@ -373,24 +373,24 @@ function rd_fix_comment_form_labels( $fields ) {
 add_filter( 'comment_form_default_fields', 'rd_fix_comment_form_labels' );
 
 /*******************************************************************************
- * Markdown nos comentários (renderização)                           - (Geral) *
+ * Markdown in comments (rendering)                                - (General) *
  *                                                                             *
- * Substitui o pipeline default do `comment_text` (wpautop + texturize) por   *
- * Parsedown — a mesma lib que já carregamos pros posts. Comentários ganham   *
- * suporte a:                                                                  *
+ * Replaces the default `comment_text` pipeline (wpautop + texturize) with     *
+ * Parsedown — the same lib we already load for posts. Comments gain           *
+ * support for:                                                                *
  *                                                                             *
  *   - `**bold**` / `_italic_`                                                 *
- *   - `> citação`                                                             *
- *   - `[texto](url)` links                                                    *
- *   - listas, headers, code inline + blocks com syntax highlight              *
- *   - tabelas (GFM)                                                           *
+ *   - `> quote`                                                               *
+ *   - `[text](url)` links                                                     *
+ *   - lists, headers, inline code + blocks with syntax highlight              *
+ *   - tables (GFM)                                                            *
  *                                                                             *
- * Parsedown em safe mode = strip de HTML perigoso (scripts, iframes etc),    *
- * só o Markdown puro é convertido. Usuários comuns escrevem texto normal,    *
- * power users formatam com Markdown — ambos funcionam.                       *
+ * Parsedown in safe mode = strips dangerous HTML (scripts, iframes etc),      *
+ * only pure Markdown is converted. Regular users write normal text,           *
+ * power users format with Markdown — both work.                               *
  *                                                                             *
- * `setMarkupEscaped(true)` adicional escapa qualquer HTML literal que o     *
- * usuário tente colar — proteção dupla.                                       *
+ * The additional `setMarkupEscaped(true)` escapes any literal HTML the        *
+ * user tries to paste — double protection.                                    *
  *******************************************************************************/
 function rd_comment_markdown( $content ) {
 	if ( ! class_exists( 'Parsedown' ) ) {
@@ -403,42 +403,42 @@ function rd_comment_markdown( $content ) {
 
 	return $parsedown->text( $content );
 }
-// IMPORTANTE: Parsedown roda em prioridade 5 — ANTES dos filters padrão do WP
+// IMPORTANT: Parsedown runs at priority 5 — BEFORE WP's default filters
 // (make_clickable=9, wptexturize=10, convert_chars=10, force_balance_tags=25,
-// wpautop=30) que mangleam o input Markdown:
-// - convert_chars transforma `>` em `&gt;` (quebra blockquotes)
-// - wptexturize transforma `-` em `&#8211;` (quebra listas, troca por en-dash)
-// - make_clickable converte URLs cruas antes do Parsedown ver a sintaxe [text](url)
-// Rodando primeiro, o output JÁ é HTML com `<a>`, `<ul>`, `<blockquote>` etc.,
-// e os filters seguintes operam só em text nodes (typography touches inofensivos).
+// wpautop=30) which mangle the Markdown input:
+// - convert_chars turns `>` into `&gt;` (breaks blockquotes)
+// - wptexturize turns `-` into `&#8211;` (breaks lists, swaps for an en-dash)
+// - make_clickable converts raw URLs before Parsedown sees the [text](url) syntax
+// Running first, the output is ALREADY HTML with `<a>`, `<ul>`, `<blockquote>` etc.,
+// and the following filters operate only on text nodes (harmless typography touches).
 add_filter( 'comment_text', 'rd_comment_markdown', 5 );
 
-// Remove filters que estragam HTML estruturado depois do Parsedown:
-// - wpautop transforma quebras de linha em <p>, duplicando tags do Parsedown
-// - force_balance_tags pode quebrar HTML válido nosso
+// Remove filters that ruin structured HTML after Parsedown:
+// - wpautop turns line breaks into <p>, duplicating Parsedown's tags
+// - force_balance_tags can break our valid HTML
 remove_filter( 'comment_text', 'wpautop', 30 );
 remove_filter( 'comment_text', 'force_balance_tags', 25 );
 
 /*******************************************************************************
- * Dica "Markdown suportado" ao lado da label do form de comments    - (Geral) *
+ * "Markdown supported" hint next to the comment form label        - (General) *
  *                                                                             *
- * Hook em `comment_form_field_comment` que injeta um <span> com exemplos      *
- * curtos logo APÓS o </label> do textarea — fica irmão do label no DOM, o    *
- * CSS então posiciona um à esquerda e outro à direita na mesma linha.        *
+ * Hook on `comment_form_field_comment` that injects a <span> with short       *
+ * examples right AFTER the textarea's </label> — it becomes a sibling of the  *
+ * label in the DOM, and the CSS positions one left and one right on one line. *
  *                                                                             *
- * Usamos <span> (não <p>) porque o field já é um <p class="comment-form-      *
- * comment">, e <p> aninhado em <p> é HTML inválido (o parser fechava o pai). *
- * Aparece pra TODOS os visitantes (logados ou não).                          *
+ * We use <span> (not <p>) because the field is already a <p class="comment-   *
+ * form-comment">, and <p> nested in <p> is invalid HTML (the parser closed    *
+ * the parent). Appears for ALL visitors (logged in or not).                   *
  *******************************************************************************/
 function rd_comment_form_markdown_hint( $field ) {
-	// O id é referenciado por aria-describedby no <textarea> (a11y: leitor de
-	// tela anuncia a dica de markdown quando o campo recebe foco).
+	// The id is referenced by aria-describedby on the <textarea> (a11y: screen
+	// reader announces the markdown hint when the field gains focus).
 	$hint  = '<span id="rd-comment-md-hint" class="rd-comment-markdown-hint">';
 	$hint .= esc_html__( 'Markdown:', 'reloaded' );
 	$hint .= ' <code>**bold**</code> <code>_italic_</code> <code>[link](url)</code> <code>> quote</code> <code>`code`</code>';
 	$hint .= '</span>';
 
-	// Adiciona aria-describedby no <textarea> ligando-o ao hint.
+	// Add aria-describedby on the <textarea> linking it to the hint.
 	$field = preg_replace(
 		'/<textarea\b([^>]*)>/i',
 		'<textarea$1 aria-describedby="rd-comment-md-hint">',
@@ -446,29 +446,29 @@ function rd_comment_form_markdown_hint( $field ) {
 		1
 	);
 
-	// Injeta o hint logo após o primeiro </label> do field. Garante posição
-	// semântica (label + hint juntos, descrevendo o mesmo input).
+	// Inject the hint right after the field's first </label>. Ensures a
+	// semantic position (label + hint together, describing the same input).
 	$needle = '</label>';
 	$pos    = strpos( $field, $needle );
 	if ( false !== $pos ) {
 		return substr_replace( $field, $needle . $hint, $pos, strlen( $needle ) );
 	}
 
-	// Fallback defensivo: se o markup mudar e não tiver </label>, mantém
-	// comportamento antigo de appendar depois do field.
+	// Defensive fallback: if the markup changes and has no </label>, keep
+	// the old behavior of appending after the field.
 	return $field . $hint;
 }
 add_filter( 'comment_form_field_comment', 'rd_comment_form_markdown_hint' );
 
 /*******************************************************************************
- * Posição da Sidebar (esquerda/direita)                             - (Geral) *
+ * Sidebar position (left/right)                                   - (General) *
  *                                                                             *
- * Adiciona a classe `rd-sidebar-left` no <body> quando o admin escolhe        *
- * posicionar a sidebar à esquerda. O CSS faz o flip via `flex-direction:      *
- * row-reverse` no container do .site-main, sem tocar markup.                  *
+ * Adds the `rd-sidebar-left` class to <body> when the admin chooses to        *
+ * position the sidebar on the left. The CSS does the flip via `flex-direction:*
+ * row-reverse` on the .site-main container, without touching markup.          *
  *                                                                             *
- * Mobile (≤1024px) ignora a flag — sidebar sempre vai abaixo do conteúdo     *
- * (gerenciado pelo media query do _grid.scss).                                *
+ * Mobile (≤1024px) ignores the flag — sidebar always goes below the content   *
+ * (managed by the _grid.scss media query).                                    *
  *******************************************************************************/
 function rd_add_sidebar_position_body_class( array $classes ): array {
 	if ( rd_get_option( 'sidebar_position', 'right' ) === 'left' ) {
@@ -479,11 +479,11 @@ function rd_add_sidebar_position_body_class( array $classes ): array {
 add_filter( 'body_class', 'rd_add_sidebar_position_body_class' );
 
 /*******************************************************************************
- * Quantidade de palavras nos excerpts automáticos                   - (Geral) *
+ * Word count in automatic excerpts                                - (General) *
  *                                                                             *
- * WordPress default é 55. O admin pode ajustar via painel (Geral → Excerpt    *
- * Length). Posts com excerpt manual (campo "Resumo" do editor) não passam     *
- * pelo `wp_trim_words` e portanto não são afetados por essa configuração.    *
+ * WordPress default is 55. The admin can adjust it via the panel (General →   *
+ * Excerpt Length). Posts with a manual excerpt (editor's "Excerpt" field)     *
+ * don't go through `wp_trim_words` and so aren't affected by this setting.    *
  *******************************************************************************/
 function rd_custom_excerpt_length( $length ) {
 	$opt = get_option( 'rd_settings' );
@@ -491,19 +491,19 @@ function rd_custom_excerpt_length( $length ) {
 	if ( isset( $opt['excerpt_length'] ) && (int) $opt['excerpt_length'] > 0 ) {
 		return (int) $opt['excerpt_length'];
 	}
-	return $length; // mantém o default do WP (55)
+	return $length; // keeps WP's default (55)
 }
 add_filter( 'excerpt_length', 'rd_custom_excerpt_length', 999 );
 
 /*******************************************************************************
- * Personaliza o texto do "Leia Mais"                                - (Geral) *
+ * Customizes the "Read More" text                                 - (General) *
  *******************************************************************************/
 function rd_custom_excerpt_more( $more ) {
 	$opt = get_option( 'rd_settings' );
 
-	// Comparação estrita com '' em vez de !empty() — `empty('0')` retorna
-	// true, o que descartaria um texto literal "0" como label do botão.
-	// Caso extremo, mas mantém o pattern consistente em todo o tema.
+	// Strict comparison with '' instead of !empty() — `empty('0')` returns
+	// true, which would discard a literal "0" text as the button label.
+	// Edge case, but keeps the pattern consistent across the whole theme.
 	if ( isset( $opt['excerpt_text'] ) && $opt['excerpt_text'] !== '' ) {
 		return '... <br><span class="more-link">' . esc_html( $opt['excerpt_text'] ) . '</span>';
 	}
@@ -513,9 +513,9 @@ function rd_custom_excerpt_more( $more ) {
 add_filter( 'excerpt_more', 'rd_custom_excerpt_more' );
 
 /*******************************************************************************
- * Altera o texto "em" no bloco de Últimos Comentários               - (Geral) *
+ * Changes the "on" text in the Latest Comments block              - (General) *
  *******************************************************************************/
-// phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed -- $domain faz parte da assinatura do filter `gettext`, mesmo quando não consultamos o text domain.
+// phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed -- $domain is part of the `gettext` filter signature, even when we don't consult the text domain.
 function rd_change_latest_comments_text( $translated_text, $text, $domain ) {
 	if ( $text === '%1$s on %2$s' || $text === '%s on %s' ) {
 

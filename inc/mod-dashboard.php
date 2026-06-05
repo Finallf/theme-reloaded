@@ -1,6 +1,6 @@
 <?php
 /**
- * Module: Dashboard — Visão Geral do tema (Wave 11 Fase F).
+ * Module: Dashboard — Theme Overview (Wave 11 Phase F).
  *
  * @package ReloadeD
  */
@@ -8,25 +8,25 @@
 defined( 'ABSPATH' ) || exit;
 
 /*******************************************************************************
- * Module: Dashboard — Aba "Visão Geral" do painel admin (Wave 11 Fase F)       *
+ * Module: Dashboard — "Overview" tab of the admin panel (Wave 11 Phase F)      *
  *                                                                              *
- * Read-only landing tab. Vira a PRIMEIRA aba (default quando admin abre o      *
- * painel). Mostra estado das features principais, métricas chave e atalhos    *
- * rápidos pras outras abas.                                                    *
+ * Read-only landing tab. Becomes the FIRST tab (default when the admin opens   *
+ * the panel). Shows the state of the main features, key metrics and quick      *
+ * shortcuts to the other tabs.                                                 *
  *                                                                              *
- * Renderização 100% via componentes `rd-p*` do design system (Wave 11 Fase C).*
- * Sem JS — toda atualização vem do page reload (dados são instantâneos).      *
+ * Rendered 100% via the design system's `rd-p*` components (Wave 11 Phase C).  *
+ * No JS — every update comes from a page reload (data is instantaneous).       *
  *                                                                              *
- * Estrutura:                                                                   *
- *   1. Site Status     — 6 cards com badge ON/OFF de features-chave           *
- *   2. Quick Metrics   — 3 cards big-number (views 24h, posts/mês, comments) *
- *   3. Quick Actions   — botões pra atalhar pras outras abas relevantes      *
- *   4. Footer Info     — versão tema · WP · PHP                                *
+ * Structure:                                                                   *
+ *   1. Site Status     — 6 cards with ON/OFF badge of key features             *
+ *   2. Quick Metrics   — 3 big-number cards (views 24h, posts/month, comments) *
+ *   3. Quick Actions   — buttons to shortcut to the other relevant tabs        *
+ *   4. Footer Info     — theme version · WP · PHP                              *
  *******************************************************************************/
 
 /**
- * Callback principal — renderiza a aba inteira.
- * Chamado pelo `add_settings_section('sec_dashboard', ...)` em panel.php.
+ * Main callback — renders the entire tab.
+ * Called by `add_settings_section('sec_dashboard', ...)` in panel.php.
  */
 function rd_dashboard_render(): void {
 	rd_panel_dash_open();
@@ -42,33 +42,39 @@ function rd_dashboard_render(): void {
 
 	echo '<div class="rd-pgrid rd-pgrid--five-cols">';
 	$toggle_nonce = wp_create_nonce( 'rd_dashboard_toggle' );
+	$status_tips  = rd_dashboard_get_status_tooltips();
 	foreach ( rd_dashboard_get_status_data() as $item ) {
-		rd_panel_card_open( array( 'title' => $item['title'] ) );
+		rd_panel_card_open(
+			array(
+				'title'   => $item['title'],
+				'tooltip' => $status_tips[ $item['toggle'] ] ?? '',
+			)
+		);
 
 		/*
-		 * Linha de status: 2 grupos lado a lado com justify-content: space-between.
-		 *   Esquerda: .rd-dashboard-status-controls (switch + gear, qualquer combinação)
-		 *   Direita:  .rd-dashboard-status-info     (badge + detail)
+		 * Status line: 2 groups side by side with justify-content: space-between.
+		 *   Left:  .rd-dashboard-status-controls (switch + gear, any combination)
+		 *   Right: .rd-dashboard-status-info     (badge + detail)
 		 *
-		 * Ordem invertida do natural pra estabilizar a posição do switch/gear —
-		 * quando o badge muda de "ON" pra "OFF" (largura ~5px maior), o ajuste
-		 * acontece no gap central, não na posição do controle. Sem isso, o
-		 * switch/gear "pula" 1px lateralmente em cada toggle.
+		 * Order reversed from the natural one to stabilize the switch/gear position —
+		 * when the badge changes from "ON" to "OFF" (~5px wider), the adjustment
+		 * happens in the central gap, not in the control's position. Without this, the
+		 * switch/gear "jumps" 1px sideways on each toggle.
 		 *
-		 * O wrapper de controles também garante que switch + gear ficam juntos
-		 * à esquerda quando ambos estão presentes — sem wrapper, space-between
-		 * espalharia os 3 elementos (switch, gear, info) em 3 colunas iguais.
+		 * The controls wrapper also ensures switch + gear stay together
+		 * on the left when both are present — without the wrapper, space-between
+		 * would spread the 3 elements (switch, gear, info) into 3 equal columns.
 		 */
 		echo '<p class="rd-dashboard-status-line">';
 		echo '<span class="rd-dashboard-status-controls">';
 
-		// Toggle inline
+		// Inline toggle
 		if ( ! empty( $item['toggle'] ) ) {
 			$confirm_attr = ! empty( $item['confirm'] )
 				? ' data-rd-confirm="' . esc_attr( $item['confirm'] ) . '"'
 				: '';
-			// Tooltip dinâmico — mostra a próxima ação disponível conforme estado atual.
-			// Ambos labels passados como data-attrs pra JS swap após flipar (sem reload).
+			// Dynamic tooltip — shows the next available action based on current state.
+			// Both labels passed as data-attrs for the JS to swap after flipping (no reload).
 			$tooltip_on      = esc_attr__( 'Disable', 'reloaded' );
 			$tooltip_off     = esc_attr__( 'Enable', 'reloaded' );
 			$current_tooltip = $item['value'] ? $tooltip_on : $tooltip_off;
@@ -85,8 +91,8 @@ function rd_dashboard_render(): void {
 			);
 		}
 
-		// Gear link (deep link pra section configurável). Pode coexistir com toggle —
-		// admin usa o switch pra liga/desliga rápido, gear pra config detalhada.
+		// Gear link (deep link to a configurable section). Can coexist with the toggle —
+		// admin uses the switch for quick on/off, the gear for detailed config.
 		if ( ! empty( $item['link'] ) ) {
 			$tooltip_label = esc_attr__( 'Configure', 'reloaded' );
 			printf(
@@ -98,10 +104,10 @@ function rd_dashboard_render(): void {
 
 		echo '</span>'; // .rd-dashboard-status-controls
 
-		// Info group (direita): badge + detail. Wrapper inline-flex pra
-		// preservar o gap de 10px entre badge e detail (ex: badge "ON" + <code>slug</code>).
+		// Info group (right): badge + detail. inline-flex wrapper to
+		// preserve the 10px gap between badge and detail (e.g. badge "ON" + <code>slug</code>).
 		echo '<span class="rd-dashboard-status-info">';
-		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- badge HTML pré-escapado por rd_panel_badge(); detail é HTML controlado (esc_html aplicado nos valores dinâmicos).
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- badge HTML pre-escaped by rd_panel_badge(); detail is controlled HTML (esc_html applied to dynamic values).
 		echo $item['badge'] . $item['detail'];
 		echo '</span>';
 
@@ -125,29 +131,77 @@ function rd_dashboard_render(): void {
 		rd_panel_card_open( array( 'title' => $metric['title'] ) );
 		echo '<div class="rd-pcard__big-number">' . esc_html( $metric['value'] ) . '</div>';
 		if ( '' !== $metric['hint'] ) {
-			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- hint é HTML controlado (link com esc_url aplicado abaixo).
+			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- hint is controlled HTML (link with esc_url applied below).
 			echo '<div class="rd-pcard__big-hint">' . $metric['hint'] . '</div>';
 		}
 		rd_panel_card_close();
 	}
 	echo '</div>';
 
-	// ============ Section 3: Activity Trend (Wave 11 Fase G) ============
-	// Bar chart de views por dia nos últimos 7 dias. Sempre renderiza —
-	// quando não há dados (tracking nunca ativo ou recém-instalado), a
-	// função get_views_7d retorna array zerado e o chart mostra todas as
-	// barras em zero (preview do layout futuro).
+	// ============ Section 3: Activity Trend (+ CSP doughnut) ============
+	// Activity Trend = bar chart of views per day over the last 7 days. Always
+	// renders (zeroed bars when there's no data).
+	//
+	// When CSP report-only is collecting violations, the "Violations by
+	// Directive" doughnut shows beside it (narrow left + Activity Trend wide
+	// right) via .rd-pgrid--sidebar-main — each block keeps its own header.
+	// Without violations, Activity Trend stays full-width.
+	$views_7d = rd_dashboard_get_views_7d();
+
+	$csp_by_directive = array();
+	if ( rd_get_option_bool( 'enable_csp_report_only' ) && function_exists( 'rd_csp_get_violations_by_directive' ) ) {
+		$csp_by_directive = rd_csp_get_violations_by_directive();
+	}
+	$has_csp_doughnut = ! empty( $csp_by_directive );
+
+	if ( $has_csp_doughnut ) {
+		echo '<div class="rd-pgrid rd-pgrid--sidebar-main">';
+
+		// Left (narrow): CSP "Violations by Directive" doughnut.
+		echo '<div>';
+		rd_panel_section_header(
+			array(
+				'icon'  => 'warning',
+				'title' => __( 'Violations by Directive', 'reloaded' ),
+			)
+		);
+		rd_panel_card_open(
+			array(
+				// Short summary of the Security tab's chart description — keeps this
+				// card the same height as the Activity Trend card beside it.
+				'desc' => __( 'Recorded violations grouped by CSP directive.', 'reloaded' ),
+			)
+		);
+		?>
+		<div class="rd-dashboard-chart-wrapper">
+			<canvas id="rd-dashboard-csp-chart"
+				data-rd-chart-type="doughnut"
+				data-labels="<?php echo esc_attr( wp_json_encode( array_keys( $csp_by_directive ) ) ); ?>"
+				data-values="<?php echo esc_attr( wp_json_encode( array_values( $csp_by_directive ) ) ); ?>"></canvas>
+		</div>
+		<?php
+		rd_panel_card_close();
+		echo '</div>';
+
+		// Right (wide): Activity Trend block opens here.
+		echo '<div>';
+	}
+
 	rd_panel_section_header(
 		array(
 			'icon'  => 'chart-bar',
 			'title' => __( 'Activity Trend', 'reloaded' ),
-			'desc'  => __( 'Views per day over the last 7 days. Useful to spot weekly patterns and traffic spikes.', 'reloaded' ),
 		)
 	);
 
-	$views_7d = rd_dashboard_get_views_7d();
-
-	rd_panel_card_open();
+	// Description goes inside the card (not the section header) so this header
+	// stays title-only — matching the doughnut header beside it and keeping the
+	// two cards' tops aligned in the side-by-side layout.
+	rd_panel_card_open(
+		array(
+			'desc' => __( 'Views per day over the last 7 days. Useful to spot weekly patterns and traffic spikes.', 'reloaded' ),
+		)
+	);
 	?>
 	<div class="rd-dashboard-chart-wrapper">
 		<canvas id="rd-dashboard-views-7d-chart"
@@ -158,6 +212,11 @@ function rd_dashboard_render(): void {
 	</div>
 	<?php
 	rd_panel_card_close();
+
+	if ( $has_csp_doughnut ) {
+		echo '</div>'; // .rd-pgrid__item (right column — Activity Trend)
+		echo '</div>'; // .rd-pgrid--sidebar-main
+	}
 
 	// ============ Section 4: Theme Updates ============
 	rd_dashboard_render_updates_card();
@@ -196,22 +255,22 @@ function rd_dashboard_render(): void {
 		'<code>' . esc_html( $wp_ver ) . '</code>',
 		'<code>' . esc_html( $php_ver ) . '</code>'
 	);
-	// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $footer_text contém só esc_html() em cada valor dinâmico; o resto é literal HTML (<code>).
+	// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $footer_text contains only esc_html() on each dynamic value; the rest is literal HTML (<code>).
 	echo '<p class="rd-dashboard-footer-info">' . $footer_text . '</p>';
 
 	rd_panel_dash_close();
 }
 
 /**
- * Renderiza o card "Theme Updates" no Dashboard.
+ * Renders the "Theme Updates" card on the Dashboard.
  *
- * Lê a versão local (style.css) + tenta ler o cache da última checagem de
- * releases (sem disparar fetch novo — fetch só roda no botão "Check now" ou
- * na expiração natural do transient 24h). Botão no canto superior direito
- * dispara AJAX pra re-checar imediatamente.
+ * Reads the local version (style.css) + tries to read the cache of the last
+ * release check (without triggering a new fetch — fetch only runs on the "Check now"
+ * button or on the natural 24h transient expiration). The button in the top-right
+ * corner fires AJAX to re-check immediately.
  *
- * Server-side só renderiza estado FROZEN. JS (admin-self-update.js) atualiza
- * o conteúdo após resposta AJAX — DOM ids usados pra alvo:
+ * Server-side only renders the FROZEN state. JS (admin-panel.js) updates
+ * the content after the AJAX response — DOM ids used as targets:
  *   #rd-self-update-latest, #rd-self-update-status, #rd-self-update-last-check,
  *   #rd-self-update-action.
  */
@@ -226,7 +285,7 @@ function rd_dashboard_render_updates_card(): void {
 
 	$current = (string) wp_get_theme( RD_SELF_UPDATE_SLUG )->get( 'Version' );
 
-	// Lê cache sem disparar fetch (server-side render barato).
+	// Read cache without triggering a fetch (cheap server-side render).
 	$cached      = get_transient( RD_SELF_UPDATE_TRANSIENT );
 	$latest      = ( is_array( $cached ) && ! empty( $cached['version'] ) ) ? $cached['version'] : '';
 	$checked_at  = ( is_array( $cached ) && ! empty( $cached['checked_at'] ) ) ? (int) $cached['checked_at'] : 0;
@@ -272,7 +331,7 @@ function rd_dashboard_render_updates_card(): void {
 		<dd>
 			<code id="rd-self-update-latest"><?php echo esc_html( '' !== $latest ? $latest : '—' ); ?></code>
 			<span id="rd-self-update-status">
-				<?php echo $status_html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- rd_panel_badge() escapa internamente. ?>
+				<?php echo $status_html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- rd_panel_badge() escapes internally. ?>
 			</span>
 		</dd>
 
@@ -297,14 +356,14 @@ function rd_dashboard_render_updates_card(): void {
 }
 
 /**
- * Coleta dados de status das features principais.
+ * Collects status data for the main features.
  *
- * Cada item retornado tem:
- *   - title  : string traduzida do nome da feature
- *   - badge  : HTML do badge (gerado por rd_panel_badge, já escapado)
- *   - detail : HTML adicional opcional (vazio ou com info contextual)
+ * Each returned item has:
+ *   - title  : translated string of the feature name
+ *   - badge  : badge HTML (generated by rd_panel_badge, already escaped)
+ *   - detail : optional extra HTML (empty or with contextual info)
  *
- * @return array[] Array de cards de status, na ordem de exibição.
+ * @return array[] Array of status cards, in display order.
  */
 function rd_dashboard_get_status_data(): array {
 	$data = array();
@@ -329,9 +388,9 @@ function rd_dashboard_get_status_data(): array {
 	);
 
 	// --- Login Protection ---
-	// Master switch (enable_login_protection) controla TODAS as features do módulo.
-	// Slug salvo é preservado quando OFF — visível como detail pra contexto, mas
-	// inativo. Badge mostra estado da feature mestra (ON/OFF).
+	// Master switch (enable_login_protection) controls ALL the module's features.
+	// The saved slug is preserved when OFF — visible as detail for context, but
+	// inactive. The badge shows the master feature's state (ON/OFF).
 	$login_active = rd_get_option_bool( 'enable_login_protection' );
 	$slug         = trim( (string) rd_get_option( 'login_secret_slug' ) );
 	if ( ! $login_active ) {
@@ -351,11 +410,11 @@ function rd_dashboard_get_status_data(): array {
 	);
 
 	// --- Maintenance Mode (toggle inline) ---
-	// Badge ON usa variant `success` (verde) pra consistência com outros toggles,
-	// + ⚠️ prefix pra reforço visual de "estado anormal/temporário" (site
-	// bloqueado pra visitantes). Bypassa rd_panel_badge() helper pra inserir o
-	// emoji num <span> com vertical-align próprio — o helper escapa HTML via
-	// esc_html() e quebraria o markup.
+	// The ON badge uses the `success` variant (green) for consistency with other toggles,
+	// + a ⚠️ prefix for visual reinforcement of an "abnormal/temporary state" (site
+	// blocked to visitors). Bypasses the rd_panel_badge() helper to insert the
+	// emoji in a <span> with its own vertical-align — the helper escapes HTML via
+	// esc_html() and would break the markup.
 	$maint  = rd_get_option_bool( 'maintenance_mode' );
 	$data[] = array(
 		'title'   => __( 'Maintenance Mode', 'reloaded' ),
@@ -370,9 +429,9 @@ function rd_dashboard_get_status_data(): array {
 	);
 
 	// --- Statistics Tracking (toggle inline) ---
-	// Controla a coleta real de views (enable_views_tracking). Quando OFF,
-	// o tracker para de registrar novas visualizações — mas o histórico
-	// fica preservado e a aba Statistics continua acessível.
+	// Controls the actual view collection (enable_views_tracking). When OFF,
+	// the tracker stops recording new views — but the history
+	// is preserved and the Statistics tab stays accessible.
 	$tracking = rd_get_option_bool( 'enable_views_tracking' );
 	$data[]   = array(
 		'title'  => __( 'Statistics Tracking', 'reloaded' ),
@@ -416,7 +475,7 @@ function rd_dashboard_get_status_data(): array {
 		'link'   => admin_url( 'admin.php?page=rd_options&tab=media#sec_media_upload' ),
 	);
 
-	// --- Row 2 (Wave 11 — 6 cards adicionais pra grid 12-cards 3×4) ---
+	// --- Row 2 (Wave 11 — 6 additional cards for the 12-card 3×4 grid) ---
 
 	// Top Bar (toggle inline)
 	$top_bar = rd_get_option_bool( 'enable_top_bar' );
@@ -491,9 +550,9 @@ function rd_dashboard_get_status_data(): array {
 		'value'  => $breadcrumbs,
 	);
 
-	// --- Row 3: SEO + Compliance (Wave 12 — 3 cards adicionais pra grid 5×3 = 15-cards) ---
+	// --- Row 3: SEO + Compliance (Wave 12 — 3 additional cards for the 5×3 = 15-card grid) ---
 
-	// Cookie Banner (toggle inline) — banner de consent granular no footer (LGPD/GDPR)
+	// Cookie Banner (inline toggle) — granular consent banner in the footer (LGPD/GDPR)
 	$lgpd   = rd_get_option_bool( 'enable_lgpd' );
 	$data[] = array(
 		'title'  => __( 'Cookie Banner', 'reloaded' ),
@@ -505,7 +564,7 @@ function rd_dashboard_get_status_data(): array {
 		'value'  => $lgpd,
 	);
 
-	// Sitemap (toggle inline) — /wp-sitemap.xml nativo WP 5.5+
+	// Sitemap (inline toggle) — native /wp-sitemap.xml WP 5.5+
 	$sitemap = rd_get_option_bool( 'enable_sitemap' );
 	$data[]  = array(
 		'title'  => __( 'Sitemap', 'reloaded' ),
@@ -517,7 +576,7 @@ function rd_dashboard_get_status_data(): array {
 		'value'  => $sitemap,
 	);
 
-	// Open Graph — switch ON/OFF + gear pra config detalhada (og_fallback_image).
+	// Open Graph — ON/OFF switch + gear for detailed config (og_fallback_image).
 	$og     = rd_get_option_bool( 'enable_open_graph' );
 	$data[] = array(
 		'title'  => __( 'Open Graph', 'reloaded' ),
@@ -534,23 +593,53 @@ function rd_dashboard_get_status_data(): array {
 }
 
 /**
- * Coleta métricas rápidas pra cards big-number.
+ * Short hover explanations for the Site Status cards.
  *
- * Só é chamado quando enable_stats está ON (gating em rd_dashboard_render()).
- * Reusa rd_stats_total_views() pra views (cacheado em transient pelo mod-stats).
+ * Keyed by each card's toggle option name so it maps onto
+ * rd_dashboard_get_status_data() without bloating that array (which stays
+ * focused on live state). Rendered as a tooltip on the card title via the
+ * `tooltip` arg of rd_panel_card_open().
  *
- * @return array[] Array de métricas, cada uma com title/value/hint.
+ * @return array<string,string> Option name => one-line explanation.
+ */
+function rd_dashboard_get_status_tooltips(): array {
+	return array(
+		'enable_csp_report_only'   => __( 'Browser policy that blocks unauthorized scripts and resources.', 'reloaded' ),
+		'enable_login_protection'  => __( 'Hides the login URL behind a secret slug and limits attempts.', 'reloaded' ),
+		'maintenance_mode'         => __( 'Shows a holding page to visitors while the site is offline.', 'reloaded' ),
+		'enable_views_tracking'    => __( 'Records the page views shown in the Statistics tab.', 'reloaded' ),
+		'inline_critical_css'      => __( 'Inlines critical CSS to speed up the first paint.', 'reloaded' ),
+		'enable_next_gen_images'   => __( 'Serves WebP/AVIF image versions to supported browsers.', 'reloaded' ),
+		'enable_top_bar'           => __( 'Announcement bar shown above the site header.', 'reloaded' ),
+		'enable_comments_globally' => __( 'Enables the comment system across the whole site.', 'reloaded' ),
+		'markdown_enabled'         => __( 'Lets you write posts using Markdown syntax.', 'reloaded' ),
+		'discord_widget'           => __( 'Shows your Discord server widget on the site.', 'reloaded' ),
+		'facade_youtube'           => __( 'Replaces YouTube embeds with a light click-to-load preview.', 'reloaded' ),
+		'enable_breadcrumbs'       => __( 'Shows the navigation trail above post titles.', 'reloaded' ),
+		'enable_lgpd'              => __( 'Granular cookie consent banner (LGPD/GDPR).', 'reloaded' ),
+		'enable_sitemap'           => __( 'Enables the native wp-sitemap.xml for search engines.', 'reloaded' ),
+		'enable_open_graph'        => __( 'Adds Open Graph tags for rich social previews.', 'reloaded' ),
+	);
+}
+
+/**
+ * Collects quick metrics for the big-number cards.
+ *
+ * Only called when enable_stats is ON (gated in rd_dashboard_render()).
+ * Reuses rd_stats_total_views() for views (cached in a transient by mod-stats).
+ *
+ * @return array[] Array of metrics, each with title/value/hint.
  */
 function rd_dashboard_get_metrics_data(): array {
 	$metrics = array();
 
-	// --- Views nas últimas 24h ---
-	// Bypass do cache do mod-stats: a função rd_stats_total_views() guarda
-	// resultado em transient com TTL 1h, o que deixa o Dashboard mostrando
-	// dados até 1h velhos. Aqui forçamos refresh deletando o transient
-	// específico antes de chamar — custo: 1 query SQL extra por render do
-	// Dashboard, insignificante. Outros transients de stats continuam
-	// cacheados pra performance do Stats Dashboard (aba Estatísticas).
+	// --- Views in the last 24h ---
+	// Bypass the mod-stats cache: the rd_stats_total_views() function stores its
+	// result in a transient with a 1h TTL, which leaves the Dashboard showing
+	// data up to 1h stale. Here we force a refresh by deleting the specific
+	// transient before calling — cost: 1 extra SQL query per Dashboard
+	// render, insignificant. Other stats transients stay
+	// cached for the Stats Dashboard's performance (Statistics tab).
 	if ( function_exists( 'rd_stats_total_views' ) && defined( 'RD_STATS_CACHE_PREFIX' ) ) {
 		delete_transient( RD_STATS_CACHE_PREFIX . 'total_day' );
 		$views_24h = (int) rd_stats_total_views( 'day' );
@@ -563,10 +652,10 @@ function rd_dashboard_get_metrics_data(): array {
 		'hint'  => '',
 	);
 
-	// --- Posts publicados nos últimos 30 dias (rolling) ---
-	// Janela rolling (alinha com "Views Last 24h" — ambas rolling, evita o
-	// confuso "no dia 1 do mês mostra zero" do calendar month.
-	// Query rápida: só IDs, sem found_rows, e limit -1 pra contar todos.
+	// --- Posts published in the last 30 days (rolling) ---
+	// Rolling window (aligns with "Views Last 24h" — both rolling, avoids the
+	// confusing "on day 1 of the month it shows zero" of a calendar month.
+	// Fast query: IDs only, no found_rows, and limit -1 to count them all.
 	$cutoff_30d  = time() - ( 30 * DAY_IN_SECONDS );
 	$month_posts = get_posts(
 		array(
@@ -589,7 +678,7 @@ function rd_dashboard_get_metrics_data(): array {
 		'hint'  => '',
 	);
 
-	// --- Comentários pendentes ---
+	// --- Pending comments ---
 	$comments_count = wp_count_comments();
 	$pending        = isset( $comments_count->moderated ) ? (int) $comments_count->moderated : 0;
 	if ( $pending > 0 ) {
@@ -612,12 +701,12 @@ function rd_dashboard_get_metrics_data(): array {
 }
 
 /**
- * Lista de atalhos rápidos pras abas mais usadas.
+ * List of quick shortcuts to the most-used tabs.
  *
- * Ordem otimizada por frequência esperada de uso. "Statistics" só aparece
- * se a feature estiver ativada.
+ * Order optimized by expected frequency of use. "Statistics" only appears
+ * if the feature is enabled.
  *
- * @return array[] Array de actions com url/icon/label.
+ * @return array[] Array of actions with url/icon/label.
  */
 function rd_dashboard_get_quick_actions(): array {
 	$base    = admin_url( 'admin.php?page=rd_options' );
@@ -654,25 +743,25 @@ function rd_dashboard_get_quick_actions(): array {
 }
 
 /**
- * Agrega views dos últimos 7 dias, agrupados por dia.
+ * Aggregates views from the last 7 days, grouped by day.
  *
- * Itera todos os logs de views (`_rd_post_views_log` em postmeta), separa
- * cada timestamp por bucket de dia, retorna array `[ 'DD/MM' => count, ... ]`
- * ordenado cronologicamente (dia mais antigo → mais recente).
+ * Iterates over all view logs (`_rd_post_views_log` in postmeta), buckets
+ * each timestamp by day, returns array `[ 'DD/MM' => count, ... ]`
+ * sorted chronologically (oldest day → most recent).
  *
- * Sem cache (mesma filosofia do "Views Last 24h" — Dashboard mostra dados
- * frescos a cada render; custo aceitável porque admin não carrega Dashboard
- * milhares de vezes/hora).
+ * No cache (same philosophy as "Views Last 24h" — the Dashboard shows fresh
+ * data on each render; acceptable cost because the admin doesn't load the Dashboard
+ * thousands of times/hour).
  *
- * Wave 11 Fase G — alimenta o bar chart "Activity Trend" no Dashboard.
+ * Wave 11 Phase G — feeds the "Activity Trend" bar chart on the Dashboard.
  *
- * @return int[] Map `'DD/MM' => count`, 7 entradas (cronológico).
+ * @return int[] Map `'DD/MM' => count`, 7 entries (chronological).
  */
 function rd_dashboard_get_views_7d(): array {
 	global $wpdb;
 
-	// Bucket inicial: 7 dias, hoje incluso, ordem cronológica.
-	// Format `DD/MM` pra label compacto no eixo X do gráfico.
+	// Initial buckets: 7 days, today included, chronological order.
+	// Format `DD/MM` for a compact label on the chart's X axis.
 	$buckets = array();
 	for ( $i = 6; $i >= 0; $i-- ) {
 		$ts                = strtotime( "-{$i} days", time() );
@@ -680,11 +769,11 @@ function rd_dashboard_get_views_7d(): array {
 		$buckets[ $label ] = 0;
 	}
 
-	// Cutoff: meia-noite de "6 dias atrás" (inclusivo) — qualquer view antes
-	// disso não importa pro gráfico de 7d.
+	// Cutoff: midnight of "6 days ago" (inclusive) — any view before
+	// that doesn't matter for the 7d chart.
 	$cutoff = strtotime( '-6 days 00:00:00', time() );
 
-	// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching -- query single-purpose pro Dashboard (read-only render); volume baixo (1 chamada por load do dashboard); resultado não precisa de cache porque o Dashboard sempre quer fresh data nessa seção.
+	// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching -- single-purpose query for the Dashboard (read-only render); low volume (1 call per dashboard load); result doesn't need caching because the Dashboard always wants fresh data in this section.
 	$logs = $wpdb->get_col(
 		$wpdb->prepare(
 			"SELECT meta_value FROM {$wpdb->postmeta} WHERE meta_key = %s",
@@ -714,61 +803,61 @@ function rd_dashboard_get_views_7d(): array {
 
 /*
 =============================================================================
- *  AJAX TOGGLE — endpoint pra switches inline do Dashboard (Wave 11 Cat B)
+ *  AJAX TOGGLE — endpoint for the Dashboard's inline switches (Wave 11 Cat B)
  * ============================================================================= */
 
 /**
- * Whitelist de option keys que podem ser flipadas pelo toggle inline do Dashboard.
+ * Whitelist of option keys that can be flipped by the Dashboard's inline toggle.
  *
- * Defesa em profundidade: mesmo com nonce + capability check, restringimos
- * EXPLICITAMENTE quais options o endpoint aceita. Se algum admin malicioso ou
- * bug futuro tentar passar outro key, retorna erro silencioso.
+ * Defense in depth: even with nonce + capability check, we EXPLICITLY
+ * restrict which options the endpoint accepts. If some malicious admin or
+ * future bug tries to pass another key, it returns a silent error.
  *
- * Ampliar SÓ pra options claramente binárias (0/1) que façam sentido como
- * toggle de status — não pra options complexas tipo strings ou textareas.
+ * Expand ONLY for clearly binary options (0/1) that make sense as a
+ * status toggle — not for complex options like strings or textareas.
  */
 const RD_DASHBOARD_TOGGLE_WHITELIST = array(
 	'maintenance_mode',
 	'enable_views_tracking',
 	'inline_critical_css',
-	// Switches dos 4 cards "gear-only" — Fase 3:
+	// Switches of the 4 "gear-only" cards — Phase 3:
 	'enable_csp_report_only',
 	'enable_login_protection',
 	'enable_next_gen_images',
 	'enable_open_graph',
-	// 6 toggles da segunda fileira de cards do Site Status — todas features
-	// safe pra flipar (sem efeito destrutivo). Maintenance é o único que
-	// bloqueia visitantes, e tem confirm dialog próprio no JS.
+	// 6 toggles from the second row of Site Status cards — all features
+	// safe to flip (no destructive effect). Maintenance is the only one that
+	// blocks visitors, and it has its own confirm dialog in the JS.
 	'enable_top_bar',
 	'enable_comments_globally',
 	'markdown_enabled',
 	'discord_widget',
 	'facade_youtube',
 	'enable_breadcrumbs',
-	// Wave 12 — 3 cards adicionais (Row 3 do grid 5×3): SEO + Compliance.
+	// Wave 12 — 3 additional cards (Row 3 of the 5×3 grid): SEO + Compliance.
 	'enable_lgpd',
 	'enable_sitemap',
-	// (Open Graph não entra aqui — é deep link/gear, não switch)
+	// (Open Graph doesn't go here — it's a deep link/gear, not a switch)
 );
 
 /**
  * AJAX handler — flipa uma option booleana via fetch().
  *
  * Espera POST com:
- *   - action: 'rd_dashboard_toggle' (resolvido pelo WP)
- *   - key:    nome da option (deve estar em RD_DASHBOARD_TOGGLE_WHITELIST)
- *   - value:  '0' ou '1' (novo valor desejado)
- *   - _wpnonce: nonce verificado via check_ajax_referer
+ *   - action: 'rd_dashboard_toggle' (resolved by WP)
+ *   - key:    option name (must be in RD_DASHBOARD_TOGGLE_WHITELIST)
+ *   - value:  '0' or '1' (new desired value)
+ *   - _wpnonce: nonce verified via check_ajax_referer
  *
- * Retorna JSON:
- *   { ok: true, key: '...', value: 1 } — sucesso
- *   { ok: false, error: '...' } — falha
+ * Returns JSON:
+ *   { ok: true, key: '...', value: 1 } — success
+ *   { ok: false, error: '...' } — failure
  *
- * Códigos HTTP: 200 OK em sucesso/erro de domínio, 403 em capability fail,
- * 400 em validação fail.
+ * HTTP codes: 200 OK on success/domain error, 403 on capability fail,
+ * 400 on validation fail.
  */
 function rd_dashboard_ajax_toggle(): void {
-	// Capability — só manage_options. Mesmo gate do painel inteiro.
+	// Capability — manage_options only. Same gate as the whole panel.
 	if ( ! current_user_can( 'manage_options' ) ) {
 		wp_send_json(
 			array(
@@ -779,10 +868,10 @@ function rd_dashboard_ajax_toggle(): void {
 		);
 	}
 
-	// Nonce — protege CSRF. Falha aqui se nonce ausente/inválido.
+	// Nonce — protects against CSRF. Fails here if nonce missing/invalid.
 	check_ajax_referer( 'rd_dashboard_toggle', '_wpnonce' );
 
-	// Validação do key — deve estar na whitelist.
+	// Key validation — must be in the whitelist.
 	$key = isset( $_POST['key'] ) ? sanitize_key( wp_unslash( $_POST['key'] ) ) : '';
 	if ( '' === $key || ! in_array( $key, RD_DASHBOARD_TOGGLE_WHITELIST, true ) ) {
 		wp_send_json(
@@ -794,7 +883,7 @@ function rd_dashboard_ajax_toggle(): void {
 		);
 	}
 
-	// Value — só aceitamos '0' ou '1' (boolean toggle).
+	// Value — we only accept '0' or '1' (boolean toggle).
 	$value_raw = isset( $_POST['value'] ) ? sanitize_text_field( wp_unslash( $_POST['value'] ) ) : '';
 	if ( '0' !== $value_raw && '1' !== $value_raw ) {
 		wp_send_json(
@@ -807,7 +896,7 @@ function rd_dashboard_ajax_toggle(): void {
 	}
 	$value = (int) $value_raw;
 
-	// Update da option dentro do rd_settings array.
+	// Update the option inside the rd_settings array.
 	$opt = get_option( 'rd_settings', array() );
 	if ( ! is_array( $opt ) ) {
 		$opt = array();
@@ -824,46 +913,34 @@ function rd_dashboard_ajax_toggle(): void {
 	);
 }
 add_action( 'wp_ajax_rd_dashboard_toggle', 'rd_dashboard_ajax_toggle' );
-// Sem wp_ajax_nopriv — endpoint só pra admins logados (capability check já
-// rejeitaria, mas registrar apenas no `wp_ajax_` deixa o intent claro).
+// No wp_ajax_nopriv — endpoint for logged-in admins only (the capability check
+// would already reject it, but registering only on `wp_ajax_` makes the intent clear).
 
 /**
- * Enfileira o JS dos toggles inline (rd-pswitch) — só na aba Dashboard.
+ * Localizes the self-update data for the Dashboard tab.
  *
- * Independente do Chart.js / mod-stats — vive aqui pra manter responsabilidade
- * clara (toggle é feature do Dashboard, não do Stats).
+ * The toggle (rd-pswitch) and self-update JS now ship in the consolidated
+ * admin-panel.js bundle; this function only attaches the rdSelfUpdate localized
+ * data to that handle, gated to the Dashboard tab.
  *
- * @param string $hook Hook suffix da página atual no admin.
+ * @param string $hook Hook suffix of the current admin page.
  */
 function rd_dashboard_admin_enqueue( $hook ): void {
 	if ( 'toplevel_page_rd_options' !== $hook ) {
 		return;
 	}
 
-	// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only gate em admin_enqueue_scripts: decide se enfileira o JS dos toggles, não processa form.
+	// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only gate in admin_enqueue_scripts: decides whether to enqueue the toggles JS, doesn't process a form.
 	$active_tab = isset( $_GET['tab'] ) ? sanitize_key( wp_unslash( $_GET['tab'] ) ) : 'dashboard';
 	if ( 'dashboard' !== $active_tab ) {
 		return;
 	}
 
-	wp_enqueue_script(
-		'rd-admin-dashboard-toggle',
-		get_template_directory_uri() . '/assets/js/admin-dashboard-toggle.js',
-		array(),
-		rd_asset_version( '/assets/js/admin-dashboard-toggle.js' ),
-		true
-	);
-
-	wp_enqueue_script(
-		'rd-admin-self-update',
-		get_template_directory_uri() . '/assets/js/admin-self-update.js',
-		array(),
-		rd_asset_version( '/assets/js/admin-self-update.js' ),
-		true
-	);
-
+	// The toggle + self-update JS now ship in the consolidated admin-panel.js
+	// bundle (enqueued in core.php at priority 5). Here we only attach the
+	// self-update localized data to that handle, still gated to the Dashboard tab.
 	wp_localize_script(
-		'rd-admin-self-update',
+		'rd-admin-panel',
 		'rdSelfUpdate',
 		array(
 			'themes_url' => admin_url( 'themes.php' ),
