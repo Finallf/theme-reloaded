@@ -242,6 +242,7 @@ Hardening + LGPD + Login Protection + CSP. **5 sections.** Slug legacy `?tab=pri
 | `csp_custom_scripts` | _vazio_ | Origens custom pra `script-src` + `connect-src`. 1 por linha. Só HTTPS |
 | `csp_custom_frames` | _vazio_ | Origens custom pra `frame-src`. 1 por linha |
 | `csp_custom_styles` | _vazio_ | Origens custom pra `style-src` + `font-src`. 1 por linha |
+| `csp_report_denylist` | _vazio_ | Filtro de ruído: hosts cujas violações são descartadas antes de gravar (mantém o log só com violação real). 1 host por linha, sem esquema. Ex.: `use.typekit.net`. Extensões de navegador já são filtradas automaticamente pelo esquema |
 
 Detalhes completos do sistema CSP em [10 — Content Security Policy](10-content-security-policy.md).
 

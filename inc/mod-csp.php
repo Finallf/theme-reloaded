@@ -428,6 +428,84 @@ function rd_csp_register_endpoint() {
 add_action( 'rest_api_init', 'rd_csp_register_endpoint' );
 
 /**
+ * Parses the admin's "Report Noise Filter" textarea (1 host per line) into a
+ * normalized list of lowercase hostnames. Accepts a bare host (use.typekit.net)
+ * or a full URL (https://use.typekit.net/...) — in both cases only the host is
+ * kept, since CSP blocked-uri matching is host-based.
+ *
+ * @param string|null $raw Textarea content (separated by \n).
+ * @return string[] Lowercase hostnames, deduped.
+ */
+function rd_csp_parse_report_denylist( $raw ): array {
+	if ( ! is_string( $raw ) || '' === trim( $raw ) ) {
+		return array();
+	}
+	$hosts = array();
+	$lines = preg_split( '/\r\n|\r|\n/', $raw );
+	if ( ! is_array( $lines ) ) {
+		return array();
+	}
+	foreach ( $lines as $line ) {
+		$line = trim( $line );
+		if ( '' === $line ) {
+			continue;
+		}
+		// Full URL pasted by mistake → extract just the host.
+		if ( false !== strpos( $line, '://' ) ) {
+			$line = (string) ( wp_parse_url( $line, PHP_URL_HOST ) ?? '' );
+		}
+		$line = strtolower( ltrim( $line, '.' ) );
+		if ( '' !== $line ) {
+			$hosts[] = $line;
+		}
+	}
+	return array_values( array_unique( $hosts ) );
+}
+
+/**
+ * Decides whether a CSP report is "noise" that should be discarded before being
+ * stored, so the panel shows only real, actionable violations. Two layers:
+ *
+ *   A) Browser-extension injections (automatic, in code): when the browser
+ *      attributes the violation to an extension via the source-file scheme
+ *      (chrome-extension://, moz-extension://, safari-web-extension:// and
+ *      Safari's masked webkit-masked-url://). Covers ANY extension, present or
+ *      future, with zero maintenance.
+ *
+ *   B) Admin host denylist (Panel → Security): for noise that slips through
+ *      layer A with an empty or page-level source-file — some browsers don't
+ *      attribute the extension, so only the blocked-uri host identifies it
+ *      (e.g. use.typekit.net injected by the Adobe Acrobat extension).
+ *
+ * @param array    $report   Decoded csp-report payload.
+ * @param string[] $denylist Lowercase hosts from rd_csp_parse_report_denylist().
+ * @return bool True when the report is noise and should be dropped.
+ */
+function rd_csp_report_is_noise( array $report, array $denylist ): bool {
+	// --- Layer A: extension-scheme source-file ---
+	$source      = isset( $report['source-file'] ) ? strtolower( (string) $report['source-file'] ) : '';
+	$ext_schemes = array( 'chrome-extension://', 'moz-extension://', 'safari-web-extension://', 'safari-extension://', 'webkit-masked-url://' );
+	foreach ( $ext_schemes as $scheme ) {
+		if ( 0 === strpos( $source, $scheme ) ) {
+			return true;
+		}
+	}
+
+	// --- Layer B: blocked-uri host in the admin denylist ---
+	if ( ! empty( $denylist ) ) {
+		$blocked = isset( $report['blocked-uri'] ) ? (string) $report['blocked-uri'] : '';
+		if ( '' !== $blocked && false !== strpos( $blocked, '://' ) ) {
+			$host = strtolower( (string) ( wp_parse_url( $blocked, PHP_URL_HOST ) ?? '' ) );
+			if ( '' !== $host && in_array( $host, $denylist, true ) ) {
+				return true;
+			}
+		}
+	}
+
+	return false;
+}
+
+/**
  * Receives a CSP report from the browser. Expects a JSON body with the standard CSP-2 structure:
  *   { "csp-report": { "document-uri", "violated-directive", "blocked-uri", ... } }
  *
@@ -468,6 +546,14 @@ function rd_csp_receive_report( WP_REST_Request $request ) {
 		);
 	}
 	$report = $data['csp-report'];
+
+	// Noise filter — drop browser-extension injections (Layer A) and admin-listed
+	// hosts (Layer B) BEFORE storing, so the panel shows only real violations.
+	// Returns 204 (same as a stored report) so the browser sees nothing unusual.
+	$denylist = rd_csp_parse_report_denylist( rd_get_option( 'csp_report_denylist' ) );
+	if ( rd_csp_report_is_noise( $report, $denylist ) ) {
+		return new WP_REST_Response( null, 204 );
+	}
 
 	// Defensive whitelist — only saves known fields (avoids polluting the option
 	// if a browser/extension sends extra junk)
