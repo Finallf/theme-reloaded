@@ -158,7 +158,7 @@ Outras variantes (Poppins 500/900, JetBrains Mono 400/600/700) carregam normalme
     --rd-text-light:  #cccccc;
     --rd-text-label:  #aaaaaa;
     --rd-text-muted:  #999999;
-    --rd-text-dimmed: #777777;
+    --rd-text-dimmed: #909090;
 
     --rd-border:        #222222;
     --rd-border-light:  #333333;
@@ -171,6 +171,11 @@ Outras variantes (Poppins 500/900, JetBrains Mono 400/600/700) carregam normalme
 
     --rd-blue-dark:  #031CFF;
     --rd-blue-light: #00A8FF;
+
+    // Padding do "card" de conteúdo (posts single + páginas estáticas) — fonte
+    // única, com escada responsiva; o FAB do TOC lê --rd-content-pad-inline.
+    --rd-content-pad-block:  50px;  // 40px ≤1024px · 30px ≤768px
+    --rd-content-pad-inline: 60px;  // 40px ≤1024px · 25px ≤768px · 0.5rem <600px (só posts)
 }
 
 [data-theme="light"] {
@@ -185,7 +190,7 @@ Outras variantes (Poppins 500/900, JetBrains Mono 400/600/700) carregam normalme
     --rd-text-light:  #333333;
     --rd-text-label:  #495057;
     --rd-text-muted:  #6c757d;
-    --rd-text-dimmed: #adb5bd;
+    --rd-text-dimmed: #7a818b;
 
     --rd-border:        #dee2e6;
     --rd-border-light:  #e9ecef;
