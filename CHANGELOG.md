@@ -7,6 +7,20 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 <br>
 
 
+## [1.2.0-beta.1](https://github.com/Finallf/theme-reloaded/compare/v1.1.1-beta.1...v1.2.0-beta.1) (2026-06-08)
+
+### ✨ Features
+
+* **csp:** filter noise from violation reports before storage ([7812b59](https://github.com/Finallf/theme-reloaded/commit/7812b594419824b87d222bef497f8be40d64311c))
+
+### ♻️ Code Refactoring
+
+* **scss:** unify content padding into shared responsive tokens ([0dbdad0](https://github.com/Finallf/theme-reloaded/commit/0dbdad0d1a12bb786b3525501f226e5205ac6a5a))
+
+<br>
+
+---
+
 ## [1.1.1-beta.1](https://github.com/Finallf/theme-reloaded/compare/v1.1.0...v1.1.1-beta.1) (2026-06-06)
 
 ### 🐛 Bug Fixes
