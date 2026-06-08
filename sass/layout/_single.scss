@@ -15,22 +15,23 @@
 // 2. Style for the content inside single.php (unaffected)
 // ==========================================================
 .single-post-content {
-	// CSS custom property shared with the TOC anchor (in _toc.scss).
-	// The `right` of .rd-toc-anchor reads this variable and stays auto-synced:
-	// change the padding here → the FAB follows the new content-edge without touching the TOC.
-	// Override in media queries: redeclare `--rd-single-padding` inside the
-	// breakpoint to change both together.
-	--rd-single-padding: 1.25rem;
-
-	@media (max-width: 600px) {
-		--rd-single-padding: 0.5rem;
-	}
-
 	background-color: $glass-bg;
-	padding: var(--rd-single-padding);
+	// Shared content padding (defined in _variables.scss) — same token as the
+	// static pages, so both stay in sync from a single source. The TOC FAB anchor
+	// reads --rd-content-pad-inline for its `right` and stays auto-aligned.
+	padding: var(--rd-content-pad-block) var(--rd-content-pad-inline);
 	border-radius: 5px; // Your golden rule (was 8px)!
 	border: 1px solid $glass-border; // Unifying the border with the sidebar and grid
 	position: relative; // containing block for .rd-toc-anchor (position: absolute)
+
+	// Mobile: keep posts as tight as possible to maximize reading/code width
+	// (preserves the pre-refactor 0.5rem). Redeclaring the shared tokens here
+	// cascades to the TOC anchor nested inside, keeping the FAB aligned without
+	// touching _toc.scss.
+	@media (max-width: 600px) {
+		--rd-content-pad-block:  0.5rem;
+		--rd-content-pad-inline: 0.5rem;
+	}
 
 	.entry-header {
 		margin-bottom: 20px;

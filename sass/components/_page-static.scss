@@ -11,16 +11,10 @@
     background: $glass-bg;
     border: 1px solid $glass-border;
     border-radius: 8px;
-    padding: 50px 60px;
+    // Shared content padding (defined in _variables.scss) — same token as the
+    // single posts. The responsive ladder lives in :root, not here.
+    padding: var(--rd-content-pad-block) var(--rd-content-pad-inline);
     box-sizing: border-box;
-
-    @media (max-width: 1024px) {
-        padding: 40px 40px;
-    }
-
-    @media (max-width: 768px) {
-        padding: 30px 25px;
-    }
 }
 
 /* ===== HEADER (Page title) ===== */

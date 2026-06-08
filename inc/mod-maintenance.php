@@ -251,6 +251,14 @@ function rd_maintenance_render_login_form( $error_message = '' ) {
 
 	$html = rd_maintenance_get_template_html( $logo_url, '', $form_html );
 
+	// CSP: same as rd_maintenance_render_screen() — wp_die() injects a core
+	// <style> without a nonce. Open a local output buffer so the filter adds the
+	// nonce before the response is sent (idempotent; skips the template's already-
+	// nonce'd <style>).
+	if ( function_exists( 'rd_csp_nonce' ) && '' !== rd_csp_nonce() ) {
+		ob_start( 'rd_maintenance_nonce_filter' );
+	}
+
 	wp_die(
 		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $html built by rd_maintenance_get_template_html() where all dynamic values are esc_url/esc_attr/esc_html/wp_kses_post'd internally.
 		$html,

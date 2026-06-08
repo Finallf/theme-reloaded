@@ -1316,7 +1316,7 @@ FAB flutuante no canto superior direito de cada single (quando há ≥3 headings
 
 ### CSS variable compartilhada
 
-`--rd-single-padding` (1.25rem desktop, 0.5rem mobile <600px) é definida em `.single-post-content` e usada no `right` do `.rd-toc-anchor`. Mudanças de padding no `.single-post-content` são auto-seguidas pelo TOC sem alterar `_toc.scss`.
+`--rd-content-pad-inline` (padding horizontal do conteúdo — 60px desktop, 40px ≤1024px, 25px ≤768px; e 0.5rem no mobile <600px só nos posts) é definida em `_variables.scss` e compartilhada por `.single-post-content` e `.rd-page-article`. O `right` do `.rd-toc-anchor` lê esse token, então mudanças de padding são auto-seguidas pelo TOC sem alterar `_toc.scss`. Os posts redeclaram o token no breakpoint <600px (mantendo o mobile justo) e, como o anchor está aninhado dentro, o FAB acompanha automaticamente.
 
 ### Sticky detection via IntersectionObserver
 

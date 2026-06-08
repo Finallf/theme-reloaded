@@ -236,9 +236,9 @@ function rd_toc_render_html( $entries ) {
 	// The anchor lets the sticky have scope = the whole article without shifting
 	// the content (vs float:right which squeezed the kicker in .entry-title-row).
 	//
-	// Padding-tracking: the anchor uses the CSS custom property `--rd-single-padding`
-	// for `right`, defined in .single-post-content and shared with the
-	// article's `padding`. Padding changes in _single.scss are followed
+	// Padding-tracking: the anchor uses the shared CSS custom property
+	// `--rd-content-pad-inline` (defined in _variables.scss) for `right`, the same
+	// token used by the article's `padding`. Padding changes are followed
 	// automatically by the TOC without changing _toc.scss.
 	// Sentinel = an invisible 1×1 px element positioned at the top of the anchor (= natural
 	// position of the FAB before the sticky kicks in). An IntersectionObserver in toc.js
