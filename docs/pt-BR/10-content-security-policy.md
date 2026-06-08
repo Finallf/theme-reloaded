@@ -215,6 +215,17 @@ Pra cada violação recorrente, classifica:
 | `font-src` | Fonte de CDN | Adicionar origem |
 | `default-src` | Recurso de tipo não-mapeado | Analisar — provavelmente algo exótico (audio, manifest, worker) |
 
+> ⚠️ **Atenção a violações de extensão de navegador.** Fontes/scripts injetados por extensões (ex.: a extensão do Adobe Acrobat carregando `use.typekit.net`) aparecem como violação mesmo o tema não pedindo nada disso. **Não adicione a origem** — é ruído do cliente, não do site.
+
+### Filtro de ruído (2 camadas)
+
+O endpoint que recebe os reports descarta ruído **antes de gravar**, pra o painel mostrar só violação real:
+
+- **Camada A — esquema de extensão (automática, em código):** descarta quando o `source-file` vem de `chrome-extension://`, `moz-extension://`, `safari-web-extension://` ou `webkit-masked-url://` (Safari). Cobre qualquer extensão, sem manutenção.
+- **Camada B — denylist de hosts (painel):** campo `csp_report_denylist` em *Security*. Para o ruído que escapa da camada A sem `source-file` de extensão (alguns navegadores não atribuem a origem), basta listar o host (ex.: `use.typekit.net`). 1 host por linha, sem esquema.
+
+Implementação em `inc/mod-csp.php`: `rd_csp_report_is_noise()` (predicado das 2 camadas) + `rd_csp_parse_report_denylist()` (parser do campo). O filtro só vale pra reports **novos** — pra limpar os antigos, use o botão *Clear reports* no painel.
+
 ---
 
 ## 7. Como promover pra Enforce mode

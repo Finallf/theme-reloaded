@@ -62,6 +62,7 @@ function rd_get_default_options(): array {
 		'csp_custom_scripts'          => '', // extra origins for script-src + connect-src (1 per line)
 		'csp_custom_frames'           => '', // extra origins for frame-src (1 per line)
 		'csp_custom_styles'           => '', // extra origins for style-src + font-src (1 per line)
+		'csp_report_denylist'         => '', // blocked-uri hosts to drop from CSP reports (noise filter, 1 per line)
 
 		'ga_id'                       => '',
 		'google_site_verification'    => '',
@@ -954,6 +955,22 @@ function rd_settings_init() {
 			'id'   => 'csp_custom_styles',
 			'type' => 'textarea',
 			'desc' => __( 'Adds origins to <code>style-src</code> and <code>font-src</code>. Use for external font CDNs (Bunny Fonts, Google Fonts mirror) or external stylesheets. <strong>One per line.</strong> Examples: <code>https://fonts.bunny.net</code>, <code>https://fonts.googleapis.com</code>. Only HTTPS origins accepted.', 'reloaded' ),
+		)
+	);
+
+	// Report Noise Filter — admin-managed host denylist (Layer B of the noise
+	// filter in mod-csp.php). Layer A (browser-extension schemes) is automatic in
+	// code; this list only covers noise that arrives without an extension source-file.
+	add_settings_field(
+		'csp_report_denylist',
+		__( 'Report Noise Filter — Ignored Hosts', 'reloaded' ),
+		'rd_master_field_cb',
+		'rd_options_security',
+		'sec_seg_csp',
+		array(
+			'id'   => 'csp_report_denylist',
+			'type' => 'textarea',
+			'desc' => __( 'Hosts whose violations are <strong>dropped before being stored</strong>, to keep the reports below focused on real, actionable issues. Violations injected by browser extensions are already filtered automatically (by their <code>chrome-extension://</code> / <code>moz-extension://</code> scheme); use this list only for noise that slips through without an extension source — e.g. fonts injected by the Adobe Acrobat extension (<code>use.typekit.net</code>). <strong>One host per line, no scheme.</strong> Example: <code>use.typekit.net</code>.', 'reloaded' ),
 		)
 	);
 
@@ -1924,7 +1941,7 @@ function rd_options_sanitize( array $input ) {
 		} elseif ( in_array( $key, array( 'lgpd_text', 'footer_subline', 'maintenance_text' ), true ) ) {
 			// 2. Fields that allow safe basic HTML (links, bold, emphasis) — but block scripts.
 			$new_input[ $key ] = wp_kses_post( $value );
-		} elseif ( in_array( $key, array( 'custom_robots_txt', 'trusted_proxy_ips', 'csp_custom_scripts', 'csp_custom_frames', 'csp_custom_styles' ), true ) ) {
+		} elseif ( in_array( $key, array( 'custom_robots_txt', 'trusted_proxy_ips', 'csp_custom_scripts', 'csp_custom_frames', 'csp_custom_styles', 'csp_report_denylist' ), true ) ) {
 			// 3. Plain-text textarea fields — strip tags but PRESERVE line breaks.
 			// sanitize_text_field() would collapse all lines into a single one.
 			$new_input[ $key ] = sanitize_textarea_field( $value );

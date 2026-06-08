@@ -1107,6 +1107,9 @@ Adiciona o header `Content-Security-Policy-Report-Only` no frontend com policy c
   - `csp_custom_styles` → style-src + font-src
   - Parser `rd_csp_parse_custom_origins()` valida formato (só HTTPS, sem keywords com aspas, sem wildcard puro)
 - **`report-uri`**: endpoint REST próprio `/wp-json/rd/v1/csp-report`
+- **Filtro de ruído nos reports** — descarta violação irrelevante **antes de gravar** (`rd_csp_report_is_noise()`):
+  - Camada A (código): `source-file` com esquema de extensão (`chrome-extension://`, `moz-extension://`, `safari-web-extension://`, `webkit-masked-url://`)
+  - Camada B (painel): host do `blocked-uri` na denylist `csp_report_denylist` (parser `rd_csp_parse_report_denylist()`). Ex.: `use.typekit.net` injetado por extensão sem `source-file`
 
 ### Nonce + strict-dynamic (Wave 8.5)
 
