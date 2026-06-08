@@ -192,6 +192,24 @@ $brand-gradient: linear-gradient(135deg, $brand-blue-dark 0%, $brand-blue-light 
 	// Fixed Colors (Brand)
 	--rd-blue-dark: #031CFF;
 	--rd-blue-light: #00A8FF;
+
+	// Content padding — single source of truth for the content "card"
+	// (single posts + static pages). Split into block/inline so the padding can
+	// be asymmetric (50/60). The TOC FAB anchor reads the inline value for its
+	// `right`, staying auto-aligned to the content edge. The responsive ladder
+	// lives here only — components just consume the tokens.
+	--rd-content-pad-block:  50px;  // vertical
+	--rd-content-pad-inline: 60px;  // horizontal
+
+	@media (max-width: 1024px) {
+		--rd-content-pad-block:  40px;
+		--rd-content-pad-inline: 40px;
+	}
+
+	@media (max-width: 768px) {
+		--rd-content-pad-block:  30px;
+		--rd-content-pad-inline: 25px;
+	}
 }
 
 [data-theme="light"] {

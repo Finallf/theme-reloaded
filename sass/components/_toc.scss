@@ -23,15 +23,16 @@
 // article but WITHOUT changing the content flow).
 //
 // Padding auto-tracking:
-// --rd-single-padding is defined in .single-post-content (_single.scss).
-// The anchor reads the variable in `right`, so changing the padding there → changes right here
-// automatically. An override in a media query (mobile, etc.) only needs to
-// redeclare `--rd-single-padding` inside the .single-post-content breakpoint.
+// --rd-content-pad-inline is the shared horizontal content padding (defined in
+// _variables.scss, the same token used by .single-post-content and .rd-page-article).
+// The anchor reads it in `right`, so it stays aligned to the content edge.
+// .single-post-content redeclares the token at its mobile breakpoint and, since
+// the anchor is nested inside, the FAB follows automatically.
 // ==========================================================
 .rd-toc-anchor {
     position: absolute;
-    top: 52px;
-    right: var(--rd-single-padding, 1.25rem); // fallback: current desktop value
+    top: 82px;
+    right: var(--rd-content-pad-inline, 60px); // fallback: current desktop horizontal padding
     height: 100%;
     width: 40px;
     pointer-events: none; // anchor is just a "track" — doesn't block clicks
