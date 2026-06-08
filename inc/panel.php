@@ -74,9 +74,6 @@ function rd_get_default_options(): array {
 		'plausible_domain'            => '',
 		'umami_website_id'            => '',
 		'umami_script_url'            => '',
-		'discord_widget'              => 1,
-		'discord_id'                  => '',
-		'discord_facade_logo'         => '', // URL of the dedicated logo for the Discord facade; empty = fallback Custom Logo → theme's hardcoded logo.
 
 		'markdown_enabled'            => 1,
 		'prism_js'                    => 1,
@@ -87,7 +84,6 @@ function rd_get_default_options(): array {
 		'enable_search_suggestions'   => 1,
 		'disable_emojis'              => 1,
 		'hide_wp_ver'                 => 1,
-		'facade_discord'              => 1,
 		'facade_youtube'              => 1,
 		'disable_gutenberg_css'       => 1,
 		'enable_security_headers'     => 1,
@@ -1069,45 +1065,6 @@ function rd_settings_init() {
 		)
 	);
 
-	rd_panel_register_section( 'sec_int_discord', __( 'Discord Widget', 'reloaded' ), 'format-chat', 'rd_options_integrations' );
-	add_settings_field(
-		'discord_widget',
-		__( 'Enable Discord Widget', 'reloaded' ),
-		'rd_master_field_cb',
-		'rd_options_integrations',
-		'sec_int_discord',
-		array(
-			'id'   => 'discord_widget',
-			'type' => 'checkbox',
-			'desc' => __( 'Enables displaying the Discord server in the sidebar.', 'reloaded' ),
-		)
-	);
-	add_settings_field(
-		'discord_id',
-		__( 'Discord Server ID', 'reloaded' ),
-		'rd_master_field_cb',
-		'rd_options_integrations',
-		'sec_int_discord',
-		array(
-			'id'          => 'discord_id',
-			'type'        => 'text',
-			'placeholder' => '408089552759029788',
-			'desc'        => __( 'Numeric <strong>Server ID</strong> (snowflake, 17-19 digits) — <strong>NOT</strong> a username or invite code. To get it: enable Developer Mode in Discord (Settings → Advanced → Developer Mode), then right-click your server icon in the sidebar → "Copy Server ID". Required by the widget API: server must also have Widget enabled in Server Settings → Widget.', 'reloaded' ),
-		)
-	);
-	add_settings_field(
-		'discord_facade_logo',
-		__( 'Discord Facade Logo', 'reloaded' ),
-		'rd_master_field_cb',
-		'rd_options_integrations',
-		'sec_int_discord',
-		array(
-			'id'   => 'discord_facade_logo',
-			'type' => 'media',
-			'desc' => __( 'Optional. Image displayed next to the Discord logo on the sidebar facade (before the user clicks to load the live widget). If empty, falls back to the site\'s Custom Logo (Customizer → Site Identity), then to the theme\'s default panel logo. Recommended: horizontal logo, ~430x100px or similar 4:1 aspect ratio.', 'reloaded' ),
-		)
-	);
-
 	/*
 	 * --- PERFORMANCE --- (Wave 11: split into Loading + Bloat. Moved to
 	 * other tabs: markdown/prism → General; hide_wp_ver/security_headers →
@@ -1150,19 +1107,6 @@ function rd_settings_init() {
 			'desc' => __( 'Replaces YouTube embeds with a lightweight thumbnail image, loading the player iframe only when the user clicks. Drastically reduces initial page weight on posts with videos.', 'reloaded' ),
 		)
 	);
-	add_settings_field(
-		'facade_discord',
-		__( 'Discord Facade', 'reloaded' ),
-		'rd_master_field_cb',
-		'rd_options_performance',
-		'sec_perf_loading',
-		array(
-			'id'   => 'facade_discord',
-			'type' => 'checkbox',
-			'desc' => __( 'Replaces the Discord sidebar widget with a static placeholder, loading the live iframe only when the user clicks. Saves a third-party connection on every page load.', 'reloaded' ),
-		)
-	);
-
 	rd_panel_register_section( 'sec_perf_bloat', __( 'Bloat Reducers', 'reloaded' ), 'trash', 'rd_options_performance' );
 	add_settings_field(
 		'disable_emojis',

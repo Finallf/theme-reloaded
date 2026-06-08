@@ -312,10 +312,9 @@ Usada por single.php, page.php, archive.php, search.php, author.php.
 
 Conteúdo:
 
-1. **Widget Discord** — facade ou iframe direto (`rd_render_discord_widget()`) — hardcoded (vira widget na fase 2)
-2. **Banner sidebar top** (300×250 — `rd_render_ad_sidebar_top()`) — hardcoded (vira widget na fase 3)
-3. **Sidebar dinâmica `sidebar-1`** — widgets WP nativos (Most Read, Latest Video, **Apoie o Projeto** via `RD_Support_Widget`, etc.)
-4. **Banner sidebar sticky** (`rd_render_ad_sidebar_sticky()`) — `position: sticky`
+1. **Banner sidebar top** (300×250 — `rd_render_ad_sidebar_top()`) — hardcoded (vira widget na fase 3)
+2. **Sidebar dinâmica `sidebar-1`** — widgets WP nativos (Most Read, Latest Video, **Apoie o Projeto**, **Discord**, etc.)
+3. **Banner sidebar sticky** (`rd_render_ad_sidebar_sticky()`) — `position: sticky`
 
 ---
 

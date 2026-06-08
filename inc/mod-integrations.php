@@ -148,22 +148,19 @@ add_action(
 
 /*******************************************************************************
  * Renders the Discord Widget (Sidebar)                        - (Integrations)*
+ *                                                                             *
+ * Builds and RETURNS the Discord block HTML from a data array. Config now     *
+ * lives in RD_Discord_Widget (Appearance → Widgets), not the theme panel.     *
+ * Keys: discord_id (string), facade (bool-ish), facade_logo (URL).            *
  *******************************************************************************/
-function rd_render_discord_widget() {
-	// 1. Master check: is the widget enabled in the panel?
-	$show_discord = rd_get_option_bool( 'discord_widget' );
+function rd_get_discord_widget_html( array $data ): string {
+	// Server ID — falls back to the ReloadeD default when not provided.
+	$id_discord = ! empty( $data['discord_id'] ) ? $data['discord_id'] : '408089552759029788';
 
-	// If it's off, the function dies here and renders nothing
-	if ( ! $show_discord ) {
-		return;
-	}
+	// Facade (lazy-load) defaults ON when the instance hasn't set it yet.
+	$use_facade = ! isset( $data['facade'] ) ? true : ! empty( $data['facade'] );
 
-	// 2. Define which ID to use (Panel or ReloadeD Default)
-	$id_discord = rd_get_option( 'discord_id' ) ? rd_get_option( 'discord_id' ) : '408089552759029788';
-
-	// 3. Check the performance mode (Facade or Iframe)
-	$use_facade = rd_get_option_bool( 'facade_discord' );
-
+	ob_start();
 	if ( $use_facade ) :
 		?>
 		<div class="rd-facade discord-style" data-type="discord" data-id="<?php echo esc_attr( $id_discord ); ?>">
@@ -179,10 +176,10 @@ function rd_render_discord_widget() {
 				<div class="logo-int">
 					<?php
 					// 3-level resolution:
-					// 1. discord_facade_logo from the panel (admin chose a dedicated image)
+					// 1. facade_logo from the widget (admin chose a dedicated image)
 					// 2. WP's Custom Logo (rd_get_site_logo)
 					// 3. logo-reloaded-panel.webp (hardcoded fallback — inside rd_get_site_logo)
-					$facade_logo_url = rd_get_option( 'discord_facade_logo' );
+					$facade_logo_url = $data['facade_logo'] ?? '';
 					if ( empty( $facade_logo_url ) ) {
 						$logo_data       = rd_get_site_logo( 'medium' );
 						$facade_logo_url = $logo_data['url'];
@@ -210,4 +207,5 @@ function rd_render_discord_widget() {
 		<iframe src="https://ptb.discord.com/widget?id=<?php echo esc_attr( $id_discord ); ?>&theme=dark" width="100%" height="500" allowtransparency="true" frameborder="0" loading="lazy"></iframe>
 		<?php
 	endif;
+	return (string) ob_get_clean();
 }

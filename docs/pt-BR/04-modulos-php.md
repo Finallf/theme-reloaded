@@ -140,9 +140,10 @@ Priority 5 no wp_head:
 
 ### Discord Widget
 
-- Renderiza facade ou iframe direto baseado em `facade_discord`
+- `rd_get_discord_widget_html( array $data )` — **retorna** o HTML do bloco a partir do array do widget (`discord_id`, `facade`, `facade_logo`); não lê mais opções do painel
 - Facade: div estática com SVG do Discord + logo do site, sem carregar iframe até o user clicar
 - Iframe direto: `<iframe loading="lazy" src="https://ptb.discord.com/widget?id=...&theme=dark">`
+- Config + posicionamento no **`RD_Discord_Widget`** (`inc/class-rd-discord-widget.php`). O CSP libera o `frame-src` via `is_active_widget('rd_discord')`
 
 ### Ad Global
 
@@ -789,7 +790,7 @@ A função `rd_dashboard_render()` (callback de `add_settings_section('sec_dashb
 
 3 cards do Site Status com **deep link buttons** (CSP, Login Protection, Next-gen Images) — ícone de engrenagem ao lado do badge com tooltip estilizado que abre a aba relevante e scrolla até a section via hash anchor.
 
-9 cards com **toggle switch inline** (Maintenance Mode, Statistics Tracking, Critical CSS Inline, Top Bar, Comments, Markdown, Discord Widget, YouTube Facade, Breadcrumbs) — admin flipa ON/OFF sem sair do Dashboard.
+8 cards com **toggle switch inline** (Maintenance Mode, Statistics Tracking, Critical CSS Inline, Top Bar, Comments, Markdown, YouTube Facade, Breadcrumbs) — admin flipa ON/OFF sem sair do Dashboard. (Discord saiu — virou widget WP.)
 
 **Tooltips de nome (Wave 12)** — passar o mouse no **nome** de qualquer card do Site Status mostra uma explicação curta do que a feature faz, reusando o mesmo balão `[data-tooltip]` dos switches/engrenagens (fundo preto translúcido). O balão fica centralizado sobre o card (âncora via `position: relative` no `.rd-pcard`) e o texto em caixa normal. As explicações vivem em `rd_dashboard_get_status_tooltips()` (keyed pelo option name de cada card) e são injetadas pelo novo arg `tooltip` do `rd_panel_card_open()`.
 
@@ -888,7 +889,7 @@ Agrega dados coletados pelo `mod-views.php` num dashboard read-only no painel ad
 
 **Primeiro widget WP nativo do tema.** Classe `RD_Popular_Posts_Widget extends WP_Widget` registrada em `widgets_init`. Aparece em **Aparência → Widgets** sob o nome "ReloadeD: Popular Posts" — o admin arrasta pra qualquer sidebar registrada (no momento, só "Main Sidebar").
 
-**Diferente dos blocos hardcoded no `sidebar.php`** (Discord, Donations, Ads) que são chamadas de função fixas — esse é controlado 100% pela UI nativa de widgets do WP. Admin decide se/onde colocar e configura sem editar código.
+**Diferente dos blocos hardcoded no `sidebar.php`** (apenas os anúncios agora) que são chamadas de função fixas — esse é controlado 100% pela UI nativa de widgets do WP. Admin decide se/onde colocar e configura sem editar código. (Discord e Apoie o Projeto também já são widgets `WP_Widget`.)
 
 ### Configuração no admin (`form()`)
 

@@ -82,7 +82,7 @@ Bundle padrão do Prism — cobre as ~30 mais comuns (JavaScript, PHP, Python, C
 
 ## 🎬 Facades de iframe (YouTube/Discord)
 
-Habilitado via 2 toggles independentes no painel (Performance): `facade_youtube` e `facade_discord` (ambos default: ✅).
+Habilitado para YouTube via toggle no painel (Performance): `facade_youtube` (default ✅). O facade do Discord agora é um checkbox no próprio widget **"ReloadeD: Discord"** (default ligado).
 
 ### Por que?
 
@@ -115,7 +115,7 @@ facade.addEventListener('click', function () {
 
 ### Discord
 
-Diferente do YT, o Discord widget é renderizado pelo `rd_render_discord_widget()` em vez de oembed. Mesma lógica:
+Diferente do YT, o bloco Discord é renderizado pelo `rd_get_discord_widget_html()` (via `RD_Discord_Widget`) em vez de oembed. Mesma lógica:
 - Com facade: div com SVG do Discord + logo do site (clicável)
 - Sem facade: `<iframe src="https://ptb.discord.com/widget?id=...&theme=dark">` direto
 
@@ -398,13 +398,12 @@ O handler em `navigation.js` faz o resto: copia pra clipboard, troca o texto do 
 A sidebar do tema renderiza:
 
 ```php
-1. rd_render_discord_widget()      ← bloco hardcoded (vira widget na fase 2)
-2. rd_render_ad_sidebar_top()      ← bloco hardcoded (vira widget na fase 3)
-3. dynamic_sidebar('sidebar-1')    ← WIDGETS WP NATIVOS (Most Read, Latest Video, Support, etc.)
-4. rd_render_ad_sidebar_sticky()   ← bloco hardcoded (fixo no rodapé da sidebar)
+1. rd_render_ad_sidebar_top()      ← bloco hardcoded (vira widget na fase 3)
+2. dynamic_sidebar('sidebar-1')    ← WIDGETS WP NATIVOS (Most Read, Latest Video, Support, Discord, etc.)
+3. rd_render_ad_sidebar_sticky()   ← bloco hardcoded (fixo no rodapé da sidebar)
 ```
 
-O "Apoie o Projeto" deixou de ser hardcoded e virou o `RD_Support_Widget`, posicionado livremente no slot 3 junto dos demais widgets. Discord e anúncio-topo seguem hardcoded por ora (migração pra widget em fases). Vantagem do modelo widget: o usuário ordena/remove pela UI nativa, sem editar código.
+O "Apoie o Projeto" (`RD_Support_Widget`) e o "Discord" (`RD_Discord_Widget`) deixaram de ser hardcoded e agora são widgets, posicionados livremente no slot de widgets. Só o anúncio-topo segue hardcoded por ora (vira widget na fase 3). Vantagem do modelo widget: o usuário ordena/remove pela UI nativa, sem editar código.
 
 ### Configuração
 

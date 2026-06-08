@@ -312,8 +312,9 @@ function rd_csp_build_policy(): string {
 		}
 	}
 
-	// Discord widget (iframe)
-	if ( rd_get_option_bool( 'discord_widget' ) ) {
+	// Discord widget (iframe) — allowed only when the Discord widget is placed
+	// in an active sidebar/area (placement = enable; there's no master toggle).
+	if ( is_active_widget( false, false, 'rd_discord' ) ) {
 		$d['frame-src'][] = 'https://ptb.discord.com';
 		$d['frame-src'][] = 'https://discord.com';
 	}

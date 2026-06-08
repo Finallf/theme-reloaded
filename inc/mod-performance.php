@@ -452,9 +452,9 @@ function rd_add_resource_hints( $hints, $relation_type ) {
 			$hints[] = 'https://i.ytimg.com';
 		}
 
-		// Discord widget — iframe loaded directly in the sidebar when the widget
-		// is enabled (even without a facade, the domain is the same)
-		if ( rd_get_option_bool( 'discord_widget' ) ) {
+		// Discord widget — iframe loaded in the sidebar when the widget is placed
+		// (even without a facade, the domain is the same). Gated on widget presence.
+		if ( is_active_widget( false, false, 'rd_discord' ) ) {
 			$hints[] = 'https://ptb.discord.com';
 		}
 

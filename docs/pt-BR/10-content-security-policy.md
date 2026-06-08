@@ -48,7 +48,7 @@ $d = [
 
 // Origens condicionais — adicionadas só se integração está ON no painel
 if (rd_get_option('ga_id'))            $d['script-src'][] = 'https://www.googletagmanager.com';
-if (rd_get_option_bool('discord_widget')) $d['frame-src'][] = 'https://ptb.discord.com';
+if (is_active_widget(false, false, 'rd_discord')) $d['frame-src'][] = 'https://ptb.discord.com';
 // ...etc
 
 // Custom origins do painel (3 textareas — admin adiciona origens novas sem PHP)
@@ -59,7 +59,7 @@ $d['style-src']   = array_merge($d['style-src'],   rd_csp_parse_custom_origins(r
 $d['font-src']    = array_merge($d['font-src'],    rd_csp_parse_custom_origins(rd_get_option('csp_custom_styles')));
 ```
 
-**Vantagem da arquitetura condicional:** liga toggle "Discord" no painel → policy automaticamente permite `discord.com`. Desliga → origem é removida. **Sem editar PHP** pra integrações já mapeadas.
+**Vantagem da arquitetura condicional:** ativa uma integração (ex.: configura o GA, ou coloca o widget Discord) → policy automaticamente permite a origem; remove → origem some. **Sem editar PHP** pra integrações já mapeadas.
 
 **Custom origins do painel:** se aparecer integração nova que NÃO está no código (tracker novo, embed novo, CDN nova), admin cola no campo certo dos 3 textareas em **Painel → Segurança** sem precisar editar PHP. Ver seção 4 abaixo.
 
@@ -134,7 +134,7 @@ Função `rd_csp_render_reports_panel()` é callback de section em **Painel → 
 | Aumentar/diminuir limite FIFO | `inc/mod-csp.php` → constante `RD_CSP_REPORTS_MAX` |
 | Aumentar/diminuir rate-limit do endpoint | `inc/mod-csp.php` → constantes `RD_CSP_RATE_LIMIT_MAX` (default 60) e `RD_CSP_RATE_LIMIT_WINDOW` (default 60s) |
 
-**Nota:** integrações **mapeadas no código** (GA, Clarity, FB Pixel, Discord, YouTube, etc.) liberam suas origens automaticamente quando o toggle correspondente está ON. Integrações **não mapeadas** vão pros 3 campos Custom Origins do painel — admin controla sem precisar mexer em PHP.
+**Nota:** integrações **mapeadas no código** (GA, Clarity, FB Pixel, Discord, YouTube, etc.) liberam suas origens automaticamente quando ativas (toggle ON, ID configurado, ou — no caso do Discord — o widget colocado). Integrações **não mapeadas** vão pros 3 campos Custom Origins do painel — admin controla sem precisar mexer em PHP.
 
 ### Os 3 campos Custom Origins
 

@@ -1,11 +1,6 @@
 <?php defined( 'ABSPATH' ) || exit; ?>
 <aside id="secondary" class="widget-area">
 	<?php
-	// Discord block (comes from mod-integrations.php).
-	if ( function_exists( 'rd_render_discord_widget' ) ) {
-		rd_render_discord_widget();
-	}
-
 	// Top-of-sidebar ad banner (comes from mod-ads.php).
 	if ( function_exists( 'rd_render_ad_sidebar_top' ) ) {
 		rd_render_ad_sidebar_top();
