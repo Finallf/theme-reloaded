@@ -7,6 +7,20 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 <br>
 
 
+## [1.1.1](https://github.com/Finallf/theme-reloaded/compare/v1.1.0...v1.1.1) (2026-06-08)
+
+### 🐛 Bug Fixes
+
+* **maintenance:** add CSP nonce to the wp_die style on the dev-login screen ([df7c07f](https://github.com/Finallf/theme-reloaded/commit/df7c07fc475ac2175cdecde6aea4dbe5ddf4af71))
+
+### ♻️ Code Refactoring
+
+* **scss:** unify content padding into shared responsive tokens ([0dbdad0](https://github.com/Finallf/theme-reloaded/commit/0dbdad0d1a12bb786b3525501f226e5205ac6a5a))
+
+<br>
+
+---
+
 ## [1.1.1-beta.1](https://github.com/Finallf/theme-reloaded/compare/v1.1.0...v1.1.1-beta.1) (2026-06-06)
 
 ### 🐛 Bug Fixes
