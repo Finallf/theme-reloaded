@@ -7,6 +7,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 <br>
 
 
+## [1.3.0-beta.2](https://github.com/Finallf/theme-reloaded/compare/v1.3.0-beta.1...v1.3.0-beta.2) (2026-06-08)
+
+### ✨ Features
+
+* **widgets:** convert the Discord block into a configurable widget ([3c453e3](https://github.com/Finallf/theme-reloaded/commit/3c453e3fe0b172d072d4acec6e55aec12dc5aaea))
+
+<br>
+
+---
+
 ## [1.3.0-beta.1](https://github.com/Finallf/theme-reloaded/compare/v1.2.0...v1.3.0-beta.1) (2026-06-08)
 
 ### ✨ Features
