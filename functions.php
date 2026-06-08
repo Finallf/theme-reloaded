@@ -27,6 +27,7 @@ require_once get_template_directory() . '/inc/mod-views.php';
 require_once get_template_directory() . '/inc/mod-stats.php';
 require_once get_template_directory() . '/inc/class-rd-popular-posts-widget.php';
 require_once get_template_directory() . '/inc/class-rd-latest-video-widget.php';
+require_once get_template_directory() . '/inc/class-rd-support-widget.php';
 require_once get_template_directory() . '/inc/mod-security.php';
 require_once get_template_directory() . '/inc/mod-csp.php';
 require_once get_template_directory() . '/inc/mod-backup.php';

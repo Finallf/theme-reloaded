@@ -11,12 +11,9 @@
 		rd_render_ad_sidebar_top();
 	}
 
-	// "Support the Project" block (comes from mod-donations.php).
-	if ( function_exists( 'rd_render_support_block' ) ) {
-		rd_render_support_block();
-	}
-
 	// WordPress widgets (Appearance → Widgets) — only renders when present.
+	// The "Support the Project" block is now RD_Support_Widget, placed and
+	// ordered here via Appearance → Widgets (no longer hardcoded).
 	if ( is_active_sidebar( 'sidebar-1' ) ) {
 		dynamic_sidebar( 'sidebar-1' );
 	}

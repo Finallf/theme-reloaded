@@ -114,13 +114,6 @@ function rd_get_default_options(): array {
 		'sitemap_include_authors'     => 0,
 		'sitemap_include_cpt'         => 1,
 
-		'github_sponsors'             => '',
-		'paypal_url'                  => '',
-		'paypal_qrcode'               => '',
-		'pix_url'                     => '',
-		'pix_qrcode'                  => '',
-		'pix_chave'                   => '',
-
 		'ad_global'                   => '',
 		'ad_topo_desktop'             => '',
 		'ad_topo_mobile'              => '',
@@ -1588,91 +1581,6 @@ function rd_settings_init() {
 			'id'   => 'ad_sidebar_sticky',
 			'type' => 'textarea',
 			'desc' => __( 'Rendered at the bottom of the sidebar. Follows the screen scroll.', 'reloaded' ),
-		)
-	);
-
-	/*
-	 * --- MONETIZATION — DONATIONS sub-sections ---
-	 * Direct user-supported donations: GitHub Sponsors, PayPal, PIX (Brazil).
-	 * Rendered after the Ads sub-sections (passive monetization comes first).
-	 */
-	rd_panel_register_section( 'sec_doacoes_intl', __( 'Donations — International', 'reloaded' ), 'admin-site-alt3', 'rd_options_monetization' );
-	add_settings_field(
-		'github_sponsors',
-		__( 'GitHub Sponsors', 'reloaded' ),
-		'rd_master_field_cb',
-		'rd_options_monetization',
-		'sec_doacoes_intl',
-		array(
-			'id'          => 'github_sponsors',
-			'type'        => 'text',
-			'placeholder' => 'https://github.com/sponsors/seu-usuario',
-			'desc'        => __( 'Link to your official GitHub sponsorship page for global supporters.', 'reloaded' ),
-		)
-	);
-	add_settings_field(
-		'paypal_url',
-		__( 'PayPal Donation Link', 'reloaded' ),
-		'rd_master_field_cb',
-		'rd_options_monetization',
-		'sec_doacoes_intl',
-		array(
-			'id'          => 'paypal_url',
-			'type'        => 'text',
-			'placeholder' => 'https://www.paypal.com/donate?hosted_button_id=XXXX',
-			'desc'        => __( 'Direct URL to your PayPal donation page.', 'reloaded' ),
-		)
-	);
-	add_settings_field(
-		'paypal_qrcode',
-		__( 'PayPal QR Code', 'reloaded' ),
-		'rd_master_field_cb',
-		'rd_options_monetization',
-		'sec_doacoes_intl',
-		array(
-			'id'   => 'paypal_qrcode',
-			'type' => 'media',
-			'desc' => __( 'Upload the PayPal QR Code. When clicked on the site, it will open the link configured above.', 'reloaded' ),
-		)
-	);
-
-	rd_panel_register_section( 'sec_doacoes_br', __( 'Donations — Brazil (PIX)', 'reloaded' ), 'money-alt', 'rd_options_monetization' );
-	add_settings_field(
-		'pix_url',
-		__( 'PIX Link (Copy and Paste)', 'reloaded' ),
-		'rd_master_field_cb',
-		'rd_options_monetization',
-		'sec_doacoes_br',
-		array(
-			'id'          => 'pix_url',
-			'type'        => 'text',
-			'placeholder' => 'https://nubank.com.br/pagar/xxx',
-			'desc'        => __( 'Direct URL for PIX payment (if your bank provides a link). The QR Code will be clickable.', 'reloaded' ),
-		)
-	);
-	add_settings_field(
-		'pix_qrcode',
-		__( 'PIX QR Code', 'reloaded' ),
-		'rd_master_field_cb',
-		'rd_options_monetization',
-		'sec_doacoes_br',
-		array(
-			'id'   => 'pix_qrcode',
-			'type' => 'media',
-			'desc' => __( 'Upload your PIX QR Code image.', 'reloaded' ),
-		)
-	);
-	add_settings_field(
-		'pix_chave',
-		__( 'PIX Key', 'reloaded' ),
-		'rd_master_field_cb',
-		'rd_options_monetization',
-		'sec_doacoes_br',
-		array(
-			'id'          => 'pix_chave',
-			'type'        => 'text',
-			'placeholder' => __( 'email@domain.com or CPF/CNPJ', 'reloaded' ),
-			'desc'        => __( 'Your direct PIX key for supporters from Brazil.', 'reloaded' ),
 		)
 	);
 

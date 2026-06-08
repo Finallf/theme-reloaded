@@ -676,11 +676,15 @@ O title e a description seguem usando os helpers nativos `the_archive_title()` e
 
 ## 💝 `inc/mod-donations.php` — Apoie o Projeto
 
-- `rd_render_donations()` — renderiza o bloco "Apoie o Projeto" com:
+- `rd_get_support_block_html( array $data ): string` — monta e **retorna** o HTML do bloco "Apoie o Projeto" a partir de um array de dados (não lê mais opções do painel):
+  - Título configurável (`<h3>`; vazio = "Support the Project")
   - GitHub Sponsors (link)
   - PayPal (link + QR code clicável)
   - PIX (URL + QR code + chave "copia e cola" com botão JS)
-  - WhatsApp direto
+  - Retorna `''` quando nenhum método é preenchido (o caller pula o wrapper do widget)
+- `rd_render_qr_img()` — serve a versão `rd-qr` (240×240) do QR quando o anexo é resolvível.
+
+> Configuração e posicionamento ficam no **`RD_Support_Widget`** (`inc/class-rd-support-widget.php`, Aparência → Widgets). O bloco deixou de ser hardcoded no `sidebar.php` e os campos saíram do painel.
 
 > JS pra "Copy PIX key" usa o helper genérico `data-rd-copy` (definido em `assets/js/navigation.js`). Veja seção [Copy to Clipboard](06-frontend-scss-js.md#copy-to-clipboard) pra detalhes.
 

@@ -360,26 +360,20 @@ $primary_id = rd_get_primary_category_id( get_the_ID() );
 
 ## 💝 Sistema de Doações
 
-Configurado via aba "Donations" do painel.
+Configurado no widget **"ReloadeD: Support the Project"** (`RD_Support_Widget`, Aparência → Widgets) — todas as opções ficam no próprio widget, não mais no painel. O bloco "Apoie o Projeto" aparece **onde você colocar o widget** (Main Sidebar ou Footer), na ordem que definir.
 
-### Bloco renderizado
+### Itens suportados (campos do widget)
 
-Bloco "Apoie o Projeto" aparece:
-- **Sidebar** — abaixo das integrações (Discord)
-- **Footer** — coluna 3 ou bloco standalone (depende do template)
-
-### Itens suportados
-
-| Item | Como configurar |
-|------|-----------------|
+| Item | Campo |
+|------|-------|
+| **Título (heading)** | `title` — texto do `<h3>`; vazio = "Support the Project" (padrão) |
 | **GitHub Sponsors** | URL completa em `github_sponsors` |
-| **PayPal** | URL em `paypal_url` + QR code via Media Library em `paypal_qrcode` |
-| **PIX (link)** | URL em `pix_url` (link copia-cola se banco fornecer) |
-| **PIX (QR)** | Imagem em `pix_qrcode` |
+| **PayPal** | URL em `paypal_url` + QR code (seletor de mídia ou URL) em `paypal_qrcode` |
+| **PIX (link)** | URL em `pix_url` (link copia-cola se o banco fornecer) |
+| **PIX (QR)** | Imagem em `pix_qrcode` (seletor de mídia ou URL) |
 | **PIX (chave texto)** | Texto em `pix_chave` — renderiza com botão "Copiar chave" funcional via JS |
-| **WhatsApp** | URL `wa.me/...` em `social_whatsapp` |
 
-Cada campo vazio remove o item do bloco.
+Cada campo vazio remove o item do bloco. Se **nenhum** método de doação for preenchido, o widget se oculta por completo (nem o wrapper aparece).
 
 ### Botão "Copiar chave PIX"
 
@@ -401,17 +395,16 @@ O handler em `navigation.js` faz o resto: copia pra clipboard, troca o texto do 
 
 ### Distinção vs blocos hardcoded do `sidebar.php`
 
-A sidebar do tema renderiza 5 elementos:
+A sidebar do tema renderiza:
 
 ```php
-1. rd_render_discord_widget()      ← bloco hardcoded
-2. rd_render_ad_sidebar_top()      ← bloco hardcoded
-3. rd_render_support_block()       ← bloco hardcoded
-4. dynamic_sidebar('sidebar-1')    ← WIDGETS WP NATIVOS aqui
-5. rd_render_ad_sidebar_sticky()   ← bloco hardcoded
+1. rd_render_discord_widget()      ← bloco hardcoded (vira widget na fase 2)
+2. rd_render_ad_sidebar_top()      ← bloco hardcoded (vira widget na fase 3)
+3. dynamic_sidebar('sidebar-1')    ← WIDGETS WP NATIVOS (Most Read, Latest Video, Support, etc.)
+4. rd_render_ad_sidebar_sticky()   ← bloco hardcoded (fixo no rodapé da sidebar)
 ```
 
-Os 3 primeiros são **funções fixas** controladas pelo painel do tema (não dá pra reordenar/remover via UI de widgets). O "Most Read" entra no slot 4 — admin arrasta na UI nativa de widgets. Vantagem: controle pelo usuário sem editar código.
+O "Apoie o Projeto" deixou de ser hardcoded e virou o `RD_Support_Widget`, posicionado livremente no slot 3 junto dos demais widgets. Discord e anúncio-topo seguem hardcoded por ora (migração pra widget em fases). Vantagem do modelo widget: o usuário ordena/remove pela UI nativa, sem editar código.
 
 ### Configuração
 

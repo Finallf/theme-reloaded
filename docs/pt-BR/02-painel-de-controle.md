@@ -20,7 +20,7 @@ Ele é dividido em **13 abas** (12 fixas + Statistics condicional), agrupando op
 | 6 | **Integrations** | `integracoes` | Analytics, marketing pixels, Discord widget |
 | 7 | **SEO** | `seo` | Site verification, Open Graph, sitemap, robots.txt |
 | 8 | **Social Networks** | `redes` | URLs das redes sociais (footer + top bar) |
-| 9 | **Donations** | `doacoes` | GitHub Sponsors, PayPal, PIX |
+| 9 | **Donations** | — | _Movido pro widget "ReloadeD: Support the Project" (Aparência → Widgets)_ |
 | 10 | **Ads** | `ads` | Script global + banners por posição |
 | 11 | **Statistics** | `estatisticas` | Tracking de views + dashboard de stats (top posts, growth chart) |
 | 12 | **Maintenance** | `manutencao` | Modo manutenção + senha de dev |
@@ -345,25 +345,9 @@ Todos default _vazio_. Quando vazio, ícone não renderiza.
 
 ---
 
-## 💰 Aba 9 — Donations (`?tab=doacoes`)
+## 💰 Aba 9 — Donations
 
-Sistema de doações com 2 públicos. **2 sections.** Slug legacy `?tab=interface` redireciona pra cá.
-
-### Section: International (`sec_doacoes_intl`)
-
-| Opção | Placeholder |
-|---|---|
-| `github_sponsors` | `https://github.com/sponsors/seu-usuario` |
-| `paypal_url` | `https://www.paypal.com/donate?hosted_button_id=XXXX` |
-| `paypal_qrcode` | (media uploader) |
-
-### Section: Brazil (PIX) (`sec_doacoes_br`)
-
-| Opção | Placeholder |
-|---|---|
-| `pix_url` | `https://nubank.com.br/pagar/xxx` |
-| `pix_qrcode` | (media uploader) |
-| `pix_chave` | `email@domain.com` ou CPF/CNPJ |
+> **Movido pra widget (2026-06).** As opções de doação (GitHub Sponsors, PayPal, PIX) **deixaram de ficar no painel** — agora são configuradas no widget **"ReloadeD: Support the Project"** (Aparência → Widgets), com config e posicionamento juntos. As sections `sec_doacoes_intl` e `sec_doacoes_br` foram removidas. Veja `inc/class-rd-support-widget.php` e o [doc de recursos](07-recursos-especiais.md#-sistema-de-doações).
 
 ---
 
