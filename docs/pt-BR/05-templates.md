@@ -312,9 +312,8 @@ Usada por single.php, page.php, archive.php, search.php, author.php.
 
 Conteúdo:
 
-1. **Banner sidebar top** (300×250 — `rd_render_ad_sidebar_top()`) — hardcoded (vira widget na fase 3)
-2. **Sidebar dinâmica `sidebar-1`** — widgets WP nativos (Most Read, Latest Video, **Apoie o Projeto**, **Discord**, etc.)
-3. **Banner sidebar sticky** (`rd_render_ad_sidebar_sticky()`) — `position: sticky`
+1. **Sidebar dinâmica `sidebar-1`** — widgets WP nativos (Most Read, Latest Video, **Apoie o Projeto**, **Discord**, **Ad / Banner**, etc.)
+2. **Banner sidebar sticky** (`rd_render_ad_sidebar_sticky()`) — `position: sticky` (único bloco hardcoded restante)
 
 ---
 

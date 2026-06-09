@@ -113,7 +113,6 @@ function rd_get_default_options(): array {
 		'ad_global'                   => '',
 		'ad_topo_desktop'             => '',
 		'ad_topo_mobile'              => '',
-		'ad_sidebar_top'              => '',
 		'ad_sidebar_sticky'           => '',
 
 		'maintenance_mode'            => 0,
@@ -1501,18 +1500,6 @@ function rd_settings_init() {
 			'id'   => 'ad_topo_mobile',
 			'type' => 'textarea',
 			'desc' => __( 'Rendered in the header only on smartphone screens.', 'reloaded' ),
-		)
-	);
-	add_settings_field(
-		'ad_sidebar_top',
-		__( 'Sidebar Banner - Top (300x250)', 'reloaded' ),
-		'rd_master_field_cb',
-		'rd_options_monetization',
-		'sec_ads_zones',
-		array(
-			'id'   => 'ad_sidebar_top',
-			'type' => 'textarea',
-			'desc' => __( 'Rendered in the sidebar, right below integrations (e.g. Discord).', 'reloaded' ),
 		)
 	);
 	add_settings_field(

@@ -699,10 +699,9 @@ O title e a description seguem usando os helpers nativos `the_archive_title()` e
 |--------|----------------|------|
 | `rd_render_ad_topo()` | `header.php` (top branding) | Banner desktop 728×90 |
 | `rd_render_ad_mobile_anchor()` | Hook `wp_footer` | Anchor fixo mobile |
-| `rd_render_ad_sidebar_top()` | `sidebar.php` topo | 300×250 |
 | `rd_render_ad_sidebar_sticky()` | `sidebar.php` (sticky) | 300×250 ou 300×600 |
 
-Cada um lê do `rd_settings` o HTML/JS literal do anúncio e renderiza só se preenchido.
+Cada um lê do `rd_settings` o HTML/JS literal do anúncio e renderiza só se preenchido. O banner "sidebar topo" virou o widget `RD_Ad_Widget` (`inc/class-rd-ad-widget.php`) — código no form do widget, nonce do CSP via `rd_csp_inject_nonce()`.
 
 JS pra fechar o anchor mobile (X) vive em `navigation.js` (`.rd-ad-close`).
 

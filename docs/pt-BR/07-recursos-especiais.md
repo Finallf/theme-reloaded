@@ -398,12 +398,11 @@ O handler em `navigation.js` faz o resto: copia pra clipboard, troca o texto do 
 A sidebar do tema renderiza:
 
 ```php
-1. rd_render_ad_sidebar_top()      ← bloco hardcoded (vira widget na fase 3)
-2. dynamic_sidebar('sidebar-1')    ← WIDGETS WP NATIVOS (Most Read, Latest Video, Support, Discord, etc.)
-3. rd_render_ad_sidebar_sticky()   ← bloco hardcoded (fixo no rodapé da sidebar)
+1. dynamic_sidebar('sidebar-1')    ← WIDGETS WP NATIVOS (Most Read, Latest Video, Support, Discord, Ad/Banner, etc.)
+2. rd_render_ad_sidebar_sticky()   ← bloco hardcoded (fixo no rodapé da sidebar — único restante)
 ```
 
-O "Apoie o Projeto" (`RD_Support_Widget`) e o "Discord" (`RD_Discord_Widget`) deixaram de ser hardcoded e agora são widgets, posicionados livremente no slot de widgets. Só o anúncio-topo segue hardcoded por ora (vira widget na fase 3). Vantagem do modelo widget: o usuário ordena/remove pela UI nativa, sem editar código.
+Apoie o Projeto (`RD_Support_Widget`), Discord (`RD_Discord_Widget`) e os anúncios de sidebar (`RD_Ad_Widget`) agora são widgets, posicionados livremente. Só o **banner sticky** segue hardcoded (posição `sticky` especial no rodapé da sidebar). Vantagem do modelo widget: o usuário ordena/remove pela UI nativa, sem editar código.
 
 ### Configuração
 

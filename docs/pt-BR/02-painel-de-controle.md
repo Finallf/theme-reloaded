@@ -363,8 +363,9 @@ Monetização. **2 sections.**
 |---|---|---|
 | `ad_topo_desktop` | Header desktop | 728×90 |
 | `ad_topo_mobile` | Header mobile (anchor fixa) | 320×100 |
-| `ad_sidebar_top` | Sidebar topo | 300×250 |
 | `ad_sidebar_sticky` | Sidebar sticky | 300×600 |
+
+> O banner "Sidebar topo" deixou de ser campo de painel — virou o widget **"ReloadeD: Ad / Banner"** (`RD_Ad_Widget`, Aparência → Widgets), que aceita qualquer código e vai em qualquer posição/ordem.
 
 > **Nota CSP:** Os 5 campos `ad_*` aceitam `<script>` raw. Nonce é **injetado automaticamente** via `rd_csp_inject_nonce()` antes do echo (Wave 8.5) — não precisa adicionar nonce manualmente.
 

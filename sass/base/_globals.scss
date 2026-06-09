@@ -158,8 +158,9 @@ a {
     width: 100%;
 }
 
-// Sidebar top banner — extra space below to separate it from the following blocks
-.rd-ad-sidebar-top {
+// Ad/banner widget (RD_Ad_Widget) — no glass card (the ad creative brings its
+// own look); just bottom spacing to separate it from the next sidebar widget.
+.widget_rd_ad {
     margin-bottom: 20px;
 }
 
