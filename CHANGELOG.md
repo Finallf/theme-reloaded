@@ -7,6 +7,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 <br>
 
 
+## [1.3.0-beta.3](https://github.com/Finallf/theme-reloaded/compare/v1.3.0-beta.2...v1.3.0-beta.3) (2026-06-09)
+
+### ✨ Features
+
+* **widgets:** convert the sidebar-top ad into a generic Ad widget ([52327a0](https://github.com/Finallf/theme-reloaded/commit/52327a09148ee118bac6522d1c04e82e25edad76))
+
+<br>
+
+---
+
 ## [1.3.0-beta.2](https://github.com/Finallf/theme-reloaded/compare/v1.3.0-beta.1...v1.3.0-beta.2) (2026-06-08)
 
 ### ✨ Features
