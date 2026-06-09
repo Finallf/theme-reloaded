@@ -513,19 +513,6 @@ function rd_dashboard_get_status_data(): array {
 		'value'  => $markdown,
 	);
 
-	// Discord Widget (toggle inline)
-	$discord = rd_get_option_bool( 'discord_widget' );
-	$data[]  = array(
-		'title'  => __( 'Discord Widget', 'reloaded' ),
-		'badge'  => $discord
-			? rd_panel_badge( 'success', __( 'ON', 'reloaded' ) )
-			: rd_panel_badge( 'neutral', __( 'OFF', 'reloaded' ) ),
-		'detail' => '',
-		'toggle' => 'discord_widget',
-		'value'  => $discord,
-		'link'   => admin_url( 'admin.php?page=rd_options&tab=integrations#sec_int_discord' ),
-	);
-
 	// YouTube Facade (toggle inline)
 	$yt_facade = rd_get_option_bool( 'facade_youtube' );
 	$data[]    = array(
@@ -613,7 +600,6 @@ function rd_dashboard_get_status_tooltips(): array {
 		'enable_top_bar'           => __( 'Announcement bar shown above the site header.', 'reloaded' ),
 		'enable_comments_globally' => __( 'Enables the comment system across the whole site.', 'reloaded' ),
 		'markdown_enabled'         => __( 'Lets you write posts using Markdown syntax.', 'reloaded' ),
-		'discord_widget'           => __( 'Shows your Discord server widget on the site.', 'reloaded' ),
 		'facade_youtube'           => __( 'Replaces YouTube embeds with a light click-to-load preview.', 'reloaded' ),
 		'enable_breadcrumbs'       => __( 'Shows the navigation trail above post titles.', 'reloaded' ),
 		'enable_lgpd'              => __( 'Granular cookie consent banner (LGPD/GDPR).', 'reloaded' ),
@@ -825,13 +811,13 @@ const RD_DASHBOARD_TOGGLE_WHITELIST = array(
 	'enable_login_protection',
 	'enable_next_gen_images',
 	'enable_open_graph',
-	// 6 toggles from the second row of Site Status cards — all features
+	// Toggles from the second row of Site Status cards — all features
 	// safe to flip (no destructive effect). Maintenance is the only one that
 	// blocks visitors, and it has its own confirm dialog in the JS.
+	// (Discord moved to a WP widget — no longer a panel toggle here.)
 	'enable_top_bar',
 	'enable_comments_globally',
 	'markdown_enabled',
-	'discord_widget',
 	'facade_youtube',
 	'enable_breadcrumbs',
 	// Wave 12 — 3 additional cards (Row 3 of the 5×3 grid): SEO + Compliance.

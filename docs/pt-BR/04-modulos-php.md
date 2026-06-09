@@ -140,9 +140,10 @@ Priority 5 no wp_head:
 
 ### Discord Widget
 
-- Renderiza facade ou iframe direto baseado em `facade_discord`
+- `rd_get_discord_widget_html( array $data )` — **retorna** o HTML do bloco a partir do array do widget (`discord_id`, `facade`, `facade_logo`); não lê mais opções do painel
 - Facade: div estática com SVG do Discord + logo do site, sem carregar iframe até o user clicar
 - Iframe direto: `<iframe loading="lazy" src="https://ptb.discord.com/widget?id=...&theme=dark">`
+- Config + posicionamento no **`RD_Discord_Widget`** (`inc/class-rd-discord-widget.php`). O CSP libera o `frame-src` via `is_active_widget('rd_discord')`
 
 ### Ad Global
 
@@ -676,11 +677,15 @@ O title e a description seguem usando os helpers nativos `the_archive_title()` e
 
 ## 💝 `inc/mod-donations.php` — Apoie o Projeto
 
-- `rd_render_donations()` — renderiza o bloco "Apoie o Projeto" com:
+- `rd_get_support_block_html( array $data ): string` — monta e **retorna** o HTML do bloco "Apoie o Projeto" a partir de um array de dados (não lê mais opções do painel):
+  - Título configurável (`<h3>`; vazio = "Support the Project")
   - GitHub Sponsors (link)
   - PayPal (link + QR code clicável)
   - PIX (URL + QR code + chave "copia e cola" com botão JS)
-  - WhatsApp direto
+  - Retorna `''` quando nenhum método é preenchido (o caller pula o wrapper do widget)
+- `rd_render_qr_img()` — serve a versão `rd-qr` (240×240) do QR quando o anexo é resolvível.
+
+> Configuração e posicionamento ficam no **`RD_Support_Widget`** (`inc/class-rd-support-widget.php`, Aparência → Widgets). O bloco deixou de ser hardcoded no `sidebar.php` e os campos saíram do painel.
 
 > JS pra "Copy PIX key" usa o helper genérico `data-rd-copy` (definido em `assets/js/navigation.js`). Veja seção [Copy to Clipboard](06-frontend-scss-js.md#copy-to-clipboard) pra detalhes.
 
@@ -694,10 +699,9 @@ O title e a description seguem usando os helpers nativos `the_archive_title()` e
 |--------|----------------|------|
 | `rd_render_ad_topo()` | `header.php` (top branding) | Banner desktop 728×90 |
 | `rd_render_ad_mobile_anchor()` | Hook `wp_footer` | Anchor fixo mobile |
-| `rd_render_ad_sidebar_top()` | `sidebar.php` topo | 300×250 |
 | `rd_render_ad_sidebar_sticky()` | `sidebar.php` (sticky) | 300×250 ou 300×600 |
 
-Cada um lê do `rd_settings` o HTML/JS literal do anúncio e renderiza só se preenchido.
+Cada um lê do `rd_settings` o HTML/JS literal do anúncio e renderiza só se preenchido. O banner "sidebar topo" virou o widget `RD_Ad_Widget` (`inc/class-rd-ad-widget.php`) — código no form do widget, nonce do CSP via `rd_csp_inject_nonce()`.
 
 JS pra fechar o anchor mobile (X) vive em `navigation.js` (`.rd-ad-close`).
 
@@ -785,7 +789,7 @@ A função `rd_dashboard_render()` (callback de `add_settings_section('sec_dashb
 
 3 cards do Site Status com **deep link buttons** (CSP, Login Protection, Next-gen Images) — ícone de engrenagem ao lado do badge com tooltip estilizado que abre a aba relevante e scrolla até a section via hash anchor.
 
-9 cards com **toggle switch inline** (Maintenance Mode, Statistics Tracking, Critical CSS Inline, Top Bar, Comments, Markdown, Discord Widget, YouTube Facade, Breadcrumbs) — admin flipa ON/OFF sem sair do Dashboard.
+8 cards com **toggle switch inline** (Maintenance Mode, Statistics Tracking, Critical CSS Inline, Top Bar, Comments, Markdown, YouTube Facade, Breadcrumbs) — admin flipa ON/OFF sem sair do Dashboard. (Discord saiu — virou widget WP.)
 
 **Tooltips de nome (Wave 12)** — passar o mouse no **nome** de qualquer card do Site Status mostra uma explicação curta do que a feature faz, reusando o mesmo balão `[data-tooltip]` dos switches/engrenagens (fundo preto translúcido). O balão fica centralizado sobre o card (âncora via `position: relative` no `.rd-pcard`) e o texto em caixa normal. As explicações vivem em `rd_dashboard_get_status_tooltips()` (keyed pelo option name de cada card) e são injetadas pelo novo arg `tooltip` do `rd_panel_card_open()`.
 
@@ -884,7 +888,7 @@ Agrega dados coletados pelo `mod-views.php` num dashboard read-only no painel ad
 
 **Primeiro widget WP nativo do tema.** Classe `RD_Popular_Posts_Widget extends WP_Widget` registrada em `widgets_init`. Aparece em **Aparência → Widgets** sob o nome "ReloadeD: Popular Posts" — o admin arrasta pra qualquer sidebar registrada (no momento, só "Main Sidebar").
 
-**Diferente dos blocos hardcoded no `sidebar.php`** (Discord, Donations, Ads) que são chamadas de função fixas — esse é controlado 100% pela UI nativa de widgets do WP. Admin decide se/onde colocar e configura sem editar código.
+**Diferente dos blocos hardcoded no `sidebar.php`** (apenas os anúncios agora) que são chamadas de função fixas — esse é controlado 100% pela UI nativa de widgets do WP. Admin decide se/onde colocar e configura sem editar código. (Discord e Apoie o Projeto também já são widgets `WP_Widget`.)
 
 ### Configuração no admin (`form()`)
 

@@ -175,6 +175,44 @@ function rd_widgets_init() {
 }
 add_action( 'widgets_init', 'rd_widgets_init' );
 
+/**
+ * Loads the WP media library + the widget media-picker binding on the Widgets
+ * screen, for RD widgets whose form has image fields (Support, Discord).
+ * Self-contained: only enqueues on widgets.php.
+ *
+ * Works on both the block-based and classic widgets screens: widget-media.js
+ * binds via event delegation (not inline scripts), and on widgets.php the
+ * Legacy Widget forms render in the main document (the iframe caveat is
+ * specific to the Site Editor, not this screen). The image fields are also
+ * plain editable URL inputs, so the widget stays usable even if the media
+ * button is unavailable in some WP version — no global editor override needed.
+ *
+ * @param string $hook Current admin page hook.
+ * @return void
+ */
+function rd_enqueue_widget_media( $hook ) {
+	if ( 'widgets.php' !== $hook ) {
+		return;
+	}
+	wp_enqueue_media();
+	wp_enqueue_script(
+		'rd-widget-media',
+		get_template_directory_uri() . '/assets/js/widget-media.js',
+		array( 'jquery' ),
+		rd_asset_version( '/assets/js/widget-media.js' ),
+		true
+	);
+	wp_localize_script(
+		'rd-widget-media',
+		'rdWidgetMedia',
+		array(
+			'title'  => __( 'Select image', 'reloaded' ),
+			'button' => __( 'Use this image', 'reloaded' ),
+		)
+	);
+}
+add_action( 'admin_enqueue_scripts', 'rd_enqueue_widget_media' );
+
 /***********************************************************************************
  * Loads admin assets                                                 - (Hardcoded) *
  *                                                                                  *

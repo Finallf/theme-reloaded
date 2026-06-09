@@ -40,17 +40,6 @@ function rd_render_ad_mobile_anchor() {
 // The "add_action" makes the function run automatically at the end of the site, without us having to touch the visual files!
 add_action( 'wp_footer', 'rd_render_ad_mobile_anchor' );
 
-function rd_render_ad_sidebar_top() {
-	// Renders the Sidebar banner (Top)
-	$ad_sidebar_top = rd_get_option( 'ad_sidebar_top' );
-	if ( ! empty( $ad_sidebar_top ) ) {
-		// text-align center already comes from .rd-ad-container; the sidebar-top-specific
-		// margin-bottom is in sass/base/_globals.scss
-		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- BY DESIGN: ad codes (AdSense, GAM, etc) require raw HTML/JS. Admin with manage_options trusted under WP model. CSP nonce injected automatically into <script> tags via rd_csp_inject_nonce().
-		echo '<div class="rd-ad-container rd-ad-sidebar-top">' . rd_csp_inject_nonce( $ad_sidebar_top ) . '</div>';
-	}
-}
-
 /**
  * Renders the Sidebar banner (Sticky).
  */

@@ -1,22 +1,9 @@
 <?php defined( 'ABSPATH' ) || exit; ?>
 <aside id="secondary" class="widget-area">
 	<?php
-	// Discord block (comes from mod-integrations.php).
-	if ( function_exists( 'rd_render_discord_widget' ) ) {
-		rd_render_discord_widget();
-	}
-
-	// Top-of-sidebar ad banner (comes from mod-ads.php).
-	if ( function_exists( 'rd_render_ad_sidebar_top' ) ) {
-		rd_render_ad_sidebar_top();
-	}
-
-	// "Support the Project" block (comes from mod-donations.php).
-	if ( function_exists( 'rd_render_support_block' ) ) {
-		rd_render_support_block();
-	}
-
 	// WordPress widgets (Appearance → Widgets) — only renders when present.
+	// Discord, Support and ad banners are now WP widgets (RD_Discord_Widget,
+	// RD_Support_Widget, RD_Ad_Widget), placed and ordered freely here.
 	if ( is_active_sidebar( 'sidebar-1' ) ) {
 		dynamic_sidebar( 'sidebar-1' );
 	}

@@ -18,7 +18,7 @@ reloaded.com.br/
 │   ├── template-contact.php  # "Contact Page" — sem thumb/comments
 │   └── template-legal.php    # "Legal Page (Privacy / Terms)" — sem thumb/comments, "Last updated"
 ├── search.php                # Resultados de busca (4 layouts)
-├── sidebar.php               # Sidebar registrada (Discord + ads + apoio)
+├── sidebar.php               # Sidebar: anúncios hardcoded + dynamic_sidebar (widgets: Apoie, Discord, etc.)
 ├── single.php                # Post individual
 ├── style.css                 # Header WP + CSS compilado
 ├── README.md

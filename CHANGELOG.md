@@ -7,6 +7,40 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 <br>
 
 
+## [1.3.0-beta.3](https://github.com/Finallf/theme-reloaded/compare/v1.3.0-beta.2...v1.3.0-beta.3) (2026-06-09)
+
+### ✨ Features
+
+* **widgets:** convert the sidebar-top ad into a generic Ad widget ([52327a0](https://github.com/Finallf/theme-reloaded/commit/52327a09148ee118bac6522d1c04e82e25edad76))
+
+<br>
+
+---
+
+## [1.3.0-beta.2](https://github.com/Finallf/theme-reloaded/compare/v1.3.0-beta.1...v1.3.0-beta.2) (2026-06-08)
+
+### ✨ Features
+
+* **widgets:** convert the Discord block into a configurable widget ([3c453e3](https://github.com/Finallf/theme-reloaded/commit/3c453e3fe0b172d072d4acec6e55aec12dc5aaea))
+
+<br>
+
+---
+
+## [1.3.0-beta.1](https://github.com/Finallf/theme-reloaded/compare/v1.2.0...v1.3.0-beta.1) (2026-06-08)
+
+### ✨ Features
+
+* **widgets:** convert the Support block into a configurable widget ([6ae0895](https://github.com/Finallf/theme-reloaded/commit/6ae0895887f68439dd2c8e5fb5fec55bda10b411))
+
+### 📝 Documentation
+
+* **scss:** document content-padding tokens and fix stale color values ([80831d1](https://github.com/Finallf/theme-reloaded/commit/80831d154fef293d334c12152fa0a31f92b44753))
+
+<br>
+
+---
+
 ## [1.2.0](https://github.com/Finallf/theme-reloaded/compare/v1.1.1...v1.2.0) (2026-06-08)
 
 ### ✨ Features

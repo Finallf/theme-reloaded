@@ -46,21 +46,30 @@ function rd_render_qr_img( $stored_url, $alt ) {
 
 /*******************************************************************************
  * Support Module                                                 - (Donations)*
+ *                                                                             *
+ * Builds the donation block HTML (GitHub Sponsors, PayPal, PIX) from a data   *
+ * array and RETURNS it as a string ('' when nothing is configured, so the     *
+ * caller can skip the widget wrapper). Config now lives in the                *
+ * RD_Support_Widget form (Appearance → Widgets), not in the theme panel.      *
  *******************************************************************************/
-function rd_render_support_block() {
-	$github     = rd_get_option( 'github_sponsors' );
-	$pix_key    = rd_get_option( 'pix_chave' );
-	$pix_img    = rd_get_option( 'pix_qrcode' );
-	$pix_url    = rd_get_option( 'pix_url' ); // The new link field
-	$paypal_url = rd_get_option( 'paypal_url' );
-	$paypal_qr  = rd_get_option( 'paypal_qrcode' );
+function rd_get_support_block_html( array $data ): string {
+	$github     = $data['github_sponsors'] ?? '';
+	$pix_key    = $data['pix_chave'] ?? '';
+	$pix_img    = $data['pix_qrcode'] ?? '';
+	$pix_url    = $data['pix_url'] ?? '';
+	$paypal_url = $data['paypal_url'] ?? '';
+	$paypal_qr  = $data['paypal_qrcode'] ?? '';
+	// Heading text — configurable in the widget; falls back to the default
+	// when left empty, preserving the historical "Support the Project" label.
+	$title = ( isset( $data['title'] ) && '' !== $data['title'] ) ? $data['title'] : __( 'Support the Project', 'reloaded' );
 
 	if ( empty( $github ) && empty( $pix_key ) && empty( $pix_img ) && empty( $paypal_url ) ) {
-		return;
+		return '';
 	}
 
+	ob_start();
 	echo '<section class="rd-support-block">';
-	echo '  <h3 class="rd-support-title">' . esc_html__( 'Support the Project', 'reloaded' ) . '</h3>';
+	echo '  <h3 class="rd-support-title">' . esc_html( $title ) . '</h3>';
 	echo '  <div class="rd-support-content">';
 
 	// GitHub Sponsors
@@ -131,4 +140,6 @@ function rd_render_support_block() {
 
 	echo '  </div>';
 	echo '</section>';
+
+	return (string) ob_get_clean();
 }
