@@ -7,6 +7,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 <br>
 
 
+## [1.5.0-beta.1](https://github.com/Finallf/theme-reloaded/compare/v1.4.1-beta.2...v1.5.0-beta.1) (2026-06-10)
+
+### ✨ Features
+
+* **carousel:** featured carousel between the header and the home content ([e0ebd6c](https://github.com/Finallf/theme-reloaded/commit/e0ebd6c74dd936851546bded5595d0a5d4532a56))
+
+<br>
+
+---
+
 ## [1.4.1-beta.2](https://github.com/Finallf/theme-reloaded/compare/v1.4.1-beta.1...v1.4.1-beta.2) (2026-06-10)
 
 ### 🐛 Bug Fixes
