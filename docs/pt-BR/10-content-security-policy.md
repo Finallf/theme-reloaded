@@ -217,6 +217,10 @@ Pra cada violação recorrente, classifica:
 
 > ⚠️ **Atenção a violações de extensão de navegador.** Fontes/scripts injetados por extensões (ex.: a extensão do Adobe Acrobat carregando `use.typekit.net`) aparecem como violação mesmo o tema não pedindo nada disso. **Não adicione a origem** — é ruído do cliente, não do site.
 
+### Identificando violações "inline" (report-sample)
+
+O `script-src` carrega a keyword `'report-sample'`: navegadores anexam os primeiros ~40 chars do script inline bloqueado ao report (`script-sample`), exibidos na tabela do painel abaixo do blocked-uri (`↳ snippet`). Sem isso, violação inline é um "inline" anônimo impossível de diagnosticar remotamente. Caso real: o Auto Ads do AdSense injeta inline parser-inserted (`document.write`) que o `strict-dynamic` não cobre — o sample identifica o autor direto dos reports dos visitantes.
+
 ### Filtro de ruído (2 camadas)
 
 O endpoint que recebe os reports descarta ruído **antes de gravar**, pra o painel mostrar só violação real:

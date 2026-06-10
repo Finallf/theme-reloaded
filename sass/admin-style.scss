@@ -1314,6 +1314,16 @@ body {
         font-size: 0.82rem;
         word-break: break-all;
     }
+
+    /* report-sample snippet under "inline" blocked-uris — identifies the
+       injector (first ~40 chars of the blocked script, sent by the browser
+       because script-src carries 'report-sample') */
+    &__sample {
+        color: $rd-text-secondary;
+        font-size: 0.78rem;
+        font-style: italic;
+        word-break: break-all;
+    }
 }
 
 /* ==========================================================================

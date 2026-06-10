@@ -186,6 +186,21 @@ function rd_csp_parse_custom_origins( $raw ): array {
  *
  * @return string CSP header ready to send
  */
+/**
+ * Whether any ad slot is configured — gates the AdSense CSP origins. Covers
+ * the global Auto Ads tag, the panel banner zones (page-level + sticky) and
+ * the Ad widget (placement = enabled, same convention as the Discord widget).
+ */
+function rd_csp_ads_active(): bool {
+	if ( '' !== trim( (string) rd_get_option( 'ad_global' ) )
+		|| '' !== trim( (string) rd_get_option( 'ad_topo_desktop' ) )
+		|| '' !== trim( (string) rd_get_option( 'ad_topo_mobile' ) )
+		|| '' !== trim( (string) rd_get_option( 'ad_sidebar_sticky' ) ) ) {
+		return true;
+	}
+	return is_active_widget( false, false, 'rd_ad' );
+}
+
 function rd_csp_build_policy(): string {
 	$self  = "'self'";
 	$nonce = rd_csp_nonce();
@@ -215,6 +230,12 @@ function rd_csp_build_policy(): string {
 				$nonce_token,
 				'' !== $nonce_token ? "'strict-dynamic'" : '',
 				"'unsafe-inline'",
+				// Asks browsers to attach the first ~40 chars of a blocked inline
+				// script to the violation report ("script-sample"). Without it,
+				// inline violations arrive as an unidentifiable "inline" — with
+				// it, the reports panel shows WHO injected the script (e.g.
+				// AdSense Auto Ads document.write machinery on visitors' browsers).
+				"'report-sample'",
 			)
 		),
 		// style-src: governs <style> tags (and <link rel=stylesheet>). Nonce enables
@@ -271,7 +292,31 @@ function rd_csp_build_policy(): string {
 		$d['connect-src'][] = 'https://www.google-analytics.com';
 		$d['connect-src'][] = 'https://*.analytics.google.com';
 		$d['connect-src'][] = 'https://*.google-analytics.com';
+		// With Google Signals / an Ads (AdSense) link active on the GA property,
+		// GA4 switches its beacons to www.google.com/g/collect and also pings
+		// stats.g.doubleclick.net — both surfaced as real connect-src violations
+		// the moment ads went live on the portal.
+		$d['connect-src'][] = 'https://www.google.com';
+		$d['connect-src'][] = 'https://stats.g.doubleclick.net';
 		// img-src: GA uses a beacon image (collect endpoint) — covered by the `https:` baseline
+	}
+
+	// Google AdSense — active when any ad slot is configured (global Auto Ads
+	// tag, the panel banner zones or the Ad widget). Ads render inside iframes
+	// (the bulk of the violations when ads went live) and ping the SODAR
+	// anti-fraud endpoint. script-src entries are the pre-CSP3 fallback —
+	// modern browsers trust the nonce'd adsbygoogle.js via 'strict-dynamic'.
+	if ( rd_csp_ads_active() ) {
+		$d['script-src'][]  = 'https://pagead2.googlesyndication.com';
+		$d['script-src'][]  = 'https://googleads.g.doubleclick.net';
+		$d['script-src'][]  = 'https://tpc.googlesyndication.com';
+		$d['frame-src'][]   = 'https://googleads.g.doubleclick.net';
+		$d['frame-src'][]   = 'https://tpc.googlesyndication.com';
+		$d['frame-src'][]   = 'https://*.safeframe.googlesyndication.com';
+		$d['frame-src'][]   = 'https://www.google.com'; // anchor/vignette frames
+		$d['frame-src'][]   = 'https://*.adtrafficquality.google'; // SODAR frame (ep2)
+		$d['connect-src'][] = 'https://pagead2.googlesyndication.com';
+		$d['connect-src'][] = 'https://*.adtrafficquality.google'; // SODAR getconfig (ep1)
 	}
 
 	// Microsoft Clarity
@@ -567,6 +612,9 @@ function rd_csp_receive_report( WP_REST_Request $request ) {
 		'blocked_uri'         => isset( $report['blocked-uri'] ) ? sanitize_text_field( (string) $report['blocked-uri'] ) : '',
 		'source_file'         => isset( $report['source-file'] ) ? sanitize_text_field( (string) $report['source-file'] ) : '',
 		'line_number'         => isset( $report['line-number'] ) ? (int) $report['line-number'] : 0,
+		// First ~40 chars of the blocked inline script — sent by browsers only
+		// because script-src carries 'report-sample'. Identifies the injector.
+		'script_sample'       => isset( $report['script-sample'] ) ? sanitize_text_field( (string) $report['script-sample'] ) : '',
 		'user_agent'          => isset( $_SERVER['HTTP_USER_AGENT'] ) ? sanitize_text_field( wp_unslash( $_SERVER['HTTP_USER_AGENT'] ) ) : '',
 	);
 
@@ -896,7 +944,12 @@ function rd_csp_render_reports_panel(): void {
 					<tr>
 						<td class="rd-csp-table__when"><?php echo esc_html( wp_date( 'd/m H:i', (int) ( $r['timestamp'] ?? 0 ) ) ); ?></td>
 						<td><code class="rd-csp-table__directive"><?php echo esc_html( $r['violated_directive'] ?? '' ); ?></code></td>
-						<td><code class="rd-csp-table__uri"><?php echo esc_html( $r['blocked_uri'] ?? '' ); ?></code></td>
+						<td>
+						<code class="rd-csp-table__uri"><?php echo esc_html( $r['blocked_uri'] ?? '' ); ?></code>
+						<?php if ( '' !== (string) ( $r['script_sample'] ?? '' ) ) : ?>
+							<br><code class="rd-csp-table__sample" title="<?php esc_attr_e( 'Sample of the blocked inline script (report-sample)', 'reloaded' ); ?>">&#8627; <?php echo esc_html( $r['script_sample'] ); ?></code>
+						<?php endif; ?>
+					</td>
 						<td><code class="rd-csp-table__uri"><?php echo esc_html( $r['document_uri'] ?? '' ); ?></code></td>
 					</tr>
 				<?php endforeach; ?>
