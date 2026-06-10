@@ -34,7 +34,7 @@ Cada aba tem um **ícone Dashicons** no header de cada section, dando contexto v
 
 Aba **read-only** que serve de landing quando admin abre o painel. Sem opções editáveis — só visualização de estado e atalhos. Renderizada por `rd_dashboard_render()` em `inc/mod-dashboard.php`.
 
-**4 seções:**
+**6 seções:**
 
 ### Site Status
 Grid de **15 cards** em 5 colunas (3 linhas × 5 cards em desktop; 3 colunas em tablet 768-1023px; 1 coluna em mobile). Cada card mostra badge de estado + ação inline (toggle ou deep link, conforme apropriado):
@@ -51,6 +51,7 @@ Grid de **15 cards** em 5 colunas (3 linhas × 5 cards em desktop; 3 colunas em 
 | Comments | `OFF` / `ON` | switch |
 | Markdown | `OFF` / `ON` | switch |
 | YouTube Facade | `OFF` / `ON` | switch |
+| Carousel | `OFF` / `ON` (mostra nº de slides) | switch + ⚙ deep link `?tab=general#sec_geral_carousel` |
 | Breadcrumbs | `OFF` / `ON` | switch |
 | LGPD Banner | `OFF` / `ON` | switch |
 | Sitemap | `OFF` / `ON` | switch |
@@ -75,6 +76,11 @@ Grid de **15 cards** em 5 colunas (3 linhas × 5 cards em desktop; 3 colunas em 
 Bar chart de **views por dia nos últimos 7 dias**. Função `rd_dashboard_get_views_7d()` parseia logs (`_rd_post_views_log`) sem cache. Quando não há dados (tracking nunca ativo ou recém-instalado), o chart mostra todas as barras zeradas — preview do layout futuro.
 
 Quando o CSP report-only tem violações registradas, o **doughnut "Violações por Diretiva"** aparece ao lado (estreito à esquerda + Activity Trend largo à direita, via `.rd-pgrid--sidebar-main`) — resumo de relance; a tabela completa fica só na aba Security. Sem violações, o Activity Trend ocupa a largura toda.
+
+Os dois cards têm **gear de deep link** no canto superior direito (na linha da desc): doughnut → Relatórios de Violação CSP (`?tab=security#sec_seg_csp_reports`); Activity Trend → dashboard de Estatísticas (`?tab=statistics#sec_stats_dashboard`).
+
+### Theme Updates
+Card "Release status" do auto-updater: versão atual vs última no GitHub, badge de estado (`Never checked` / `Up to date` / `Update available`), "última verificação" e botão **"Check for updates"** (AJAX, força refresh do transient de 24h). No header, **switch "Beta channel"** (`update_beta_channel`, default OFF = stable): ON segue a release mais nova **incluindo prereleases** (e promove pra estável automaticamente quando ela sai). Flip do switch encadeia um re-check imediato e sincroniza o badge **BETA** ao lado da "Latest version". Detalhes em [04 — mod-self-update](04-modulos-php.md).
 
 ### Quick Actions
 4-5 botões pra atalhar pras outras abas mais usadas:

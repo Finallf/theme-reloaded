@@ -343,7 +343,7 @@ mark.rd-highlight {
         align-items: center;
         gap: 15px;
         background-color: $glass-bg;
-        padding: 12px 15px;
+        //padding: 12px 15px;
         border-radius: 5px;
         border: 1px solid $glass-border;
         box-shadow: 0 8px 20px var(--rd-glass-shadow); // Adapts dark/light (flat in light)
@@ -365,10 +365,10 @@ mark.rd-highlight {
     // makes them uniform regardless of title length or source ratio.
     .rd-card-thumb-small {
         flex-shrink: 0;
-        width: 100px;
+        width: 200px;
         aspect-ratio: 16 / 9;
         overflow: hidden;
-        border-radius: 3px;
+        border-radius: 3px 0 0 3px;
         background: $dark-deep;
 
         img {
