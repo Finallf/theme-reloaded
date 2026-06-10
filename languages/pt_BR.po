@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ReloadeD 0.1.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/theme/reloaded\n"
-"POT-Creation-Date: 2026-06-10T10:53:00-03:00\n"
-"PO-Revision-Date: 2026-06-10 10:54-0300\n"
+"POT-Creation-Date: 2026-06-10T15:53:58-03:00\n"
+"PO-Revision-Date: 2026-06-10 15:56-0300\n"
 "Last-Translator: Regis Vieira Delgado (Finallf) <finallf2@gmail.com>\n"
 "Language-Team: Brazilian Portuguese\n"
 "Language: pt_BR\n"
@@ -889,11 +889,11 @@ msgstr ""
 "e ao lado do título, no topo dos posts individuais. A cor do texto é ajustada "
 "automaticamente (preto ou branco) para garantir um bom contraste."
 
-#: inc/mod-csp.php:801
+#: inc/mod-csp.php:849
 msgid "CSP Violation Reports"
 msgstr "Relatórios de Violação CSP"
 
-#: inc/mod-csp.php:810
+#: inc/mod-csp.php:858
 msgid ""
 "Enable the toggle above to start collecting reports. Then browse the frontend "
 "— violations will appear here."
@@ -901,16 +901,16 @@ msgstr ""
 "Ative a opção acima para começar a coletar relatórios. Em seguida, navegue "
 "pela interface — as violações aparecerão aqui."
 
-#: inc/mod-csp.php:822
+#: inc/mod-csp.php:870
 msgid "ENFORCE MODE"
 msgstr "ENFORCE MODE"
 
-#: inc/mod-csp.php:823 inc/mod-dashboard.php:422
+#: inc/mod-csp.php:871 inc/mod-dashboard.php:422
 msgid "REPORT-ONLY"
 msgstr "REPORT-ONLY"
 
 #. translators: 1: number of reports stored; 2: max storage capacity (FIFO discards older)
-#: inc/mod-csp.php:827
+#: inc/mod-csp.php:875
 #, php-format
 msgid ""
 "%1$d reports stored (FIFO max %2$d). Open browser DevTools → Console for live "
@@ -919,15 +919,15 @@ msgstr ""
 "%1$d relatórios armazenados (FIFO máximo %2$d). Abra o DevTools → Console, "
 "para ver as violações em tempo real."
 
-#: inc/mod-csp.php:837
+#: inc/mod-csp.php:885
 msgid "Clear all stored CSP reports?"
 msgstr "Limpar todos os relatórios CSP?"
 
-#: inc/mod-csp.php:838
+#: inc/mod-csp.php:886
 msgid "Clear reports"
 msgstr "Limpar Relatórios"
 
-#: inc/mod-csp.php:855
+#: inc/mod-csp.php:903
 msgid ""
 "No reports yet — either nothing violated the policy, or no one has loaded the "
 "frontend since the feature was enabled."
@@ -935,11 +935,11 @@ msgstr ""
 "Ainda não há relatos — ou nada violou a política, ou ninguém acessou a "
 "interface desde que o recurso foi ativado."
 
-#: inc/mod-csp.php:867 inc/mod-dashboard.php:165
+#: inc/mod-csp.php:915 inc/mod-dashboard.php:165
 msgid "Violations by Directive"
 msgstr "Violações por Diretiva"
 
-#: inc/mod-csp.php:868
+#: inc/mod-csp.php:916
 msgid ""
 "Distribution of recorded violations grouped by CSP directive. Hover slices "
 "for exact counts and percentages."
@@ -947,21 +947,25 @@ msgstr ""
 "Distribuição das violações registradas agrupadas por diretiva CSP. Passe o "
 "mouse sobre as fatias para ver contagens e porcentagens exatas."
 
-#: inc/mod-csp.php:888
+#: inc/mod-csp.php:936
 msgid "When"
 msgstr "Quando"
 
-#: inc/mod-csp.php:889
+#: inc/mod-csp.php:937
 msgid "Directive"
 msgstr "Diretiva"
 
-#: inc/mod-csp.php:890
+#: inc/mod-csp.php:938
 msgid "Blocked URI"
 msgstr "URI bloqueada"
 
-#: inc/mod-csp.php:891
+#: inc/mod-csp.php:939
 msgid "Document"
 msgstr "URL de origem"
+
+#: inc/mod-csp.php:950
+msgid "Sample of the blocked inline script (report-sample)"
+msgstr "Amostra do script inline bloqueado (report-sample)"
 
 #: inc/mod-dashboard.php:38
 msgid "Site Status"
@@ -1605,29 +1609,29 @@ msgstr "Acesso Restrito - %s"
 msgid "Working behind the scenes..."
 msgstr "Trabalhando nos bastidores…"
 
-#: inc/mod-performance.php:86
+#: inc/mod-performance.php:101
 msgid "Key Copied!"
 msgstr "Chave Copiada!"
 
-#: inc/mod-performance.php:87
+#: inc/mod-performance.php:102
 msgid "Error copying: "
 msgstr "Erro ao copiar: "
 
-#: inc/mod-performance.php:90
+#: inc/mod-performance.php:105
 msgid "Sending…"
 msgstr "Enviando…"
 
-#: inc/mod-performance.php:91
+#: inc/mod-performance.php:106
 msgid "Comment sent! Loading…"
 msgstr "Comentário enviado! Carregando…"
 
-#: inc/mod-performance.php:92
+#: inc/mod-performance.php:107
 msgid "Unexpected error submitting the comment. Reload the page and try again."
 msgstr ""
 "Ocorreu um erro inesperado ao enviar o comentário. Recarregue a página e "
 "tente novamente."
 
-#: inc/mod-performance.php:93
+#: inc/mod-performance.php:108
 msgid "Network error: "
 msgstr "Erro de rede: "
 

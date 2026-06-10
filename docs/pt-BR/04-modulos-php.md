@@ -1130,6 +1130,8 @@ Adiciona o header `Content-Security-Policy-Report-Only` no frontend com policy c
   - Umami URL → extrai origem do `umami_script_url`
   - Discord widget ON → `ptb.discord.com`, `discord.com` (frame-src)
   - YouTube facade ON → `youtube.com`, `youtube-nocookie.com` (frame-src)
+  - Ads configurados (`rd_csp_ads_active()`: ad_global/zonas/widget) → AdSense: `pagead2.googlesyndication.com`, `googleads.g.doubleclick.net`, `tpc.googlesyndication.com` (script-src fallback pré-CSP3), iframes de anúncio + safeframes + `www.google.com` + `*.adtrafficquality.google` (frame-src), SODAR `*.adtrafficquality.google` + pagead2 (connect-src)
+  - GA com Google Signals/Ads → `www.google.com` + `stats.g.doubleclick.net` (connect-src, beacons g/collect)
 - **Custom Origins (3 textareas no painel)** — admin adiciona origens novas sem editar PHP:
   - `csp_custom_scripts` → script-src + connect-src
   - `csp_custom_frames` → frame-src
