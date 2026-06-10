@@ -7,6 +7,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 <br>
 
 
+## [1.6.2](https://github.com/Finallf/theme-reloaded/compare/v1.6.1...v1.6.2) (2026-06-10)
+
+### 🐛 Bug Fixes
+
+* **csp:** AdSense conditional origins, GA4+Ads beacons, report-sample ([3e726e1](https://github.com/Finallf/theme-reloaded/commit/3e726e18b76bdb5c58c252a4e3c760c219f57d9a))
+
+<br>
+
+---
+
 ## [1.6.2-beta.1](https://github.com/Finallf/theme-reloaded/compare/v1.6.1...v1.6.2-beta.1) (2026-06-10)
 
 ### 🐛 Bug Fixes
