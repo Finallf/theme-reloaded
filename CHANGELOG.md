@@ -7,6 +7,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 <br>
 
 
+## [1.6.0-beta.4](https://github.com/Finallf/theme-reloaded/compare/v1.6.0-beta.3...v1.6.0-beta.4) (2026-06-10)
+
+### ✨ Features
+
+* **widgets:** Social Networks "Follow Us" widget ([4787bee](https://github.com/Finallf/theme-reloaded/commit/4787beee53de896759347eb2de1bffe36164612b))
+
+<br>
+
+---
+
 ## [1.6.0-beta.3](https://github.com/Finallf/theme-reloaded/compare/v1.6.0-beta.2...v1.6.0-beta.3) (2026-06-10)
 
 ### ✨ Features
