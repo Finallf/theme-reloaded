@@ -408,7 +408,7 @@ A sidebar do tema renderiza:
 2. rd_render_ad_sidebar_sticky()   ← bloco hardcoded (fixo no rodapé da sidebar — único restante)
 ```
 
-Apoie o Projeto (`RD_Support_Widget`), Discord (`RD_Discord_Widget`) e os anúncios de sidebar (`RD_Ad_Widget`) agora são widgets, posicionados livremente. Só o **banner sticky** segue hardcoded (posição `sticky` especial no rodapé da sidebar). Vantagem do modelo widget: o usuário ordena/remove pela UI nativa, sem editar código.
+Apoie o Projeto (`RD_Support_Widget`), Discord (`RD_Discord_Widget`), os anúncios de sidebar (`RD_Ad_Widget`) e as Redes Sociais (`RD_Social_Widget`, grade "Siga-nos" 2 colunas — URLs vêm do painel, o widget só marca quais exibir) são widgets, posicionados livremente. Só o **banner sticky** segue hardcoded (posição `sticky` especial no rodapé da sidebar). Vantagem do modelo widget: o usuário ordena/remove pela UI nativa, sem editar código.
 
 ### Configuração
 

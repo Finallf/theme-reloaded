@@ -978,6 +978,18 @@ Resultado (ou marcador `'none'`) guardado no transient `rd_latest_video_{cat_id}
 
 ---
 
+## 📣 `inc/class-rd-social-widget.php` — Widget "Redes Sociais" (Siga-nos)
+
+Classe `RD_Social_Widget extends WP_Widget` ("ReloadeD: Social Networks"). Grade **2 colunas** de chips `[ícone] Nome da rede` (8 redes = 4 linhas de 2), cada chip linkando pra rede em nova aba.
+
+**Divisão de responsabilidades (convenção do tema):** as URLs são **dado global do site** → ficam no painel (Integrations → Social Networks, compartilhadas com a fileira de ícones do footer/top-bar). O widget só decide **exibição**: título (default "Follow Us") + 1 checkbox por rede. Sem contagem de seguidores — número ao vivo exigiria credencial de API por rede, e texto manual envelhece.
+
+- Rede renderiza só se **marcada E com URL no painel**; sem URL, o checkbox aparece desabilitado no form com aviso. Nenhuma qualificada → widget não renderiza nada
+- **Catálogo/ícones**: `rd_social_get_networks()` + `rd_social_get_icons()` em `mod-social.php` — extraídos do `rd_render_social_icons()` (fonte única de SVGs pro footer, perfis de autor e widget)
+- CSS: `sass/components/_social-widget.scss`; card glass shell via `.widget_rd_social` no `_sidebar.scss`
+
+---
+
 ## 🔐 `inc/mod-security.php` — Headers HTTP defensivos + Hardening
 
 ### Headers HTTP

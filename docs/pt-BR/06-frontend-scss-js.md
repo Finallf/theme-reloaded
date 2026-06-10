@@ -39,7 +39,8 @@ sass/
     ├── _page-static.scss   # page.php styling
     ├── _pagination.scss    # Pagination (numbered + prev/next)
     ├── _prism.scss         # Override do tema do Prism.js
-    └── _search.scss        # Página de busca (header + chips + 4 layouts)
+    ├── _search.scss        # Página de busca (header + chips + 4 layouts)
+    └── _social-widget.scss # Widget Redes Sociais "Siga-nos" (grade 2 col de chips)
 ```
 
 ### Ordem de import no entry

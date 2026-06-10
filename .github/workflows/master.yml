@@ -10,9 +10,17 @@ on:
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
+# Anti-loop strategy: the release commit used to carry "[skip ci]", but that
+# directive kills EVERY workflow for the SHA — including the required
+# "PHP Syntax Check" on release PRs, which stalled at "Waiting for status"
+# and forced a manual bypass on every release. Now the release commit runs CI
+# normally (Smoke Test gives the SHA its green check) and the re-run loop is
+# prevented HERE, by skipping these jobs when the pushed commit IS a release
+# commit (semantic-release pushes with GH_PAT, which does trigger workflows).
 jobs:
   # JOB 1: Update the contributors list in the README
   contrib-readme-job:
+    if: "!startsWith(github.event.head_commit.message, 'chore(release):')"
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -31,6 +39,9 @@ jobs:
 
   # JOB 2: Release & Package
   release:
+    # Redundant with the needs-chain (a skipped parent skips the child), but
+    # explicit: never run semantic-release on its own release commit.
+    if: "!startsWith(github.event.head_commit.message, 'chore(release):')"
     needs: contrib-readme-job
     runs-on: ubuntu-latest
     permissions:
