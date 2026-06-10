@@ -490,6 +490,17 @@ Remover o callback do filter (apagar o mu-plugin ou comentar o snippet). URLs vo
 
 ---
 
+## 📡 `inc/mod-indexnow.php` — IndexNow (push indexing)
+
+Notificação push pros buscadores participantes (Bing/Yandex/Seznam/Naver) no momento em que conteúdo muda — indexação em minutos em vez de esperar o crawler (Google não participa; o sitemap segue essencial). 3 peças:
+
+- **Chave:** auto-gerada (32-hex) no save via `pre_update_option_rd_settings` quando o toggle liga com o campo vazio (`rd_indexnow_generate_key_on_save`). Aceita chave externa colada (validação `[a-z0-9-]{8,128}`)
+- **Prova de propriedade:** `/{key}.txt` servido **virtualmente** (`rd_indexnow_serve_key_file` no `init`) — sem arquivo físico, com `X-Robots-Tag: noindex`
+- **Ping:** `transition_post_status` (post/page; publica, atualiza publicado, ou despublica — engines reveem e acham o 404/410). POST JSON pro `api.indexnow.org` com `blocking=false` + timeout 3s (fire-and-forget — o editor nunca espera). Slug `__trashed` é limpo antes do ping de despublicação
+- **Breadcrumb:** último ping (timestamp + URL) salvo em `rd_indexnow_last_ping` (autoload off) e exibido na desc do campo da chave no painel
+
+---
+
 ## 🔍 `inc/mod-seo.php` — SEO técnico (OG, Twitter, Canonical, Description, Schema)
 
 Um módulo, cinco frentes complementares. Tudo emitido no `<wp_head>` com prioridades distintas pra ordem previsível no source.

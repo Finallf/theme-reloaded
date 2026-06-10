@@ -112,6 +112,8 @@ function rd_get_default_options(): array {
 		'enable_open_graph'           => 1,
 		'og_fallback_image'           => '',
 		'custom_robots_txt'           => '',
+		'enable_indexnow'             => 0,
+		'indexnow_key'                => '', // auto-generated on save when the toggle is on and this is empty.
 		'enable_sitemap'              => 1,
 		'sitemap_include_authors'     => 0,
 		'sitemap_include_cpt'         => 1,
@@ -1543,6 +1545,34 @@ function rd_settings_init() {
 			'id'   => 'sitemap_include_cpt',
 			'type' => 'checkbox',
 			'desc' => __( 'Includes any public Custom Post Types registered by the theme or plugins (alongside the standard <code>post</code> and <code>page</code>). Turn off if you have CPTs you don\'t want indexed (e.g. portfolio items used only as widgets).', 'reloaded' ),
+		)
+	);
+
+	// Section: IndexNow — push indexing notifications (Bing/Yandex & friends).
+	rd_panel_register_section( 'sec_seo_indexnow', __( 'IndexNow', 'reloaded' ), 'controls-forward', 'rd_options_seo' );
+	add_settings_field(
+		'enable_indexnow',
+		__( 'Enable IndexNow', 'reloaded' ),
+		'rd_master_field_cb',
+		'rd_options_seo',
+		'sec_seo_indexnow',
+		array(
+			'id'   => 'enable_indexnow',
+			'type' => 'checkbox',
+			'desc' => __( 'Notifies Bing, Yandex and other participating engines the moment a post or page is published, updated or unpublished — push indexing in minutes instead of waiting for the crawler. One ping is shared between all participating engines. <strong>Google does not join IndexNow</strong>, so keep the sitemap on. The key file is served automatically at <code>/{key}.txt</code> — nothing to upload.', 'reloaded' ),
+		)
+	);
+	add_settings_field(
+		'indexnow_key',
+		__( 'IndexNow Key', 'reloaded' ),
+		'rd_master_field_cb',
+		'rd_options_seo',
+		'sec_seo_indexnow',
+		array(
+			'id'          => 'indexnow_key',
+			'type'        => 'text',
+			'placeholder' => __( 'auto-generated on save when empty', 'reloaded' ),
+			'desc'        => rd_indexnow_key_field_desc(),
 		)
 	);
 

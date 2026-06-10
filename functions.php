@@ -17,6 +17,7 @@ require_once get_template_directory() . '/inc/mod-critical-css.php';
 require_once get_template_directory() . '/inc/mod-login-protection.php';
 require_once get_template_directory() . '/inc/mod-social.php';
 require_once get_template_directory() . '/inc/mod-seo.php';
+require_once get_template_directory() . '/inc/mod-indexnow.php'; // Push indexing pings (Bing/Yandex) + virtual key file.
 require_once get_template_directory() . '/inc/mod-breadcrumbs.php';
 require_once get_template_directory() . '/inc/mod-category-colors.php';
 require_once get_template_directory() . '/inc/mod-archive-header.php';
