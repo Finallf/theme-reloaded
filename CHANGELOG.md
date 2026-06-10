@@ -7,6 +7,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 <br>
 
 
+## [1.5.1-beta.1](https://github.com/Finallf/theme-reloaded/compare/v1.5.0...v1.5.1-beta.1) (2026-06-10)
+
+### 🐛 Bug Fixes
+
+* **dashboard:** allow the Carousel card's inline toggle ([5fed0b5](https://github.com/Finallf/theme-reloaded/commit/5fed0b5fef2f13ffbe8a0aa2db7267fefc9cd0ae))
+
+<br>
+
+---
+
 ## [1.5.0](https://github.com/Finallf/theme-reloaded/compare/v1.4.0...v1.5.0) (2026-06-10)
 
 ### ✨ Features
