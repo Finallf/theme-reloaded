@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ReloadeD 0.1.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/theme/reloaded\n"
-"POT-Creation-Date: 2026-06-10T15:53:58-03:00\n"
-"PO-Revision-Date: 2026-06-10 15:56-0300\n"
+"POT-Creation-Date: 2026-06-10T16:19:10-03:00\n"
+"PO-Revision-Date: 2026-06-10 16:20-0300\n"
 "Last-Translator: Regis Vieira Delgado (Finallf) <finallf2@gmail.com>\n"
 "Language-Team: Brazilian Portuguese\n"
 "Language: pt_BR\n"
@@ -693,7 +693,7 @@ msgstr "Aplicar"
 msgid "Cancel"
 msgstr "Cancelar"
 
-#: inc/mod-backup.php:720 inc/mod-dashboard.php:779 inc/panel.php:268
+#: inc/mod-backup.php:720 inc/mod-dashboard.php:789 inc/panel.php:268
 msgid "Backup"
 msgstr "Backup"
 
@@ -905,7 +905,7 @@ msgstr ""
 msgid "ENFORCE MODE"
 msgstr "ENFORCE MODE"
 
-#: inc/mod-csp.php:871 inc/mod-dashboard.php:422
+#: inc/mod-csp.php:871 inc/mod-dashboard.php:432
 msgid "REPORT-ONLY"
 msgstr "REPORT-ONLY"
 
@@ -1059,12 +1059,12 @@ msgstr "Nunca verificado"
 msgid "never"
 msgstr "nunca"
 
-#: inc/mod-dashboard.php:320 inc/mod-dashboard.php:1001
+#: inc/mod-dashboard.php:320 inc/mod-dashboard.php:1016
 #: inc/mod-self-update.php:323
 msgid "Update available"
 msgstr "Atualização disponível"
 
-#: inc/mod-dashboard.php:322 inc/mod-dashboard.php:1000
+#: inc/mod-dashboard.php:322 inc/mod-dashboard.php:1015
 #: inc/mod-self-update.php:324
 msgid "Up to date"
 msgstr "Atualizado"
@@ -1107,207 +1107,207 @@ msgstr "BETA"
 msgid "Last check"
 msgstr "Última verificação"
 
-#: inc/mod-dashboard.php:388 inc/mod-dashboard.php:1002
-msgid "Go to Themes → Update Now"
-msgstr "Acesse Temas → Atualizar Agora"
+#: inc/mod-dashboard.php:398 inc/mod-dashboard.php:1017
+msgid "Update now"
+msgstr "Atualizar agora"
 
-#: inc/mod-dashboard.php:392 inc/mod-dashboard.php:1003
+#: inc/mod-dashboard.php:402 inc/mod-dashboard.php:1018
 msgid "View release on GitHub"
 msgstr "Ver release no GitHub"
 
-#: inc/mod-dashboard.php:418 inc/mod-dashboard.php:440 inc/mod-dashboard.php:466
-#: inc/mod-dashboard.php:483 inc/mod-dashboard.php:496 inc/mod-dashboard.php:505
-#: inc/mod-dashboard.php:529 inc/mod-dashboard.php:541 inc/mod-dashboard.php:553
-#: inc/mod-dashboard.php:565 inc/mod-dashboard.php:579 inc/mod-dashboard.php:594
-#: inc/mod-dashboard.php:608 inc/mod-dashboard.php:620 inc/mod-dashboard.php:632
+#: inc/mod-dashboard.php:428 inc/mod-dashboard.php:450 inc/mod-dashboard.php:476
+#: inc/mod-dashboard.php:493 inc/mod-dashboard.php:506 inc/mod-dashboard.php:515
+#: inc/mod-dashboard.php:539 inc/mod-dashboard.php:551 inc/mod-dashboard.php:563
+#: inc/mod-dashboard.php:575 inc/mod-dashboard.php:589 inc/mod-dashboard.php:604
+#: inc/mod-dashboard.php:618 inc/mod-dashboard.php:630 inc/mod-dashboard.php:642
 msgid "OFF"
 msgstr "OFF"
 
-#: inc/mod-dashboard.php:420
+#: inc/mod-dashboard.php:430
 msgid "ENFORCE"
 msgstr "ENFORCE"
 
-#: inc/mod-dashboard.php:425
+#: inc/mod-dashboard.php:435
 msgid "CSP"
 msgstr "CSP"
 
-#: inc/mod-dashboard.php:443 inc/mod-dashboard.php:465 inc/mod-dashboard.php:482
-#: inc/mod-dashboard.php:495 inc/mod-dashboard.php:509 inc/mod-dashboard.php:528
-#: inc/mod-dashboard.php:540 inc/mod-dashboard.php:552 inc/mod-dashboard.php:564
-#: inc/mod-dashboard.php:578 inc/mod-dashboard.php:593 inc/mod-dashboard.php:607
-#: inc/mod-dashboard.php:619 inc/mod-dashboard.php:631
+#: inc/mod-dashboard.php:453 inc/mod-dashboard.php:475 inc/mod-dashboard.php:492
+#: inc/mod-dashboard.php:505 inc/mod-dashboard.php:519 inc/mod-dashboard.php:538
+#: inc/mod-dashboard.php:550 inc/mod-dashboard.php:562 inc/mod-dashboard.php:574
+#: inc/mod-dashboard.php:588 inc/mod-dashboard.php:603 inc/mod-dashboard.php:617
+#: inc/mod-dashboard.php:629 inc/mod-dashboard.php:641
 msgid "ON"
 msgstr "ON"
 
-#: inc/mod-dashboard.php:447 inc/panel.php:916
+#: inc/mod-dashboard.php:457 inc/panel.php:916
 msgid "Login Protection"
 msgstr "Proteção de Login"
 
-#: inc/mod-dashboard.php:463
+#: inc/mod-dashboard.php:473
 msgid "Maintenance Mode"
 msgstr "Manutenção"
 
-#: inc/mod-dashboard.php:471
+#: inc/mod-dashboard.php:481
 msgid "Maintenance Mode blocks ALL visitors of the site. Are you sure?"
 msgstr "O Modo de Manutenção bloqueia TODOS os visitantes do site. Tem certeza?"
 
-#: inc/mod-dashboard.php:480
+#: inc/mod-dashboard.php:490
 msgid "Statistics Tracking"
 msgstr "Estatísticas"
 
-#: inc/mod-dashboard.php:493
+#: inc/mod-dashboard.php:503
 msgid "Critical CSS Inline"
 msgstr "CSS Crítico Inline"
 
-#: inc/mod-dashboard.php:513
+#: inc/mod-dashboard.php:523
 msgid "Next-gen Images"
 msgstr "Imagem Next-gen"
 
-#: inc/mod-dashboard.php:526
+#: inc/mod-dashboard.php:536
 msgid "Top Bar"
 msgstr "Barra de Topo"
 
-#: inc/mod-dashboard.php:538 inc/panel.php:583
+#: inc/mod-dashboard.php:548 inc/panel.php:583
 msgid "Comments"
 msgstr "Comentários"
 
-#: inc/mod-dashboard.php:550 inc/panel.php:511
+#: inc/mod-dashboard.php:560 inc/panel.php:511
 msgid "Markdown"
 msgstr "Markdown"
 
-#: inc/mod-dashboard.php:562 inc/panel.php:1211
+#: inc/mod-dashboard.php:572 inc/panel.php:1211
 msgid "YouTube Facade"
 msgstr "Fachada do YouTube"
 
-#: inc/mod-dashboard.php:576
+#: inc/mod-dashboard.php:586
 msgid "Carousel"
 msgstr "Carrossel"
 
-#: inc/mod-dashboard.php:591
+#: inc/mod-dashboard.php:601
 msgid "Breadcrumbs"
 msgstr "Navegação"
 
-#: inc/mod-dashboard.php:605 inc/panel.php:840
+#: inc/mod-dashboard.php:615 inc/panel.php:840
 msgid "Cookie Banner"
 msgstr "Banner de Cookies"
 
-#: inc/mod-dashboard.php:617 inc/panel.php:1516
+#: inc/mod-dashboard.php:627 inc/panel.php:1516
 msgid "Sitemap"
 msgstr "Mapa do Site"
 
 # --- SEO ---
-#: inc/mod-dashboard.php:629
+#: inc/mod-dashboard.php:639
 msgid "Open Graph"
 msgstr "Open Graph"
 
-#: inc/mod-dashboard.php:654
+#: inc/mod-dashboard.php:664
 msgid "Browser policy that blocks unauthorized scripts and resources."
 msgstr "Política do navegador que bloqueia scripts e recursos não autorizados."
 
-#: inc/mod-dashboard.php:655
+#: inc/mod-dashboard.php:665
 msgid "Hides the login URL behind a secret slug and limits attempts."
 msgstr "Esconde a URL de login atrás de um slug secreto e limita tentativas."
 
-#: inc/mod-dashboard.php:656
+#: inc/mod-dashboard.php:666
 msgid "Shows a holding page to visitors while the site is offline."
 msgstr "Mostra uma página de espera aos visitantes com o site offline."
 
-#: inc/mod-dashboard.php:657
+#: inc/mod-dashboard.php:667
 msgid "Records the page views shown in the Statistics tab."
 msgstr "Registra as visualizações exibidas na aba Estatísticas."
 
-#: inc/mod-dashboard.php:658
+#: inc/mod-dashboard.php:668
 msgid "Inlines critical CSS to speed up the first paint."
 msgstr "Embute o CSS crítico para acelerar a primeira renderização."
 
-#: inc/mod-dashboard.php:659
+#: inc/mod-dashboard.php:669
 msgid "Serves WebP/AVIF image versions to supported browsers."
 msgstr "Entrega imagens em WebP/AVIF para navegadores compatíveis."
 
-#: inc/mod-dashboard.php:660
+#: inc/mod-dashboard.php:670
 msgid "Announcement bar shown above the site header."
 msgstr "Barra de aviso exibida acima do cabeçalho do site."
 
-#: inc/mod-dashboard.php:661
+#: inc/mod-dashboard.php:671
 msgid "Enables the comment system across the whole site."
 msgstr "Ativa o sistema de comentários em todo o site."
 
-#: inc/mod-dashboard.php:662
+#: inc/mod-dashboard.php:672
 msgid "Lets you write posts using Markdown syntax."
 msgstr "Permite escrever posts usando sintaxe Markdown."
 
-#: inc/mod-dashboard.php:663
+#: inc/mod-dashboard.php:673
 msgid "Replaces YouTube embeds with a light click-to-load preview."
 msgstr "Troca embeds do YouTube por uma prévia leve com clique pra carregar."
 
-#: inc/mod-dashboard.php:664
+#: inc/mod-dashboard.php:674
 msgid "Full-width featured carousel between the header and the home content."
 msgstr ""
 "Carrossel de destaques em largura total entre o header e o conteúdo da home."
 
-#: inc/mod-dashboard.php:665
+#: inc/mod-dashboard.php:675
 msgid "Shows the navigation trail above post titles."
 msgstr "Exibe a trilha de navegação acima dos títulos."
 
-#: inc/mod-dashboard.php:666
+#: inc/mod-dashboard.php:676
 msgid "Granular cookie consent banner (LGPD/GDPR)."
 msgstr "Banner de consentimento de cookies granular (LGPD/GDPR)."
 
-#: inc/mod-dashboard.php:667
+#: inc/mod-dashboard.php:677
 msgid "Enables the native wp-sitemap.xml for search engines."
 msgstr "Ativa o wp-sitemap.xml nativo para os buscadores."
 
-#: inc/mod-dashboard.php:668
+#: inc/mod-dashboard.php:678
 msgid "Adds Open Graph tags for rich social previews."
 msgstr "Adiciona tags Open Graph para prévias ricas em redes sociais."
 
-#: inc/mod-dashboard.php:697
+#: inc/mod-dashboard.php:707
 msgid "Views Last 24h"
 msgstr "Visualizações nas últimas 24h"
 
-#: inc/mod-dashboard.php:723
+#: inc/mod-dashboard.php:733
 msgid "Posts Last 30 Days"
 msgstr "Posts nos últimos 30 dias"
 
-#: inc/mod-dashboard.php:736
+#: inc/mod-dashboard.php:746
 msgid "Review queue"
 msgstr "Fila de moderação"
 
-#: inc/mod-dashboard.php:739
+#: inc/mod-dashboard.php:749
 msgid "Inbox zero ✓"
 msgstr "Caixa zerada ✓"
 
-#: inc/mod-dashboard.php:742
+#: inc/mod-dashboard.php:752
 msgid "Pending Comments"
 msgstr "Comentários pendentes"
 
-#: inc/mod-dashboard.php:764
+#: inc/mod-dashboard.php:774
 msgid "General Settings"
 msgstr "Configurações Gerais"
 
-#: inc/mod-dashboard.php:769
+#: inc/mod-dashboard.php:779
 msgid "Security & CSP"
 msgstr "Segurança e CSP"
 
-#: inc/mod-dashboard.php:774 inc/panel.php:260
+#: inc/mod-dashboard.php:784 inc/panel.php:260
 msgid "Images & Media"
 msgstr "Imagens & Mídia"
 
-#: inc/mod-dashboard.php:786 inc/mod-privacy.php:174 inc/panel.php:266
+#: inc/mod-dashboard.php:796 inc/mod-privacy.php:174 inc/panel.php:266
 #: inc/panel.php:1782
 msgid "Statistics"
 msgstr "Estatísticas"
 
-#: inc/mod-dashboard.php:998
+#: inc/mod-dashboard.php:1013
 msgid "Checking…"
 msgstr "Verificando…"
 
-#: inc/mod-dashboard.php:999 inc/mod-self-update.php:309
+#: inc/mod-dashboard.php:1014 inc/mod-self-update.php:309
 #: inc/mod-self-update.php:325
 msgid "just now"
 msgstr "agora mesmo"
 
-#: inc/mod-dashboard.php:1004 inc/mod-self-update.php:308
+#: inc/mod-dashboard.php:1019 inc/mod-self-update.php:308
 msgid "Could not reach GitHub. Try again later."
 msgstr "Não foi possível acessar o GitHub. Tente novamente mais tarde."
 
@@ -3649,6 +3649,9 @@ msgstr "Exibir:"
 msgid "No levels found for this term. Try using different keywords."
 msgstr ""
 "Nenhum nível encontrado com este termo. Tente usar outras palavras-chave."
+
+#~ msgid "Go to Themes → Update Now"
+#~ msgstr "Acesse Temas → Atualizar Agora"
 
 #~ msgid "Open search"
 #~ msgstr "Abrir Pesquisa"

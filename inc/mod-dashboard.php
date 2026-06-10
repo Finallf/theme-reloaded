@@ -384,8 +384,18 @@ function rd_dashboard_render_updates_card(): void {
 
 	<p class="rd-self-update__action" id="rd-self-update-action">
 		<?php if ( $has_update ) : ?>
-			<a class="button button-primary" href="<?php echo esc_url( admin_url( 'themes.php' ) ); ?>">
-				<?php esc_html_e( 'Go to Themes → Update Now', 'reloaded' ); ?>
+			<?php
+			// One-click update straight from the Dashboard: core's update.php
+			// runs the Theme_Upgrader immediately (progress screen included),
+			// using the package our transient injected — same flow the Themes
+			// screen triggers, minus the detour through it.
+			$rd_update_url = wp_nonce_url(
+				self_admin_url( 'update.php?action=upgrade-theme&theme=' . RD_SELF_UPDATE_SLUG ),
+				'upgrade-theme_' . RD_SELF_UPDATE_SLUG
+			);
+			?>
+			<a class="button button-primary" href="<?php echo esc_url( $rd_update_url ); ?>">
+				<?php esc_html_e( 'Update now', 'reloaded' ); ?>
 			</a>
 			<?php if ( '' !== $release_url ) : ?>
 				<a class="button-link" href="<?php echo esc_url( $release_url ); ?>" target="_blank" rel="noopener">
@@ -993,13 +1003,18 @@ function rd_dashboard_admin_enqueue( $hook ): void {
 		'rd-admin-panel',
 		'rdSelfUpdate',
 		array(
-			'themes_url' => admin_url( 'themes.php' ),
+			// Direct one-click update URL (core update.php + nonce) — used by the
+			// CTA the JS injects after an AJAX check finds a new release.
+			'update_url' => wp_nonce_url(
+				self_admin_url( 'update.php?action=upgrade-theme&theme=' . RD_SELF_UPDATE_SLUG ),
+				'upgrade-theme_' . RD_SELF_UPDATE_SLUG
+			),
 			'i18n'       => array(
 				'checking'         => __( 'Checking…', 'reloaded' ),
 				'just_now'         => __( 'just now', 'reloaded' ),
 				'up_to_date'       => __( 'Up to date', 'reloaded' ),
 				'update_available' => __( 'Update available', 'reloaded' ),
-				'go_to_themes'     => __( 'Go to Themes → Update Now', 'reloaded' ),
+				'update_now'       => __( 'Update now', 'reloaded' ),
 				'view_release'     => __( 'View release on GitHub', 'reloaded' ),
 				'network_error'    => __( 'Could not reach GitHub. Try again later.', 'reloaded' ),
 			),

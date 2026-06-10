@@ -603,11 +603,13 @@ jQuery(document).ready(function($){
 		}
 		if ( actionEl ) {
 			if ( data.has_update ) {
-				var themesUrl  = ( window.rdSelfUpdate && window.rdSelfUpdate.themes_url ) || '/wp-admin/themes.php';
-				var goLabel    = i18n.go_to_themes || 'Go to Themes → Update Now';
+				// One-click update: core update.php URL (nonce'd server-side in
+				// the rdSelfUpdate localize) — runs the upgrader immediately.
+				var updateUrl  = ( window.rdSelfUpdate && window.rdSelfUpdate.update_url ) || '/wp-admin/themes.php';
+				var goLabel    = i18n.update_now || 'Update now';
 				var viewLabel  = i18n.view_release || 'View release on GitHub';
 				var releaseUrl = data.release_url || '';
-				var html       = '<a class="button button-primary" href="' + escapeAttr( themesUrl ) + '">' + escapeHtml( goLabel ) + '</a>';
+				var html       = '<a class="button button-primary" href="' + escapeAttr( updateUrl ) + '">' + escapeHtml( goLabel ) + '</a>';
 				if ( releaseUrl ) {
 					html += ' <a class="button-link" href="' + escapeAttr( releaseUrl ) + '" target="_blank" rel="noopener">' + escapeHtml( viewLabel ) + '</a>';
 				}
