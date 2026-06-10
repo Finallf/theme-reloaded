@@ -7,6 +7,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 <br>
 
 
+## [1.6.0-beta.5](https://github.com/Finallf/theme-reloaded/compare/v1.6.0-beta.4...v1.6.0-beta.5) (2026-06-10)
+
+### 🐛 Bug Fixes
+
+* **markdown:** decode &gt; blockquote markers before parsing ([c4fcbef](https://github.com/Finallf/theme-reloaded/commit/c4fcbef5bfd55fa1753412c21eaa06e9bead56e3))
+
+<br>
+
+---
+
 ## [1.6.0-beta.4](https://github.com/Finallf/theme-reloaded/compare/v1.6.0-beta.3...v1.6.0-beta.4) (2026-06-10)
 
 ### ✨ Features
