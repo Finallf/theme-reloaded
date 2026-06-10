@@ -2,6 +2,12 @@
 defined( 'ABSPATH' ) || exit;
 get_header();
 
+// Featured carousel — full-width band between the header and the main
+// content (renders only when enabled, on home page 1, with posts).
+if ( function_exists( 'rd_render_carousel' ) ) {
+	rd_render_carousel();
+}
+
 // Active home sections (admin config). Empty array → classic fallback layout.
 $rd_home_sections = rd_home_get_active_sections();
 ?>

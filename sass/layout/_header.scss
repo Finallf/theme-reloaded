@@ -232,6 +232,11 @@
 	align-items: center;
 	margin-left: 15px;
 	padding-left: 15px;
+	// Breathing room against the right edge (all widths): the sun/moon SVG
+	// draws edge-to-edge in its viewBox, so as the bar's last element it
+	// visually touches the wall without this (the ☰ glyph carries built-in
+	// whitespace in its font em-box; this mirrors it).
+	padding-right: 6px;
 	border-left: 1px solid rgba(255, 255, 255, 0.1);
 }
 

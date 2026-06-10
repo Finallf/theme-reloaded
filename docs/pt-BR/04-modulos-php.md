@@ -1153,6 +1153,20 @@ Quando policy estiver madura (30+ dias de monitoramento sem violações inespera
 
 ---
 
+## 🎠 `inc/mod-carousel.php` — Carrossel de Destaques
+
+Carrossel full-width entre o header e a main (home página 1, via `rd_render_carousel()` no `index.php`). Layout "peek": slides de ~84% com snap central — primeiro/último colam nas bordas (snap `start`/`end`, sem vão na carga).
+
+- **Fontes** (`carousel_source`): `sticky` (posts fixados ★, mais recentes primeiro, fallback pros últimos) / `category` / `latest`. Só posts **com imagem destacada** (`meta_key _thumbnail_id`)
+- **Anti-duplicação:** `rd_carousel_exclude_from_home()` (`pre_get_posts`) exclui os IDs do carrossel da main query da home; com source sticky também desliga o sticky-prepend do WP (o carrossel **é** a vitrine dos fixados)
+- **Performance:** slide 1 = candidato LCP (`eager` + `fetchpriority=high`), demais `lazy`; reusa o crop `rd-full-banner` (sem regenerate); `carousel.js` só enfileira quando o carrossel renderiza
+- **Slide:** chip de categoria (`.post-tag.tag-{slug}`, cores do admin) + chapéu (`rd_get_post_overline_html()` contexto `carousel`) + título clampado em 2 linhas, sobre gradiente fixo
+- **A11y:** `aria-roledescription` carousel/slide, "x de N", setas/dots com labels, navegação por teclado
+- Card "Carousel" no Dashboard (toggle inline + engrenagem + nº de slides)
+- Sem JS: fileira swipeável nativa (controles ocultos via gate `.is-ready`)
+
+---
+
 ## 🏠 `inc/mod-home.php` — Layout configurável da home
 
 Controla o layout da home (`index.php`). A home é uma vitrine fixa: **2 cards grandes (hero)** sempre no topo + até três seções opcionais que reúsam os layouts de card da busca (Grid/Vertical/Compact, via `rd_render_post_card()` de `post-card.php`). Google não é usado aqui.

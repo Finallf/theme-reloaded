@@ -1,0 +1,208 @@
+// sass/components/_carousel.scss
+@use '../base/variables' as *;
+
+// ==========================================================================
+// Featured Carousel (mod-carousel.php) — full-width band between the header
+// and the main content (home page 1 only).
+//
+// Engine: native CSS scroll-snap. The track is a flex row with overflow-x;
+// each slide is ~84% wide and snaps to CENTER, so the neighbors' edges peek
+// in from the sides (the "there's more" invitation). carousel.js adds
+// autoplay/arrows/dots — without JS the block degrades to a plain swipeable
+// row (controls stay hidden via the .is-ready gate).
+//
+// Overlay colors are intentionally FIXED (white over a dark gradient): they
+// sit on top of photos, so they must not follow the dark/light switcher.
+// ==========================================================================
+
+.rd-carousel {
+    position: relative;
+    width: 100%;
+    // Caps at the portal's container width — on ultrawide monitors the
+    // full-viewport band stretched into a thin "sausage" way past the
+    // 1440px the rest of the site uses. Centered like every other section.
+    max-width: $container-max;
+    margin: 20px auto 10px;
+
+    // Controls are JS-driven — hidden until carousel.js marks the block ready.
+    &:not(.is-ready) {
+        .rd-carousel__arrow,
+        .rd-carousel__dots {
+            display: none;
+        }
+    }
+}
+
+.rd-carousel__track {
+    display: flex;
+    gap: 16px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
+
+    @media (prefers-reduced-motion: reduce) {
+        scroll-behavior: auto;
+    }
+
+    // Hidden scrollbar (same pattern as the markdown tables)
+    scrollbar-width: none;
+
+    &::-webkit-scrollbar {
+        display: none;
+    }
+}
+
+.rd-carousel__slide {
+    flex: 0 0 84%;
+    scroll-snap-align: center;
+
+    // Edge slides snap to the EDGES instead of center: the page opens with
+    // slide 1 flush left (no empty gutter before it — it would otherwise sit
+    // centered with a blank 8% strip on the left) and the last slide closes
+    // flush right. Only the middle slides center-snap with both-side peeks.
+    &:first-child { scroll-snap-align: start; }
+    &:last-child  { scroll-snap-align: end; }
+
+    @media (max-width: 768px) {
+        flex-basis: 88%;
+    }
+}
+
+.rd-carousel__link {
+    position: relative;
+    display: block;
+    // Wide cinematic box. The image source is the existing rd-full-banner
+    // (16:9) — object-fit: cover crops it to the band. max-height caps the
+    // growth on very wide screens.
+    aspect-ratio: 21 / 9;
+    max-height: 480px;
+    width: 100%;
+    overflow: hidden;
+    border-radius: 5px; // golden rule
+    border: 1px solid $glass-border;
+    background-color: $dark-bg; // image loading backdrop
+    transition: border-color 250ms ease;
+
+    &:hover {
+        border-color: $brand-blue-light;
+
+        .rd-carousel__img {
+            transform: scale(1.04);
+        }
+    }
+
+    @media (max-width: 768px) {
+        aspect-ratio: 16 / 9; // taller box reads better on phones
+    }
+}
+
+.rd-carousel__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    display: block;
+    transition: transform 0.5s ease;
+}
+
+// Bottom gradient + text. Fixed dark-over-photo palette (see header note).
+.rd-carousel__overlay {
+    position: absolute;
+    inset: auto 0 0 0;
+    // Extra bottom padding clears the overlaid dots row (bottom: 12px + 8px dots)
+    padding: 48px 24px 34px;
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.82) 78%);
+
+    // Category chip — reuses .post-tag.tag-{slug} so it inherits the color
+    // configured in the admin (mod-category-colors). The structural styling
+    // is local because the global chip rules are scoped to .post-categories.
+    .post-tag {
+        display: inline-block;
+        padding: 3px 8px 1px;
+        margin-bottom: 8px;
+        font-size: 0.7rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        border-radius: 2px;
+        letter-spacing: 0.5px;
+    }
+}
+
+.rd-carousel__title {
+    margin: 0;
+    color: #fff;
+    font-size: clamp(1.05rem, 2.2vw, 1.6rem);
+    font-weight: 600;
+    line-height: 1.3;
+    // Clamp long headlines to 2 lines so slides keep a uniform height.
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+/* --- Arrows (desktop only — touch swipes natively) --- */
+.rd-carousel__arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.55);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    color: #fff;
+    cursor: pointer;
+    z-index: 2;
+    transition: background-color 0.2s ease, border-color 0.2s ease;
+
+    &:hover {
+        background: rgba(0, 0, 0, 0.75);
+        border-color: $brand-blue-light;
+        color: $brand-blue-light;
+    }
+
+    // Sits over the peek gutters, beside the active slide's edges
+    &--prev { left: calc(8% + 12px); }
+    &--next { right: calc(8% + 12px); }
+
+    @media (max-width: 768px) {
+        display: none;
+    }
+}
+
+/* --- Dots — overlaid on the section (bottom center, over the gradient) --- */
+.rd-carousel__dots {
+    position: absolute;
+    left: 50%;
+    bottom: 12px;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 8px;
+    z-index: 2;
+}
+
+.rd-carousel__dot {
+    width: 8px;
+    height: 8px;
+    padding: 0;
+    border-radius: 20px;
+    border: none;
+    // Fixed whites: the dots sit over photos/gradient, not over the page bg
+    background: rgba(255, 255, 255, 0.5);
+    cursor: pointer;
+    transition: width 0.25s ease, background-color 0.25s ease;
+
+    &[aria-current="true"] {
+        width: 22px; // active dot stretches into a pill
+        background: $brand-blue-light;
+    }
+
+    &:hover {
+        background: rgba(255, 255, 255, 0.85);
+    }
+}

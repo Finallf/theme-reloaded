@@ -525,6 +525,23 @@ function rd_dashboard_get_status_data(): array {
 		'value'  => $yt_facade,
 	);
 
+	// Featured Carousel — ON/OFF switch + gear to the General tab section.
+	// Fills the slot left by the Discord card (moved to a widget) keeping the
+	// 15-card 5×3 grid. Detail shows the configured slide count when ON.
+	$carousel = rd_get_option_bool( 'enable_carousel' );
+	$data[]   = array(
+		'title'  => __( 'Carousel', 'reloaded' ),
+		'badge'  => $carousel
+			? rd_panel_badge( 'success', __( 'ON', 'reloaded' ) )
+			: rd_panel_badge( 'neutral', __( 'OFF', 'reloaded' ) ),
+		'detail' => $carousel
+			? ' <code>' . esc_html( (string) max( 3, min( 8, (int) rd_get_option( 'carousel_count', 5 ) ) ) ) . '</code>'
+			: '',
+		'toggle' => 'enable_carousel',
+		'value'  => $carousel,
+		'link'   => admin_url( 'admin.php?page=rd_options&tab=general#sec_geral_carousel' ),
+	);
+
 	// Breadcrumbs (toggle inline)
 	$breadcrumbs = rd_get_option_bool( 'enable_breadcrumbs' );
 	$data[]      = array(
@@ -601,6 +618,7 @@ function rd_dashboard_get_status_tooltips(): array {
 		'enable_comments_globally' => __( 'Enables the comment system across the whole site.', 'reloaded' ),
 		'markdown_enabled'         => __( 'Lets you write posts using Markdown syntax.', 'reloaded' ),
 		'facade_youtube'           => __( 'Replaces YouTube embeds with a light click-to-load preview.', 'reloaded' ),
+		'enable_carousel'          => __( 'Full-width featured carousel between the header and the home content.', 'reloaded' ),
 		'enable_breadcrumbs'       => __( 'Shows the navigation trail above post titles.', 'reloaded' ),
 		'enable_lgpd'              => __( 'Granular cookie consent banner (LGPD/GDPR).', 'reloaded' ),
 		'enable_sitemap'           => __( 'Enables the native wp-sitemap.xml for search engines.', 'reloaded' ),

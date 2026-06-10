@@ -358,6 +358,12 @@ $primary_id = rd_get_primary_category_id( get_the_ID() );
 
 ---
 
+## 🎠 Carrossel de Destaques
+
+Vitrine editorial full-width entre o header e o conteúdo da home (página 1). Liga em **General → Featured Carousel** (ou pelo card do Dashboard). Curadoria pelo recurso nativo do WP: marca os posts com **"Fixar no topo do blog"** (★) e eles entram no carrossel (mais recentes primeiro; sem fixados, caem os últimos posts). Largura limitada ao container do portal (1440px). Detalhes técnicos em [04 — Módulos PHP](04-modulos-php.md#-incmod-carouselphp--carrossel-de-destaques).
+
+---
+
 ## 💝 Sistema de Doações
 
 Configurado no widget **"ReloadeD: Support the Project"** (`RD_Support_Widget`, Aparência → Widgets) — todas as opções ficam no próprio widget, não mais no painel. O bloco "Apoie o Projeto" aparece **onde você colocar o widget** (Main Sidebar ou Footer), na ordem que definir.

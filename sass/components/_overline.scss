@@ -33,4 +33,12 @@
         margin-bottom: 4px;
         opacity: 0.9;
     }
+
+    // Carousel — over the slide's dark gradient, on its own line between the
+    // category chip and the headline (display: block breaks it out of the
+    // chip's inline flow). Brand blue holds good contrast on the gradient.
+    &.entry-overline-carousel {
+        display: block;
+        font-size: 0.75rem;
+    }
 }

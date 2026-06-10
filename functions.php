@@ -35,6 +35,7 @@ require_once get_template_directory() . '/inc/mod-csp.php';
 require_once get_template_directory() . '/inc/mod-backup.php';
 require_once get_template_directory() . '/inc/post-card.php';
 require_once get_template_directory() . '/inc/mod-home.php'; // Configurable home layout (hero + Grid/Vertical/Compact sections).
+require_once get_template_directory() . '/inc/mod-carousel.php'; // Featured carousel between header and main (home only).
 require_once get_template_directory() . '/inc/mod-author-bio.php';
 require_once get_template_directory() . '/inc/mod-reading-time.php';
 require_once get_template_directory() . '/inc/mod-related-posts.php';
