@@ -169,8 +169,18 @@
 		}
 	}
 
+	// Bar height locked to the DESKTOP height so the menu bar doesn't jump when
+	// crossing the breakpoint. Desktop height = menu link: 24px line (16px ×
+	// 1.5 line-height) + 2×10px vertical padding = 44px. In hamburger mode the
+	// links are gone, so the bar would otherwise size itself to the buttons.
+	.menu-bar-fixed .container {
+		min-height: 44px;
+	}
+
 	// Hamburger on the LEFT of the bar. No z-index: the open panel slides OVER
 	// it — closing is handled by the floating .menu-close beside the panel.
+	// line-height: 1 keeps the 1.7rem glyph from inflating the bar above the
+	// 44px desktop height locked on the container.
 	.menu-bar-fixed .menu-toggle {
 		display: flex;
 		align-items: center;
@@ -180,6 +190,7 @@
 		cursor: pointer;
 		color: $brand-blue-light;
 		font-size: 1.7rem;
+		line-height: 1;
 		padding: 6px;
 	}
 
@@ -225,14 +236,6 @@
 		transition-delay: 0.15s;
 	}
 
-	// Breathing room against the right viewport edge. The ☰ glyph carries
-	// whitespace inside its own font em-box, so the hamburger never looks
-	// glued to the left wall — but the sun/moon SVG draws edge-to-edge, so as
-	// the last element in the bar it visually touches the right wall. Mirror
-	// the hamburger's 6px so both sides read the same.
-	.menu-bar-fixed .theme-switch-wrapper {
-		padding-right: 6px;
-	}
 }
 
 /* ==========================================================================
