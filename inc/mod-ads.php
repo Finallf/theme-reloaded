@@ -5,6 +5,39 @@ defined( 'ABSPATH' ) || exit;
  *******************************************************************************/
 
 /*******************************************************************************
+ * Virtual ads.txt                                                             *
+ *                                                                             *
+ * Serves https://host/ads.txt straight from the panel option — same pattern   *
+ * as the IndexNow key file (mod-indexnow.php): no physical file, no SFTP,     *
+ * survives migrations and enters the theme-settings backup. AdSense/networks  *
+ * crawl this file to verify who is authorized to sell the site's inventory.   *
+ *                                                                             *
+ * Note: a PHYSICAL ads.txt in the web root wins (the web server serves real   *
+ * files before WordPress routing kicks in) — delete it to use this field.     *
+ ******************************************************************************/
+
+/**
+ * Serves /ads.txt with the panel content when filled. Dormant when empty.
+ */
+function rd_ads_serve_ads_txt() {
+	$content = trim( (string) rd_get_option( 'ads_txt_content' ) );
+	if ( '' === $content ) {
+		return;
+	}
+
+	$request_uri = isset( $_SERVER['REQUEST_URI'] ) ? esc_url_raw( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : '';
+	$path        = (string) wp_parse_url( $request_uri, PHP_URL_PATH );
+	if ( '/ads.txt' !== $path ) {
+		return;
+	}
+
+	header( 'Content-Type: text/plain; charset=utf-8' );
+	echo $content; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- plain text (sanitize_textarea_field on save strips any HTML); ads.txt format is comma-separated records.
+	exit;
+}
+add_action( 'init', 'rd_ads_serve_ads_txt', 2 );
+
+/*******************************************************************************
  * Rendering of Ads and Banners - (Desktop and Mobile)                 - (ADS) *
  *******************************************************************************/
 function rd_render_ad_topo() {

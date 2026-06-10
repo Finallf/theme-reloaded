@@ -377,6 +377,7 @@ Monetização. **2 sections.**
 | Opção | O que faz |
 |---|---|
 | `ad_global` | Tag global do `<head>` (ex: AdSense Auto Ads). Aceita JS/HTML raw |
+| `ads_txt_content` | Conteúdo servido **virtualmente** em `/ads.txt` (mesmo padrão do arquivo de chave do IndexNow — sem SFTP, sobrevive a migração, entra no backup). 1 registro por linha; vazio = dormante. ⚠️ Arquivo físico `ads.txt` na raiz tem precedência (o web server serve antes do WP) — apague-o pra usar o campo |
 
 ### Section: Banners by Position (`sec_ads_zones`)
 

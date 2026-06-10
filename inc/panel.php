@@ -119,6 +119,7 @@ function rd_get_default_options(): array {
 		'sitemap_include_cpt'         => 1,
 
 		'ad_global'                   => '',
+		'ads_txt_content'             => '', // virtual /ads.txt content (served by mod-ads.php; empty = dormant).
 		'ad_topo_desktop'             => '',
 		'ad_topo_mobile'              => '',
 		'ad_sidebar_sticky'           => '',
@@ -1613,6 +1614,19 @@ function rd_settings_init() {
 			'desc' => __( 'Paste here the global &lt;head&gt; tag (e.g. AdSense Auto Ads).', 'reloaded' ),
 		)
 	);
+	add_settings_field(
+		'ads_txt_content',
+		__( 'ads.txt', 'reloaded' ),
+		'rd_master_field_cb',
+		'rd_options_monetization',
+		'sec_ads_global',
+		array(
+			'id'          => 'ads_txt_content',
+			'type'        => 'textarea',
+			'placeholder' => 'google.com, pub-0000000000000000, DIRECT, f08c47fec0942fa0',
+			'desc'        => __( 'Content served <strong>virtually</strong> at <code>/ads.txt</code> — no file to upload via SFTP, survives migrations and is included in the settings backup. Paste the lines your ad networks give you (AdSense shows yours under <em>Sites → ads.txt</em>), one record per line. Empty = no ads.txt is served. <strong>Note:</strong> a physical ads.txt file in the web root takes precedence — delete it to use this field.', 'reloaded' ),
+		)
+	);
 
 	rd_panel_register_section( 'sec_ads_zones', __( 'Ads — Banners by Position', 'reloaded' ), 'format-image', 'rd_options_monetization' );
 	add_settings_field(
@@ -1935,7 +1949,7 @@ function rd_options_sanitize( array $input ) {
 		} elseif ( in_array( $key, array( 'lgpd_text', 'footer_subline', 'maintenance_text' ), true ) ) {
 			// 2. Fields that allow safe basic HTML (links, bold, emphasis) — but block scripts.
 			$new_input[ $key ] = wp_kses_post( $value );
-		} elseif ( in_array( $key, array( 'custom_robots_txt', 'trusted_proxy_ips', 'csp_custom_scripts', 'csp_custom_frames', 'csp_custom_styles', 'csp_report_denylist' ), true ) ) {
+		} elseif ( in_array( $key, array( 'custom_robots_txt', 'trusted_proxy_ips', 'csp_custom_scripts', 'csp_custom_frames', 'csp_custom_styles', 'csp_report_denylist', 'ads_txt_content' ), true ) ) {
 			// 3. Plain-text textarea fields — strip tags but PRESERVE line breaks.
 			// sanitize_text_field() would collapse all lines into a single one.
 			$new_input[ $key ] = sanitize_textarea_field( $value );

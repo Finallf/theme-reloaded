@@ -714,6 +714,8 @@ O title e a description seguem usando os helpers nativos `the_archive_title()` e
 
 Cada um lê do `rd_settings` o HTML/JS literal do anúncio e renderiza só se preenchido. O banner "sidebar topo" virou o widget `RD_Ad_Widget` (`inc/class-rd-ad-widget.php`) — código no form do widget, nonce do CSP via `rd_csp_inject_nonce()`.
 
+**ads.txt virtual** — `rd_ads_serve_ads_txt()` (hook `init`) serve `/ads.txt` direto da opção `ads_txt_content` (textarea em Monetization → Global Script). Mesmo padrão do arquivo de chave do IndexNow: sem arquivo físico, sem SFTP, sobrevive a migrações e entra no backup de settings. Sanitizado como plain-text (`sanitize_textarea_field` — a chave não casa com o prefixo `ad_` de HTML raw). Vazio = dormante; arquivo físico na raiz tem precedência.
+
 JS pra fechar o anchor mobile (X) vive em `navigation.js` (`.rd-ad-close`).
 
 ---
