@@ -7,6 +7,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 <br>
 
 
+## [1.5.1-beta.2](https://github.com/Finallf/theme-reloaded/compare/v1.5.1-beta.1...v1.5.1-beta.2) (2026-06-10)
+
+### 🐛 Bug Fixes
+
+* **ui:** dashboard Carousel toggle whitelist + uniform compact-card thumbs ([cfe758b](https://github.com/Finallf/theme-reloaded/commit/cfe758bce5ff8fa11cdd3893fa2b54c4330c5b86))
+
+<br>
+
+---
+
 ## [1.5.1-beta.1](https://github.com/Finallf/theme-reloaded/compare/v1.5.0...v1.5.1-beta.1) (2026-06-10)
 
 ### 🐛 Bug Fixes
