@@ -7,6 +7,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 <br>
 
 
+## [1.4.1-beta.1](https://github.com/Finallf/theme-reloaded/compare/v1.4.0...v1.4.1-beta.1) (2026-06-10)
+
+### 🐛 Bug Fixes
+
+* **header:** stable menu-bar height across breakpoints + desktop edge gap ([584218f](https://github.com/Finallf/theme-reloaded/commit/584218f3e54cb2cbc90aea1d8448c397e23b61bc))
+
+<br>
+
+---
+
 ## [1.4.0](https://github.com/Finallf/theme-reloaded/compare/v1.3.0...v1.4.0) (2026-06-10)
 
 ### ✨ Features
