@@ -32,7 +32,7 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const themeRoot = resolve(__dirname, '../..');
 
 // Configuração base — sobrescrita pelos templates abaixo.
-const BASE_URL = process.env.RD_SANDBOX_URL || 'https://theme.reloaded.com.br';
+const BASE_URL = process.env.RD_SANDBOX_URL || 'https://reloaded.com.br';
 const SRC_CSS = resolve(themeRoot, 'assets/css/style.css');
 const OUT_DIR = resolve(themeRoot, 'assets/css');
 

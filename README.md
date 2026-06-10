@@ -91,7 +91,7 @@
  - ✅ Granular cookie consent banner with 4 categories (necessary, analytics, marketing, integrations), Open Graph and Twitter Card meta tags, native sitemap (configurable), customizable `robots.txt`, Schema.org JSON-LD for posts and Organization, and HTTP 503 maintenance mode that preserves SEO.
 
 ### Donations and integrations
- - ✅ Built-in support for GitHub Sponsors, PayPal (with QR code), and PIX (with QR code and copy-paste key). Discord server widget. Google Analytics, Microsoft Clarity, Facebook Pixel, TikTok Pixel, Plausible, and Umami integrations. Eight social network links. Pre-defined ad zones for AdSense (728×90, 320×100, 300×250, 300×600) plus a global header script slot.
+ - ✅ Built-in support for GitHub Sponsors, PayPal (with QR code), and PIX (with QR code and copy-paste key). Discord server widget. Google Analytics, Microsoft Clarity, Facebook Pixel, TikTok Pixel, Plausible, and Umami integrations. Eight social network links. Ad zones for AdSense — page-level banners (728×90, 320×100) and a sticky sidebar slot (300×600) via panel, plus a generic ad/banner widget for free placement — and a global header script slot. Donations and the Discord server widget are configured as WP widgets (Appearance → Widgets).
 
 <br>
 
@@ -267,8 +267,7 @@ External analytics and marketing pixels (all opt-in, gated by cookie consent).
 | Facebook Pixel | Pixel ID | `Empty` |
 | TikTok Pixel | Pixel ID | `Empty` |
 | Plausible / Umami | Self-hosted analytics endpoint and domain | `Empty` |
-| Discord widget | Display the Discord server widget in the sidebar | `OFF` |
-| Discord server ID | Server ID required for the official Discord widget | `Empty` |
+| Discord server widget | Configured in the *ReloadeD: Discord* widget (Appearance → Widgets) — server ID, lazy-load facade and facade logo. Placement enables it | `—` |
 | Social networks | 8 channels (Discord, Telegram, YouTube, Instagram, Steam, Twitter/X, Facebook, WhatsApp) | `Empty` |
 
 <br>
@@ -289,20 +288,13 @@ Open Graph, Twitter Cards, Schema.org, sitemap, and meta verification.
 
 ### 💰 Monetization
 
-Donations and ad zones — bundled into one tab.
+Page-level and sticky ad zones. **Donations** (GitHub Sponsors, PayPal, PIX) and the **sidebar-top ad** moved to WP widgets — *ReloadeD: Support the Project* and *ReloadeD: Ad / Banner* (Appearance → Widgets), placed and ordered freely.
 
 | ***Setting*** | ***Description*** | ***Default*** |
 | :--- | :---: | :---: |
-| GitHub Sponsors | Sponsor page URL | `Empty` |
-| PayPal donation link | Direct PayPal donation URL | `Empty` |
-| PayPal QR code | QR code image upload for PayPal | `Empty` |
-| PIX URL | Direct PIX payment URL | `Empty` |
-| PIX QR code | QR code image upload for PIX | `Empty` |
-| PIX key | Direct PIX key (email, CPF/CNPJ, or random) | `Empty` |
 | Global ads script | `<head>` global tag (e.g. AdSense Auto Ads) | `Empty` |
 | Top banner — desktop | Header banner for large screens (728×90) | `Empty` |
 | Top banner — mobile | Header banner for small screens (320×100) | `Empty` |
-| Sidebar top banner | Sidebar slot above other widgets (300×250) | `Empty` |
 | Sidebar sticky banner | Sidebar slot that follows scroll (300×600) | `Empty` |
 
 <br>
