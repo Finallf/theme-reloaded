@@ -7,6 +7,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 <br>
 
 
+## [1.4.1-beta.2](https://github.com/Finallf/theme-reloaded/compare/v1.4.1-beta.1...v1.4.1-beta.2) (2026-06-10)
+
+### 🐛 Bug Fixes
+
+* **ui:** menu-bar height stability, theme-toggle edge gap, sidebar title case ([b7a280f](https://github.com/Finallf/theme-reloaded/commit/b7a280fa45912fa4978e907ae86ae01140f324e4))
+
+<br>
+
+---
+
 ## [1.4.1-beta.1](https://github.com/Finallf/theme-reloaded/compare/v1.4.0...v1.4.1-beta.1) (2026-06-10)
 
 ### 🐛 Bug Fixes
