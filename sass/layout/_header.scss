@@ -16,7 +16,7 @@
 		max-width: $container-max; // Pulling from the global variable
 		margin: 0 auto;
 		width: 100%;
-		padding: 20px;
+		padding: 10px;
 	}
 
 	// Text Logo (default)
@@ -84,12 +84,12 @@
 
 		// Panel wrapper: on desktop it's "transparent" (display: contents),
 		// making the <ul> appear as a direct child of the nav to inherit layout.
-		// At ≤1440px the display becomes `block` and position: fixed (becomes a sliding panel).
+		// At ≤1024px the display becomes `block` and position: fixed (becomes a sliding panel).
 		.menu-panel {
 			display: contents;
 		}
 
-		// The panel's internal search only appears in hamburger mode (≤1440px)
+		// The panel's internal search only appears in hamburger mode (≤1024px)
 		.menu-search-form {
 			display: none;
 		}
@@ -216,30 +216,11 @@
 	}
 }
 
-// When the menu is open (.is-active class via JS)
-.main-navigation.is-active {
-	.hamburger {
-		background: transparent;
-
-		&::before {
-			transform: rotate(45deg);
-			top: 0;
-		}
-
-		&::after {
-			transform: rotate(-45deg);
-			bottom: 0;
-		}
-	}
-
-	ul {
-		display: flex;
-	}
-}
-
-/* By default, hides the hamburger-version buttons (visible at ≤1440px via _media.scss) */
+/* By default, hides the hamburger-version buttons (visible at ≤1024px via _media.scss):
+   .menu-toggle opens the panel (left side of the bar); .menu-close is the floating X
+   beside the open panel. */
 .menu-toggle,
-.menu-search-toggle {
+.menu-close {
 	display: none;
 }
 
@@ -252,7 +233,6 @@
 	margin-left: 15px;
 	padding-left: 15px;
 	border-left: 1px solid rgba(255, 255, 255, 0.1);
-	transition: border-color 0.3s ease;
 }
 
 .theme-toggle-btn {
@@ -302,15 +282,6 @@
 
 	.moon-icon {
 		display: block;
-	}
-}
-
-/* In hamburger mode (≤1440px), the theme-switch loses the left border
-   separator (which only makes sense next to the desktop's expandable search) */
-@media (max-width: 1440px) {
-	.theme-switch-wrapper {
-		border-left: none;
-		padding-left: 0;
 	}
 }
 
@@ -388,15 +359,16 @@
 	}
 }
 
-// Hide the expandable search as soon as hamburger mode kicks in.
-// (The search accessible in hamburger mode lives in the sliding panel — _media.scss)
-@media (max-width: 1440px) {
+// The expandable search survives hamburger mode on tablets (769-1024px) —
+// there's room for it beside the theme switch. Only real mobile (≤768px)
+// hides it; there, search lives in the sliding panel (_media.scss).
+@media (max-width: 768px) {
 	.header-search-container {
 		display: none;
 	}
 }
 
-// Top bar stays specific to real mobile (≤768px); at 769-1440px it remains visible
+// Top bar stays specific to real mobile (≤768px); at 769-1024px it remains visible
 @media (max-width: 768px) {
 	.rd-top-bar {
 		display: none;

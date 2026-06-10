@@ -49,6 +49,15 @@ details {
 }
 
 .entry-content {
+	// Reading comfort — matches the static pages (.rd-page-content: 1.75).
+	// The body global is 1.5, too tight for long-form post reading.
+	line-height: 1.7;
+
+	// Paragraph rhythm — browser default is 1em; 1.3em gives article text
+	// breathing room (static pages use 1.4em).
+	p {
+		margin: 0 0 1.3em;
+	}
 
 	// scroll-margin-top: when hash navigation (#section) scrolls,
 	// the heading isn't stuck to the top (the fixed header would cover it). 100px
@@ -142,7 +151,10 @@ details {
 	}
 
 	h3 {
-		margin-bottom: 0;
+		// Was margin-bottom: 0 — the heading sat glued to the text below.
+		// 1.6em top separates it from the previous section; 0.7em bottom
+		// breathes without detaching it from its own content.
+		margin: 1.6em 0 0.7em;
 	}
 
 	// ==========================================================

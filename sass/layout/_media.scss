@@ -2,17 +2,23 @@
 @use '../base/variables' as *;
 
 /* ==========================================================================
-   HAMBURGER MODE (tablet + mobile, ≤1440px)
+   HAMBURGER MODE (tablet + mobile, ≤1024px)
 
-   At ≤1440px the theme enters hamburger mode:
+   At ≤1024px the theme enters hamburger mode (same breakpoint where the
+   sidebar stacks — one consistent "compact layout" threshold):
    - The top logo (.top-branding .site-branding) disappears, the banner centers
    - The inline desktop menu becomes a sliding panel (.menu-panel)
-   - The buttons appear: .menu-search-toggle, .menu-toggle
-   - The header's expandable search is replaced by an internal search
-     inside the panel (.menu-search-form)
+   - .menu-toggle (hamburger) appears on the LEFT of the bar; the theme switch
+     stays alone on the right (no separator line — nothing beside it to divide)
+   - When the panel opens it slides over the hamburger; the close control is
+     .menu-close — a floating X just OUTSIDE the panel's right edge, aligned
+     with the panel's internal search bar
+   - The header's expandable search SURVIVES on tablets (769-1024px, beside
+     the theme switch with the separator line). Only ≤768px (real mobile)
+     hides it — there search lives in the panel (.menu-search-form)
    - Specifically ≤768px (real mobile) also hides .rd-top-bar
    ========================================================================== */
-@media (max-width: 1440px) {
+@media (max-width: 1024px) {
 	// Hides only the top-branding LOGO; the banner stays and centers itself.
 	.top-branding {
 		.site-branding {
@@ -163,9 +169,9 @@
 		}
 	}
 
-	// Right group buttons (visual order: search → switcher → hamburger).
-	// .menu-search-toggle with margin-left: auto pushes the whole group to the right.
-	.menu-bar-fixed .menu-search-toggle {
+	// Hamburger on the LEFT of the bar. No z-index: the open panel slides OVER
+	// it — closing is handled by the floating .menu-close beside the panel.
+	.menu-bar-fixed .menu-toggle {
 		display: flex;
 		align-items: center;
 		justify-content: center;
@@ -173,20 +179,59 @@
 		border: none;
 		cursor: pointer;
 		color: $brand-blue-light;
+		font-size: 1.7rem;
 		padding: 6px;
-		margin-left: auto;
 	}
 
-	.menu-bar-fixed .menu-toggle {
+	// Right side at 769-1024px: the expandable search stays visible (its own
+	// margin-left: auto pushes the group right) with the separator line before
+	// the theme switch — same as desktop. The ≤768px block below takes over
+	// when the search disappears.
+
+	// Floating close (X) — fixed just OUTSIDE the open panel's right edge
+	// (panel is 55% wide → left: calc(55% + 12px)), vertically aligned with the
+	// panel's internal search bar (top: 20px = the form's margin, 40px = its
+	// height). DOM sibling of .menu-panel, so `.toggled +` reveals it: fades in
+	// slightly AFTER the slide finishes, fades out immediately on close.
+	.menu-bar-fixed .main-navigation .menu-close {
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		background: transparent;
-		border: none;
-		color: $brand-blue-light;
-		font-size: 1.7rem;
-		padding: 6px;
-		z-index: 10000;
+		position: fixed;
+		top: 20px;
+		left: calc(55% + 12px);
+		width: 40px;
+		height: 40px;
+		background: rgba($color-menu-bg, 0.96);
+		border: 1px solid rgba(255, 255, 255, 0.15);
+		border-radius: 5px;
+		color: #fff;
+		cursor: pointer;
+		padding: 0;
+		z-index: 9999;
+		opacity: 0;
+		visibility: hidden;
+		transition: opacity 0.25s ease, visibility 0.25s ease;
+
+		&:hover {
+			color: $brand-blue-light;
+			border-color: $brand-blue-light;
+		}
+	}
+
+	.menu-bar-fixed .main-navigation .menu-panel.toggled + .menu-close {
+		opacity: 1;
+		visibility: visible;
+		transition-delay: 0.15s;
+	}
+
+	// Breathing room against the right viewport edge. The ☰ glyph carries
+	// whitespace inside its own font em-box, so the hamburger never looks
+	// glued to the left wall — but the sun/moon SVG draws edge-to-edge, so as
+	// the last element in the bar it visually touches the right wall. Mirror
+	// the hamburger's 6px so both sides read the same.
+	.menu-bar-fixed .theme-switch-wrapper {
+		padding-right: 6px;
 	}
 }
 
@@ -197,6 +242,15 @@
 	// Top bar with date/ticker/social only appears on larger screens
 	.rd-top-bar {
 		display: none;
+	}
+
+	// With the expandable search hidden (≤768px, rule in _header.scss), the
+	// theme switch sits alone on the right: pushes itself there and drops the
+	// separator line (nothing beside it to divide).
+	.menu-bar-fixed .theme-switch-wrapper {
+		margin-left: auto;
+		border-left: none;
+		padding-left: 0;
 	}
 
 	// The whole top branding disappears on mobile (728x90 desktop banner doesn't fit the

@@ -20,7 +20,7 @@ sass/
 │   ├── _grid.scss          # Home grid (.post-grid, .grid-item)
 │   ├── _sidebar.scss       # Sidebar widgets, Discord block, search widget
 │   ├── _single.scss        # Single post (article header, .post-tags, byline)
-│   └── _media.scss         # Modo hambúrguer (≤1440px) — slide panel, etc.
+│   └── _media.scss         # Modo hambúrguer (≤1024px) — slide panel, etc.
 └── components/
     ├── _backtotop.scss     # Botão flutuante "voltar ao topo"
     ├── _breadcrumbs.scss   # Trilha de navegação contextual (Home › Cat › Post)
@@ -217,9 +217,9 @@ Implementação:
 
 | Breakpoint | Usado pra |
 |------------|-----------|
-| `≥1441px` | Desktop "premium" — layout completo inline |
-| `769-1440px` | Tablets / laptops menores — modo hambúrguer com top bar visível |
-| `≤768px` | Mobile real — modo hambúrguer + top bar oculta |
+| `≥1025px` | Desktop — layout completo inline (menu + busca expansível) |
+| `769-1024px` | Tablets — modo hambúrguer com top bar **e busca expansível visíveis** (sidebar também empilha em ≤1024px — threshold único de "layout compacto") |
+| `≤768px` | Mobile real — modo hambúrguer + top bar oculta + busca expansível oculta (busca vive no painel) |
 | `≤600px` | Ajustes finos pra phones (raros) |
 
 A maior parte das responsividade vive em `sass/layout/_media.scss`.
@@ -271,7 +271,7 @@ Otimiza o output em papel ou "Salvar como PDF". Adicionado em 2026-05-29 — ant
 
 #### O que esconde (`display: none !important`)
 
-Tudo que é UI/navegação e não-conteúdo: `.site-header`, `.site-footer`, `.rd-top-bar`, `.menu-bar-fixed`, `.main-navigation`, `.navigation`, `.menu-toggle`, `.menu-search-toggle`, `.header-search-container`, `.theme-switch-wrapper`, `.theme-toggle-btn`, `.site-branding-toggle`, `aside`, `.footer-widget`, `.rd-breadcrumbs`, `.back-to-top`, `.rd-cookie-banner`, `.rd-lgpd-reopen`, `.rd-toc` + variantes (`.rd-toc__fab`, `.rd-toc__panel`, `.rd-toc-anchor`), `.rd-sugg`, `.rd-search-suggestions`, `.rd-related-posts`, `.rd-popular-posts`, `.rd-social-icons`, `.rd-social-link`, `.rd-ticker-*`, `.rd-ad-container` + closers, `.rd-support-block`, `.rd-copy-btn`, `.comments-area`, `.comment-list`, `#respond`, `.pagination`, `.reading-time`.
+Tudo que é UI/navegação e não-conteúdo: `.site-header`, `.site-footer`, `.rd-top-bar`, `.menu-bar-fixed`, `.main-navigation`, `.navigation`, `.menu-toggle`, `.menu-close`, `.header-search-container`, `.theme-switch-wrapper`, `.theme-toggle-btn`, `.site-branding-toggle`, `aside`, `.footer-widget`, `.rd-breadcrumbs`, `.back-to-top`, `.rd-cookie-banner`, `.rd-lgpd-reopen`, `.rd-toc` + variantes (`.rd-toc__fab`, `.rd-toc__panel`, `.rd-toc-anchor`), `.rd-sugg`, `.rd-search-suggestions`, `.rd-related-posts`, `.rd-popular-posts`, `.rd-social-icons`, `.rd-social-link`, `.rd-ticker-*`, `.rd-ad-container` + closers, `.rd-support-block`, `.rd-copy-btn`, `.comments-area`, `.comment-list`, `#respond`, `.pagination`, `.reading-time`.
 
 #### O que mantém
 
@@ -311,10 +311,10 @@ Arquivo principal do frontend. Vários `DOMContentLoaded` listeners independente
 - Smooth scroll ao clicar
 
 #### 2. **Menu Hambúrguer + Busca Integrada**
-- Toggle do `.menu-panel` (slide-in/out)
-- `.menu-search-toggle` abre o painel + foca a busca interna (1 clique → tudo)
-- Funções `window.rdOpenMenuPanel(focusSearch)` e `window.rdCloseMenuPanel()` expostas pra outros handlers
-- Resize listener com debounce: fecha o painel se usuário redimensionar pra >1440px (evita ficar "preso aberto"). **Também adiciona `.rd-resizing` no `<body>` no início do resize e remove após debounce de 150ms** — neutraliza transitions durante o resize ativo, evita o flash do `.menu-panel` quando muda de `display: contents` (desktop) pra `display: block + position: fixed` (mobile/tablet)
+- `.menu-toggle` (hambúrguer, lado esquerdo da barra) só ABRE o `.menu-panel` (slide-in da esquerda, desliza por cima do botão)
+- `.menu-close` (X flutuante fora da borda direita do painel aberto, alinhado à busca interna; revelado via `.toggled +` no CSS) fecha o painel — sem morphing de ícone no hambúrguer
+- Funções `window.rdOpenMenuPanel(focusSearch)` e `window.rdCloseMenuPanel()` expostas pra outros handlers (o trigger do 404 usa `rdOpenMenuPanel(true)` pra abrir + focar a busca interna)
+- Resize listener com debounce: fecha o painel se usuário redimensionar pra >1024px (evita ficar "preso aberto"). **Também adiciona `.rd-resizing` no `<body>` no início do resize e remove após debounce de 150ms** — neutraliza transitions durante o resize ativo, evita o flash do `.menu-panel` quando muda de `display: contents` (desktop) pra `display: block + position: fixed` (mobile/tablet)
 
 #### 3. **Facades (YouTube/Discord)**
 - Click handler em `.rd-facade` — substitui o div estático pelo iframe real
