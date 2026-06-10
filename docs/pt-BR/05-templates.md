@@ -195,7 +195,7 @@ Renderiza quando WordPress não acha o conteúdo. Tema temático "LEVEL NOT FOUN
    - Layout grid customizado `.rd-404-recommended-grid`
 
 JS:
-- Botão "Buscar conteúdo" foca a busca expansível do header (≥1441px) ou abre o painel hambúrguer + foca a busca interna (≤1440px)
+- Botão "Buscar conteúdo" foca a busca expansível do header (≥1025px) ou abre o painel hambúrguer + foca a busca interna (≤1024px)
 
 Estilizado por `sass/components/_page-404.scss`.
 
@@ -261,26 +261,28 @@ Estrutura:
 
         <div class="menu-bar-fixed">
             <div class="container">
+                <button class="menu-toggle">...</button> <!-- hambúrguer, lado ESQUERDO (≤1024px) -->
+
                 <nav class="main-navigation">
                     <div class="site-branding-toggle"><?php rd_render_logo(); ?></div>
                     <div class="menu-panel" id="primary-menu-panel">
                         <form class="menu-search-form">...</form>
                         <?php wp_nav_menu(...); ?>
                     </div>
+                    <button class="menu-close">...</button> <!-- X flutuante ao lado do painel aberto -->
                 </nav>
 
                 <div class="header-search-container">...</div>
-                <button class="menu-search-toggle">...</button>
                 <div class="theme-switch-wrapper">...</div>
-                <button class="menu-toggle">...</button>
             </div>
         </div>
     </header>
 ```
 
 **Estratégia responsiva:**
-- ≥1441px: menu inline horizontal + busca expansível visível
-- ≤1440px: menu vira hambúrguer (slide panel) + busca-icon abre painel
+- ≥1025px: menu inline horizontal + busca expansível visível (com separador antes do theme-switch)
+- 769-1024px: menu vira hambúrguer (slide panel a partir da esquerda; botão à esquerda da barra), mas a **busca expansível continua visível** à direita com o separador — só o menu colapsa
+- ≤768px: busca expansível some (a busca passa a viver no painel) e o theme-switch fica sozinho à direita, sem separador. O painel desliza por cima do hambúrguer; fecha pelo X flutuante fora da borda direita do painel, alinhado à busca interna
 
 Veja [06 — Frontend SCSS + JS](06-frontend-scss-js.md) pra detalhes de breakpoints.
 

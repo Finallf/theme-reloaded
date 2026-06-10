@@ -73,6 +73,10 @@
 
 				<div class="menu-bar-fixed">
 					<div class="container">
+						<button class="menu-toggle" aria-controls="primary-menu-panel" aria-expanded="false" aria-label="<?php esc_attr_e( 'Open navigation menu', 'reloaded' ); ?>">
+							<span class="hamburger-icon" aria-hidden="true">&#9776;</span>
+						</button>
+
 						<nav id="site-navigation" class="main-navigation" aria-label="<?php esc_attr_e( 'Primary menu', 'reloaded' ); ?>">
 
 							<div class="site-branding-toggle">
@@ -110,6 +114,13 @@
 									);
 									?>
 							</div>
+
+							<button class="menu-close" aria-controls="primary-menu-panel" aria-label="<?php esc_attr_e( 'Close navigation menu', 'reloaded' ); ?>">
+								<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+									<line x1="18" y1="6" x2="6" y2="18"></line>
+									<line x1="6" y1="6" x2="18" y2="18"></line>
+								</svg>
+							</button>
 						</nav>
 
 						<div class="header-search-container">
@@ -131,13 +142,6 @@
 							</form>
 						</div>
 
-						<button class="menu-search-toggle" aria-controls="primary-menu-panel" aria-label="<?php esc_attr_e( 'Open search', 'reloaded' ); ?>">
-							<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-								<circle cx="11" cy="11" r="8"></circle>
-								<line x1="22" y1="22" x2="16.65" y2="16.65"></line>
-							</svg>
-						</button>
-
 						<?php if ( rd_get_option_bool( 'enable_theme_switch' ) ) : ?>
 							<div class="theme-switch-wrapper">
 								<button id="rd-theme-toggle" class="theme-toggle-btn" aria-label="<?php esc_attr_e( 'Toggle dark/light mode', 'reloaded' ); ?>">
@@ -146,10 +150,6 @@
 								</button>
 							</div>
 						<?php endif; ?>
-
-						<button class="menu-toggle" aria-controls="primary-menu-panel" aria-expanded="false" aria-label="<?php esc_attr_e( 'Open navigation menu', 'reloaded' ); ?>">
-							<span class="hamburger-icon" aria-hidden="true">&#9776;</span>
-						</button>
 
 					</div>
 				</div>

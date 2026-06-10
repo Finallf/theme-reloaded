@@ -27,16 +27,17 @@
         }
     }
 
-    // Grid override: fixed rows of 3 on desktop instead of the search auto-fill.
-    // Mobile (default): 1 col • Tablet: 2 cols • Desktop: 3 cols.
+    // Grid override: fixed rows of 3 instead of the search auto-fill.
+    // Mobile (default): 1 col • ≥768px: 3 cols.
+    //
+    // No 2-col step: below 1024px the sidebar stacks (layout in _grid.scss),
+    // so the content is FULL width — 3 cards fit comfortably. A 2-col step
+    // here made the section cards ~50% wide, visually identical to the 2 hero
+    // cards above (looked like 5 equal cards between 768-1023px).
     .rd-wrapper-grid {
         grid-template-columns: 1fr;
 
         @media (min-width: 768px) {
-            grid-template-columns: 1fr 1fr;
-        }
-
-        @media (min-width: 1024px) {
             grid-template-columns: 1fr 1fr 1fr;
         }
     }

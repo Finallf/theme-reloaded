@@ -35,18 +35,19 @@ document.addEventListener('DOMContentLoaded', function () {
 	}
 
 	/* MENU (HAMBURGER) + SEARCH INTEGRATED IN THE PANEL */
+	// .menu-toggle (hamburger, left of the bar) only OPENS the panel — the
+	// panel slides over it. Closing is done by .menu-close, the floating X
+	// beside the open panel. No icon morphing: each button keeps its own glyph.
 	const menuPanel       = document.getElementById('primary-menu-panel');
 	const menuToggleBtn   = document.querySelector('.menu-toggle');
-	const searchToggleBtn = document.querySelector('.menu-search-toggle');
+	const menuCloseBtn    = document.querySelector('.menu-close');
 	const menuSearchInput = document.querySelector('.menu-search-field');
 
 	function openMenuPanel(focusSearch) {
 		if (!menuPanel) return;
 		menuPanel.classList.add('toggled');
 		if (menuToggleBtn) {
-			menuToggleBtn.innerHTML = '<span class="hamburger-icon" aria-hidden="true">&#10006;</span>';
 			menuToggleBtn.setAttribute('aria-expanded', 'true');
-			menuToggleBtn.setAttribute('aria-label', t.menu_close || 'Close navigation menu');
 		}
 		if (focusSearch && menuSearchInput) {
 			// Small delay to wait for the panel's transition to finish
@@ -58,9 +59,7 @@ document.addEventListener('DOMContentLoaded', function () {
 		if (!menuPanel) return;
 		menuPanel.classList.remove('toggled');
 		if (menuToggleBtn) {
-			menuToggleBtn.innerHTML = '<span class="hamburger-icon" aria-hidden="true">&#9776;</span>';
 			menuToggleBtn.setAttribute('aria-expanded', 'false');
-			menuToggleBtn.setAttribute('aria-label', t.menu_open || 'Open navigation menu');
 		}
 	}
 
@@ -70,21 +69,17 @@ document.addEventListener('DOMContentLoaded', function () {
 
 	if (menuPanel && menuToggleBtn) {
 		menuToggleBtn.onclick = function () {
-			if (menuPanel.classList.contains('toggled')) {
-				closeMenuPanel();
-			} else {
-				openMenuPanel(false);
-			}
+			openMenuPanel(false);
 		};
 	}
 
-	if (searchToggleBtn) {
-		searchToggleBtn.addEventListener('click', function () {
-			openMenuPanel(true);
+	if (menuCloseBtn) {
+		menuCloseBtn.addEventListener('click', function () {
+			closeMenuPanel();
 		});
 	}
 
-	// Resize → close the panel when crossing into desktop (>1440px),
+	// Resize → close the panel when crossing into desktop (>1024px),
 	// preventing it from showing open if the user goes back to tablet/mobile.
 	// Also adds .rd-resizing on <body> during the resize to neutralize
 	// transitions globally — avoids the .menu-panel "flash" when it switches
@@ -97,7 +92,7 @@ document.addEventListener('DOMContentLoaded', function () {
 		clearTimeout(resizeTimer);
 		resizeTimer = setTimeout(function () {
 			document.body.classList.remove('rd-resizing');
-			if (window.innerWidth > 1440 && menuPanel && menuPanel.classList.contains('toggled')) {
+			if (window.innerWidth > 1024 && menuPanel && menuPanel.classList.contains('toggled')) {
 				closeMenuPanel();
 			}
 		}, 150);
@@ -683,14 +678,14 @@ document.addEventListener('DOMContentLoaded', function () {
     trigger.addEventListener('click', function () {
         const desktopSearch = document.querySelector('.header-search-container .search-field');
 
-        // ≥1441px: header's expandable search visible → focus directly
+        // ≥769px: header's expandable search visible → focus directly
         if (desktopSearch && desktopSearch.offsetParent !== null) {
             desktopSearch.focus();
             desktopSearch.scrollIntoView({ behavior: 'smooth', block: 'center' });
             return;
         }
 
-        // ≤1440px: open the hamburger panel and focus the inner search
+        // ≤768px: open the hamburger panel and focus the inner search
         if (typeof window.rdOpenMenuPanel === 'function') {
             window.rdOpenMenuPanel(true);
         }

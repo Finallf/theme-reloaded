@@ -53,7 +53,7 @@ Todos os recursos são **nativos do tema**. Nada de:
 - 📂 **Header de archive contextual** — ícone, contador de posts e borda colorida com a cor da categoria
 
 ### Recursos de estrutura
-- 🍔 **Menu hambúrguer** estendido até 1440px (laptops) com busca integrada no painel
+- 🍔 **Menu hambúrguer** em ≤1024px (mesmo breakpoint em que o sidebar empilha) com busca integrada no painel
 - 📰 **News ticker** rolante na top bar (mostra últimas notícias)
 - 🌐 **Top bar** com data, redes sociais e ticker
 - 💬 **Widget Discord** pra comunidade (com facade ou iframe direto)

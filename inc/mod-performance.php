@@ -85,8 +85,8 @@ function rd_scripts() {
 		array(
 			'copied'          => esc_html__( 'Key Copied!', 'reloaded' ),
 			'copy_error'      => esc_html__( 'Error copying: ', 'reloaded' ),
-			'menu_close'      => esc_html__( 'Close navigation menu', 'reloaded' ),
-			'menu_open'       => esc_html__( 'Open navigation menu', 'reloaded' ),
+			// menu_close/menu_open removed: the hamburger no longer morphs into an X
+			// (the floating .menu-close carries a static PHP-translated aria-label).
 			'comment_sending' => esc_html__( 'Sending…', 'reloaded' ),
 			'comment_sent'    => esc_html__( 'Comment sent! Loading…', 'reloaded' ),
 			'comment_error'   => esc_html__( 'Unexpected error submitting the comment. Reload the page and try again.', 'reloaded' ),
