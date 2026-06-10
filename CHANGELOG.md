@@ -7,6 +7,20 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 <br>
 
 
+## [1.6.0-beta.1](https://github.com/Finallf/theme-reloaded/compare/v1.5.1-beta.2...v1.6.0-beta.1) (2026-06-10)
+
+### ✨ Features
+
+* **seo:** IndexNow push-indexing module ([cf63d87](https://github.com/Finallf/theme-reloaded/commit/cf63d87fe200d47936a6767d50b5b9959c9b0076))
+
+### 🐛 Bug Fixes
+
+* **admin:** dashboard fixes, compact thumbs, chart deep links ([c8b1e42](https://github.com/Finallf/theme-reloaded/commit/c8b1e422bdfee7b381f481443193642acef0ca47))
+
+<br>
+
+---
+
 ## [1.5.1-beta.2](https://github.com/Finallf/theme-reloaded/compare/v1.5.1-beta.1...v1.5.1-beta.2) (2026-06-10)
 
 ### 🐛 Bug Fixes
