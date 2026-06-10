@@ -7,6 +7,26 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 <br>
 
 
+## [1.6.0](https://github.com/Finallf/theme-reloaded/compare/v1.5.0...v1.6.0) (2026-06-10)
+
+### ✨ Features
+
+* **ads:** serve ads.txt virtually from a panel field ([5429899](https://github.com/Finallf/theme-reloaded/commit/5429899d2e5b035fcbaedb60841223a4dc2a83dc))
+* **self-update:** opt-in beta release channel ([2f0b1e9](https://github.com/Finallf/theme-reloaded/commit/2f0b1e90187319d9f311f4b79b7d174d02dc82bc))
+* **seo:** IndexNow push-indexing module ([cf63d87](https://github.com/Finallf/theme-reloaded/commit/cf63d87fe200d47936a6767d50b5b9959c9b0076))
+* **widgets:** Social Networks "Follow Us" widget ([4787bee](https://github.com/Finallf/theme-reloaded/commit/4787beee53de896759347eb2de1bffe36164612b))
+
+### 🐛 Bug Fixes
+
+* **admin:** dashboard fixes, compact thumbs, chart deep links ([c8b1e42](https://github.com/Finallf/theme-reloaded/commit/c8b1e422bdfee7b381f481443193642acef0ca47))
+* **dashboard:** allow the Carousel card's inline toggle ([5fed0b5](https://github.com/Finallf/theme-reloaded/commit/5fed0b5fef2f13ffbe8a0aa2db7267fefc9cd0ae))
+* **markdown:** decode &gt; blockquote markers before parsing ([c4fcbef](https://github.com/Finallf/theme-reloaded/commit/c4fcbef5bfd55fa1753412c21eaa06e9bead56e3))
+* **ui:** dashboard Carousel toggle whitelist + uniform compact-card thumbs ([cfe758b](https://github.com/Finallf/theme-reloaded/commit/cfe758bce5ff8fa11cdd3893fa2b54c4330c5b86))
+
+<br>
+
+---
+
 ## [1.6.0-beta.5](https://github.com/Finallf/theme-reloaded/compare/v1.6.0-beta.4...v1.6.0-beta.5) (2026-06-10)
 
 ### 🐛 Bug Fixes
