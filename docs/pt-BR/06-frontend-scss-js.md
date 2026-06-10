@@ -24,6 +24,7 @@ sass/
 └── components/
     ├── _backtotop.scss     # Botão flutuante "voltar ao topo"
     ├── _breadcrumbs.scss   # Trilha de navegação contextual (Home › Cat › Post)
+    ├── _carousel.scss      # Carrossel de destaques (scroll-snap, peek, overlay, dots)
     ├── _buttons.scss       # Botões compartilhados
     ├── _comments.scss      # Lista de comentários + form
     ├── _facades.scss       # Facade YouTube/Discord (estado clickable)
@@ -374,6 +375,15 @@ A função usa `reloaded_i18n.copied` e `reloaded_i18n.copy_error` (via `wp_loca
 
 #### 10. **Dark/Light Toggle**
 - Click em `#rd-theme-toggle` → toggle `data-theme` no `<html>` + persiste em `localStorage['rd-theme']`
+
+### `assets/js/carousel.js` (~130 linhas)
+
+Camada de controle do Carrossel de Destaques (markup em `mod-carousel.php`; enqueue **condicional** — só quando o carrossel renderiza). O slide/swipe é CSS scroll-snap nativo; o JS adiciona:
+
+- **Autoplay** com rewind (sem clonagem de DOM) — `scrollTo({ behavior: 'smooth' })`
+- **Matriz de pausas:** hover/foco, `pointerdown` no track, aba oculta (`visibilitychange`), fora da viewport (`IntersectionObserver` threshold 0.25), e `prefers-reduced-motion` → autoplay nunca liga
+- Setas/dots/teclado; slide ativo derivado da **posição de scroll** (fonte única de verdade — swipe, setas e autoplay convergem)
+- Gate `.is-ready` revela os controles (sem JS = fileira swipeável pura)
 
 ### `assets/js/views-tracker.js` (~25 linhas)
 

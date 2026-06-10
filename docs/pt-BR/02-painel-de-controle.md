@@ -133,6 +133,18 @@ Controle de comentários do site.
 | `comment_a11y` | ✅ | Labels + autocomplete attributes pra acessibilidade do form |
 | `comments_separator` | _vazio_ | Texto entre autor e post no link. Vazio = default WP; `&nbsp;` = esconde |
 
+### Section: Featured Carousel (`sec_geral_carousel`)
+
+Carrossel de destaques full-width entre o header e o conteúdo (só na home, página 1). Engine: CSS scroll-snap nativo + `carousel.js` (autoplay/setas/dots, enqueue condicional). Posts do carrossel são **excluídos automaticamente** dos grids da home (sem duplicação).
+
+| Opção | Default | O que faz |
+|---|---|---|
+| `enable_carousel` | ❌ | Liga o carrossel (também via card no Dashboard) |
+| `carousel_source` | `sticky` | Fonte: Sticky posts (fallback pros últimos) / Categoria / Últimos. Só posts **com imagem destacada** entram |
+| `carousel_category` | _vazio_ | Categoria usada quando source = Category |
+| `carousel_count` | `5` | Quantidade de slides (3–8) |
+| `carousel_interval` | `6` | Segundos do autoplay (0 = só manual). Respeita `prefers-reduced-motion` |
+
 ### Section: Home Page (`sec_geral_home`)
 Layout configurável da home (`index.php`). A home é uma vitrine fixa: **2 cards grandes (hero)** sempre no topo, seguidos de até três seções opcionais que reúsam os layouts de card da busca (Grid/Vertical/Compact). Cada seção tem a quantidade escolhida pelo admin via dropdown; `Off` (0) remove a seção.
 

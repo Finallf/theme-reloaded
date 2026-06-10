@@ -38,6 +38,12 @@ function rd_get_default_options(): array {
 		'enable_theme_switch'         => 1,
 		'default_theme_mode'          => 'system',
 
+		'enable_carousel'             => 0,  // featured carousel between header and main (home page 1).
+		'carousel_source'             => 'sticky', // sticky (w/ latest fallback) | category | latest.
+		'carousel_category'           => '', // category ID when carousel_source = category.
+		'carousel_count'              => '5', // 3-8 slides.
+		'carousel_interval'           => '6', // autoplay seconds; 0 = off.
+
 		'home_layout_grid'            => '3', // 0 (off) / 3 / 6 / 9 — hero + section showcase on the home.
 		'home_layout_vertical'        => '3', // 0 (off) / 1 / 2 / 3.
 		'home_layout_compact'         => '6', // 0 (off) / 2 / 4 / 6.
@@ -296,6 +302,23 @@ function rd_options_render() {
 		</form>
 	</div>
 	<?php
+}
+
+/**
+ * Builds the options array for a category <select> field: '' (none) + every
+ * category (id => name). Used by the Featured Carousel section. Runs at
+ * admin_init time only (settings registration), so the query never touches
+ * the front-end.
+ *
+ * @return array<string,string>
+ */
+function rd_panel_category_options(): array {
+	$options    = array( '' => __( '— Select —', 'reloaded' ) );
+	$categories = get_categories( array( 'hide_empty' => false ) );
+	foreach ( $categories as $category ) {
+		$options[ (string) $category->term_id ] = $category->name;
+	}
+	return $options;
 }
 
 /*******************************************************************************
@@ -587,6 +610,90 @@ function rd_settings_init() {
 			'id'   => 'comments_separator',
 			'type' => 'text',
 			'desc' => __( 'Text between Author and Post (e.g., "commented on post:"). Leave <strong>empty</strong> for WP default or type <strong>&amp;nbsp;</strong> to hide.', 'reloaded' ),
+		)
+	);
+
+	// Section: Featured Carousel — full-width band between header and main (home page 1).
+	rd_panel_register_section( 'sec_geral_carousel', __( 'Featured Carousel', 'reloaded' ), 'images-alt2', 'rd_options_general' );
+	add_settings_field(
+		'enable_carousel',
+		__( 'Enable Carousel', 'reloaded' ),
+		'rd_master_field_cb',
+		'rd_options_general',
+		'sec_geral_carousel',
+		array(
+			'id'   => 'enable_carousel',
+			'type' => 'checkbox',
+			'desc' => __( 'Shows a full-width featured carousel between the header and the home content (home page 1 only). Slides swipe natively on touch; autoplay pauses on hover, background tabs and off-screen.', 'reloaded' ),
+		)
+	);
+	add_settings_field(
+		'carousel_source',
+		__( 'Content Source', 'reloaded' ),
+		'rd_master_field_cb',
+		'rd_options_general',
+		'sec_geral_carousel',
+		array(
+			'id'      => 'carousel_source',
+			'type'    => 'select',
+			'options' => array(
+				'sticky'   => __( 'Sticky posts (falls back to latest)', 'reloaded' ),
+				'category' => __( 'Category', 'reloaded' ),
+				'latest'   => __( 'Latest posts', 'reloaded' ),
+			),
+			'desc'    => __( '<strong>Sticky posts</strong> = editorial curation: mark posts with "Stick to the top of the blog" in the editor and they enter the carousel (newest first). With none stickied, the latest posts fill in. Only posts with a featured image qualify. Carousel posts are automatically excluded from the home grids below (no duplicates).', 'reloaded' ),
+		)
+	);
+	add_settings_field(
+		'carousel_category',
+		__( 'Category (if source = Category)', 'reloaded' ),
+		'rd_master_field_cb',
+		'rd_options_general',
+		'sec_geral_carousel',
+		array(
+			'id'      => 'carousel_category',
+			'type'    => 'select',
+			'options' => rd_panel_category_options(),
+			'desc'    => __( 'Used only when the Content Source above is set to Category.', 'reloaded' ),
+		)
+	);
+	add_settings_field(
+		'carousel_count',
+		__( 'Slides', 'reloaded' ),
+		'rd_master_field_cb',
+		'rd_options_general',
+		'sec_geral_carousel',
+		array(
+			'id'      => 'carousel_count',
+			'type'    => 'select',
+			'options' => array(
+				'3' => '3',
+				'4' => '4',
+				'5' => '5',
+				'6' => '6',
+				'7' => '7',
+				'8' => '8',
+			),
+			'desc'    => __( 'How many slides the carousel holds.', 'reloaded' ),
+		)
+	);
+	add_settings_field(
+		'carousel_interval',
+		__( 'Autoplay Interval', 'reloaded' ),
+		'rd_master_field_cb',
+		'rd_options_general',
+		'sec_geral_carousel',
+		array(
+			'id'      => 'carousel_interval',
+			'type'    => 'select',
+			'options' => array(
+				'0'  => __( 'Off (manual only)', 'reloaded' ),
+				'4'  => __( '4 seconds', 'reloaded' ),
+				'6'  => __( '6 seconds', 'reloaded' ),
+				'8'  => __( '8 seconds', 'reloaded' ),
+				'10' => __( '10 seconds', 'reloaded' ),
+			),
+			'desc'    => __( 'Time between automatic slides. Respects the visitor\'s reduced-motion preference (autoplay stays off for them).', 'reloaded' ),
 		)
 	);
 
