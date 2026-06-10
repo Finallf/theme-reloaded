@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ReloadeD 0.1.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/theme/reloaded\n"
-"POT-Creation-Date: 2026-06-10T10:02:14-03:00\n"
-"PO-Revision-Date: 2026-06-10 10:03-0300\n"
+"POT-Creation-Date: 2026-06-10T10:53:00-03:00\n"
+"PO-Revision-Date: 2026-06-10 10:54-0300\n"
 "Last-Translator: Regis Vieira Delgado (Finallf) <finallf2@gmail.com>\n"
 "Language-Team: Brazilian Portuguese\n"
 "Language: pt_BR\n"
@@ -378,6 +378,38 @@ msgstr "Janela temporal:"
 msgid "Number of posts to show:"
 msgstr "Quantidade de posts a exibir:"
 
+#: inc/class-rd-social-widget.php:26
+msgid "ReloadeD: Social Networks"
+msgstr "ReloadeD: Redes Sociais"
+
+#: inc/class-rd-social-widget.php:28
+msgid ""
+"\"Follow Us\" grid of the portal's social networks (URLs come from "
+"Integrations → Social Networks). Just pick which networks to show."
+msgstr ""
+"Grade \"Siga-nos\" das redes sociais do portal (as URLs vêm de Integrações → "
+"Redes Sociais). Apenas escolha quais redes exibir."
+
+#: inc/class-rd-social-widget.php:68 inc/class-rd-social-widget.php:95
+msgid "Follow Us"
+msgstr "Siga-nos"
+
+#: inc/class-rd-social-widget.php:90 inc/class-rd-support-widget.php:122
+msgid "Title (heading):"
+msgstr "Título (cabeçalho):"
+
+#: inc/class-rd-social-widget.php:99
+msgid ""
+"URLs come from Integrations → Social Networks. Networks without a URL are "
+"disabled here."
+msgstr ""
+"As URLs vêm de Integrações → Redes Sociais. Redes sem URL ficam desabilitadas "
+"aqui."
+
+#: inc/class-rd-social-widget.php:118
+msgid "no URL configured"
+msgstr "nenhuma URL configurada"
+
 #: inc/class-rd-support-widget.php:25
 msgid "ReloadeD: Support the Project"
 msgstr "ReloadeD: Apoie o Projeto"
@@ -397,10 +429,6 @@ msgid ""
 msgstr ""
 "Deixe uma seção vazia para ocultá-la. O widget se oculta por completo quando "
 "nada é preenchido."
-
-#: inc/class-rd-support-widget.php:122
-msgid "Title (heading):"
-msgstr "Título (cabeçalho):"
 
 #: inc/class-rd-support-widget.php:122 inc/mod-donations.php:64
 msgid "Support the Project"
@@ -1734,35 +1762,35 @@ msgstr "Posts de %s."
 msgid "Archive of posts from %s."
 msgstr "Arquivo de posts de %s."
 
-#: inc/mod-social.php:95
+#: inc/mod-social.php:120
 msgid "Discord (URL)"
 msgstr "Discord (URL)"
 
-#: inc/mod-social.php:96
+#: inc/mod-social.php:121
 msgid "Telegram (URL)"
 msgstr "Telegram (URL)"
 
-#: inc/mod-social.php:97
+#: inc/mod-social.php:122
 msgid "WhatsApp (URL)"
 msgstr "WhatsApp (URL)"
 
-#: inc/mod-social.php:98
+#: inc/mod-social.php:123
 msgid "YouTube (URL)"
 msgstr "YouTube (URL)"
 
-#: inc/mod-social.php:99
+#: inc/mod-social.php:124
 msgid "Instagram (URL)"
 msgstr "Instagram (URL)"
 
-#: inc/mod-social.php:100
+#: inc/mod-social.php:125
 msgid "Steam (URL)"
 msgstr "Steam (URL)"
 
-#: inc/mod-social.php:101
+#: inc/mod-social.php:126
 msgid "Twitter / X (URL)"
 msgstr "Twitter / X (URL)"
 
-#: inc/mod-social.php:102
+#: inc/mod-social.php:127
 msgid "Facebook (URL)"
 msgstr "Facebook (URL)"
 

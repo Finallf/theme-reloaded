@@ -36,4 +36,5 @@
 @use 'components/home'; // after search — scoped .rd-wrapper-grid override for the home showcase
 @use 'components/toc';
 @use 'components/search-suggestions';
+@use 'components/social-widget';
 @use 'components/print'; // @media print — last to ensure the override

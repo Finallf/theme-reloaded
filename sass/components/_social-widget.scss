@@ -1,0 +1,52 @@
+// sass/components/_social-widget.scss
+@use '../base/variables' as *;
+
+// ==========================================================================
+// Social Networks widget — "Follow Us" (RD_Social_Widget).
+// 2-column grid of "[icon] Network name" chips inside the sidebar card shell
+// (the glass card itself comes from the .widget_rd_social entry in
+// layout/_sidebar.scss).
+// ==========================================================================
+
+// 2-column grid: 8 networks = 4 rows of 2 (without counts there's room for
+// pairs, and the widget gets half as tall).
+.rd-social-list {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    // Breathing room below the title's blue accent line — same 12px the
+    // other sidebar widgets use (.rd-lvideo / .rd-popular-posts).
+    margin-top: 12px;
+}
+
+.rd-social-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 10px;
+    color: $text-light;
+    text-decoration: none;
+    background: $glass-bg;
+    border: 1px solid $glass-border;
+    border-radius: 5px; // golden rule
+    transition: color 0.2s ease, border-color 0.2s ease, background-color 0.2s ease;
+
+    &:hover {
+        color: $brand-blue-light;
+        border-color: $brand-blue-light;
+        background: rgba(0, 168, 255, 0.08); // same family as the search chips' active state
+    }
+
+    svg {
+        flex-shrink: 0;
+        color: $brand-blue-light;
+    }
+
+    &__name {
+        font-size: 0.85rem;
+        font-weight: 500;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+}

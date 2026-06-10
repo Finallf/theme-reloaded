@@ -31,6 +31,7 @@ require_once get_template_directory() . '/inc/class-rd-latest-video-widget.php';
 require_once get_template_directory() . '/inc/class-rd-support-widget.php';
 require_once get_template_directory() . '/inc/class-rd-discord-widget.php';
 require_once get_template_directory() . '/inc/class-rd-ad-widget.php';
+require_once get_template_directory() . '/inc/class-rd-social-widget.php';
 require_once get_template_directory() . '/inc/mod-security.php';
 require_once get_template_directory() . '/inc/mod-csp.php';
 require_once get_template_directory() . '/inc/mod-backup.php';

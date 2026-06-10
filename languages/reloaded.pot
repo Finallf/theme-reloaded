@@ -2,14 +2,14 @@
 # This file is distributed under the GPL v2 or later.
 msgid ""
 msgstr ""
-"Project-Id-Version: ReloadeD 1.6.0-beta.2\n"
+"Project-Id-Version: ReloadeD 1.6.0-beta.3\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/theme/reloaded\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-06-10T10:02:14-03:00\n"
+"POT-Creation-Date: 2026-06-10T10:53:00-03:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: reloaded\n"
@@ -338,6 +338,32 @@ msgstr ""
 msgid "Number of posts to show:"
 msgstr ""
 
+#: inc/class-rd-social-widget.php:26
+msgid "ReloadeD: Social Networks"
+msgstr ""
+
+#: inc/class-rd-social-widget.php:28
+msgid "\"Follow Us\" grid of the portal's social networks (URLs come from Integrations → Social Networks). Just pick which networks to show."
+msgstr ""
+
+#: inc/class-rd-social-widget.php:68
+#: inc/class-rd-social-widget.php:95
+msgid "Follow Us"
+msgstr ""
+
+#: inc/class-rd-social-widget.php:90
+#: inc/class-rd-support-widget.php:122
+msgid "Title (heading):"
+msgstr ""
+
+#: inc/class-rd-social-widget.php:99
+msgid "URLs come from Integrations → Social Networks. Networks without a URL are disabled here."
+msgstr ""
+
+#: inc/class-rd-social-widget.php:118
+msgid "no URL configured"
+msgstr ""
+
 #: inc/class-rd-support-widget.php:25
 msgid "ReloadeD: Support the Project"
 msgstr ""
@@ -348,10 +374,6 @@ msgstr ""
 
 #: inc/class-rd-support-widget.php:119
 msgid "Leave a section empty to hide it. The widget hides itself entirely when nothing is filled in."
-msgstr ""
-
-#: inc/class-rd-support-widget.php:122
-msgid "Title (heading):"
 msgstr ""
 
 #: inc/class-rd-support-widget.php:122
@@ -1569,35 +1591,35 @@ msgstr ""
 msgid "Archive of posts from %s."
 msgstr ""
 
-#: inc/mod-social.php:95
+#: inc/mod-social.php:120
 msgid "Discord (URL)"
 msgstr ""
 
-#: inc/mod-social.php:96
+#: inc/mod-social.php:121
 msgid "Telegram (URL)"
 msgstr ""
 
-#: inc/mod-social.php:97
+#: inc/mod-social.php:122
 msgid "WhatsApp (URL)"
 msgstr ""
 
-#: inc/mod-social.php:98
+#: inc/mod-social.php:123
 msgid "YouTube (URL)"
 msgstr ""
 
-#: inc/mod-social.php:99
+#: inc/mod-social.php:124
 msgid "Instagram (URL)"
 msgstr ""
 
-#: inc/mod-social.php:100
+#: inc/mod-social.php:125
 msgid "Steam (URL)"
 msgstr ""
 
-#: inc/mod-social.php:101
+#: inc/mod-social.php:126
 msgid "Twitter / X (URL)"
 msgstr ""
 
-#: inc/mod-social.php:102
+#: inc/mod-social.php:127
 msgid "Facebook (URL)"
 msgstr ""
 
