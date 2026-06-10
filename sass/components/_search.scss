@@ -358,6 +358,27 @@ mark.rd-highlight {
         }
     }
 
+    // Compact thumbnail — FIXED box so every card shows the same image size.
+    // Without this the div was unstyled: the img was a bare flex item, so
+    // long titles squeezed it and each card ended up with a different
+    // thumbnail width (flex-shrink default). The fixed 16:9 box + cover crop
+    // makes them uniform regardless of title length or source ratio.
+    .rd-card-thumb-small {
+        flex-shrink: 0;
+        width: 100px;
+        aspect-ratio: 16 / 9;
+        overflow: hidden;
+        border-radius: 3px;
+        background: $dark-deep;
+
+        img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+    }
+
     // Meta line in compact: only the date stays in the flow.
     .rd-card-meta-compact {
         margin-top: 4px;
