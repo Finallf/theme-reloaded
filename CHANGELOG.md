@@ -7,6 +7,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 <br>
 
 
+## [1.6.0-beta.3](https://github.com/Finallf/theme-reloaded/compare/v1.6.0-beta.2...v1.6.0-beta.3) (2026-06-10)
+
+### ✨ Features
+
+* **self-update:** opt-in beta release channel ([2f0b1e9](https://github.com/Finallf/theme-reloaded/commit/2f0b1e90187319d9f311f4b79b7d174d02dc82bc))
+
+<br>
+
+---
+
 ## [1.6.0-beta.2](https://github.com/Finallf/theme-reloaded/compare/v1.6.0-beta.1...v1.6.0-beta.2) (2026-06-10)
 
 ### ✨ Features
