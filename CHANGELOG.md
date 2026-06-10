@@ -7,6 +7,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 <br>
 
 
+## [1.6.1](https://github.com/Finallf/theme-reloaded/compare/v1.6.0...v1.6.1) (2026-06-10)
+
+### 🐛 Bug Fixes
+
+* **critical-css:** synchronous stylesheet on templates without critical CSS ([7a280d9](https://github.com/Finallf/theme-reloaded/commit/7a280d96258c4aaf24114075ea18c255301cc550))
+
+<br>
+
+---
+
 ## [1.6.1-beta.1](https://github.com/Finallf/theme-reloaded/compare/v1.6.0...v1.6.1-beta.1) (2026-06-10)
 
 ### 🐛 Bug Fixes
