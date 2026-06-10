@@ -7,6 +7,20 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 <br>
 
 
+## [1.4.0](https://github.com/Finallf/theme-reloaded/compare/v1.3.0...v1.4.0) (2026-06-10)
+
+### ✨ Features
+
+* **frontend:** mobile nav redesign + responsive spacing refinements ([f85402e](https://github.com/Finallf/theme-reloaded/commit/f85402e0cf5e886400cb055a7d5f185e7cef740b))
+
+### 📝 Documentation
+
+* sync README with the sidebar widget migration ([e24f1e2](https://github.com/Finallf/theme-reloaded/commit/e24f1e2228d2847990c611f85b04f15d189ccda3))
+
+<br>
+
+---
+
 ## [1.4.0-beta.1](https://github.com/Finallf/theme-reloaded/compare/v1.3.0...v1.4.0-beta.1) (2026-06-10)
 
 ### ✨ Features
