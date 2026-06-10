@@ -405,6 +405,21 @@ jQuery(document).ready(function($){
 				if ( res.body && res.body.ok ) {
 					// Success — update the switch visual + sibling badge.
 					applyState( btn, '1' === String( res.body.value ) );
+
+					// Beta-channel flip (Theme Updates card): the cached release
+					// belongs to the previous channel — chain an immediate
+					// "Check for updates" so the card reflects the new channel,
+					// and sync the BETA badge next to "Latest version".
+					if ( 'update_beta_channel' === key ) {
+						var channelBadge = document.getElementById( 'rd-self-update-channel-badge' );
+						if ( channelBadge ) {
+							channelBadge.hidden = '1' !== String( res.body.value );
+						}
+						var checkBtn = document.getElementById( 'rd-self-update-check' );
+						if ( checkBtn ) {
+							checkBtn.click();
+						}
+					}
 				} else {
 					setError( btn );
 					console.warn( 'rd-dashboard-toggle: server error', res );

@@ -1439,7 +1439,17 @@ Decisão histórica: cogitamos usar [`plugin-update-checker`](https://github.com
 2. **Bloat** — ~421 KB instalado, dos quais ~340 KB são código que nunca usaríamos (Bitbucket/GitLab APIs, Plugin updater, DebugBar, license keys, authentication, multi-idioma).
 3. **Filosofia** — "zero plugins externos" deveria escalar pra "zero libs all-in-one" também.
 
-Nosso custom resolve o happy path (1 repo público + 1 asset ZIP + tema + ignore prerelease) em código próprio mantido sob nosso controle.
+Nosso custom resolve o happy path (1 repo público + 1 asset ZIP + tema) em código próprio mantido sob nosso controle.
+
+### Canal de atualização (Stable/Beta)
+
+Switch **"Beta channel"** no card "Theme Updates" do Dashboard (option `update_beta_channel`, default OFF = stable; usa a infra genérica `rd_dashboard_toggle` + whitelist):
+
+- **Stable (OFF):** `/releases/latest` — o GitHub exclui prereleases por design (comportamento original)
+- **Beta (ON):** `/releases?per_page=15` → pega a **primeira** entrada (a "ponta", prerelease ou estável, a mais nova). Quando uma estável sai depois das betas, ela é a ponta → instalações beta são **promovidas pra estável automaticamente**
+- **Cache ciente do canal:** o payload do transient guarda `channel`; mismatch (trocou o canal) → refetch imediato. O render do card também confere e trata cache do outro canal como "never checked"
+- **UX:** ao flipar o switch, o JS encadeia um "Check for updates" automático + sincroniza o badge **BETA** ao lado da "Latest version"
+- **Sem downgrade:** beta→stable não rebaixa; a instalação fica na beta até uma estável MAIS NOVA sair (`version_compare` trata sufixos `-beta.N` corretamente)
 
 ### Fluxo end-to-end
 

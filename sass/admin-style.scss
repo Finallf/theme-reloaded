@@ -1568,6 +1568,29 @@ body {
         letter-spacing: 0.3px;
     }
 
+    // Right side of the header — stacked at every width (side by side squeezed
+    // the button on mobile, and the stack reads better on wide screens too):
+    // button on top, Beta-channel switch BELOW it, aligned to its right edge
+    // (column-reverse flips the DOM order: channel renders first in markup).
+    &__controls {
+        display: inline-flex;
+        flex-direction: column-reverse;
+        align-items: flex-end;
+        gap: 8px;
+    }
+
+    &__channel {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    &__channel-label {
+        font-size: 12px;
+        font-weight: 600;
+        color: $rd-text-secondary;
+    }
+
     &__grid {
         display: grid;
         grid-template-columns: max-content 1fr;

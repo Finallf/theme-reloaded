@@ -296,10 +296,16 @@ function rd_dashboard_render_updates_card(): void {
 		)
 	);
 
-	$current = (string) wp_get_theme( RD_SELF_UPDATE_SLUG )->get( 'Version' );
+	$current      = (string) wp_get_theme( RD_SELF_UPDATE_SLUG )->get( 'Version' );
+	$beta_channel = rd_get_option_bool( 'update_beta_channel' );
 
 	// Read cache without triggering a fetch (cheap server-side render).
-	$cached      = get_transient( RD_SELF_UPDATE_TRANSIENT );
+	// A payload from the OTHER channel is stale for this view — treat it as
+	// "never checked" (the channel switch chains an immediate re-check via JS).
+	$cached = get_transient( RD_SELF_UPDATE_TRANSIENT );
+	if ( is_array( $cached ) && ( $cached['channel'] ?? 'stable' ) !== ( $beta_channel ? 'beta' : 'stable' ) ) {
+		$cached = false;
+	}
 	$latest      = ( is_array( $cached ) && ! empty( $cached['version'] ) ) ? $cached['version'] : '';
 	$checked_at  = ( is_array( $cached ) && ! empty( $cached['checked_at'] ) ) ? (int) $cached['checked_at'] : 0;
 	$release_url = ( is_array( $cached ) && ! empty( $cached['release_url'] ) ) ? (string) $cached['release_url'] : '';
@@ -327,13 +333,34 @@ function rd_dashboard_render_updates_card(): void {
 	?>
 	<div class="rd-self-update__header">
 		<h3 class="rd-self-update__title"><?php esc_html_e( 'Release status', 'reloaded' ); ?></h3>
-		<button type="button"
-				id="rd-self-update-check"
-				class="button"
-				data-nonce="<?php echo esc_attr( $nonce ); ?>">
-			<span class="dashicons dashicons-update" aria-hidden="true"></span>
-			<?php esc_html_e( 'Check for updates', 'reloaded' ); ?>
-		</button>
+		<span class="rd-self-update__controls">
+			<span class="rd-self-update__channel">
+				<span class="rd-self-update__channel-label"><?php esc_html_e( 'Beta channel', 'reloaded' ); ?></span>
+				<?php
+				// Same rd-pswitch infra as the Site Status cards (generic AJAX
+				// toggle + whitelist). On flip, admin-panel.js chains an immediate
+				// "Check for updates" so the card reflects the new channel at once.
+				$channel_tooltip_on  = esc_attr__( 'Disable', 'reloaded' );
+				$channel_tooltip_off = esc_attr__( 'Enable', 'reloaded' );
+				printf(
+					'<button type="button" class="rd-pswitch" role="switch" aria-checked="%1$s" data-rd-toggle="update_beta_channel" data-rd-nonce="%2$s" data-tooltip="%3$s" data-tooltip-on="%4$s" data-tooltip-off="%5$s"><span class="rd-pswitch__track"></span><span class="rd-pswitch__thumb"></span><span class="screen-reader-text">%6$s</span></button>',
+					$beta_channel ? 'true' : 'false',
+					esc_attr( wp_create_nonce( 'rd_dashboard_toggle' ) ),
+					$beta_channel ? $channel_tooltip_on : $channel_tooltip_off, // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- esc_attr__'d above.
+					$channel_tooltip_on, // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- esc_attr__'d above.
+					$channel_tooltip_off, // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- esc_attr__'d above.
+					esc_html__( 'Beta channel', 'reloaded' )
+				);
+				?>
+			</span>
+			<button type="button"
+					id="rd-self-update-check"
+					class="button"
+					data-nonce="<?php echo esc_attr( $nonce ); ?>">
+				<span class="dashicons dashicons-update" aria-hidden="true"></span>
+				<?php esc_html_e( 'Check for updates', 'reloaded' ); ?>
+			</button>
+		</span>
 	</div>
 
 	<dl class="rd-self-update__grid">
@@ -345,6 +372,9 @@ function rd_dashboard_render_updates_card(): void {
 			<code id="rd-self-update-latest"><?php echo esc_html( '' !== $latest ? $latest : '—' ); ?></code>
 			<span id="rd-self-update-status">
 				<?php echo $status_html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- rd_panel_badge() escapes internally. ?>
+			</span>
+			<span id="rd-self-update-channel-badge"<?php echo $beta_channel ? '' : ' hidden'; ?>>
+				<?php echo rd_panel_badge( 'info', __( 'BETA', 'reloaded' ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- rd_panel_badge() escapes internally. ?>
 			</span>
 		</dd>
 
@@ -855,6 +885,8 @@ const RD_DASHBOARD_TOGGLE_WHITELIST = array(
 	// Wave 12 — 3 additional cards (Row 3 of the 5×3 grid): SEO + Compliance.
 	'enable_lgpd',
 	'enable_sitemap',
+	// Theme Updates card — beta release channel switch (stable when OFF).
+	'update_beta_channel',
 	// (Open Graph doesn't go here — it's a deep link/gear, not a switch)
 );
 

@@ -124,6 +124,8 @@ function rd_get_default_options(): array {
 		'ad_topo_mobile'              => '',
 		'ad_sidebar_sticky'           => '',
 
+		'update_beta_channel'         => 0, // self-update release channel: OFF = stable (/releases/latest), ON = newest release incl. prereleases.
+
 		'maintenance_mode'            => 0,
 		'maintenance_pass'            => '',
 		'maintenance_text'            => '',
