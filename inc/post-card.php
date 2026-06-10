@@ -135,7 +135,9 @@ function rd_render_post_card( $type ) {
 			break;
 
 		case 'compact':
-			$thumb_small = has_post_thumbnail() ? get_the_post_thumbnail( $post_id, 'thumbnail', $thumb_attrs ) : '<div class="rd-thumb-fallback-small"></div>';
+			// rd-micro (150x84, 16:9) instead of WP's square 'thumbnail' (150x150):
+			// matches the compact box's aspect-ratio — no wasted square crop.
+			$thumb_small = has_post_thumbnail() ? get_the_post_thumbnail( $post_id, 'rd-micro', $thumb_attrs ) : '<div class="rd-thumb-fallback-small"></div>';
 			echo '<article class="rd-search-card layout-compact">';
 			echo '<a href="' . esc_url( $link ) . '" class="rd-card-link-flex">';
 			echo '<div class="rd-card-thumb-small">' . $thumb_small . '</div>';

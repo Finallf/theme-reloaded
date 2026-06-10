@@ -490,6 +490,17 @@ Remover o callback do filter (apagar o mu-plugin ou comentar o snippet). URLs vo
 
 ---
 
+## 📡 `inc/mod-indexnow.php` — IndexNow (push indexing)
+
+Notificação push pros buscadores participantes (Bing/Yandex/Seznam/Naver) no momento em que conteúdo muda — indexação em minutos em vez de esperar o crawler (Google não participa; o sitemap segue essencial). 3 peças:
+
+- **Chave:** auto-gerada (32-hex) no save via `pre_update_option_rd_settings` quando o toggle liga com o campo vazio (`rd_indexnow_generate_key_on_save`). Aceita chave externa colada (validação `[a-z0-9-]{8,128}`)
+- **Prova de propriedade:** `/{key}.txt` servido **virtualmente** (`rd_indexnow_serve_key_file` no `init`) — sem arquivo físico, com `X-Robots-Tag: noindex`
+- **Ping:** `transition_post_status` (post/page; publica, atualiza publicado, ou despublica — engines reveem e acham o 404/410). POST JSON pro `api.indexnow.org` com `blocking=false` + timeout 3s (fire-and-forget — o editor nunca espera). Slug `__trashed` é limpo antes do ping de despublicação
+- **Breadcrumb:** último ping (timestamp + URL) salvo em `rd_indexnow_last_ping` (autoload off) e exibido na desc do campo da chave no painel
+
+---
+
 ## 🔍 `inc/mod-seo.php` — SEO técnico (OG, Twitter, Canonical, Description, Schema)
 
 Um módulo, cinco frentes complementares. Tudo emitido no `<wp_head>` com prioridades distintas pra ordem previsível no source.
@@ -702,6 +713,8 @@ O title e a description seguem usando os helpers nativos `the_archive_title()` e
 | `rd_render_ad_sidebar_sticky()` | `sidebar.php` (sticky) | 300×250 ou 300×600 |
 
 Cada um lê do `rd_settings` o HTML/JS literal do anúncio e renderiza só se preenchido. O banner "sidebar topo" virou o widget `RD_Ad_Widget` (`inc/class-rd-ad-widget.php`) — código no form do widget, nonce do CSP via `rd_csp_inject_nonce()`.
+
+**ads.txt virtual** — `rd_ads_serve_ads_txt()` (hook `init`) serve `/ads.txt` direto da opção `ads_txt_content` (textarea em Monetization → Global Script). Mesmo padrão do arquivo de chave do IndexNow: sem arquivo físico, sem SFTP, sobrevive a migrações e entra no backup de settings. Sanitizado como plain-text (`sanitize_textarea_field` — a chave não casa com o prefixo `ad_` de HTML raw). Vazio = dormante; arquivo físico na raiz tem precedência.
 
 JS pra fechar o anchor mobile (X) vive em `navigation.js` (`.rd-ad-close`).
 
@@ -1426,7 +1439,17 @@ Decisão histórica: cogitamos usar [`plugin-update-checker`](https://github.com
 2. **Bloat** — ~421 KB instalado, dos quais ~340 KB são código que nunca usaríamos (Bitbucket/GitLab APIs, Plugin updater, DebugBar, license keys, authentication, multi-idioma).
 3. **Filosofia** — "zero plugins externos" deveria escalar pra "zero libs all-in-one" também.
 
-Nosso custom resolve o happy path (1 repo público + 1 asset ZIP + tema + ignore prerelease) em código próprio mantido sob nosso controle.
+Nosso custom resolve o happy path (1 repo público + 1 asset ZIP + tema) em código próprio mantido sob nosso controle.
+
+### Canal de atualização (Stable/Beta)
+
+Switch **"Beta channel"** no card "Theme Updates" do Dashboard (option `update_beta_channel`, default OFF = stable; usa a infra genérica `rd_dashboard_toggle` + whitelist):
+
+- **Stable (OFF):** `/releases/latest` — o GitHub exclui prereleases por design (comportamento original)
+- **Beta (ON):** `/releases?per_page=15` → pega a **primeira** entrada (a "ponta", prerelease ou estável, a mais nova). Quando uma estável sai depois das betas, ela é a ponta → instalações beta são **promovidas pra estável automaticamente**
+- **Cache ciente do canal:** o payload do transient guarda `channel`; mismatch (trocou o canal) → refetch imediato. O render do card também confere e trata cache do outro canal como "never checked"
+- **UX:** ao flipar o switch, o JS encadeia um "Check for updates" automático + sincroniza o badge **BETA** ao lado da "Latest version"
+- **Sem downgrade:** beta→stable não rebaixa; a instalação fica na beta até uma estável MAIS NOVA sair (`version_compare` trata sufixos `-beta.N` corretamente)
 
 ### Fluxo end-to-end
 

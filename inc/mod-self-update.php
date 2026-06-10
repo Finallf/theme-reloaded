@@ -32,7 +32,10 @@ defined( 'ABSPATH' ) || exit;
  *   - Reuses lib/Parsedown.php to render release notes                        *
  *   - WP APIs stable for ~15 years                                            *
  *   - Public repo (no token auth) — releases accessible anonymously           *
- *   - `beta` branch produces `prerelease: true` → API ignores by design       *
+ *   - Channels: stable (default) uses /releases/latest, where prereleases     *
+ *     are excluded by design; the opt-in beta channel (Dashboard switch,      *
+ *     `update_beta_channel`) follows the newest release including             *
+ *     prereleases — see rd_self_update_channel()                              *
  ******************************************************************************/
 
 const RD_SELF_UPDATE_REPO        = 'Finallf/theme-reloaded';
@@ -63,14 +66,25 @@ const RD_SELF_UPDATE_API_TIMEOUT = 8;
  * @param bool $force_refresh Invalidates cache and re-fetches immediately ("Check now" button).
  */
 function rd_self_update_fetch_release( bool $force_refresh = false ): ?array {
+	$channel = rd_self_update_channel();
+
 	if ( ! $force_refresh ) {
 		$cached = get_transient( RD_SELF_UPDATE_TRANSIENT );
-		if ( is_array( $cached ) && ! empty( $cached['version'] ) ) {
+		// Cache only counts when it belongs to the CURRENT channel — switching
+		// channels on the Dashboard invalidates the view immediately instead of
+		// serving the other channel's release for up to 24h.
+		if ( is_array( $cached ) && ! empty( $cached['version'] ) && ( $cached['channel'] ?? 'stable' ) === $channel ) {
 			return $cached;
 		}
 	}
 
-	$url      = 'https://api.github.com/repos/' . RD_SELF_UPDATE_REPO . '/releases/latest';
+	// stable → /releases/latest (GitHub excludes prereleases by design).
+	// beta   → the releases LIST (newest first, prereleases included): we take
+	// the tip whatever it is — when a stable ships after the betas it IS the
+	// newest entry, so beta-channel installs get promoted to stable automatically.
+	$url = 'https://api.github.com/repos/' . RD_SELF_UPDATE_REPO
+		. ( 'beta' === $channel ? '/releases?per_page=15' : '/releases/latest' );
+
 	$response = wp_remote_get(
 		$url,
 		array(
@@ -86,6 +100,11 @@ function rd_self_update_fetch_release( bool $force_refresh = false ): ?array {
 	}
 
 	$data = json_decode( wp_remote_retrieve_body( $response ), true );
+	if ( 'beta' === $channel ) {
+		// List endpoint: the first entry is the newest release (the anonymous
+		// API never returns drafts, so no extra filtering is needed).
+		$data = ( is_array( $data ) && ! empty( $data[0] ) ) ? $data[0] : null;
+	}
 	if ( ! is_array( $data ) || empty( $data['tag_name'] ) ) {
 		return null;
 	}
@@ -112,10 +131,21 @@ function rd_self_update_fetch_release( bool $force_refresh = false ): ?array {
 		'body'         => (string) ( $data['body'] ?? '' ),
 		'published_at' => (string) ( $data['published_at'] ?? '' ),
 		'checked_at'   => time(),
+		'channel'      => $channel, // which channel produced this payload (cache validity check)
 	);
 
 	set_transient( RD_SELF_UPDATE_TRANSIENT, $release, RD_SELF_UPDATE_CACHE_HOURS * HOUR_IN_SECONDS );
 	return $release;
+}
+
+/**
+ * Update channel: 'beta' when the Dashboard "Beta channel" switch is ON,
+ * 'stable' otherwise (the default — /releases/latest, prereleases excluded).
+ * Note: no downgrade on beta → stable switch; the install stays on the beta
+ * version until a NEWER stable ships (version_compare handles -beta suffixes).
+ */
+function rd_self_update_channel(): string {
+	return rd_get_option_bool( 'update_beta_channel' ) ? 'beta' : 'stable';
 }
 
 /**

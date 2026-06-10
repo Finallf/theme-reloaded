@@ -324,6 +324,15 @@ Site verification + Open Graph + sitemap + robots.txt. **4 sections.**
 | `sitemap_include_authors` | ❌ | Inclui `/wp-sitemap-users-1.xml`. Off pra solo blogs (evita duplicate content) |
 | `sitemap_include_cpt` | ✅ | Inclui custom post types públicos no sitemap |
 
+### Section: IndexNow (`sec_seo_indexnow`)
+
+| Opção | Default | O que faz |
+|---|---|---|
+| `enable_indexnow` | ❌ | Ping push pros buscadores participantes (Bing/Yandex/Seznam/Naver — 1 ping compartilhado) quando post/página é publicado, atualizado ou despublicado. Google **não** participa — sitemap continua essencial |
+| `indexnow_key` | _vazio_ | Auto-gerada (32-hex) ao salvar com o toggle ON. O arquivo de prova `/{key}.txt` é servido **virtualmente** pelo tema (nada pra subir). A desc do campo mostra a URL do arquivo + último ping enviado |
+
+Detalhes em `inc/mod-indexnow.php` — ping fire-and-forget (`blocking=false`, editor nunca espera a API).
+
 ### Section: robots.txt (`sec_seo_robots`)
 
 | Opção | Default | O que faz |
@@ -368,6 +377,7 @@ Monetização. **2 sections.**
 | Opção | O que faz |
 |---|---|
 | `ad_global` | Tag global do `<head>` (ex: AdSense Auto Ads). Aceita JS/HTML raw |
+| `ads_txt_content` | Conteúdo servido **virtualmente** em `/ads.txt` (mesmo padrão do arquivo de chave do IndexNow — sem SFTP, sobrevive a migração, entra no backup). 1 registro por linha; vazio = dormante. ⚠️ Arquivo físico `ads.txt` na raiz tem precedência (o web server serve antes do WP) — apague-o pra usar o campo |
 
 ### Section: Banners by Position (`sec_ads_zones`)
 

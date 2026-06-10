@@ -794,10 +794,12 @@ add_action( 'admin_init', 'rd_csp_handle_clear_request' );
  */
 function rd_csp_render_reports_panel(): void {
 	// Section header with icon (empty title in add_settings_section avoids a duplicate <h2>).
+	// id = hash anchor for deep links (e.g. the gear on the Dashboard doughnut card).
 	rd_panel_section_header(
 		array(
 			'icon'  => 'warning',
 			'title' => __( 'CSP Violation Reports', 'reloaded' ),
+			'id'    => 'sec_seg_csp_reports',
 		)
 	);
 

@@ -641,6 +641,14 @@ $rd-bp-lg: 1024px;
     }
 }
 
+/* Gear variant floated inside a card's description line (e.g. the Dashboard
+   "Violations by Directive" doughnut → deep link to the CSP reports). Floats
+   right so it sits at the card's top-right corner, in front of the desc text. */
+.rd-pcard__desc-gear {
+    float: right;
+    margin: -4px -6px 0 8px; /* optical alignment with the desc line */
+}
+
 /* Styled tooltip — appears on hover/focus, same look as the Chart.js
    tooltip (semi-transparent dark background, small white text, positioned
    above the element with a little arrow pointing down). Applied to:
@@ -1558,6 +1566,29 @@ body {
         color: $rd-text;
         text-transform: uppercase;
         letter-spacing: 0.3px;
+    }
+
+    // Right side of the header — stacked at every width (side by side squeezed
+    // the button on mobile, and the stack reads better on wide screens too):
+    // button on top, Beta-channel switch BELOW it, aligned to its right edge
+    // (column-reverse flips the DOM order: channel renders first in markup).
+    &__controls {
+        display: inline-flex;
+        flex-direction: column-reverse;
+        align-items: flex-end;
+        gap: 8px;
+    }
+
+    &__channel {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    &__channel-label {
+        font-size: 12px;
+        font-weight: 600;
+        color: $rd-text-secondary;
     }
 
     &__grid {

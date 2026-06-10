@@ -112,14 +112,19 @@ function rd_get_default_options(): array {
 		'enable_open_graph'           => 1,
 		'og_fallback_image'           => '',
 		'custom_robots_txt'           => '',
+		'enable_indexnow'             => 0,
+		'indexnow_key'                => '', // auto-generated on save when the toggle is on and this is empty.
 		'enable_sitemap'              => 1,
 		'sitemap_include_authors'     => 0,
 		'sitemap_include_cpt'         => 1,
 
 		'ad_global'                   => '',
+		'ads_txt_content'             => '', // virtual /ads.txt content (served by mod-ads.php; empty = dormant).
 		'ad_topo_desktop'             => '',
 		'ad_topo_mobile'              => '',
 		'ad_sidebar_sticky'           => '',
+
+		'update_beta_channel'         => 0, // self-update release channel: OFF = stable (/releases/latest), ON = newest release incl. prereleases.
 
 		'maintenance_mode'            => 0,
 		'maintenance_pass'            => '',
@@ -1546,6 +1551,34 @@ function rd_settings_init() {
 		)
 	);
 
+	// Section: IndexNow — push indexing notifications (Bing/Yandex & friends).
+	rd_panel_register_section( 'sec_seo_indexnow', __( 'IndexNow', 'reloaded' ), 'controls-forward', 'rd_options_seo' );
+	add_settings_field(
+		'enable_indexnow',
+		__( 'Enable IndexNow', 'reloaded' ),
+		'rd_master_field_cb',
+		'rd_options_seo',
+		'sec_seo_indexnow',
+		array(
+			'id'   => 'enable_indexnow',
+			'type' => 'checkbox',
+			'desc' => __( 'Notifies Bing, Yandex and other participating engines the moment a post or page is published, updated or unpublished — push indexing in minutes instead of waiting for the crawler. One ping is shared between all participating engines. <strong>Google does not join IndexNow</strong>, so keep the sitemap on. The key file is served automatically at <code>/{key}.txt</code> — nothing to upload.', 'reloaded' ),
+		)
+	);
+	add_settings_field(
+		'indexnow_key',
+		__( 'IndexNow Key', 'reloaded' ),
+		'rd_master_field_cb',
+		'rd_options_seo',
+		'sec_seo_indexnow',
+		array(
+			'id'          => 'indexnow_key',
+			'type'        => 'text',
+			'placeholder' => __( 'auto-generated on save when empty', 'reloaded' ),
+			'desc'        => rd_indexnow_key_field_desc(),
+		)
+	);
+
 	rd_panel_register_section( 'sec_seo_robots', __( 'robots.txt', 'reloaded' ), 'media-text', 'rd_options_seo' );
 	add_settings_field(
 		'custom_robots_txt',
@@ -1581,6 +1614,19 @@ function rd_settings_init() {
 			'id'   => 'ad_global',
 			'type' => 'textarea',
 			'desc' => __( 'Paste here the global &lt;head&gt; tag (e.g. AdSense Auto Ads).', 'reloaded' ),
+		)
+	);
+	add_settings_field(
+		'ads_txt_content',
+		__( 'ads.txt', 'reloaded' ),
+		'rd_master_field_cb',
+		'rd_options_monetization',
+		'sec_ads_global',
+		array(
+			'id'          => 'ads_txt_content',
+			'type'        => 'textarea',
+			'placeholder' => 'google.com, pub-0000000000000000, DIRECT, f08c47fec0942fa0',
+			'desc'        => __( 'Content served <strong>virtually</strong> at <code>/ads.txt</code> — no file to upload via SFTP, survives migrations and is included in the settings backup. Paste the lines your ad networks give you (AdSense shows yours under <em>Sites → ads.txt</em>), one record per line. Empty = no ads.txt is served. <strong>Note:</strong> a physical ads.txt file in the web root takes precedence — delete it to use this field.', 'reloaded' ),
 		)
 	);
 
@@ -1721,7 +1767,25 @@ function rd_settings_init() {
 		)
 	);
 
-	add_settings_section( 'sec_stats_dashboard', __( 'Dashboard', 'reloaded' ), 'rd_stats_render_dashboard', 'rd_options_statistics' );
+	// Empty title + custom callback: emits the theme-styled header (icon + hash
+	// anchor for the Dashboard gear deep link) instead of WP's plain <h2>.
+	// Renamed from "Dashboard" to "Statistics" — inside the Statistics tab,
+	// "Dashboard" (pt: "Painel") read like a stray panel reference.
+	add_settings_section(
+		'sec_stats_dashboard',
+		'',
+		static function () {
+			rd_panel_section_header(
+				array(
+					'id'    => 'sec_stats_dashboard',
+					'icon'  => 'chart-bar',
+					'title' => __( 'Statistics', 'reloaded' ),
+				)
+			);
+			rd_stats_render_dashboard();
+		},
+		'rd_options_statistics'
+	);
 
 	/*
 	 * --- BACKUP & RESTORE --- (Wave 11)
@@ -1887,7 +1951,7 @@ function rd_options_sanitize( array $input ) {
 		} elseif ( in_array( $key, array( 'lgpd_text', 'footer_subline', 'maintenance_text' ), true ) ) {
 			// 2. Fields that allow safe basic HTML (links, bold, emphasis) — but block scripts.
 			$new_input[ $key ] = wp_kses_post( $value );
-		} elseif ( in_array( $key, array( 'custom_robots_txt', 'trusted_proxy_ips', 'csp_custom_scripts', 'csp_custom_frames', 'csp_custom_styles', 'csp_report_denylist' ), true ) ) {
+		} elseif ( in_array( $key, array( 'custom_robots_txt', 'trusted_proxy_ips', 'csp_custom_scripts', 'csp_custom_frames', 'csp_custom_styles', 'csp_report_denylist', 'ads_txt_content' ), true ) ) {
 			// 3. Plain-text textarea fields — strip tags but PRESERVE line breaks.
 			// sanitize_text_field() would collapse all lines into a single one.
 			$new_input[ $key ] = sanitize_textarea_field( $value );

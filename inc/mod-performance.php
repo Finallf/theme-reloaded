@@ -16,6 +16,21 @@ function rd_markdown_support( $content ) {
 			require_once get_template_directory() . '/lib/Parsedown.php';
 		}
 
+		// Gutenberg's code editor stores '>' as &gt; in freeform content, and
+		// whether the core decodes it back before the_content varies between
+		// WP versions. Parsedown only recognizes a blockquote with a REAL '>'
+		// at line start — so [!TIP]/[!NOTE] alerts written as "&gt; [!TIP]"
+		// silently degraded into inline text. Decode the line-start markers
+		// (including nested "&gt; &gt;") before parsing; content that already
+		// has real '>' is untouched.
+		$content = preg_replace_callback(
+			'/^(\s*(?:&gt;\s*)+)/m',
+			static function ( $m ) {
+				return str_replace( '&gt;', '>', $m[1] );
+			},
+			$content
+		);
+
 		$parsedown = new Parsedown();
 		$parsedown->setSafeMode( false );
 		$html = $parsedown->text( $content ); // Converts the basic Markdown
