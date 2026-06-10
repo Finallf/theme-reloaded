@@ -7,6 +7,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 <br>
 
 
+## [1.6.0-beta.2](https://github.com/Finallf/theme-reloaded/compare/v1.6.0-beta.1...v1.6.0-beta.2) (2026-06-10)
+
+### ✨ Features
+
+* **ads:** serve ads.txt virtually from a panel field ([5429899](https://github.com/Finallf/theme-reloaded/commit/5429899d2e5b035fcbaedb60841223a4dc2a83dc))
+
+<br>
+
+---
+
 ## [1.6.0-beta.1](https://github.com/Finallf/theme-reloaded/compare/v1.5.1-beta.2...v1.6.0-beta.1) (2026-06-10)
 
 ### ✨ Features
