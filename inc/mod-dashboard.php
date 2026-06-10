@@ -837,6 +837,7 @@ const RD_DASHBOARD_TOGGLE_WHITELIST = array(
 	'enable_comments_globally',
 	'markdown_enabled',
 	'facade_youtube',
+	'enable_carousel',
 	'enable_breadcrumbs',
 	// Wave 12 — 3 additional cards (Row 3 of the 5×3 grid): SEO + Compliance.
 	'enable_lgpd',
