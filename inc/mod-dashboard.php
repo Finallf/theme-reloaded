@@ -165,11 +165,18 @@ function rd_dashboard_render(): void {
 				'title' => __( 'Violations by Directive', 'reloaded' ),
 			)
 		);
+		// Gear floated at the card's top-right, on the same line as the desc —
+		// deep link straight to the CSP Violation Reports section (Security tab).
+		$csp_reports_gear = sprintf(
+			'<a href="%1$s" class="rd-dashboard-card-link rd-pcard__desc-gear" data-tooltip="%2$s" aria-label="%2$s"><span class="dashicons dashicons-admin-generic" aria-hidden="true"></span></a>',
+			esc_url( admin_url( 'admin.php?page=rd_options&tab=security#sec_seg_csp_reports' ) ),
+			esc_attr__( 'View CSP reports', 'reloaded' )
+		);
 		rd_panel_card_open(
 			array(
 				// Short summary of the Security tab's chart description — keeps this
 				// card the same height as the Activity Trend card beside it.
-				'desc' => __( 'Recorded violations grouped by CSP directive.', 'reloaded' ),
+				'desc' => $csp_reports_gear . __( 'Recorded violations grouped by CSP directive.', 'reloaded' ),
 			)
 		);
 		?>
@@ -197,9 +204,15 @@ function rd_dashboard_render(): void {
 	// Description goes inside the card (not the section header) so this header
 	// stays title-only — matching the doughnut header beside it and keeping the
 	// two cards' tops aligned in the side-by-side layout.
+	// Gear at the card's top-right → deep link to the full Statistics dashboard.
+	$stats_gear = sprintf(
+		'<a href="%1$s" class="rd-dashboard-card-link rd-pcard__desc-gear" data-tooltip="%2$s" aria-label="%2$s"><span class="dashicons dashicons-admin-generic" aria-hidden="true"></span></a>',
+		esc_url( admin_url( 'admin.php?page=rd_options&tab=statistics#sec_stats_dashboard' ) ),
+		esc_attr__( 'View statistics', 'reloaded' )
+	);
 	rd_panel_card_open(
 		array(
-			'desc' => __( 'Views per day over the last 7 days. Useful to spot weekly patterns and traffic spikes.', 'reloaded' ),
+			'desc' => $stats_gear . __( 'Views per day over the last 7 days. Useful to spot weekly patterns and traffic spikes.', 'reloaded' ),
 		)
 	);
 	?>

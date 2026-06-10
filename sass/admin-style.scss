@@ -641,6 +641,14 @@ $rd-bp-lg: 1024px;
     }
 }
 
+/* Gear variant floated inside a card's description line (e.g. the Dashboard
+   "Violations by Directive" doughnut → deep link to the CSP reports). Floats
+   right so it sits at the card's top-right corner, in front of the desc text. */
+.rd-pcard__desc-gear {
+    float: right;
+    margin: -4px -6px 0 8px; /* optical alignment with the desc line */
+}
+
 /* Styled tooltip — appears on hover/focus, same look as the Chart.js
    tooltip (semi-transparent dark background, small white text, positioned
    above the element with a little arrow pointing down). Applied to:

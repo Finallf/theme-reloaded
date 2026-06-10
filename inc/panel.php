@@ -1721,7 +1721,25 @@ function rd_settings_init() {
 		)
 	);
 
-	add_settings_section( 'sec_stats_dashboard', __( 'Dashboard', 'reloaded' ), 'rd_stats_render_dashboard', 'rd_options_statistics' );
+	// Empty title + custom callback: emits the theme-styled header (icon + hash
+	// anchor for the Dashboard gear deep link) instead of WP's plain <h2>.
+	// Renamed from "Dashboard" to "Statistics" — inside the Statistics tab,
+	// "Dashboard" (pt: "Painel") read like a stray panel reference.
+	add_settings_section(
+		'sec_stats_dashboard',
+		'',
+		static function () {
+			rd_panel_section_header(
+				array(
+					'id'    => 'sec_stats_dashboard',
+					'icon'  => 'chart-bar',
+					'title' => __( 'Statistics', 'reloaded' ),
+				)
+			);
+			rd_stats_render_dashboard();
+		},
+		'rd_options_statistics'
+	);
 
 	/*
 	 * --- BACKUP & RESTORE --- (Wave 11)
