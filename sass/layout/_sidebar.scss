@@ -85,8 +85,10 @@
 			// (sidebar on every page) costing ~52 KB on the critical path.
 			font-weight: 500;
 			margin-bottom: 5px;
-			text-transform: uppercase;
-			letter-spacing: 1.5px;
+			// Normal case (was uppercase + 1.5px tracking). The wide
+			// letter-spacing was a caps companion — on normal case it reads
+			// stretched, so it drops to a subtle 0.5px.
+			letter-spacing: 0.5px;
 			position: relative;
 			padding-bottom: 12px;
 			border: none;
