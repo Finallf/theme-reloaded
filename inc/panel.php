@@ -1300,7 +1300,7 @@ function rd_settings_init() {
 			'id'      => 'jpeg_quality',
 			'type'    => 'number',
 			'default' => '80',
-			'desc'    => __( 'Quality used when WordPress re-encodes images on upload (JPEG, WebP, AVIF). Range 1-100. WP core default is 82; the theme defaults to 80 for a better size/quality tradeoff. <strong>Tip on file formats:</strong> upload featured images as <strong>WebP</strong> or <strong>JPEG</strong> for photos; avoid PNG unless you need transparency (PNG files are typically 3-5x larger than the equivalent WebP).', 'reloaded' ),
+			'desc'    => __( 'Quality used when WordPress re-encodes images on upload (JPEG, WebP). Range 1-100. WP core default is 82; the theme defaults to 80 for a better size/quality tradeoff. <strong>AVIF uses its own derived scale</strong> (this value minus 20, floor 45): the 0-100 scale is not comparable across codecs, and AVIF at JPEG-like values produces needlessly large files. <strong>Tip on file formats:</strong> upload featured images as <strong>WebP</strong> or <strong>JPEG</strong> for photos; avoid PNG unless you need transparency (PNG files are typically 3-5x larger than the equivalent WebP).', 'reloaded' ),
 		)
 	);
 	add_settings_field(
@@ -1312,7 +1312,7 @@ function rd_settings_init() {
 		array(
 			'id'   => 'enable_next_gen_images',
 			'type' => 'checkbox',
-			'desc' => __( 'Automatically generates WebP/AVIF versions of every uploaded JPEG/PNG (all sizes) and wraps <img> tags in <picture> with <source> elements. Browsers that support next-gen formats get the smaller file (AVIF ~50%, WebP ~30% smaller than JPEG), older browsers fall back transparently to the original. Original files are always preserved.', 'reloaded' ),
+			'desc' => __( 'Automatically generates WebP/AVIF versions of every uploaded JPEG/PNG (all sizes) and wraps <img> tags in <picture> with <source> elements. WebP uploads get an AVIF twin too. Browsers that support next-gen formats get the smaller file (AVIF ~50%, WebP ~30% smaller than JPEG), older browsers fall back transparently to the original. Original files are always preserved.', 'reloaded' ),
 		)
 	);
 	add_settings_field(

@@ -177,7 +177,14 @@ function rd_render_carousel() {
 
 				// Slide 1 is the LCP candidate — load it eagerly with high priority.
 				// The rest only load as the user (or the autoplay) approaches them.
-				$img_attr = array( 'class' => 'rd-carousel__img' );
+				// sizes mirrors the CSS: slides are 88% wide on phones, 84% of the
+				// track on desktop, capped by the 1440px container (max ~1210px).
+				// WP's default "(max-width: 1200px) 100vw, 1200px" made browsers
+				// always pick the 1200w candidate for ~630px slots.
+				$img_attr = array(
+					'class' => 'rd-carousel__img',
+					'sizes' => '(max-width: 768px) 88vw, (max-width: 1440px) 84vw, 1210px',
+				);
 				if ( 0 === $i ) {
 					$img_attr['loading']       = 'eager';
 					$img_attr['fetchpriority'] = 'high';

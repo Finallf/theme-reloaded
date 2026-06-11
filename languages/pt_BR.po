@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ReloadeD 0.1.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/theme/reloaded\n"
-"POT-Creation-Date: 2026-06-10T15:53:58-03:00\n"
-"PO-Revision-Date: 2026-06-10 15:56-0300\n"
+"POT-Creation-Date: 2026-06-10T22:06:26-03:00\n"
+"PO-Revision-Date: 2026-06-10 22:17-0300\n"
 "Last-Translator: Regis Vieira Delgado (Finallf) <finallf2@gmail.com>\n"
 "Language-Team: Brazilian Portuguese\n"
 "Language: pt_BR\n"
@@ -222,15 +222,15 @@ msgstr ""
 "Slot de anúncio/banner — cole AdSense, GAM ou qualquer HTML. Posicione e "
 "ordene livremente em qualquer área de widgets."
 
-#: inc/class-rd-ad-widget.php:71
+#: inc/class-rd-ad-widget.php:77
 msgid "Title (optional):"
 msgstr "Título (opcional):"
 
-#: inc/class-rd-ad-widget.php:78
+#: inc/class-rd-ad-widget.php:84
 msgid "Ad / banner code:"
 msgstr "Código do anúncio / banner:"
 
-#: inc/class-rd-ad-widget.php:82
+#: inc/class-rd-ad-widget.php:88
 msgid ""
 "Paste the ad-network code (AdSense, GAM, etc.) or any HTML. Script tags "
 "receive a CSP nonce automatically."
@@ -256,7 +256,7 @@ msgstr "URL da imagem"
 
 # --- Botões e Componentes Reutilizáveis ---
 #: inc/class-rd-discord-widget.php:113 inc/class-rd-support-widget.php:100
-#: inc/core.php:209
+#: inc/core.php:210
 msgid "Select image"
 msgstr "Selecionar Imagem"
 
@@ -470,43 +470,43 @@ msgstr "Chave PIX"
 msgid "email@domain.com or CPF/CNPJ"
 msgstr "email@dominio.com.br ou CPF/CNPJ"
 
-#: inc/core.php:52
+#: inc/core.php:53
 msgid "Primary Menu"
 msgstr "Menu Principal"
 
-#: inc/core.php:144
+#: inc/core.php:145
 msgid "Main Sidebar"
 msgstr "Barra Lateral Principal"
 
-#: inc/core.php:146
+#: inc/core.php:147
 msgid "Add widgets here to appear in the sidebar."
 msgstr "Adicione widgets aqui para aparecerem na lateral."
 
-#: inc/core.php:158
+#: inc/core.php:159
 msgid "Footer Column 2"
 msgstr "Rodapé - Coluna 2"
 
-#: inc/core.php:159
+#: inc/core.php:160
 msgid "Footer Column 3"
 msgstr "Rodapé - Coluna 3"
 
-#: inc/core.php:160
+#: inc/core.php:161
 msgid "Footer Column 4"
 msgstr "Rodapé - Coluna 4"
 
-#: inc/core.php:167
+#: inc/core.php:168
 msgid "Add widgets here to appear in this footer column."
 msgstr "Adicione widgets aqui para exibi-los nesta coluna do rodapé."
 
-#: inc/core.php:210 inc/core.php:262
+#: inc/core.php:211 inc/core.php:263
 msgid "Use this image"
 msgstr "Usar esta imagem"
 
-#: inc/core.php:261
+#: inc/core.php:262
 msgid "Select fallback image"
 msgstr "Selecionar Imagem de Fallback"
 
-#: inc/mod-ads.php:65
+#: inc/mod-ads.php:102
 msgid "Close ad"
 msgstr "Fechar anúncio"
 
@@ -693,7 +693,7 @@ msgstr "Aplicar"
 msgid "Cancel"
 msgstr "Cancelar"
 
-#: inc/mod-backup.php:720 inc/mod-dashboard.php:779 inc/panel.php:268
+#: inc/mod-backup.php:720 inc/mod-dashboard.php:789 inc/panel.php:268
 msgid "Backup"
 msgstr "Backup"
 
@@ -844,21 +844,21 @@ msgid "Featured posts"
 msgstr "Posts em destaque"
 
 #. translators: 1: slide number, 2: total slides
-#: inc/mod-carousel.php:190
+#: inc/mod-carousel.php:197
 #, php-format
 msgid "%1$d of %2$d"
 msgstr "%1$d de %2$d"
 
-#: inc/mod-carousel.php:216
+#: inc/mod-carousel.php:223
 msgid "Previous slide"
 msgstr "Slide anterior"
 
-#: inc/mod-carousel.php:219
+#: inc/mod-carousel.php:226
 msgid "Next slide"
 msgstr "Próximo slide"
 
 #. translators: %d: slide number
-#: inc/mod-carousel.php:229
+#: inc/mod-carousel.php:236
 #, php-format
 msgid "Go to slide %d"
 msgstr "Ir para o slide %d"
@@ -905,7 +905,7 @@ msgstr ""
 msgid "ENFORCE MODE"
 msgstr "ENFORCE MODE"
 
-#: inc/mod-csp.php:871 inc/mod-dashboard.php:422
+#: inc/mod-csp.php:871 inc/mod-dashboard.php:432
 msgid "REPORT-ONLY"
 msgstr "REPORT-ONLY"
 
@@ -1059,12 +1059,12 @@ msgstr "Nunca verificado"
 msgid "never"
 msgstr "nunca"
 
-#: inc/mod-dashboard.php:320 inc/mod-dashboard.php:1001
+#: inc/mod-dashboard.php:320 inc/mod-dashboard.php:1016
 #: inc/mod-self-update.php:323
 msgid "Update available"
 msgstr "Atualização disponível"
 
-#: inc/mod-dashboard.php:322 inc/mod-dashboard.php:1000
+#: inc/mod-dashboard.php:322 inc/mod-dashboard.php:1015
 #: inc/mod-self-update.php:324
 msgid "Up to date"
 msgstr "Atualizado"
@@ -1107,207 +1107,207 @@ msgstr "BETA"
 msgid "Last check"
 msgstr "Última verificação"
 
-#: inc/mod-dashboard.php:388 inc/mod-dashboard.php:1002
-msgid "Go to Themes → Update Now"
-msgstr "Acesse Temas → Atualizar Agora"
+#: inc/mod-dashboard.php:398 inc/mod-dashboard.php:1017
+msgid "Update now"
+msgstr "Atualizar agora"
 
-#: inc/mod-dashboard.php:392 inc/mod-dashboard.php:1003
+#: inc/mod-dashboard.php:402 inc/mod-dashboard.php:1018
 msgid "View release on GitHub"
 msgstr "Ver release no GitHub"
 
-#: inc/mod-dashboard.php:418 inc/mod-dashboard.php:440 inc/mod-dashboard.php:466
-#: inc/mod-dashboard.php:483 inc/mod-dashboard.php:496 inc/mod-dashboard.php:505
-#: inc/mod-dashboard.php:529 inc/mod-dashboard.php:541 inc/mod-dashboard.php:553
-#: inc/mod-dashboard.php:565 inc/mod-dashboard.php:579 inc/mod-dashboard.php:594
-#: inc/mod-dashboard.php:608 inc/mod-dashboard.php:620 inc/mod-dashboard.php:632
+#: inc/mod-dashboard.php:428 inc/mod-dashboard.php:450 inc/mod-dashboard.php:476
+#: inc/mod-dashboard.php:493 inc/mod-dashboard.php:506 inc/mod-dashboard.php:515
+#: inc/mod-dashboard.php:539 inc/mod-dashboard.php:551 inc/mod-dashboard.php:563
+#: inc/mod-dashboard.php:575 inc/mod-dashboard.php:589 inc/mod-dashboard.php:604
+#: inc/mod-dashboard.php:618 inc/mod-dashboard.php:630 inc/mod-dashboard.php:642
 msgid "OFF"
 msgstr "OFF"
 
-#: inc/mod-dashboard.php:420
+#: inc/mod-dashboard.php:430
 msgid "ENFORCE"
 msgstr "ENFORCE"
 
-#: inc/mod-dashboard.php:425
+#: inc/mod-dashboard.php:435
 msgid "CSP"
 msgstr "CSP"
 
-#: inc/mod-dashboard.php:443 inc/mod-dashboard.php:465 inc/mod-dashboard.php:482
-#: inc/mod-dashboard.php:495 inc/mod-dashboard.php:509 inc/mod-dashboard.php:528
-#: inc/mod-dashboard.php:540 inc/mod-dashboard.php:552 inc/mod-dashboard.php:564
-#: inc/mod-dashboard.php:578 inc/mod-dashboard.php:593 inc/mod-dashboard.php:607
-#: inc/mod-dashboard.php:619 inc/mod-dashboard.php:631
+#: inc/mod-dashboard.php:453 inc/mod-dashboard.php:475 inc/mod-dashboard.php:492
+#: inc/mod-dashboard.php:505 inc/mod-dashboard.php:519 inc/mod-dashboard.php:538
+#: inc/mod-dashboard.php:550 inc/mod-dashboard.php:562 inc/mod-dashboard.php:574
+#: inc/mod-dashboard.php:588 inc/mod-dashboard.php:603 inc/mod-dashboard.php:617
+#: inc/mod-dashboard.php:629 inc/mod-dashboard.php:641
 msgid "ON"
 msgstr "ON"
 
-#: inc/mod-dashboard.php:447 inc/panel.php:916
+#: inc/mod-dashboard.php:457 inc/panel.php:916
 msgid "Login Protection"
 msgstr "Proteção de Login"
 
-#: inc/mod-dashboard.php:463
+#: inc/mod-dashboard.php:473
 msgid "Maintenance Mode"
 msgstr "Manutenção"
 
-#: inc/mod-dashboard.php:471
+#: inc/mod-dashboard.php:481
 msgid "Maintenance Mode blocks ALL visitors of the site. Are you sure?"
 msgstr "O Modo de Manutenção bloqueia TODOS os visitantes do site. Tem certeza?"
 
-#: inc/mod-dashboard.php:480
+#: inc/mod-dashboard.php:490
 msgid "Statistics Tracking"
 msgstr "Estatísticas"
 
-#: inc/mod-dashboard.php:493
+#: inc/mod-dashboard.php:503
 msgid "Critical CSS Inline"
 msgstr "CSS Crítico Inline"
 
-#: inc/mod-dashboard.php:513
+#: inc/mod-dashboard.php:523
 msgid "Next-gen Images"
 msgstr "Imagem Next-gen"
 
-#: inc/mod-dashboard.php:526
+#: inc/mod-dashboard.php:536
 msgid "Top Bar"
 msgstr "Barra de Topo"
 
-#: inc/mod-dashboard.php:538 inc/panel.php:583
+#: inc/mod-dashboard.php:548 inc/panel.php:583
 msgid "Comments"
 msgstr "Comentários"
 
-#: inc/mod-dashboard.php:550 inc/panel.php:511
+#: inc/mod-dashboard.php:560 inc/panel.php:511
 msgid "Markdown"
 msgstr "Markdown"
 
-#: inc/mod-dashboard.php:562 inc/panel.php:1211
+#: inc/mod-dashboard.php:572 inc/panel.php:1211
 msgid "YouTube Facade"
 msgstr "Fachada do YouTube"
 
-#: inc/mod-dashboard.php:576
+#: inc/mod-dashboard.php:586
 msgid "Carousel"
 msgstr "Carrossel"
 
-#: inc/mod-dashboard.php:591
+#: inc/mod-dashboard.php:601
 msgid "Breadcrumbs"
 msgstr "Navegação"
 
-#: inc/mod-dashboard.php:605 inc/panel.php:840
+#: inc/mod-dashboard.php:615 inc/panel.php:840
 msgid "Cookie Banner"
 msgstr "Banner de Cookies"
 
-#: inc/mod-dashboard.php:617 inc/panel.php:1516
+#: inc/mod-dashboard.php:627 inc/panel.php:1516
 msgid "Sitemap"
 msgstr "Mapa do Site"
 
 # --- SEO ---
-#: inc/mod-dashboard.php:629
+#: inc/mod-dashboard.php:639
 msgid "Open Graph"
 msgstr "Open Graph"
 
-#: inc/mod-dashboard.php:654
+#: inc/mod-dashboard.php:664
 msgid "Browser policy that blocks unauthorized scripts and resources."
 msgstr "Política do navegador que bloqueia scripts e recursos não autorizados."
 
-#: inc/mod-dashboard.php:655
+#: inc/mod-dashboard.php:665
 msgid "Hides the login URL behind a secret slug and limits attempts."
 msgstr "Esconde a URL de login atrás de um slug secreto e limita tentativas."
 
-#: inc/mod-dashboard.php:656
+#: inc/mod-dashboard.php:666
 msgid "Shows a holding page to visitors while the site is offline."
 msgstr "Mostra uma página de espera aos visitantes com o site offline."
 
-#: inc/mod-dashboard.php:657
+#: inc/mod-dashboard.php:667
 msgid "Records the page views shown in the Statistics tab."
 msgstr "Registra as visualizações exibidas na aba Estatísticas."
 
-#: inc/mod-dashboard.php:658
+#: inc/mod-dashboard.php:668
 msgid "Inlines critical CSS to speed up the first paint."
 msgstr "Embute o CSS crítico para acelerar a primeira renderização."
 
-#: inc/mod-dashboard.php:659
+#: inc/mod-dashboard.php:669
 msgid "Serves WebP/AVIF image versions to supported browsers."
 msgstr "Entrega imagens em WebP/AVIF para navegadores compatíveis."
 
-#: inc/mod-dashboard.php:660
+#: inc/mod-dashboard.php:670
 msgid "Announcement bar shown above the site header."
 msgstr "Barra de aviso exibida acima do cabeçalho do site."
 
-#: inc/mod-dashboard.php:661
+#: inc/mod-dashboard.php:671
 msgid "Enables the comment system across the whole site."
 msgstr "Ativa o sistema de comentários em todo o site."
 
-#: inc/mod-dashboard.php:662
+#: inc/mod-dashboard.php:672
 msgid "Lets you write posts using Markdown syntax."
 msgstr "Permite escrever posts usando sintaxe Markdown."
 
-#: inc/mod-dashboard.php:663
+#: inc/mod-dashboard.php:673
 msgid "Replaces YouTube embeds with a light click-to-load preview."
 msgstr "Troca embeds do YouTube por uma prévia leve com clique pra carregar."
 
-#: inc/mod-dashboard.php:664
+#: inc/mod-dashboard.php:674
 msgid "Full-width featured carousel between the header and the home content."
 msgstr ""
 "Carrossel de destaques em largura total entre o header e o conteúdo da home."
 
-#: inc/mod-dashboard.php:665
+#: inc/mod-dashboard.php:675
 msgid "Shows the navigation trail above post titles."
 msgstr "Exibe a trilha de navegação acima dos títulos."
 
-#: inc/mod-dashboard.php:666
+#: inc/mod-dashboard.php:676
 msgid "Granular cookie consent banner (LGPD/GDPR)."
 msgstr "Banner de consentimento de cookies granular (LGPD/GDPR)."
 
-#: inc/mod-dashboard.php:667
+#: inc/mod-dashboard.php:677
 msgid "Enables the native wp-sitemap.xml for search engines."
 msgstr "Ativa o wp-sitemap.xml nativo para os buscadores."
 
-#: inc/mod-dashboard.php:668
+#: inc/mod-dashboard.php:678
 msgid "Adds Open Graph tags for rich social previews."
 msgstr "Adiciona tags Open Graph para prévias ricas em redes sociais."
 
-#: inc/mod-dashboard.php:697
+#: inc/mod-dashboard.php:707
 msgid "Views Last 24h"
 msgstr "Visualizações nas últimas 24h"
 
-#: inc/mod-dashboard.php:723
+#: inc/mod-dashboard.php:733
 msgid "Posts Last 30 Days"
 msgstr "Posts nos últimos 30 dias"
 
-#: inc/mod-dashboard.php:736
+#: inc/mod-dashboard.php:746
 msgid "Review queue"
 msgstr "Fila de moderação"
 
-#: inc/mod-dashboard.php:739
+#: inc/mod-dashboard.php:749
 msgid "Inbox zero ✓"
 msgstr "Caixa zerada ✓"
 
-#: inc/mod-dashboard.php:742
+#: inc/mod-dashboard.php:752
 msgid "Pending Comments"
 msgstr "Comentários pendentes"
 
-#: inc/mod-dashboard.php:764
+#: inc/mod-dashboard.php:774
 msgid "General Settings"
 msgstr "Configurações Gerais"
 
-#: inc/mod-dashboard.php:769
+#: inc/mod-dashboard.php:779
 msgid "Security & CSP"
 msgstr "Segurança e CSP"
 
-#: inc/mod-dashboard.php:774 inc/panel.php:260
+#: inc/mod-dashboard.php:784 inc/panel.php:260
 msgid "Images & Media"
 msgstr "Imagens & Mídia"
 
-#: inc/mod-dashboard.php:786 inc/mod-privacy.php:174 inc/panel.php:266
+#: inc/mod-dashboard.php:796 inc/mod-privacy.php:174 inc/panel.php:266
 #: inc/panel.php:1782
 msgid "Statistics"
 msgstr "Estatísticas"
 
-#: inc/mod-dashboard.php:998
+#: inc/mod-dashboard.php:1013
 msgid "Checking…"
 msgstr "Verificando…"
 
-#: inc/mod-dashboard.php:999 inc/mod-self-update.php:309
+#: inc/mod-dashboard.php:1014 inc/mod-self-update.php:309
 #: inc/mod-self-update.php:325
 msgid "just now"
 msgstr "agora mesmo"
 
-#: inc/mod-dashboard.php:1004 inc/mod-self-update.php:308
+#: inc/mod-dashboard.php:1019 inc/mod-self-update.php:308
 msgid "Could not reach GitHub. Try again later."
 msgstr "Não foi possível acessar o GitHub. Tente novamente mais tarde."
 
@@ -1418,58 +1418,84 @@ msgstr "Salvar meus dados neste navegador para a próxima vez que eu comentar."
 msgid "Markdown:"
 msgstr "Markdown:"
 
-#: inc/mod-image-formats.php:786
-msgid "No JPEG/PNG attachments to process."
-msgstr "Nenhum anexo JPEG/PNG para processar."
+#: inc/mod-image-formats.php:1109
+msgid "No JPEG/PNG/WebP attachments to process."
+msgstr "Nenhum anexo JPEG/PNG/WebP para processar."
 
-#. translators: %d: number of JPEG/PNG attachments to process
-#: inc/mod-image-formats.php:788
+#. translators: %d: number of JPEG/PNG/WebP attachments to process
+#: inc/mod-image-formats.php:1111
 #, php-format
 msgid "Start processing %d images? This may take several minutes."
 msgstr "Iniciar processamento de %d imagens? Isso pode levar alguns minutos."
 
-#: inc/mod-image-formats.php:789
+#: inc/mod-image-formats.php:1112
 msgid "Starting..."
 msgstr "Iniciando…"
 
-#: inc/mod-image-formats.php:790
+#: inc/mod-image-formats.php:1113
 msgid "Processed %p of %t (%pct%)"
 msgstr "Processadas %p de %t (%pct%)"
 
-#: inc/mod-image-formats.php:791
+#: inc/mod-image-formats.php:1114
 msgid "Done! Processed %t images."
 msgstr "Pronto! %t imagens processadas."
 
-#: inc/mod-image-formats.php:792
+#. translators: %f: number of failed conversions
+#: inc/mod-image-formats.php:1116
+#, php-format
+msgid "%f conversions failed — check file permissions and server capabilities."
+msgstr ""
+"%f conversões falharam — verifique as permissões de arquivo e as capacidades "
+"do servidor."
+
+#: inc/mod-image-formats.php:1117
 msgid "Error: "
 msgstr "Erro: "
 
-#: inc/mod-image-formats.php:823
+#: inc/mod-image-formats.php:1118
+msgid ""
+"Delete all files of the format not covered by the current Format Mode? The "
+"originals and the active format are kept."
+msgstr ""
+"Excluir todos os arquivos do formato não coberto pelo Modo de Formato atual? "
+"Os originais e o formato ativo são mantidos."
+
+#: inc/mod-image-formats.php:1119
+msgid "Cleaning…"
+msgstr "Limpando…"
+
+#. translators: 1: number of deleted files, 2: freed disk space in KB
+#: inc/mod-image-formats.php:1121
+#, php-format
+msgid "Removed %1$d files (%2$s KB freed)."
+msgstr "%1$d arquivos removidos (%2$s KB liberados)."
+
+#: inc/mod-image-formats.php:1152
 msgid "Server Capabilities"
 msgstr "Capacidades do Servidor"
 
-#: inc/mod-image-formats.php:824
+#: inc/mod-image-formats.php:1153
 msgid "Auto-detected from PHP extensions installed on this server."
 msgstr "Auto detectado a partir das extensões PHP instaladas neste servidor."
 
-#: inc/mod-image-formats.php:834 inc/mod-image-formats.php:845
-#: inc/mod-image-formats.php:855
+#: inc/mod-image-formats.php:1163 inc/mod-image-formats.php:1174
+#: inc/mod-image-formats.php:1184
 msgid "available"
 msgstr "disponível"
 
-#: inc/mod-image-formats.php:836
+#: inc/mod-image-formats.php:1165
 msgid "not installed"
 msgstr "não instalado"
 
-#: inc/mod-image-formats.php:838
+#: inc/mod-image-formats.php:1167
 msgid "(preferred)"
 msgstr "(preferencial)"
 
-#: inc/mod-image-formats.php:847 inc/mod-image-formats.php:857
+#: inc/mod-image-formats.php:1176 inc/mod-image-formats.php:1186
 msgid "unavailable"
 msgstr "indisponível"
 
-#: inc/mod-image-formats.php:863
+#: inc/mod-image-formats.php:1192
 msgid ""
 "Neither WebP nor AVIF is available — module is dormant. Uploads will not be "
 "converted and no <picture> wrapping happens. Original JPEG/PNG continue to "
@@ -1479,40 +1505,72 @@ msgstr ""
 "convertidos e nenhum wrapping <picture> acontece. JPEG/PNG originais "
 "continuam funcionando normalmente."
 
-#: inc/mod-image-formats.php:871
+#: inc/mod-image-formats.php:1200
 msgid "Regenerate sizes and next-gen formats for existing attachments"
 msgstr "Regenerar tamanhos e formatos next-gen para anexos existentes"
 
-#: inc/mod-image-formats.php:872
+#: inc/mod-image-formats.php:1201
 msgid ""
 "New uploads are processed automatically. Use this button after: (a) enabling "
 "the module on a site with existing images; (b) switching the Format Mode "
-"above; or (c) adding/changing a custom image size in the theme (re-crops all "
-"sizes via WP's wp_generate_attachment_metadata, then generates WebP/AVIF for "
-"each). The action is idempotent: re-running overwrites existing files with "
-"current settings. May take several minutes on a large Media Library — runs in "
-"chunks of 10 via AJAX to avoid timeouts."
+"above; (c) changing the image quality; or (d) adding/changing a custom image "
+"size in the theme (re-crops all sizes via WP's "
+"wp_generate_attachment_metadata, then generates WebP/AVIF for each). The "
+"action is idempotent: re-running overwrites existing files with current "
+"settings. May take several minutes on a large Media Library — runs in time-"
+"budgeted AJAX chunks to avoid timeouts."
 msgstr ""
-"Uploads novos são processados automaticamente. Use este botão após: (a) "
+"Novos uploads são processados automaticamente. Use este botão após: (a) "
 "ativar o módulo em um site com imagens existentes; (b) trocar o Modo de "
-"Formato acima; ou (c) adicionar/alterar um tamanho de imagem customizado no "
-"tema (re-corta todos os tamanhos via wp_generate_attachment_metadata do WP, "
-"depois gera WebP/AVIF de cada um). A ação é idempotente: re-rodar sobrescreve "
-"os arquivos existentes com as configurações atuais. Pode demorar vários "
-"minutos em uma Biblioteca de Mídia grande — roda em lotes de 10 via AJAX para "
+"Formato acima; (c) alterar a qualidade de imagem; ou (d) adicionar/alterar um "
+"tamanho de imagem personalizado no tema (recorta novamente todos os tamanhos "
+"via wp_generate_attachment_metadata do WP e depois gera WebP/AVIF de cada "
+"um). A ação é idempotente: executar de novo sobrescreve os arquivos "
+"existentes com as configurações atuais. Pode levar vários minutos em uma "
+"Biblioteca de Mídia grande — roda em lotes AJAX com orçamento de tempo para "
 "evitar timeouts."
 
-#. translators: 1: number of JPEG/PNG attachments in the Media Library
-#: inc/mod-image-formats.php:881
+#. translators: 1: number of JPEG/PNG/WebP attachments in the Media Library
+#: inc/mod-image-formats.php:1214
 #, php-format
-msgid "%d JPEG/PNG attachment in the Media Library"
-msgid_plural "%d JPEG/PNG attachments in the Media Library"
-msgstr[0] "%d anexo JPEG/PNG na Biblioteca de Mídia"
-msgstr[1] "%d anexos JPEG/PNG na Biblioteca de Mídia"
+msgid "%d JPEG/PNG/WebP attachment in the Media Library"
+msgid_plural "%d JPEG/PNG/WebP attachments in the Media Library"
+msgstr[0] "%d anexo JPEG/PNG/WebP na Biblioteca de Mídia"
+msgstr[1] "%d anexos JPEG/PNG/WebP na Biblioteca de Mídia"
 
-#: inc/mod-image-formats.php:893
+#: inc/mod-image-formats.php:1226
 msgid "Start regeneration"
 msgstr "Iniciar regeneração"
+
+#. translators: 1: date/time of the last regeneration, 2: number of converted files, 3: number of failed conversions
+#: inc/mod-image-formats.php:1235
+#, php-format
+msgid "Last regeneration: %1$s — %2$d files converted, %3$d failures."
+msgstr "Última regeneração: %1$s — %2$d arquivos convertidos, %3$d falhas."
+
+#: inc/mod-image-formats.php:1242
+msgid "check failures"
+msgstr "verificar falhas"
+
+#: inc/mod-image-formats.php:1258
+msgid ""
+"Format Mode is \"both\" — every generated file is in use, nothing to clean."
+msgstr ""
+"O Modo de Formato é \"ambos\" — todos os arquivos gerados estão em uso, nada "
+"a limpar."
+
+#. translators: %s: the file format NOT covered by the current mode (webp or avif)
+#: inc/mod-image-formats.php:1262
+#, php-format
+msgid ""
+"Format Mode leaves .%s files unused — they linger on disk after a mode switch."
+msgstr ""
+"O Modo de Formato deixa arquivos .%s sem uso — eles permanecem no disco após "
+"uma troca de modo."
+
+#: inc/mod-image-formats.php:1274
+msgid "Remove unused format"
+msgstr "Remover formato sem uso"
 
 #: inc/mod-indexnow.php:76
 msgid ""
@@ -1709,15 +1767,15 @@ msgstr[1] "%d min de leitura"
 msgid "Related posts"
 msgstr "Publicações relacionadas"
 
-#: inc/mod-search-suggestions.php:125
+#: inc/mod-search-suggestions.php:130
 msgid "No matches for"
 msgstr "Nenhum resultado para"
 
-#: inc/mod-search-suggestions.php:126
+#: inc/mod-search-suggestions.php:131
 msgid "See all results for"
 msgstr "Veja todos os resultados para"
 
-#: inc/mod-search-suggestions.php:127
+#: inc/mod-search-suggestions.php:132
 msgid "Searching…"
 msgstr "Procurando…"
 
@@ -3104,20 +3162,24 @@ msgstr "Qualidade das Imagens (%)"
 
 #: inc/panel.php:1303
 msgid ""
-"Quality used when WordPress re-encodes images on upload (JPEG, WebP, AVIF). "
-"Range 1-100. WP core default is 82; the theme defaults to 80 for a better "
-"size/quality tradeoff. <strong>Tip on file formats:</strong> upload featured "
-"images as <strong>WebP</strong> or <strong>JPEG</strong> for photos; avoid "
-"PNG unless you need transparency (PNG files are typically 3-5x larger than "
-"the equivalent WebP)."
+"Quality used when WordPress re-encodes images on upload (JPEG, WebP). Range "
+"1-100. WP core default is 82; the theme defaults to 80 for a better size/"
+"quality tradeoff. <strong>AVIF uses its own derived scale</strong> (this "
+"value minus 20, floor 45): the 0-100 scale is not comparable across codecs, "
+"and AVIF at JPEG-like values produces needlessly large files. <strong>Tip on "
+"file formats:</strong> upload featured images as <strong>WebP</strong> or "
+"<strong>JPEG</strong> for photos; avoid PNG unless you need transparency (PNG "
+"files are typically 3-5x larger than the equivalent WebP)."
 msgstr ""
-"Qualidade usada quando o WordPress recodifica imagens ao fazer o upload "
-"(JPEG, WebP, AVIF). Intervalo de 1 a 100. O padrão do núcleo do WP é 82; o "
-"tema usa 80 por padrão para um melhor equilíbrio entre tamanho e qualidade. "
-"<strong>Dica sobre formatos de arquivo:</strong> faça o upload de imagens em "
-"destaque como <strong>WebP</strong> ou <strong>JPEG</strong> para fotos; "
-"evite PNG, a menos que precise de transparência (arquivos PNG são normalmente "
-"de 3 a 5 vezes maiores que o WebP equivalente)."
+"Qualidade usada quando o WordPress reprocessa imagens no upload (JPEG, WebP). "
+"Intervalo 1-100. O padrão do WP é 82; o tema usa 80 por padrão para um "
+"equilíbrio melhor entre tamanho e qualidade. <strong>O AVIF usa uma escala "
+"própria derivada</strong> (este valor menos 20, com piso em 45): a escala "
+"0-100 não é comparável entre codecs, e AVIF em valores de JPEG produz "
+"arquivos desnecessariamente grandes. <strong>Dica sobre formatos:</strong> "
+"envie imagens destacadas como <strong>WebP</strong> ou <strong>JPEG</strong> "
+"para fotos; evite PNG a menos que precise de transparência (arquivos PNG "
+"costumam ser 3-5x maiores que o WebP equivalente)."
 
 #: inc/panel.php:1308
 msgid "Enable WebP/AVIF Delivery"
@@ -3126,16 +3188,17 @@ msgstr "Ativar Entrega WebP/AVIF"
 #: inc/panel.php:1315
 msgid ""
 "Automatically generates WebP/AVIF versions of every uploaded JPEG/PNG (all "
-"sizes) and wraps <img> tags in <picture> with <source> elements. Browsers "
-"that support next-gen formats get the smaller file (AVIF ~50%, WebP ~30% "
-"smaller than JPEG), older browsers fall back transparently to the original. "
-"Original files are always preserved."
+"sizes) and wraps <img> tags in <picture> with <source> elements. WebP uploads "
+"get an AVIF twin too. Browsers that support next-gen formats get the smaller "
+"file (AVIF ~50%, WebP ~30% smaller than JPEG), older browsers fall back "
+"transparently to the original. Original files are always preserved."
 msgstr ""
-"Gera automaticamente versões WebP/AVIF de cada JPEG/PNG enviado (todos os "
-"tamanhos) e envolve tags <img> em <picture> com elementos <source>. Browsers "
-"que suportam formatos next-gen recebem o arquivo menor (AVIF ~50%, WebP ~30% "
-"menor que JPEG), browsers antigos fazem fallback transparente para o "
-"original. Arquivos originais são sempre preservados."
+"Gera automaticamente versões WebP/AVIF de todo JPEG/PNG enviado (todos os "
+"tamanhos) e envolve as tags <img> em <picture> com elementos <source>. "
+"Uploads em WebP também ganham um gêmeo AVIF. Navegadores com suporte aos "
+"formatos next-gen recebem o arquivo menor (AVIF ~50%, WebP ~30% menor que "
+"JPEG); navegadores antigos usam o original de forma transparente. Os arquivos "
+"originais são sempre preservados."
 
 #: inc/panel.php:1320
 msgid "Format Mode"
@@ -3649,6 +3712,9 @@ msgstr "Exibir:"
 msgid "No levels found for this term. Try using different keywords."
 msgstr ""
 "Nenhum nível encontrado com este termo. Tente usar outras palavras-chave."
+
+#~ msgid "Go to Themes → Update Now"
+#~ msgstr "Acesse Temas → Atualizar Agora"
 
 #~ msgid "Open search"
 #~ msgstr "Abrir Pesquisa"

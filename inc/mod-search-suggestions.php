@@ -104,32 +104,58 @@ function rd_search_suggestions_enqueue() {
 		return;
 	}
 
-	wp_enqueue_script(
-		'rd-search-suggestions',
-		get_template_directory_uri() . '/assets/js/search-suggestions.js',
-		array(),
-		rd_asset_version( '/assets/js/search-suggestions.js' ),
-		true
-	);
-
-	// i18n strings + data for the JS
-	wp_localize_script(
-		'rd-search-suggestions',
-		'rdSearchSugg',
-		array(
-			'ajaxUrl'    => admin_url( 'admin-ajax.php' ),
-			'searchUrl'  => home_url( '/?s=' ),
-			'minChars'   => RD_SUGG_MIN_CHARS,
-			'debounceMs' => 250,
-			'i18n'       => array(
-				'noResults' => __( 'No matches for', 'reloaded' ),
-				'seeAll'    => __( 'See all results for', 'reloaded' ),
-				'loading'   => __( 'Searching…', 'reloaded' ),
-			),
-		)
-	);
+	// Lazy by interaction: the script only works after someone focuses a
+	// search field, so don't ship ~10 KiB to every visitor upfront. A tiny
+	// inline loader (printed in wp_footer below) injects the real script on
+	// the first focusin of a search field; the data object that used to be
+	// wp_localize_script'd is inlined by the same loader. CSP: the inline
+	// snippet carries the nonce, and the injected <script> is trusted via
+	// 'strict-dynamic' (script-inserted scripts inherit trust).
+	add_action( 'wp_footer', 'rd_search_suggestions_print_loader' );
 }
 add_action( 'wp_enqueue_scripts', 'rd_search_suggestions_enqueue' );
+
+/**
+ * Prints the lazy loader for search-suggestions.js (see enqueue above).
+ */
+function rd_search_suggestions_print_loader() {
+	$src = get_template_directory_uri() . '/assets/js/search-suggestions.js?ver=' . rawurlencode( (string) rd_asset_version( '/assets/js/search-suggestions.js' ) );
+
+	$data = array(
+		'ajaxUrl'    => admin_url( 'admin-ajax.php' ),
+		'searchUrl'  => home_url( '/?s=' ),
+		'minChars'   => RD_SUGG_MIN_CHARS,
+		'debounceMs' => 250,
+		'i18n'       => array(
+			'noResults' => __( 'No matches for', 'reloaded' ),
+			'seeAll'    => __( 'See all results for', 'reloaded' ),
+			'loading'   => __( 'Searching…', 'reloaded' ),
+		),
+	);
+
+	$nonce_attr = function_exists( 'rd_csp_nonce_attr' ) ? rd_csp_nonce_attr() : '';
+
+	// focusin bubbles (focus doesn't) — one capture-phase listener on the
+	// document catches every current AND future search field, including the
+	// one inside the hamburger panel.
+	?>
+	<script<?php echo $nonce_attr; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- nonce attribute pre-escaped by rd_csp_nonce_attr(). ?>>
+	(function () {
+		var loaded = false;
+		document.addEventListener('focusin', function (e) {
+			if (loaded || !e.target || !e.target.matches || !e.target.matches('.search-field, .menu-search-field')) {
+				return;
+			}
+			loaded = true;
+			window.rdSearchSugg = <?php echo wp_json_encode( $data ); ?>;
+			var s = document.createElement('script');
+			s.src = <?php echo wp_json_encode( $src ); ?>;
+			document.head.appendChild(s);
+		}, true);
+	})();
+	</script>
+	<?php
+}
 
 /**
  * Clears the suggestions cache when a post is saved/edited/deleted.

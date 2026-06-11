@@ -97,8 +97,15 @@ function rd_render_post_card( $type ) {
 		)
 		: array( 'loading' => 'lazy' );
 
+	// rd-card (600x338 hardcrop, 16:9) is the size designed for these cards —
+	// WP's 'medium' (300px soft crop) was a leftover: too small for the
+	// ~460-700px slots, and when an attachment lacked the medium file WP fell
+	// back to serving the ORIGINAL (PageSpeed flagged 1365px-wide originals on
+	// home cards). Falls back to 'medium' when custom sizes aren't registered.
+	$thumb_size = rd_get_option_bool( 'image_resizing' ) ? 'rd-card' : 'medium';
+
 	// Image fallback.
-	$thumb = has_post_thumbnail() ? get_the_post_thumbnail( $post_id, 'medium', $thumb_attrs ) : '<div class="rd-thumb-fallback"></div>';
+	$thumb = has_post_thumbnail() ? get_the_post_thumbnail( $post_id, $thumb_size, $thumb_attrs ) : '<div class="rd-thumb-fallback"></div>';
 
 	// $title, $excerpt come from rd_post_card_text() (which applies esc_html + optional
 	// search <mark> via regex that skips tags/entities). $overline comes from

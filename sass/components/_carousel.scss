@@ -179,30 +179,37 @@
 .rd-carousel__dots {
     position: absolute;
     left: 50%;
-    bottom: 12px;
+    // 4px instead of 12px: the buttons grew 8px of invisible padding on each
+    // side, so this keeps the painted dot at the same spot as before.
+    bottom: 4px;
     transform: translateX(-50%);
     display: flex;
-    gap: 8px;
+    // No gap — the buttons' invisible padding already provides the visual
+    // spacing between dots, and adjacent 24px targets satisfy WCAG 2.5.8.
+    gap: 0;
     z-index: 2;
 }
 
 .rd-carousel__dot {
-    width: 8px;
-    height: 8px;
-    padding: 0;
+    // 24x24 touch target (WCAG 2.5.8 / Lighthouse). The painted dot stays
+    // 8x8: the padding is clickable but invisible thanks to background-clip.
+    width: 24px;
+    height: 24px;
+    padding: 8px;
     border-radius: 20px;
     border: none;
     // Fixed whites: the dots sit over photos/gradient, not over the page bg
-    background: rgba(255, 255, 255, 0.5);
+    background-color: rgba(255, 255, 255, 0.5);
+    background-clip: content-box;
     cursor: pointer;
     transition: width 0.25s ease, background-color 0.25s ease;
 
     &[aria-current="true"] {
-        width: 22px; // active dot stretches into a pill
-        background: $brand-blue-light;
+        width: 46px; // active dot stretches into a 30px pill
+        background-color: $brand-blue-light;
     }
 
     &:hover {
-        background: rgba(255, 255, 255, 0.85);
+        background-color: rgba(255, 255, 255, 0.85);
     }
 }

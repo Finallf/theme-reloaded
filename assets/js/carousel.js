@@ -66,7 +66,12 @@
 		var scrollDebounce;
 		track.addEventListener('scroll', function () {
 			clearTimeout(scrollDebounce);
-			scrollDebounce = setTimeout(syncFromScroll, 120);
+			scrollDebounce = setTimeout(function () {
+				// rAF aligns the geometry reads with the frame, so they don't
+				// force an extra synchronous layout when other scripts (ads)
+				// dirtied the tree between the debounce and the next paint.
+				window.requestAnimationFrame(syncFromScroll);
+			}, 120);
 		}, { passive: true });
 
 		/* --- Autoplay --- */
@@ -119,7 +124,13 @@
 			}, { threshold: 0.25 }).observe(root);
 		}
 
-		syncFromScroll();
+		// No eager syncFromScroll() here: at load the track sits at
+		// scrollLeft 0, index starts at 0 and PHP already marks dot 1 with
+		// aria-current — there is nothing to sync, and the geometry reads
+		// would force a full synchronous layout right at DOMContentLoaded
+		// (Lighthouse flagged 92ms of forced reflow). The rare restored
+		// scroll position (back/refresh) fires a scroll event and lands in
+		// the debounced listener above anyway.
 		root.classList.add('is-ready'); // reveals arrows/dots (CSS gate)
 		start();
 	}
