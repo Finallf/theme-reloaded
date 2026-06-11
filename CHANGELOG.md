@@ -7,6 +7,24 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 <br>
 
 
+## [1.7.0](https://github.com/Finallf/theme-reloaded/compare/v1.6.2...v1.7.0) (2026-06-11)
+
+### ✨ Features
+
+* **self-update:** one-click update from the Dashboard card ([58b8605](https://github.com/Finallf/theme-reloaded/commit/58b8605c8edae6c34f162bdc518a82d596017d81))
+
+### 🐛 Bug Fixes
+
+* **ads:** rename reserved keyword $match parameter (PHPCS) ([eba974b](https://github.com/Finallf/theme-reloaded/commit/eba974b234dcde61553a42a14ec88111a2750c2c))
+
+### ⚡ Performance Improvements
+
+* PageSpeed wave — production audit fixes ([2fed78f](https://github.com/Finallf/theme-reloaded/commit/2fed78fcc421ae95381a59623ae57b6e94bd84c9))
+
+<br>
+
+---
+
 ## [1.7.0-beta.3](https://github.com/Finallf/theme-reloaded/compare/v1.7.0-beta.2...v1.7.0-beta.3) (2026-06-11)
 
 ### 🐛 Bug Fixes
