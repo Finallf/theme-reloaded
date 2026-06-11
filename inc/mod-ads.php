@@ -65,13 +65,13 @@ function rd_ads_dedupe_loader( string $html ): string {
 
 	return (string) preg_replace_callback(
 		'#<script\b[^>]*\bsrc=["\']([^"\']+)["\'][^>]*>\s*</script>#i',
-		function ( $match ) use ( &$seen ) {
-			$src = $match[1];
+		function ( $matches ) use ( &$seen ) {
+			$src = $matches[1];
 			if ( isset( $seen[ $src ] ) ) {
 				return ''; // loader already on the page — drop the duplicate
 			}
 			$seen[ $src ] = true;
-			return $match[0];
+			return $matches[0];
 		},
 		$html
 	);
