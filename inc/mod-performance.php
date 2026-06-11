@@ -116,6 +116,12 @@ function rd_scripts() {
 			wp_enqueue_script( 'rd-prism-js', get_template_directory_uri() . '/lib/prism.js', array(), '1.30.0', true );
 		}
 	}
+
+	// AJAX comment submit — only where a comment form can render. Used to live
+	// inside navigation.js, shipping dead code to every commentless page.
+	if ( is_singular() && comments_open() ) {
+		wp_enqueue_script( 'rd-comments', get_template_directory_uri() . '/assets/js/comments.js', array(), rd_asset_version( '/assets/js/comments.js' ), true );
+	}
 }
 
 /*******************************************************************************
@@ -130,7 +136,20 @@ function rd_scripts() {
  * 'defer'` (WP 6.3+) to keep compatibility with the minimum version.          *
  *******************************************************************************/
 function rd_defer_theme_scripts( $tag, $handle ) {
-	$deferred = array( 'rd-navigation', 'rd-prism-js' );
+	// Every handle here must be defer-safe: no top-level DOM reads outside a
+	// DOMContentLoaded listener, and no inline script depending on it having
+	// run. All current theme scripts gate their work on DOMContentLoaded.
+	$deferred = array(
+		'rd-navigation',
+		'rd-prism-js',
+		'rd-carousel',
+		// rd-search-suggestions is no longer enqueued — it is lazy-injected on
+		// the first focus of a search field (mod-search-suggestions.php).
+		'rd-views-tracker',
+		'rd-toc',
+		'rd-comments',
+		'rd-search-layout',
+	);
 	if ( in_array( $handle, $deferred, true ) && strpos( $tag, ' defer' ) === false ) {
 		$tag = str_replace( '<script ', '<script defer ', $tag );
 	}

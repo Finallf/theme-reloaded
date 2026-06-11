@@ -42,6 +42,7 @@ if ( ! function_exists( 'rd_setup' ) ) :
 			add_image_size( 'rd-popular-thumb', 200, 113, true ); // "Most Read" widget — display 100x56 (16:9) with DPR 2x retina = 200x113. Previously used WP's 'medium' (300x300, no fixed aspect-ratio), which served the giant original (up to 2560x1429) when medium did not cover it.
 			add_image_size( 'rd-card-half', 400, 225, true );     // Post-grid cards on intermediate viewports (display ~390x220). Leverages WP's auto srcset — browser picks this one when display falls between rd-micro and rd-card. Previously WP served rd-card 600x338 (overkill at DPR 1x) or the original.
 			add_image_size( 'rd-card', 600, 338, true );          // Size for the Home cards.
+			add_image_size( 'rd-card-wide', 800, 450, true );     // Mid step between rd-card and rd-full-banner: carousel slides (~630px) and hero cards (~700px) sat in that gap, forcing the 1200w candidate (PageSpeed: "image larger than needed"). Also covers mobile carousel at DPR 2 (363x2=726).
 			add_image_size( 'rd-full-banner', 1200, 675, true );  // Size for the banner at the top of the post.
 			add_image_size( 'rd-qr', 240, 240, true );            // Donation block QR codes (sidebar). Real display ~160-200px; 240 covers retina without wasting bandwidth like the 635x635 source admins usually upload.
 		}

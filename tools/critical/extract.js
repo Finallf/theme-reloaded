@@ -86,6 +86,13 @@ async function extractTemplate(templateKey) {
                 timeout: 60000,
                 renderWaitTime: 500,
                 blockJSRequests: false,
+                // Regras que o penthouse descarta por não casarem com o DOM no
+                // momento do snapshot, mas que precisam estar no first paint:
+                // o carousel ganha .is-ready via JS ANTES do snapshot, então o
+                // seletor :not(.is-ready) (que esconde setas/dots até o JS
+                // iniciar) nunca casa durante a extração — sem ele inline, os
+                // controles aparecem mortos antes do carousel.js carregar.
+                forceInclude: [/\.rd-carousel:not\(\.is-ready\)/],
                 // Usa Chrome do sistema em vez do Chromium bundled (que vem com
                 // o Puppeteer 2.1.1 obsoleto do critical e tem problemas no Win)
                 puppeteer: {
@@ -117,10 +124,83 @@ async function extractTemplate(templateKey) {
 
         const sizeKb = (Buffer.byteLength(css, 'utf8') / 1024).toFixed(2);
         console.log(`  ✓ Saved ${sizeKb} KB of critical CSS`);
+
+        await auditCoverage(targetUrl, css, templateKey);
     } catch (err) {
         console.error(`\n[ERROR] Failed to extract critical CSS for "${templateKey}":`);
         console.error(err.message || err);
         process.exit(1);
+    }
+}
+
+// Watchlist de módulos above-the-fold POR TEMPLATE. São os módulos togglables
+// do painel que, quando ativos em produção, renderizam acima do fold — ou
+// seja: se um deles estiver desligado no sandbox na hora da extração, o
+// critical sai sem as regras dele e produção pinta o módulo "pelado" no first
+// paint (caso real: carousel OFF durante um critical:all → CLS de 0,94 em
+// produção). Comparar DOM × critical não pega esse caso — toggle OFF remove o
+// módulo do DOM também e a comparação "bate" — daí a lista explícita.
+// `_all` aplica a todos os templates. Ativou feature nova above-the-fold no
+// painel? Adicionar o módulo aqui.
+const ABOVE_FOLD_WATCH = {
+    _all: ['rd-top-bar'], // top bar + ticker (header.php, todos os templates)
+    home: ['rd-carousel'],
+};
+
+/**
+ * Guard de cobertura: pra cada módulo da watchlist, confere as duas pontas —
+ * (1) o módulo existe no DOM da página do sandbox? (não existir = toggle OFF
+ * ou conteúdo faltando → sandbox não espelha produção); (2) existindo no DOM,
+ * sobrou regra dele no critical gerado? (não sobrar = anomalia de extração).
+ * Best-effort e não-bloqueante: avisa e segue.
+ *
+ * "Módulo" = classe normalizada até o bloco BEM: rd-carousel__track e
+ * rd-carousel--x contam ambos como rd-carousel.
+ */
+async function auditCoverage(targetUrl, css, templateKey) {
+    const toModule = (cls) => cls.split('__')[0].split('--')[0];
+    const watch = [...ABOVE_FOLD_WATCH._all, ...(ABOVE_FOLD_WATCH[templateKey] || [])];
+
+    try {
+        const res = await fetch(targetUrl);
+        if (!res.ok) {
+            throw new Error(`HTTP ${res.status}`);
+        }
+        const html = await res.text();
+
+        const domModules = new Set();
+        for (const m of html.matchAll(/class=["']([^"']+)["']/g)) {
+            for (const cls of m[1].split(/\s+/)) {
+                if (cls.startsWith('rd-')) {
+                    domModules.add(toModule(cls));
+                }
+            }
+        }
+
+        const cssModules = new Set();
+        for (const m of css.matchAll(/\.(rd-[\w-]+)/g)) {
+            cssModules.add(toModule(m[1]));
+        }
+
+        let ok = true;
+        for (const mod of watch) {
+            if (!domModules.has(mod)) {
+                ok = false;
+                console.warn(`  ⚠ Coverage: "${mod}" is expected above the fold but is NOT in the page DOM.`);
+                console.warn('    Sandbox is not mirroring production (toggle OFF? missing content?).');
+                console.warn(`    Fix the sandbox state and re-run npm run critical:${templateKey}`);
+            } else if (!cssModules.has(mod)) {
+                ok = false;
+                console.warn(`  ⚠ Coverage: "${mod}" is in the page DOM but has NO rule in the generated critical.`);
+                console.warn('    Extraction anomaly — inspect before shipping this file.');
+            }
+        }
+        if (ok) {
+            console.log(`  ✓ Coverage: above-the-fold watchlist OK (${watch.join(', ')})`);
+        }
+    } catch (err) {
+        // Auditoria é best-effort: falha de rede aqui não invalida a extração.
+        console.warn(`  (coverage check skipped: ${err.message || err})`);
     }
 }
 

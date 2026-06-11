@@ -963,10 +963,12 @@ jQuery(document).ready(function($){
  * ===================================================================== */
 
 /**
- * Image Formats — Regeneration UI
+ * Image Formats — Regeneration + format-cleanup UI
  *
  * Handler for the "Start regeneration" button on the panel's Performance tab.
- * AJAX loop in chunks (10 attachments per request) with a progress bar.
+ * AJAX loop in time-budgeted chunks (server stops early when the PHP time
+ * budget is spent and reports how far it got) with a progress bar. Also the
+ * "Remove unused format" button (single-shot AJAX).
  *
  * Data localized by wp_localize_script('rd_img_regen', ...):
  *   - ajaxurl
@@ -1036,7 +1038,11 @@ jQuery(document).ready(function($){
                         .replace('%pct', pct);
 
                     if (data.data.done) {
-                        status.textContent = (t.done || 'Done! Processed %t images.').replace('%t', totalRet);
+                        let doneMsg = (t.done || 'Done! Processed %t images.').replace('%t', totalRet);
+                        if (data.data.failed > 0) {
+                            doneMsg += ' ' + (t.failures || '%f conversions failed.').replace('%f', data.data.failed);
+                        }
+                        status.textContent = doneMsg;
                         btn.disabled = false;
                         return;
                     }
@@ -1050,5 +1056,46 @@ jQuery(document).ready(function($){
                 });
             }
         });
+
+        // --- Cleanup of unused next-gen formats (mode-switch leftovers) ---
+        const cleanupBtn    = document.getElementById('rd-img-cleanup-start');
+        const cleanupStatus = document.getElementById('rd-img-cleanup-status');
+
+        if (cleanupBtn && cleanupStatus) {
+            cleanupBtn.addEventListener('click', function () {
+                if (!confirm(t.cleanup_confirm || 'Delete all files of the unused format?')) {
+                    return;
+                }
+
+                cleanupBtn.disabled = true;
+                cleanupStatus.textContent = (t.cleanup_busy || 'Cleaning…');
+
+                const body = new URLSearchParams({
+                    action: 'rd_img_cleanup_formats',
+                    nonce:  cleanupBtn.getAttribute('data-nonce')
+                });
+
+                fetch(ajaxurl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: body.toString(),
+                    credentials: 'same-origin'
+                })
+                .then(function (r) { return r.json(); })
+                .then(function (data) {
+                    if (!data || !data.success) {
+                        throw new Error((data && data.data) || 'unknown_error');
+                    }
+                    cleanupStatus.textContent = (t.cleanup_done || 'Removed %1$d files (%2$s KB freed).')
+                        .replace('%1$d', data.data.deleted)
+                        .replace('%2$s', data.data.freed_kb);
+                    cleanupBtn.disabled = false;
+                })
+                .catch(function (err) {
+                    cleanupStatus.textContent = (t.error || 'Error: ') + err.message;
+                    cleanupBtn.disabled = false;
+                });
+            });
+        }
     });
 })();

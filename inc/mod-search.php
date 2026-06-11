@@ -145,16 +145,25 @@ function rd_search_modify_query( $query ) {
 add_action( 'pre_get_posts', 'rd_search_modify_query' );
 
 /**
- * Exposes to the JS the data for AJAX redistribution.
- * Loads only on the search page.
+ * Enqueues the layout-control JS + its AJAX data.
+ * Loads only on the search page — the script used to live inside the global
+ * navigation.js, shipping ~7 KiB of dead code to every other page.
  */
 function rd_search_localize_script() {
 	if ( ! is_search() ) {
 		return;
 	}
 
+	wp_enqueue_script(
+		'rd-search-layout',
+		get_template_directory_uri() . '/assets/js/search-layout.js',
+		array(),
+		rd_asset_version( '/assets/js/search-layout.js' ),
+		true
+	);
+
 	wp_localize_script(
-		'rd-navigation',
+		'rd-search-layout',
 		'rd_search_data',
 		array(
 			'ajaxurl' => admin_url( 'admin-ajax.php' ),

@@ -40,13 +40,50 @@ add_action( 'init', 'rd_ads_serve_ads_txt', 2 );
 /*******************************************************************************
  * Rendering of Ads and Banners - (Desktop and Mobile)                 - (ADS) *
  *******************************************************************************/
+
+/**
+ * Strips duplicate ad-network loader <script src> tags at render time.
+ *
+ * Every AdSense unit pasted in the panel/widgets ships its own
+ * `<script async src=".../adsbygoogle.js?client=...">` — with top banner +
+ * mobile anchor + sidebar sticky + widgets, the page carried 5 copies of the
+ * same loader (PageSpeed listed each one). Google's recommended pattern is ONE
+ * loader per page serving every <ins> unit; the per-unit
+ * `(adsbygoogle=[]).push({})` calls just queue until it executes, so keeping
+ * only the FIRST occurrence (in render order) is safe.
+ *
+ * Deduped by exact src URL: units from different client IDs (rare multi-account
+ * setups) keep their own loader. Static cache = per request, so every page
+ * render starts fresh. Generic by design — any duplicated external loader
+ * (GAM's gpt.js, etc.) gets the same treatment.
+ *
+ * @param string $html Ad code (after CSP nonce injection).
+ * @return string Same HTML with already-seen loader <script> tags removed.
+ */
+function rd_ads_dedupe_loader( string $html ): string {
+	static $seen = array();
+
+	return (string) preg_replace_callback(
+		'#<script\b[^>]*\bsrc=["\']([^"\']+)["\'][^>]*>\s*</script>#i',
+		function ( $match ) use ( &$seen ) {
+			$src = $match[1];
+			if ( isset( $seen[ $src ] ) ) {
+				return ''; // loader already on the page — drop the duplicate
+			}
+			$seen[ $src ] = true;
+			return $match[0];
+		},
+		$html
+	);
+}
+
 function rd_render_ad_topo() {
 	// 1. Renders the top banner (Desktop)
 	$ad_desktop = rd_get_option( 'ad_topo_desktop' );
 
 	if ( ! empty( $ad_desktop ) ) {
 		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- BY DESIGN: ad codes (AdSense, GAM, etc) require raw HTML/JS. Admin with manage_options trusted under WP model. CSP nonce injected automatically into <script> tags via rd_csp_inject_nonce().
-		echo '<div class="rd-ad-container rd-ad-desktop">' . rd_csp_inject_nonce( $ad_desktop ) . '</div>';
+		echo '<div class="rd-ad-container rd-ad-desktop">' . rd_ads_dedupe_loader( rd_csp_inject_nonce( $ad_desktop ) ) . '</div>';
 	}
 }
 
@@ -66,7 +103,7 @@ function rd_render_ad_mobile_anchor() {
 		echo '</div>';
 
 		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- BY DESIGN: ad codes (AdSense, GAM, etc) require raw HTML/JS. Admin with manage_options trusted under WP model. CSP nonce injected automatically into <script> tags via rd_csp_inject_nonce().
-		echo rd_csp_inject_nonce( $ad_mobile );
+		echo rd_ads_dedupe_loader( rd_csp_inject_nonce( $ad_mobile ) );
 		echo '</div>';
 	}
 }
@@ -80,6 +117,6 @@ function rd_render_ad_sidebar_sticky() {
 	$ad_sidebar_sticky = rd_get_option( 'ad_sidebar_sticky' );
 	if ( ! empty( $ad_sidebar_sticky ) ) {
 		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- BY DESIGN: ad codes (AdSense, GAM, etc) require raw HTML/JS. Admin with manage_options trusted under WP model. CSP nonce injected automatically into <script> tags via rd_csp_inject_nonce().
-		echo '<div class="rd-ad-container rd-ad-sticky">' . rd_csp_inject_nonce( $ad_sidebar_sticky ) . '</div>';
+		echo '<div class="rd-ad-container rd-ad-sticky">' . rd_ads_dedupe_loader( rd_csp_inject_nonce( $ad_sidebar_sticky ) ) . '</div>';
 	}
 }

@@ -45,6 +45,12 @@ class RD_Ad_Widget extends WP_Widget {
 		// CSP nonce on <script> tags (defensive: mod-csp may be absent in edge cases).
 		$code_out = function_exists( 'rd_csp_inject_nonce' ) ? rd_csp_inject_nonce( $code ) : $code;
 
+		// Drop duplicate network loader scripts (one adsbygoogle.js per page —
+		// see rd_ads_dedupe_loader in mod-ads.php).
+		if ( function_exists( 'rd_ads_dedupe_loader' ) ) {
+			$code_out = rd_ads_dedupe_loader( $code_out );
+		}
+
 		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- WP widget API convention: before_widget is structural HTML from register_sidebar()
 		echo $args['before_widget'];
 

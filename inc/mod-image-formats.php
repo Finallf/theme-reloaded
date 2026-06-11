@@ -4,8 +4,8 @@ defined( 'ABSPATH' ) || exit;
 /*******************************************************************************
  * Module: Image Formats (WebP/AVIF) — Next-gen image delivery                 *
  *                                                                             *
- * Automatically generates WebP and/or AVIF versions of every JPEG/PNG image on*
- * upload (all WP sizes + the theme's custom sizes). Delivers via              *
+ * Automatically generates WebP and/or AVIF versions of every JPEG/PNG/WebP    *
+ * image on upload (all WP sizes + the theme's custom sizes). Delivers via     *
  * <picture> with transparent fallback to the original.                        *
  *                                                                             *
  * Server requirements (degrades gracefully — no hard dependency):             *
@@ -19,10 +19,11 @@ defined( 'ABSPATH' ) || exit;
  *   - Browser picks a compatible <source type>, falls back to original <img>  *
  *   - AVIF before WebP in <picture> (better compression for those who support)*
  *                                                                             *
- * Coverage (Phase 1):                                                         *
+ * Coverage:                                                                   *
  *   ✅ Featured images, post thumbnails, post-card, galleries via              *
- *      wp_get_attachment_image                                                *
- *   ⏳ Inline images from the Gutenberg editor (block core/image) — Phase 2    *
+ *      wp_get_attachment_image (rd_img_wrap_in_picture)                       *
+ *   ✅ Inline images in post content — Gutenberg core/image, Markdown, raw     *
+ *      HTML (rd_img_wrap_content_images)                                      *
  ******************************************************************************/
 
 const RD_IMG_REGEN_CHUNK = 10;
@@ -46,13 +47,27 @@ function rd_img_get_mode(): string {
 /**
  * Quality unified with the panel's global config (`jpeg_quality` in
  * General Settings). The same value is applied to JPEG (via WP filter in
- * mod-general.php) and to the WebP/AVIF we generate here — full coherence: if
- * the admin changes it to 85, all formats become 85. Default 80 if the key
+ * mod-general.php) and to the WebP we generate here. Default 80 if the key
  * isn't in rd_settings or if the value is invalid. Defensive 1-100 clamp.
  */
 function rd_img_get_quality(): int {
 	$quality = (int) rd_get_option( 'jpeg_quality', 80 );
 	return max( 1, min( 100, $quality ) );
+}
+
+/**
+ * Per-format quality. The 0-100 scale is NOT portable across codecs: AVIF at
+ * the JPEG's q80 produces bloated files (PageSpeed flagged a 139 KiB AVIF
+ * that q55-60 encodes visually identical at ~50-60 KiB). JPEG/WebP keep the
+ * panel value; AVIF gets a -20 offset with a floor of 45 — tracks the admin's
+ * quality intent while staying in AVIF's efficient range.
+ */
+function rd_img_get_quality_for( string $format ): int {
+	$quality = rd_img_get_quality();
+	if ( 'avif' === $format ) {
+		return max( 45, $quality - 20 );
+	}
+	return $quality;
 }
 
 /*
@@ -113,10 +128,11 @@ function rd_img_can_generate( string $format ): bool {
  * @return string|false Path of the generated file or false on failure
  */
 function rd_img_convert( string $source_path, string $target_format, ?int $quality = null ) {
-	// Quality default: read from the panel (same config as JPEGs) — full coherence.
-	// Override via parameter allows programmatic use with a specific value.
+	// Quality default: per-format value derived from the panel config (AVIF
+	// gets its own scale — see rd_img_get_quality_for). Override via parameter
+	// allows programmatic use with a specific value.
 	if ( $quality === null ) {
-		$quality = rd_img_get_quality();
+		$quality = rd_img_get_quality_for( $target_format );
 	}
 	if ( ! file_exists( $source_path ) ) {
 		return false;
@@ -126,28 +142,30 @@ function rd_img_convert( string $source_path, string $target_format, ?int $quali
 	}
 
 	$ext = strtolower( pathinfo( $source_path, PATHINFO_EXTENSION ) );
-	if ( ! in_array( $ext, array( 'jpg', 'jpeg', 'png' ), true ) ) {
+	if ( ! in_array( $ext, array( 'jpg', 'jpeg', 'png', 'webp' ), true ) ) {
 		return false;
 	}
 
-	$target_path = preg_replace( '/\.(jpe?g|png)$/i', '.' . $target_format, $source_path );
+	$target_path = preg_replace( '/\.(jpe?g|png|webp)$/i', '.' . $target_format, $source_path );
 	if ( $target_path === $source_path ) {
-		return false;
+		return false; // same-format conversion (webp → webp) — nothing to do
 	}
 
 	$caps = rd_img_get_capabilities();
 
 	// Engine decision by format + source:
-	// - WebP from any format → Imagick (superior quality, alpha OK)
+	// - WebP from JPEG/PNG → Imagick (superior quality, alpha OK)
 	// - AVIF from JPEG → Imagick (superior quality, JPEG has no alpha)
-	// - AVIF from PNG → SKIP Imagick, go straight to GD
+	// - AVIF from PNG or WebP → SKIP Imagick, go straight to GD
 	// Reason: ImageMagick 6 + libheif has a historical bug that replaces
 	// transparent backgrounds with black when generating AVIF. ImageMagick 7 may
-	// fix it but it depends on the exact server version. Portable solution: for PNG
-	// (which potentially has alpha) use GD, which has native + correct support for
-	// AVIF with transparency (PHP 8.1+).
+	// fix it but it depends on the exact server version. Portable solution: for
+	// sources that potentially carry alpha (PNG, WebP) use GD, which has native +
+	// correct support for AVIF with transparency (PHP 8.1+). Animated WebP is a
+	// non-issue here: GD can't load it, the conversion fails gracefully and the
+	// original keeps being served as-is.
 	// Ref: https://alexwlchan.net/2023/check-for-transparency/
-	$force_gd_for_avif = ( $target_format === 'avif' && $ext === 'png' );
+	$force_gd_for_avif = ( $target_format === 'avif' && in_array( $ext, array( 'png', 'webp' ), true ) );
 
 	// 1st attempt: Imagick (skip if PNG → AVIF)
 	if ( ! $force_gd_for_avif && $caps['imagick'] && $caps[ $target_format . '_imagick' ] ) {
@@ -175,6 +193,7 @@ function rd_img_convert( string $source_path, string $target_format, ?int $quali
 			$img->writeImage( $target_path );
 			$img->clear();
 			$img->destroy();
+			rd_img_conversion_stats( 'converted' );
 			return $target_path;
 		} catch ( Exception $e ) {
 			if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
@@ -207,24 +226,66 @@ function rd_img_convert( string $source_path, string $target_format, ?int $quali
 				imagealphablending( $img, false );
 				imagesavealpha( $img, true );
 			}
+		} elseif ( $ext === 'webp' && function_exists( 'imagecreatefromwebp' ) ) {
+			// phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged -- animated WebP makes imagecreatefromwebp fail with a warning; we prefer the silent null (checked below) and keep serving the original.
+			$img = @imagecreatefromwebp( $source_path );
+			if ( $img ) {
+				// WebP may carry alpha — same preservation dance as PNG
+				// (already TrueColor, no palette conversion needed).
+				imagealphablending( $img, false );
+				imagesavealpha( $img, true );
+			}
 		}
 		if ( ! $img ) {
+			rd_img_conversion_stats( 'failed' );
 			return false;
 		}
 
 		$func = 'image' . $target_format;
 		if ( ! function_exists( $func ) ) {
 			imagedestroy( $img );
+			rd_img_conversion_stats( 'failed' );
 			return false;
 		}
 
 		// phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged -- imagewebp/imageavif emit a warning on encode/write failure; we check $success in the `return` below.
 		$success = @$func( $img, $target_path, $quality );
 		imagedestroy( $img );
+		rd_img_conversion_stats( $success ? 'converted' : 'failed' );
 		return $success ? $target_path : false;
 	}
 
+	// No capable engine for this format — counts as a failure so the regen
+	// summary surfaces it (otherwise it dies silently in production).
+	rd_img_conversion_stats( 'failed' );
 	return false;
+}
+
+/**
+ * Per-request conversion counters — gives the regeneration flow (and the
+ * panel's "last run" summary) visibility into silent failures that previously
+ * only surfaced in the debug log with WP_DEBUG on.
+ *
+ * @param string $op 'get' (default) returns the counters; 'reset' zeroes
+ *                   them; 'converted'/'failed' bumps that counter.
+ * @return array{converted:int,failed:int} Current counters.
+ */
+function rd_img_conversion_stats( string $op = 'get' ): array {
+	static $stats = array(
+		'converted' => 0,
+		'failed'    => 0,
+	);
+
+	if ( 'reset' === $op ) {
+		$stats = array(
+			'converted' => 0,
+			'failed'    => 0,
+		);
+	} elseif ( isset( $stats[ $op ] ) ) {
+		++$stats[ $op ];
+	}
+
+	return $stats;
 }
 
 /*
@@ -285,10 +346,12 @@ function rd_img_generate_on_upload( $metadata, $attachment_id ) {
 
 	foreach ( $files as $file ) {
 		$ext = strtolower( pathinfo( $file, PATHINFO_EXTENSION ) );
-		if ( ! in_array( $ext, array( 'jpg', 'jpeg', 'png' ), true ) ) {
+		if ( ! in_array( $ext, array( 'jpg', 'jpeg', 'png', 'webp' ), true ) ) {
 			continue;
 		}
 
+		// webp → webp is a no-op (rd_img_convert's same-path guard), so WebP
+		// uploads only produce the AVIF twin — exactly what we want.
 		if ( $do_webp ) {
 			rd_img_convert( $file, 'webp' );
 		}
@@ -341,37 +404,15 @@ add_filter( 'wp_generate_attachment_metadata', 'rd_img_generate_on_upload', 10, 
  *               ordered AVIF → WebP (browser picks the first compatible one).
  */
 function rd_img_get_nextgen_sources_for_url( string $url ): array {
-	if ( '' === $url ) {
-		return array();
-	}
-
-	$ext = strtolower( pathinfo( (string) wp_parse_url( $url, PHP_URL_PATH ), PATHINFO_EXTENSION ) );
-	if ( ! in_array( $ext, array( 'jpg', 'jpeg', 'png' ), true ) ) {
-		return array();
-	}
-
-	// Resolve absolute path to check existence of the next-gen files
-	$upload_dir = wp_upload_dir();
-	$base_url   = trailingslashit( $upload_dir['baseurl'] );
-	$base_dir   = trailingslashit( $upload_dir['basedir'] );
-
-	// URL outside uploads (external CDN, etc) — passes through transparently
-	if ( strpos( $url, $base_url ) !== 0 ) {
-		return array();
-	}
-
-	$relative = substr( $url, strlen( $base_url ) );
-	$abs_path = $base_dir . $relative;
-
 	$mode    = rd_img_get_mode();
 	$sources = array();
 
 	// AVIF first — better compression for browsers that support it
 	if ( ( $mode === 'both' || $mode === 'avif' ) && rd_img_can_generate( 'avif' ) ) {
-		$avif_path = preg_replace( '/\.(jpe?g|png)$/i', '.avif', $abs_path );
-		if ( file_exists( $avif_path ) ) {
+		$avif_url = rd_img_get_variant_url( $url, 'avif' );
+		if ( null !== $avif_url ) {
 			$sources[] = array(
-				'url'  => preg_replace( '/\.(jpe?g|png)$/i', '.avif', $url ),
+				'url'  => $avif_url,
 				'type' => 'image/avif',
 			);
 		}
@@ -379,16 +420,128 @@ function rd_img_get_nextgen_sources_for_url( string $url ): array {
 
 	// WebP second
 	if ( ( $mode === 'both' || $mode === 'webp' ) && rd_img_can_generate( 'webp' ) ) {
-		$webp_path = preg_replace( '/\.(jpe?g|png)$/i', '.webp', $abs_path );
-		if ( file_exists( $webp_path ) ) {
+		$webp_url = rd_img_get_variant_url( $url, 'webp' );
+		if ( null !== $webp_url ) {
 			$sources[] = array(
-				'url'  => preg_replace( '/\.(jpe?g|png)$/i', '.webp', $url ),
+				'url'  => $webp_url,
 				'type' => 'image/webp',
 			);
 		}
 	}
 
 	return $sources;
+}
+
+/**
+ * Resolves the next-gen variant URL for ONE original image URL.
+ *
+ * Returns null when the URL is empty/external (outside wp_upload_dir), the
+ * extension isn't jpg/jpeg/png, or the variant file doesn't exist on disk —
+ * callers drop the candidate and the browser falls back to the original.
+ *
+ * @param string $url    Absolute URL of the original image.
+ * @param string $format 'avif' or 'webp'.
+ * @return string|null URL of the existing variant, or null.
+ */
+function rd_img_get_variant_url( string $url, string $format ): ?string {
+	if ( '' === $url ) {
+		return null;
+	}
+
+	$ext = strtolower( pathinfo( (string) wp_parse_url( $url, PHP_URL_PATH ), PATHINFO_EXTENSION ) );
+	if ( ! in_array( $ext, array( 'jpg', 'jpeg', 'png', 'webp' ), true ) ) {
+		return null;
+	}
+
+	// Resolve absolute path to check existence of the next-gen file
+	$upload_dir = wp_upload_dir();
+	$base_url   = trailingslashit( $upload_dir['baseurl'] );
+	$base_dir   = trailingslashit( $upload_dir['basedir'] );
+
+	// URL outside uploads (external CDN, etc) — passes through transparently
+	if ( strpos( $url, $base_url ) !== 0 ) {
+		return null;
+	}
+
+	$abs_path     = $base_dir . substr( $url, strlen( $base_url ) );
+	$variant_path = preg_replace( '/\.(jpe?g|png|webp)$/i', '.' . $format, $abs_path );
+	if ( $variant_path === $abs_path ) {
+		return null; // webp "variant" of a webp original — the <img> already serves it
+	}
+	if ( ! file_exists( $variant_path ) ) {
+		return null;
+	}
+
+	return preg_replace( '/\.(jpe?g|png|webp)$/i', '.' . $format, $url );
+}
+
+/**
+ * Builds next-gen srcset strings mirroring an <img>'s srcset attribute.
+ *
+ * THE key piece of responsive next-gen delivery: a <source> with a single
+ * URL (the old behavior) makes every AVIF/WebP-capable browser ignore the
+ * <img>'s responsive srcset entirely and download that one fixed size —
+ * PageSpeed flagged 1200x675 AVIFs being served into ~630px slots. Mirroring
+ * the full candidate list (each URL swapped to the next-gen extension, same
+ * width descriptors) restores the browser's size selection.
+ *
+ * Candidates whose next-gen file doesn't exist on disk are dropped from that
+ * format's list (partial regeneration degrades gracefully).
+ *
+ * @param string $srcset       The <img> srcset attribute value ('' if absent).
+ * @param string $fallback_url Used as a single candidate when $srcset is empty.
+ * @return array Map of MIME type => srcset string ('image/avif' first).
+ *               Formats with no existing variant are omitted.
+ */
+function rd_img_get_nextgen_srcsets( string $srcset, string $fallback_url ): array {
+	$candidates = array();
+	if ( '' !== trim( $srcset ) ) {
+		foreach ( explode( ',', $srcset ) as $candidate ) {
+			$candidate = trim( $candidate );
+			if ( '' === $candidate ) {
+				continue;
+			}
+			// "url 600w" → URL + width descriptor (descriptor may be absent)
+			$parts        = preg_split( '/\s+/', $candidate, 2 );
+			$candidates[] = array(
+				'url'  => $parts[0],
+				'desc' => isset( $parts[1] ) ? $parts[1] : '',
+			);
+		}
+	} elseif ( '' !== $fallback_url ) {
+		$candidates[] = array(
+			'url'  => $fallback_url,
+			'desc' => '',
+		);
+	}
+	if ( empty( $candidates ) ) {
+		return array();
+	}
+
+	$mode    = rd_img_get_mode();
+	$formats = array();
+	if ( ( $mode === 'both' || $mode === 'avif' ) && rd_img_can_generate( 'avif' ) ) {
+		$formats['image/avif'] = 'avif';
+	}
+	if ( ( $mode === 'both' || $mode === 'webp' ) && rd_img_can_generate( 'webp' ) ) {
+		$formats['image/webp'] = 'webp';
+	}
+
+	$srcsets = array();
+	foreach ( $formats as $type => $format ) {
+		$entries = array();
+		foreach ( $candidates as $candidate ) {
+			$variant = rd_img_get_variant_url( $candidate['url'], $format );
+			if ( null !== $variant ) {
+				$entries[] = trim( $variant . ' ' . $candidate['desc'] );
+			}
+		}
+		if ( ! empty( $entries ) ) {
+			$srcsets[ $type ] = implode( ', ', $entries );
+		}
+	}
+
+	return $srcsets;
 }
 
 /**
@@ -442,12 +595,33 @@ function rd_img_wrap_in_picture( $html, $attachment_id, $size, $icon, $attr ) {
 		return $html;
 	}
 
-	$src = wp_get_attachment_image_src( $attachment_id, $size );
-	if ( ! $src ) {
+	// Mirror the <img>'s responsive attributes into the <source> tags. WP
+	// builds the tag with double-quoted attributes — safe to capture directly.
+	$srcset = '';
+	$sizes  = '';
+	if ( preg_match( '/\ssrcset="([^"]*)"/', $html, $m ) ) {
+		$srcset = wp_specialchars_decode( $m[1] );
+	}
+	if ( preg_match( '/\ssizes="([^"]*)"/', $html, $m ) ) {
+		$sizes = wp_specialchars_decode( $m[1] );
+	}
+
+	$src      = wp_get_attachment_image_src( $attachment_id, $size );
+	$fallback = $src ? $src[0] : '';
+
+	$srcsets = rd_img_get_nextgen_srcsets( $srcset, $fallback );
+	if ( empty( $srcsets ) ) {
 		return $html;
 	}
 
-	return rd_img_wrap_url_in_picture( $src[0], $html );
+	$sources_html = '';
+	foreach ( $srcsets as $type => $set ) {
+		$sources_html .= '<source srcset="' . esc_attr( $set ) . '"'
+			. ( '' !== $sizes ? ' sizes="' . esc_attr( $sizes ) . '"' : '' )
+			. ' type="' . esc_attr( $type ) . '">';
+	}
+
+	return '<picture>' . $sources_html . $html . '</picture>';
 }
 add_filter( 'wp_get_attachment_image', 'rd_img_wrap_in_picture', 10, 5 );
 
@@ -518,10 +692,14 @@ function rd_img_wrap_content_images( $content ) {
 			continue;
 		}
 
-		$sources = rd_img_get_nextgen_sources_for_url( $src );
-		if ( empty( $sources ) ) {
+		// Mirror the <img>'s srcset/sizes into each <source> — same rationale
+		// as rd_img_wrap_in_picture(): a single-URL source disables the
+		// browser's responsive size selection for next-gen formats.
+		$srcsets = rd_img_get_nextgen_srcsets( $img->getAttribute( 'srcset' ), $src );
+		if ( empty( $srcsets ) ) {
 			continue;
 		}
+		$sizes = $img->getAttribute( 'sizes' );
 
 		// Create <picture> and populate it with <source> via direct createElement.
 		// (We tried appendXML before but DOMDocumentFragment requires strict XML —
@@ -529,10 +707,13 @@ function rd_img_wrap_content_images( $content ) {
 		// warning. createElement + setAttribute is the correct API to build
 		// new elements in the existing DOM tree.)
 		$picture = $dom->createElement( 'picture' );
-		foreach ( $sources as $source ) {
+		foreach ( $srcsets as $type => $set ) {
 			$source_el = $dom->createElement( 'source' );
-			$source_el->setAttribute( 'srcset', $source['url'] );
-			$source_el->setAttribute( 'type', $source['type'] );
+			$source_el->setAttribute( 'srcset', $set );
+			if ( '' !== $sizes ) {
+				$source_el->setAttribute( 'sizes', $sizes );
+			}
+			$source_el->setAttribute( 'type', $type );
 			$picture->appendChild( $source_el );
 		}
 
@@ -653,12 +834,12 @@ function rd_img_cleanup_on_delete( $attachment_id ) {
 
 	foreach ( $files as $file ) {
 		$ext = strtolower( pathinfo( $file, PATHINFO_EXTENSION ) );
-		if ( ! in_array( $ext, array( 'jpg', 'jpeg', 'png' ), true ) ) {
+		if ( ! in_array( $ext, array( 'jpg', 'jpeg', 'png', 'webp' ), true ) ) {
 			continue;
 		}
 
 		foreach ( array( 'webp', 'avif' ) as $fmt ) {
-			$next_gen = preg_replace( '/\.(jpe?g|png)$/i', '.' . $fmt, $file );
+			$next_gen = preg_replace( '/\.(jpe?g|png|webp)$/i', '.' . $fmt, $file );
 			if ( $next_gen !== $file && file_exists( $next_gen ) ) {
 				wp_delete_file( $next_gen );
 			}
@@ -673,7 +854,7 @@ add_action( 'delete_attachment', 'rd_img_cleanup_on_delete' );
  * ============================================================================= */
 
 /**
- * Counts total JPEG/PNG attachments in the Media Library (for the progress bar).
+ * Counts total JPEG/PNG/WebP attachments in the Media Library (for the progress bar).
  */
 function rd_img_count_attachments(): int {
 	global $wpdb;
@@ -684,12 +865,29 @@ function rd_img_count_attachments(): int {
 		$wpdb->prepare(
 			"SELECT COUNT(*) FROM {$wpdb->posts}
          WHERE post_type = %s
-         AND post_mime_type IN (%s, %s)",
+         AND post_mime_type IN (%s, %s, %s)",
 			'attachment',
 			'image/jpeg',
-			'image/png'
+			'image/png',
+			'image/webp'
 		)
 	);
+}
+
+/**
+ * Time budget (seconds) for one regeneration chunk. AVIF encoding is slow
+ * (1-3s per large image × all sizes × formats), so a fixed-count chunk can
+ * blow past max_execution_time on constrained hosts. Half the PHP limit,
+ * capped at 20s (the AJAX loop prefers many quick round-trips), floor of 5s
+ * so at least some work happens per request. ini value 0/absent = unlimited
+ * → use the 20s cap.
+ */
+function rd_img_regen_time_budget(): int {
+	$max_exec = (int) ini_get( 'max_execution_time' );
+	if ( $max_exec <= 0 ) {
+		return 20;
+	}
+	return max( 5, min( 20, (int) floor( $max_exec / 2 ) ) );
 }
 
 /**
@@ -712,7 +910,7 @@ function rd_img_ajax_regenerate() {
 	$attachments = get_posts(
 		array(
 			'post_type'      => 'attachment',
-			'post_mime_type' => array( 'image/jpeg', 'image/png' ),
+			'post_mime_type' => array( 'image/jpeg', 'image/png', 'image/webp' ),
 			'posts_per_page' => RD_IMG_REGEN_CHUNK,
 			'offset'         => $offset,
 			'orderby'        => 'ID',
@@ -727,9 +925,20 @@ function rd_img_ajax_regenerate() {
 	require_once ABSPATH . 'wp-admin/includes/file.php';
 	require_once ABSPATH . 'wp-admin/includes/media.php';
 
+	rd_img_conversion_stats( 'reset' );
+
+	// RD_IMG_REGEN_CHUNK is the upper bound per request; the time budget is
+	// the real limiter — the loop stops early (after finishing the current
+	// attachment) when the budget is spent, and the JS resumes from the actual
+	// count processed. At least 1 attachment per request → always progresses.
+	$budget    = rd_img_regen_time_budget();
+	$started   = microtime( true );
+	$processed = 0;
+
 	foreach ( $attachments as $attachment_id ) {
 		$file = get_attached_file( $attachment_id );
 		if ( ! $file || ! file_exists( $file ) ) {
+			++$processed;
 			continue; // orphaned attachment (DB has a record but the file is gone) — skip
 		}
 
@@ -742,20 +951,134 @@ function rd_img_ajax_regenerate() {
 		if ( is_array( $new_metadata ) ) {
 			wp_update_attachment_metadata( $attachment_id, $new_metadata );
 		}
+
+		++$processed;
+		if ( ( microtime( true ) - $started ) > $budget ) {
+			break;
+		}
 	}
 
-	$processed_so_far = $offset + count( $attachments );
+	$stats            = rd_img_conversion_stats();
+	$processed_so_far = $offset + $processed;
 	$done             = $processed_so_far >= $total || empty( $attachments );
+
+	// Cumulative "last run" summary shown in the panel. offset 0 = a fresh run
+	// starts the counters; later chunks accumulate on top.
+	$summary = ( 0 === $offset ) ? array(
+		'converted' => 0,
+		'failed'    => 0,
+	) : (array) get_option( 'rd_img_last_regen', array() );
+
+	$summary = array(
+		'time'      => time(),
+		'converted' => (int) ( $summary['converted'] ?? 0 ) + $stats['converted'],
+		'failed'    => (int) ( $summary['failed'] ?? 0 ) + $stats['failed'],
+		'done'      => $done,
+	);
+	update_option( 'rd_img_last_regen', $summary, false );
 
 	wp_send_json_success(
 		array(
 			'processed' => $processed_so_far,
 			'total'     => $total,
 			'done'      => $done,
+			'converted' => $summary['converted'],
+			'failed'    => $summary['failed'],
 		)
 	);
 }
 add_action( 'wp_ajax_rd_img_regenerate', 'rd_img_ajax_regenerate' );
+
+/*
+=============================================================================
+ *  CLEANUP OF UNUSED FORMATS (mode switch leftovers)
+ * ============================================================================= */
+
+/**
+ * AJAX handler: deletes next-gen files of formats NOT covered by the current
+ * Format Mode. Switching e.g. 'both' → 'avif' used to leave every .webp on
+ * disk forever (they were only removed when the attachment itself was
+ * deleted). Walks all image attachments and unlinks the stale twins.
+ *
+ * Single-shot (no chunking): unlink + file_exists are filesystem-cheap even
+ * for thousands of attachments — the expensive part of regen is encoding,
+ * which doesn't happen here.
+ *
+ * POST: nonce (string)
+ * JSON response: { deleted, freed_kb }
+ */
+function rd_img_ajax_cleanup_formats() {
+	if ( ! current_user_can( 'manage_options' ) ) {
+		wp_send_json_error( 'forbidden', 403 );
+	}
+	if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'rd_img_cleanup_formats' ) ) {
+		wp_send_json_error( 'bad_nonce', 403 );
+	}
+
+	$mode   = rd_img_get_mode();
+	$unused = array();
+	if ( 'avif' === $mode ) {
+		$unused[] = 'webp';
+	} elseif ( 'webp' === $mode ) {
+		$unused[] = 'avif';
+	}
+	// mode 'both' → nothing unused (button is disabled in the UI, but guard anyway)
+	if ( empty( $unused ) ) {
+		wp_send_json_success(
+			array(
+				'deleted'  => 0,
+				'freed_kb' => 0,
+			)
+		);
+	}
+
+	$attachments = get_posts(
+		array(
+			'post_type'      => 'attachment',
+			'post_mime_type' => array( 'image/jpeg', 'image/png', 'image/webp' ),
+			'posts_per_page' => -1,
+			'fields'         => 'ids',
+		)
+	);
+
+	$deleted     = 0;
+	$freed_bytes = 0;
+
+	foreach ( $attachments as $attachment_id ) {
+		$metadata = wp_get_attachment_metadata( $attachment_id );
+		if ( ! is_array( $metadata ) ) {
+			continue;
+		}
+
+		foreach ( rd_img_get_attachment_paths( $metadata ) as $file ) {
+			$ext = strtolower( pathinfo( $file, PATHINFO_EXTENSION ) );
+			if ( ! in_array( $ext, array( 'jpg', 'jpeg', 'png', 'webp' ), true ) ) {
+				continue;
+			}
+
+			foreach ( $unused as $fmt ) {
+				$twin = preg_replace( '/\.(jpe?g|png|webp)$/i', '.' . $fmt, $file );
+				if ( $twin === $file || ! file_exists( $twin ) ) {
+					continue;
+				}
+				$size = filesize( $twin );
+				wp_delete_file( $twin );
+				if ( ! file_exists( $twin ) ) {
+					++$deleted;
+					$freed_bytes += (int) $size;
+				}
+			}
+		}
+	}
+
+	wp_send_json_success(
+		array(
+			'deleted'  => $deleted,
+			'freed_kb' => (int) round( $freed_bytes / 1024 ),
+		)
+	);
+}
+add_action( 'wp_ajax_rd_img_cleanup_formats', 'rd_img_ajax_cleanup_formats' );
 
 /**
  * Localizes the regeneration JS data — only on the Images & Media tab of the
@@ -783,13 +1106,19 @@ function rd_img_admin_enqueue( $hook ) {
 		array(
 			'ajaxurl' => admin_url( 'admin-ajax.php' ),
 			'i18n'    => array(
-				'no_images' => __( 'No JPEG/PNG attachments to process.', 'reloaded' ),
-				/* translators: %d: number of JPEG/PNG attachments to process */
-				'confirm'   => __( 'Start processing %d images? This may take several minutes.', 'reloaded' ),
-				'starting'  => __( 'Starting...', 'reloaded' ),
-				'progress'  => __( 'Processed %p of %t (%pct%)', 'reloaded' ),
-				'done'      => __( 'Done! Processed %t images.', 'reloaded' ),
-				'error'     => __( 'Error: ', 'reloaded' ),
+				'no_images'       => __( 'No JPEG/PNG/WebP attachments to process.', 'reloaded' ),
+				/* translators: %d: number of JPEG/PNG/WebP attachments to process */
+				'confirm'         => __( 'Start processing %d images? This may take several minutes.', 'reloaded' ),
+				'starting'        => __( 'Starting...', 'reloaded' ),
+				'progress'        => __( 'Processed %p of %t (%pct%)', 'reloaded' ),
+				'done'            => __( 'Done! Processed %t images.', 'reloaded' ),
+				/* translators: %f: number of failed conversions */
+				'failures'        => __( '%f conversions failed — check file permissions and server capabilities.', 'reloaded' ),
+				'error'           => __( 'Error: ', 'reloaded' ),
+				'cleanup_confirm' => __( 'Delete all files of the format not covered by the current Format Mode? The originals and the active format are kept.', 'reloaded' ),
+				'cleanup_busy'    => __( 'Cleaning…', 'reloaded' ),
+				/* translators: 1: number of deleted files, 2: freed disk space in KB */
+				'cleanup_done'    => __( 'Removed %1$d files (%2$s KB freed).', 'reloaded' ),
 			),
 		)
 	);
@@ -869,16 +1198,20 @@ function rd_img_render_panel_section() {
 		rd_panel_card_open(
 			array(
 				'title' => __( 'Regenerate sizes and next-gen formats for existing attachments', 'reloaded' ),
-				'desc'  => __( 'New uploads are processed automatically. Use this button after: (a) enabling the module on a site with existing images; (b) switching the Format Mode above; or (c) adding/changing a custom image size in the theme (re-crops all sizes via WP\'s wp_generate_attachment_metadata, then generates WebP/AVIF for each). The action is idempotent: re-running overwrites existing files with current settings. May take several minutes on a large Media Library — runs in chunks of 10 via AJAX to avoid timeouts.', 'reloaded' ),
+				'desc'  => __( 'New uploads are processed automatically. Use this button after: (a) enabling the module on a site with existing images; (b) switching the Format Mode above; (c) changing the image quality; or (d) adding/changing a custom image size in the theme (re-crops all sizes via WP\'s wp_generate_attachment_metadata, then generates WebP/AVIF for each). The action is idempotent: re-running overwrites existing files with current settings. May take several minutes on a large Media Library — runs in time-budgeted AJAX chunks to avoid timeouts.', 'reloaded' ),
 			)
 		);
+
+		$mode      = rd_img_get_mode();
+		$last_run  = (array) get_option( 'rd_img_last_regen', array() );
+		$has_stats = ! empty( $last_run['time'] );
 		?>
 		<p class="rd-pcard__action-row rd-img-regen-row">
 			<span class="rd-img-regen-count">
 				<?php
 				printf(
-					/* translators: 1: number of JPEG/PNG attachments in the Media Library */
-					esc_html( _n( '%d JPEG/PNG attachment in the Media Library', '%d JPEG/PNG attachments in the Media Library', (int) $total, 'reloaded' ) ),
+					/* translators: 1: number of JPEG/PNG/WebP attachments in the Media Library */
+					esc_html( _n( '%d JPEG/PNG/WebP attachment in the Media Library', '%d JPEG/PNG/WebP attachments in the Media Library', (int) $total, 'reloaded' ) ),
 					(int) $total
 				);
 				?>
@@ -894,10 +1227,54 @@ function rd_img_render_panel_section() {
 			</button>
 		</p>
 
+		<?php if ( $has_stats ) : ?>
+			<p class="rd-img-regen-last">
+				<?php
+				printf(
+					/* translators: 1: date/time of the last regeneration, 2: number of converted files, 3: number of failed conversions */
+					esc_html__( 'Last regeneration: %1$s — %2$d files converted, %3$d failures.', 'reloaded' ),
+					esc_html( date_i18n( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ), (int) $last_run['time'] ) ),
+					(int) ( $last_run['converted'] ?? 0 ),
+					(int) ( $last_run['failed'] ?? 0 )
+				);
+				if ( ! empty( $last_run['failed'] ) ) {
+					// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- badge HTML pre-escaped by rd_panel_badge().
+					echo ' ' . rd_panel_badge( 'warning', __( 'check failures', 'reloaded' ) );
+				}
+				?>
+			</p>
+		<?php endif; ?>
+
 		<div id="rd-img-regen-progress" class="rd-img-regen-progress" hidden>
 			<progress id="rd-img-regen-bar" value="0" max="100"></progress>
 			<p id="rd-img-regen-status"></p>
 		</div>
+
+		<?php // === Cleanup of stale formats after a mode switch === ?>
+		<p class="rd-pcard__action-row rd-img-cleanup-row">
+			<span>
+				<?php
+				if ( 'both' === $mode ) {
+					esc_html_e( 'Format Mode is "both" — every generated file is in use, nothing to clean.', 'reloaded' );
+				} else {
+					printf(
+						/* translators: %s: the file format NOT covered by the current mode (webp or avif) */
+						esc_html__( 'Format Mode leaves .%s files unused — they linger on disk after a mode switch.', 'reloaded' ),
+						esc_html( 'avif' === $mode ? 'webp' : 'avif' )
+					);
+				}
+				?>
+			</span>
+			<button type="button"
+					id="rd-img-cleanup-start"
+					class="button button-secondary"
+					data-nonce="<?php echo esc_attr( wp_create_nonce( 'rd_img_cleanup_formats' ) ); ?>"
+					<?php disabled( 'both' === $mode ); ?>>
+				<span class="dashicons dashicons-trash" aria-hidden="true"></span>
+				<?php esc_html_e( 'Remove unused format', 'reloaded' ); ?>
+			</button>
+		</p>
+		<p id="rd-img-cleanup-status" class="rd-img-cleanup-status"></p>
 		<?php rd_panel_card_close(); ?>
 
 	</div>

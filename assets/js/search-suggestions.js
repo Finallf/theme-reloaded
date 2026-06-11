@@ -35,13 +35,23 @@
 
 	var config = window.rdSearchSugg;
 
-	document.addEventListener( 'DOMContentLoaded', function () {
+	function init() {
 		var inputs = document.querySelectorAll( '.search-field, .menu-search-field' );
 		if ( ! inputs.length ) {
 			return;
 		}
 		inputs.forEach( setupInput );
-	} );
+	}
+
+	// This script is lazy-injected on the first focus of a search field
+	// (loader in mod-search-suggestions.php), so DOMContentLoaded has usually
+	// ALREADY fired when it executes — waiting for the event would mean never
+	// initializing. readyState check covers both paths.
+	if ( 'loading' === document.readyState ) {
+		document.addEventListener( 'DOMContentLoaded', init );
+	} else {
+		init();
+	}
 
 	function setupInput( input ) {
 		// Create the dropdown and attach it to <body>. We can NOT place it inside
