@@ -7,6 +7,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 <br>
 
 
+## [1.7.0-beta.3](https://github.com/Finallf/theme-reloaded/compare/v1.7.0-beta.2...v1.7.0-beta.3) (2026-06-11)
+
+### 🐛 Bug Fixes
+
+* **ads:** rename reserved keyword $match parameter (PHPCS) ([eba974b](https://github.com/Finallf/theme-reloaded/commit/eba974b234dcde61553a42a14ec88111a2750c2c))
+
+<br>
+
+---
+
 ## [1.7.0-beta.2](https://github.com/Finallf/theme-reloaded/compare/v1.7.0-beta.1...v1.7.0-beta.2) (2026-06-11)
 
 ### ⚡ Performance Improvements
