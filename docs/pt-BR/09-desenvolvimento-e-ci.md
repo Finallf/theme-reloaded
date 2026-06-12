@@ -110,31 +110,25 @@ Configuração em `.github/workflows/`:
 
 ### `smoke-test.yml`
 
-Roda em **cada push** pra `master` ou `beta`, e em **cada PR** pra essas branches.
+Roda em **cada push** pra `master` ou `beta`, e em **cada PR** pra essas branches. **2 jobs:**
 
-Job único:
-- Setup PHP 8.2
-- Lint sintaxe de TODOS os arquivos `.php` via `php -l`
-- Falha se algum tem erro de sintaxe
+1. **PHP Syntax Check** — PHP 8.3, `php -l` em TODOS os `.php` (exceto vendor/node_modules)
+2. **PHPCS + WPCS Lint** — `composer install` + `vendor/bin/phpcs` (lê o `phpcs.xml.dist`). ⚠️ **Warning também reprova** (sem `ignore_warnings_on_exit` no ruleset)
 
-Garantia mínima: você não consegue mergear/pushar PHP quebrado.
+Garantia: você não consegue mergear/pushar PHP quebrado **nem fora do padrão WPCS**. Réplica local oficial: o hook `tools/git-hooks/pre-push` (ver Setup local).
 
-### `master.yml`
+### `master.yml` (Release & Package)
 
-Roda **apenas no push pra `master`**. Esse é o workflow de release:
+Roda no push pra `master` **e** `beta`. **2 jobs encadeados:**
 
-1. **Smoke-test** (PHP lint) — falha rápida se algo quebrou
-2. **Setup Node.js** + caches
-3. **Install dependencies** (`npm ci`)
-4. **Run semantic-release**:
-   - Analisa commits desde a última release
-   - Determina o tipo de bump (major/minor/patch) baseado nos types
-   - Atualiza `CHANGELOG.md`
-   - Atualiza versão em `style.css` (header WP)
-   - Cria git tag (`v0.3.0`)
-   - Cria GitHub Release com release notes geradas
+1. **contrib-readme-job** — atualiza a lista de contribuidores no README
+2. **release** — semantic-release (analisa commits → bump major/minor/patch pelos types → atualiza `CHANGELOG.md` + versão no `style.css` → tag `vX.Y.Z` → GitHub Release com notes) e monta o `reloaded.zip` (estrutura interna `reloaded/`, excluindo sass/docs/vendor/tooling), anexando na release
 
-> Mesmo workflow roda na `beta` mas com configuração de canal `beta` no semantic-release — gera tags `v0.3.0-beta.X` e marca como pre-release.
+> Na `beta`, o canal beta do semantic-release gera tags `vX.Y.Z-beta.N` marcadas como pre-release.
+
+#### Por que toda release gera um run "skipped" (cinza)?
+
+Anti-loop **por design**: o semantic-release faz push do próprio commit `chore(release): X` (com GH_PAT, que dispara workflows). O `[skip ci]` nesse commit foi descartado — matava TODOS os checks do SHA, inclusive os required dos PRs de release, que travavam em "Waiting for status". Solução atual: o Smoke Test **roda** no commit de release (dá o check verde pro SHA) e o Release & Package **se auto-pula** via `if: !startsWith(message, 'chore(release):')` nos 2 jobs. Esse auto-pulo aparece como run cinza/skipped na lista de Actions. **É cosmético e esperado**: cinza no "Release & Package" de um commit `chore(release)` = o guard anti-loop funcionando.
 
 ---
 
@@ -216,6 +210,20 @@ O tema **NÃO usa** Webpack, Vite, Babel, TypeScript, etc. Apenas:
 - PHP nativo
 
 Filosofia: minimalismo, dependências zero pra contribuição.
+
+### Hook de pre-push (réplica local do CI)
+
+O push só deve sair da máquina **verde**. O hook `tools/git-hooks/pre-push` roda exatamente o que o Smoke Test roda (php -l em todos os `.php` + `vendor/bin/phpcs` completo, decidindo pelo **exit code**) e **bloqueia o push** se algo reprovar.
+
+```bash
+# Ativação one-time por clone (requer composer install feito):
+git config core.hooksPath tools/git-hooks
+
+# Bypass de emergência (não recomendado):
+git push --no-verify
+```
+
+> Nasceu em 2026-06-12 depois de uma sequência de pushes vermelhos em que a verificação local era mais fraca que o CI (ou o output do phpcs era engolido por pipes). Regra da casa: se mudar o smoke-test.yml, atualizar o hook junto.
 
 ---
 

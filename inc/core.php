@@ -71,7 +71,7 @@ add_action( 'after_setup_theme', 'rd_setup' );
  * for 16:9 uploads its 768x432 output joins the theme's 16:9 srcset ladder    *
  * and browsers pick it for the ~600-700px card slots, where it fits better    *
  * than the 600/800 neighbors. Free win, costs only disk.                      *
- ******************************************************************************/
+ */
 add_action(
 	'init',
 	function () {
