@@ -317,6 +317,7 @@ function rd_csp_build_policy(): string {
 		$d['frame-src'][]   = 'https://*.adtrafficquality.google'; // SODAR frame (ep2)
 		$d['connect-src'][] = 'https://pagead2.googlesyndication.com';
 		$d['connect-src'][] = 'https://*.adtrafficquality.google'; // SODAR getconfig (ep1)
+		$d['connect-src'][] = 'https://csi.gstatic.com'; // CSI latency beacon (?s=pagead) — 3 real violations on 2026-06-10
 	}
 
 	// Microsoft Clarity
