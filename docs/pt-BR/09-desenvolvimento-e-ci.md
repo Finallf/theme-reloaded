@@ -122,7 +122,7 @@ Garantia: você não consegue mergear/pushar PHP quebrado **nem fora do padrão 
 Roda no push pra `master` **e** `beta`. **2 jobs encadeados:**
 
 1. **contrib-readme-job** — atualiza a lista de contribuidores no README
-2. **release** — semantic-release (analisa commits → bump major/minor/patch pelos types → atualiza `CHANGELOG.md` + versão no `style.css` → tag `vX.Y.Z` → GitHub Release com notes) e monta o `reloaded.zip` (estrutura interna `reloaded/`, excluindo sass/docs/vendor/tooling), anexando na release
+2. **release** — semantic-release (analisa commits → bump major/minor/patch pelos types → atualiza `CHANGELOG.md` + versão no `style.css` → tag `vX.Y.Z` → GitHub Release com notes) e monta o `reloaded.zip` (estrutura interna `reloaded/`, excluindo sass/docs/vendor/tooling), anexando na release. **Minificação de JS acontece AQUI, dentro do staging do pacote** (terser via npx, ~60% de redução): o repo permanece com source legível (open source), a sandbox recebe source via SFTP (debug), e só o zip distribuído carrega o build minificado — zero passo de build local pra lembrar. `lib/` (Prism/Chart.js) já vem minificado upstream e não é tocado. Erro de parse do terser falha o step → JS quebrado nunca shippa em silêncio.
 
 > Na `beta`, o canal beta do semantic-release gera tags `vX.Y.Z-beta.N` marcadas como pre-release.
 

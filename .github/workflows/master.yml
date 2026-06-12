@@ -94,6 +94,18 @@ jobs:
             --exclude='package-lock.json' \
             --exclude='CONTRIBUTING.md' \
             ./ staging/reloaded/
+          # Minify the theme JS inside the PACKAGE only: the repo stays
+          # readable (open source) and the sandbox keeps sources for
+          # debugging — only shipped zips carry the minified build. lib/
+          # (Prism, Chart.js) is already minified upstream and untouched.
+          # A terser parse error fails the step → broken JS can never ship
+          # silently.
+          for f in staging/reloaded/assets/js/*.js; do
+            before=$(wc -c < "$f")
+            npx --yes terser@5 "$f" --compress --mangle --comments false -o "$f"
+            after=$(wc -c < "$f")
+            echo "minified $(basename "$f"): ${before} -> ${after} bytes"
+          done
           (cd staging && zip -r ../reloaded.zip reloaded)
 
       - name: Upload theme zip to release
