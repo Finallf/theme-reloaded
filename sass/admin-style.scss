@@ -1644,6 +1644,28 @@ body {
     }
 }
 
+// Buttons that carry a dashicon glyph (self-update check, image regen and
+// format cleanup). By default the icon hangs on the text baseline, sitting
+// 2-3px below the button's optical center — barely visible at rest, but the
+// spinning is-loading state then rotates around an off-center axis and the
+// glyph wobbles like a bent wheel. Flex centering + a square box with
+// line-height = height put the glyph (and the spin axis) dead center.
+#rd-self-update-check,
+#rd-img-regen-start,
+#rd-img-cleanup-start {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+
+    .dashicons {
+        width: 18px;
+        height: 18px;
+        font-size: 18px;
+        line-height: 18px;
+        transform-origin: 50% 50%;
+    }
+}
+
 #rd-self-update-check.is-loading {
     opacity: 0.7;
     cursor: wait;
