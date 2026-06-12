@@ -81,6 +81,25 @@ add_action(
 );
 
 /*******************************************************************************
+ * Featured-image ALT fallback                                   - (Hardcoded) *
+ *                                                                             *
+ * Attachments without an alt text in the Media Library render alt="" — valid  *
+ * for decorative images, but featured images ARE the post's visual headline   *
+ * (Bing Webmaster Tools flagged the empty alts, 2026-06-12). When the editor  *
+ * didn't fill the alt, fall back to the post title; when they DID, their text *
+ * wins untouched. Used by post-card.php, mod-carousel.php and single.php.     *
+ * Purely decorative thumbs (e.g. the aria-hidden "Most Read" widget covers)   *
+ * intentionally keep alt="" — that is the correct a11y pattern there.         *
+ *******************************************************************************/
+function rd_thumb_alt_fallback( int $post_id, array $attrs ): array {
+	$thumb_id = (int) get_post_thumbnail_id( $post_id );
+	if ( $thumb_id && '' === trim( (string) get_post_meta( $thumb_id, '_wp_attachment_image_alt', true ) ) ) {
+		$attrs['alt'] = get_the_title( $post_id );
+	}
+	return $attrs;
+}
+
+/*******************************************************************************
  * Renders the Logo (Image or Text)                              - (Hardcoded) *
  *******************************************************************************/
 function rd_render_logo() {

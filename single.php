@@ -71,9 +71,14 @@ get_header();
 									<?php
 									the_post_thumbnail(
 										'rd-full-banner',
-										array(
-											'loading' => 'eager',
-											'fetchpriority' => 'high',
+										// Empty Media Library alt → post title
+										// (see rd_thumb_alt_fallback in core.php).
+										rd_thumb_alt_fallback(
+											get_the_ID(),
+											array(
+												'loading' => 'eager',
+												'fetchpriority' => 'high',
+											)
 										)
 									);
 									?>

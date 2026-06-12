@@ -125,6 +125,32 @@ function rd_scripts() {
 }
 
 /*******************************************************************************
+ * Metric-matched font fallback faces — inline in <head>       - (Performance) *
+ *                                                                             *
+ * The Inter-fallback/Poppins-fallback @font-face (local Arial + size-adjust)  *
+ * live in style.css, but style.css loads ASYNC behind the inline critical     *
+ * CSS — and the critical extractor ignores @font-face on purpose (real faces  *
+ * carry relative url() that would break when inlined). Without this block the *
+ * first paint used RAW sans-serif and the page re-rendered with the +7.4%     *
+ * size-adjusted Arial when style.css landed — a brand-new mid-load shift that *
+ * REGRESSED CLS to 0.16 (measured 2026-06-12). Printing the faces inline at   *
+ * priority 1 (right after the critical CSS at 0) makes the very first paint   *
+ * already use the matched metrics: one geometry from first paint to the woff2 *
+ * swap. ~350 bytes, local() only, no requests.                                *
+ *                                                                             *
+ * NOTE: keep these values in sync with sass/base/_variables.scss.             *
+ *******************************************************************************/
+function rd_print_font_fallback_faces() {
+	if ( is_admin() ) {
+		return;
+	}
+	$nonce_attr = function_exists( 'rd_csp_nonce_attr' ) ? rd_csp_nonce_attr() : '';
+	// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static CSS literal; nonce attribute pre-escaped by rd_csp_nonce_attr().
+	echo '<style' . $nonce_attr . '>@font-face{font-family:"Inter-fallback";src:local("Arial");size-adjust:107.4%;ascent-override:90.2%;descent-override:22.48%;line-gap-override:0%}@font-face{font-family:"Poppins-fallback";src:local("Arial");size-adjust:112.16%;ascent-override:93.62%;descent-override:31.21%;line-gap-override:8.92%}</style>' . "\n";
+}
+add_action( 'wp_head', 'rd_print_font_fallback_faces', 1 );
+
+/*******************************************************************************
  * LCP image preload                                           - (Performance) *
  *                                                                             *
  * The LCP audits showed 880ms (mobile) / 1.040ms (desktop) of "resource load  *
@@ -146,57 +172,82 @@ function rd_preload_lcp_image() {
 		return;
 	}
 
-	$attachment_id = 0;
-	$size          = '';
-	$sizes_attr    = '';
+	$preloads = array();
 
 	if ( function_exists( 'rd_carousel_should_render' ) && rd_carousel_should_render() ) {
-		$rd_posts      = rd_carousel_get_posts();
-		$attachment_id = (int) get_post_thumbnail_id( $rd_posts[0] );
-		$size          = 'rd-full-banner';
-		$sizes_attr    = rd_carousel_img_sizes();
+		// The LCP element differs per viewport (measured 2026-06-12): on
+		// desktop it's carousel slide 1 (~1130px painted), on phones the
+		// first main-grid card outpaints the 88vw slide. `media` on the
+		// preload links makes each device fetch ONLY its own LCP image.
+		$rd_posts   = rd_carousel_get_posts();
+		$preloads[] = array(
+			'id'    => (int) get_post_thumbnail_id( $rd_posts[0] ),
+			'size'  => 'rd-full-banner',
+			'sizes' => rd_carousel_img_sizes(),
+			'media' => '(min-width: 769px)',
+		);
+
+		global $wp_query;
+		if ( isset( $wp_query->posts[0] ) && has_post_thumbnail( $wp_query->posts[0] ) ) {
+			$card_id    = (int) get_post_thumbnail_id( $wp_query->posts[0] );
+			$card_sizes = wp_get_attachment_image_sizes( $card_id, 'rd-card' );
+			$preloads[] = array(
+				'id'    => $card_id,
+				'size'  => 'rd-card',
+				'sizes' => is_string( $card_sizes ) ? $card_sizes : '',
+				'media' => '(max-width: 768px)',
+			);
+		}
 	} elseif ( is_singular( 'post' ) && has_post_thumbnail() ) {
-		$attachment_id = (int) get_post_thumbnail_id();
-		$size          = 'rd-full-banner';
-		$wp_sizes      = wp_get_attachment_image_sizes( $attachment_id, $size );
-		$sizes_attr    = is_string( $wp_sizes ) ? $wp_sizes : '';
+		$banner_id  = (int) get_post_thumbnail_id();
+		$wp_sizes   = wp_get_attachment_image_sizes( $banner_id, 'rd-full-banner' );
+		$preloads[] = array(
+			'id'    => $banner_id,
+			'size'  => 'rd-full-banner',
+			'sizes' => is_string( $wp_sizes ) ? $wp_sizes : '',
+			'media' => '',
+		);
 	}
 
-	if ( ! $attachment_id ) {
-		return;
-	}
-
-	$srcset = wp_get_attachment_image_srcset( $attachment_id, $size );
-	if ( ! is_string( $srcset ) || '' === $srcset ) {
-		// Tiny original without intermediate sizes — preload the single file.
-		$src = wp_get_attachment_image_src( $attachment_id, $size );
-		if ( ! $src ) {
-			return;
+	foreach ( $preloads as $preload ) {
+		if ( ! $preload['id'] ) {
+			continue;
 		}
-		$srcset     = $src[0];
-		$sizes_attr = '';
-	}
 
-	// Same next-gen mapping the <picture> sources use — the preload must point
-	// at the very URLs the markup will request.
-	$type = '';
-	if ( function_exists( 'rd_img_get_nextgen_srcsets' ) ) {
-		$nextgen = rd_img_get_nextgen_srcsets( $srcset, '' );
-		if ( isset( $nextgen['image/avif'] ) ) {
-			$srcset = $nextgen['image/avif'];
-			$type   = 'image/avif';
-		} elseif ( isset( $nextgen['image/webp'] ) ) {
-			$srcset = $nextgen['image/webp'];
-			$type   = 'image/webp';
+		$srcset     = wp_get_attachment_image_srcset( $preload['id'], $preload['size'] );
+		$sizes_attr = $preload['sizes'];
+		if ( ! is_string( $srcset ) || '' === $srcset ) {
+			// Tiny original without intermediate sizes — preload the single file.
+			$src = wp_get_attachment_image_src( $preload['id'], $preload['size'] );
+			if ( ! $src ) {
+				continue;
+			}
+			$srcset     = $src[0];
+			$sizes_attr = '';
 		}
-	}
 
-	printf(
-		'<link rel="preload" as="image" imagesrcset="%s"%s%s fetchpriority="high">' . "\n",
-		esc_attr( $srcset ),
-		'' !== $sizes_attr ? ' imagesizes="' . esc_attr( $sizes_attr ) . '"' : '',
-		'' !== $type ? ' type="' . esc_attr( $type ) . '"' : ''
-	);
+		// Same next-gen mapping the <picture> sources use — the preload must
+		// point at the very URLs the markup will request.
+		$type = '';
+		if ( function_exists( 'rd_img_get_nextgen_srcsets' ) ) {
+			$nextgen = rd_img_get_nextgen_srcsets( $srcset, '' );
+			if ( isset( $nextgen['image/avif'] ) ) {
+				$srcset = $nextgen['image/avif'];
+				$type   = 'image/avif';
+			} elseif ( isset( $nextgen['image/webp'] ) ) {
+				$srcset = $nextgen['image/webp'];
+				$type   = 'image/webp';
+			}
+		}
+
+		printf(
+			'<link rel="preload" as="image" imagesrcset="%s"%s%s%s fetchpriority="high">' . "\n",
+			esc_attr( $srcset ),
+			'' !== $sizes_attr ? ' imagesizes="' . esc_attr( $sizes_attr ) . '"' : '',
+			'' !== $type ? ' type="' . esc_attr( $type ) . '"' : '',
+			'' !== $preload['media'] ? ' media="' . esc_attr( $preload['media'] ) . '"' : ''
+		);
+	}
 }
 add_action( 'wp_head', 'rd_preload_lcp_image', 2 );
 

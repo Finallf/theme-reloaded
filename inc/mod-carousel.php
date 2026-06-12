@@ -203,6 +203,9 @@ function rd_render_carousel() {
 				} else {
 					$img_attr['loading'] = 'lazy';
 				}
+
+				// Empty Media Library alt → post title (see rd_thumb_alt_fallback).
+				$img_attr = rd_thumb_alt_fallback( $rd_post->ID, $img_attr );
 				?>
 				<article class="rd-carousel__slide"
 						aria-roledescription="slide"
