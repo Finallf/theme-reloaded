@@ -136,11 +136,41 @@
     font-display: swap;
 }
 
+// ==========================================================================
+// Metric-matched fallbacks (CLS killer)
+// --------------------------------------------------------------------------
+// With font-display: swap, text first paints in the local fallback and
+// re-renders when the woff2 lands. Raw Arial has different glyph metrics, so
+// lines re-wrap and content jumps — PageSpeed attributed the residual CLS
+// (LGPD banner 0.033-0.065, menu, carousel title) to exactly this swap.
+// These synthetic faces scale local Arial to occupy the SAME boxes as
+// Inter/Poppins (size-adjust + ascent/descent/line-gap overrides, values from
+// the standard fontaine/next-font calibration), making the swap geometrically
+// invisible. Browsers without size-adjust support ignore the descriptors and
+// behave exactly as before — pure progressive enhancement, zero requests.
+// ==========================================================================
+@font-face {
+    font-family: 'Inter-fallback';
+    src: local('Arial');
+    size-adjust: 107.40%;
+    ascent-override: 90.20%;
+    descent-override: 22.48%;
+    line-gap-override: 0%;
+}
+@font-face {
+    font-family: 'Poppins-fallback';
+    src: local('Arial');
+    size-adjust: 112.16%;
+    ascent-override: 93.62%;
+    descent-override: 31.21%;
+    line-gap-override: 8.92%;
+}
+
 /* ==========================================================================
    2. Typography and Brand Variables
    ========================================================================== */
-$font-primary: 'Inter', sans-serif;
-$font-heading: 'Poppins', sans-serif;
+$font-primary: 'Inter', 'Inter-fallback', sans-serif;
+$font-heading: 'Poppins', 'Poppins-fallback', sans-serif;
 // $font-mono: for real CODE (markdown blocks, Prism syntax highlight, inline <code>).
 // JetBrains Mono is the branded code font — worth the download on post pages.
 $font-mono:    'JetBrains Mono', ui-monospace, 'Cascadia Mono', 'Source Code Pro', Menlo, Consolas, monospace;

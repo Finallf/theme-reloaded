@@ -19,7 +19,7 @@
 		display: grid !important;
 		grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
 		gap: 2rem;
-		margin: 3rem 0rem 1rem;
+		margin: 3rem 0rem 3rem;
 	}
 
 	// Brand column — breathing room between the logo and the tagline.
@@ -78,7 +78,7 @@
 
 	.footer-bottom {
 		border-top: 1px solid $border-dark; // Thin divider line
-		padding-top: 2rem;
+		padding-top: 1rem;
 		font-size: 0.85rem;
 
 		// 2 columns: info (copyright + hosting) on the left, social icons on the right.
@@ -118,7 +118,12 @@
 // sit on a single row (wide desktop). Removed once the grid wraps to fewer.
 @media (min-width: 1200px) {
 	.site-footer .footer-grid .footer-column + .footer-column {
-		border-left: 1px solid rgba(255, 255, 255, 0.07);
+		// Adaptive token, NOT a hardcoded white: the footer bg follows the
+		// theme (--rd-deep: #111 dark / #f1f3f5 light), so a fixed
+		// rgba(255,255,255,.07) divider vanished entirely in light mode.
+		// --rd-glass-border = white 8% on dark (visually identical to the old
+		// value) / black 10% on light (finally visible there).
+		border-left: 1px solid var(--rd-glass-border);
 		padding-left: 2rem;
 	}
 }

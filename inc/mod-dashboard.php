@@ -394,7 +394,8 @@ function rd_dashboard_render_updates_card(): void {
 				'upgrade-theme_' . RD_SELF_UPDATE_SLUG
 			);
 			?>
-			<a class="button button-primary" href="<?php echo esc_url( $rd_update_url ); ?>">
+			<a class="button button-primary rd-update-now" href="<?php echo esc_url( $rd_update_url ); ?>">
+				<span class="dashicons dashicons-update" aria-hidden="true"></span>
 				<?php esc_html_e( 'Update now', 'reloaded' ); ?>
 			</a>
 			<?php if ( '' !== $release_url ) : ?>

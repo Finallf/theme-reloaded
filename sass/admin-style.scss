@@ -1652,7 +1652,8 @@ body {
 // line-height = height put the glyph (and the spin axis) dead center.
 #rd-self-update-check,
 #rd-img-regen-start,
-#rd-img-cleanup-start {
+#rd-img-cleanup-start,
+.rd-update-now {
     display: inline-flex;
     align-items: center;
     gap: 6px;
@@ -1666,7 +1667,12 @@ body {
     }
 }
 
-#rd-self-update-check.is-loading {
+// Busy state shared by the self-update buttons: "Check for updates" (during
+// the AJAX) and "Update now" (between the click and core's update.php
+// painting its progress screen — the zip download happens in that gap and
+// the only native hint is the browser tab spinner).
+#rd-self-update-check.is-loading,
+.rd-update-now.is-loading {
     opacity: 0.7;
     cursor: wait;
 

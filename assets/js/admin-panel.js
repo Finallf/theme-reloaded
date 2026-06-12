@@ -609,7 +609,7 @@ jQuery(document).ready(function($){
 				var goLabel    = i18n.update_now || 'Update now';
 				var viewLabel  = i18n.view_release || 'View release on GitHub';
 				var releaseUrl = data.release_url || '';
-				var html       = '<a class="button button-primary" href="' + escapeAttr( updateUrl ) + '">' + escapeHtml( goLabel ) + '</a>';
+				var html       = '<a class="button button-primary rd-update-now" href="' + escapeAttr( updateUrl ) + '"><span class="dashicons dashicons-update" aria-hidden="true"></span> ' + escapeHtml( goLabel ) + '</a>';
 				if ( releaseUrl ) {
 					html += ' <a class="button-link" href="' + escapeAttr( releaseUrl ) + '" target="_blank" rel="noopener">' + escapeHtml( viewLabel ) + '</a>';
 				}
@@ -619,6 +619,25 @@ jQuery(document).ready(function($){
 			}
 		}
 	}
+
+	// "Update now" feedback: between the click and update.php painting its
+	// progress screen there's a multi-second gap (the server is fetching the
+	// release zip) where the only hint is the browser tab spinner — easy to
+	// miss and click again. Spin the icon + lock the link until navigation.
+	// Delegated on document: the CTA exists in two flavors (PHP-rendered on
+	// page load, JS-injected after a check) and may be replaced at any time.
+	document.addEventListener( 'click', function ( e ) {
+		var link = e.target && e.target.closest ? e.target.closest( '.rd-update-now' ) : null;
+		if ( ! link ) {
+			return;
+		}
+		if ( link.classList.contains( 'is-loading' ) ) {
+			e.preventDefault(); // already navigating — swallow double clicks
+			return;
+		}
+		link.classList.add( 'is-loading' );
+		link.setAttribute( 'aria-busy', 'true' );
+	} );
 
 	function applyError( message ) {
 		var statusEl = document.getElementById( 'rd-self-update-status' );
