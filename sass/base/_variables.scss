@@ -22,49 +22,42 @@
    ========================================================================== */
 
 // ==========================================================================
-// Inter (Base text / Body)
+// Inter (Base text / Body) — VARIABLE font, single file
+// --------------------------------------------------------------------------
+// One latin-subset variable woff2 (Google Fonts v20 slice, 47 KB) replaces
+// the four ~50 KB static weights the theme shipped before (2026-06-12 bit
+// brushing: -159 KB inventory, and ONE preload now covers every weight).
+// The latin slice fully covers PT-BR (ã/ç/õ live in Latin-1); rarer
+// latin-ext glyphs fall back to the system font. Browsers without
+// variable-font support (pre-2018) get the single face with synthesized
+// bold — acceptable for the theme's modern baseline.
+//
+// Inter Italic stays out — every use was decorative and `font-synthesis:
+// style weight` (global rule in _globals.scss) synthesizes it.
 // ==========================================================================
 @font-face {
     font-family: 'Inter';
-    src: url('../fonts/inter-regular.woff2') format('woff2');
-    font-weight: 400;
-    font-style: normal;
-    font-display: swap;
-}
-// Inter Italic (400 italic) removed from the theme — every use was decorative
-// (blockquotes, image captions, footer hosting-info, comment meta, LGPD tags).
-// Modern browsers synthesize italic from Inter Regular via
-// `font-synthesis: italic auto;` (global rule in _globals.scss) with identical
-// visual quality for short text. Saves ~52 KB in the font inventory.
-@font-face {
-    font-family: 'Inter';
-    src: url('../fonts/inter-500.woff2') format('woff2');
-    font-weight: 500;
-    font-style: normal;
-    font-display: swap;
-}
-@font-face {
-    font-family: 'Inter';
-    src: url('../fonts/inter-600.woff2') format('woff2');
-    font-weight: 600;
-    font-style: normal;
-    font-display: swap;
-}
-@font-face {
-    font-family: 'Inter';
-    src: url('../fonts/inter-700.woff2') format('woff2');
-    font-weight: 700;
+    src: url('../fonts/inter-variable.woff2') format('woff2');
+    font-weight: 400 700;
     font-style: normal;
     font-display: swap;
 }
 
 // ==========================================================================
-// Poppins (Headings)
+// Poppins (Headings) — VARIABLE font, single file + static italic
+// --------------------------------------------------------------------------
+// Custom-built variable woff2 (Finallf, 2026-06-12 — Google doesn't ship a
+// variable Poppins): 17.6 KB with the full 100-900 weight axis, latin
+// subset (PT-BR accents validated in tools/fonts/font.html). Replaced the 5
+// static uprights (regular/500/600/700/900 = 52.5 KB): −35 KB inventory and
+// ONE preload covers every heading weight. The italic stays a static file —
+// true italics are a separate glyph design, not interpolable from the
+// weight axis.
 // ==========================================================================
 @font-face {
     font-family: 'Poppins';
-    src: url('../fonts/poppins-regular.woff2') format('woff2');
-    font-weight: 400;
+    src: url('../fonts/poppins-variable.woff2') format('woff2');
+    font-weight: 100 900;
     font-style: normal;
     font-display: swap;
 }
@@ -75,42 +68,21 @@
     font-style: italic;
     font-display: swap;
 }
-@font-face {
-    font-family: 'Poppins';
-    src: url('../fonts/poppins-500.woff2') format('woff2');
-    font-weight: 500;
-    font-style: normal;
-    font-display: swap;
-}
-@font-face {
-    font-family: 'Poppins';
-    src: url('../fonts/poppins-600.woff2') format('woff2');
-    font-weight: 600;
-    font-style: normal;
-    font-display: swap;
-}
-@font-face {
-    font-family: 'Poppins';
-    src: url('../fonts/poppins-700.woff2') format('woff2');
-    font-weight: 700;
-    font-style: normal;
-    font-display: swap;
-}
-@font-face {
-    font-family: 'Poppins';
-    src: url('../fonts/poppins-900.woff2') format('woff2');
-    font-weight: 900;
-    font-style: normal;
-    font-display: swap;
-}
 
 // ==========================================================================
-// JetBrains Mono (Code blocks)
+// JetBrains Mono (Code blocks) — VARIABLE font + static italic
+// --------------------------------------------------------------------------
+// Google Fonts v24 latin variable slice (30.7 KB, weight axis 100-800)
+// replaced the three static uprights (regular/600/700 = 73.7 KB). The italic
+// stays STATIC on purpose: the variable italic weighs 32.3 KB while the
+// single 400-weight static (the only italic the theme uses — Prism code
+// comments) weighs 25.4 KB — variable would be heavier there. Loads only on
+// posts/pages with the Prism toggle on.
 // ==========================================================================
 @font-face {
     font-family: 'JetBrains Mono';
-    src: url('../fonts/jetbrains-mono-regular.woff2') format('woff2');
-    font-weight: 400;
+    src: url('../fonts/jetbrains-mono-variable.woff2') format('woff2');
+    font-weight: 100 800;
     font-style: normal;
     font-display: swap;
 }
@@ -119,20 +91,6 @@
     src: url('../fonts/jetbrains-mono-italic.woff2') format('woff2');
     font-weight: 400;
     font-style: italic;
-    font-display: swap;
-}
-@font-face {
-    font-family: 'JetBrains Mono';
-    src: url('../fonts/jetbrains-mono-600.woff2') format('woff2');
-    font-weight: 600;
-    font-style: normal;
-    font-display: swap;
-}
-@font-face {
-    font-family: 'JetBrains Mono';
-    src: url('../fonts/jetbrains-mono-700.woff2') format('woff2');
-    font-weight: 700;
-    font-style: normal;
     font-display: swap;
 }
 

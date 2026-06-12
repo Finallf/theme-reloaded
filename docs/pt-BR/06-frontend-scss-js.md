@@ -132,17 +132,16 @@ $dark-text-muted: var(--rd-text-muted);
 
 #### Preload de fontes críticas
 
-`inc/mod-performance.php` injeta `<link rel="preload">` pras 5 variantes mais usadas no above-the-fold (controlado pelo toggle `preload_critical_fonts` no painel, default ON):
+`inc/mod-performance.php` injeta `<link rel="preload">` pros **2 arquivos** do above-the-fold (controlado pelo toggle `preload_critical_fonts` no painel, default ON):
 
 ```
-- inter-regular.woff2  (texto base — Inter 400)
-- inter-500.woff2      (ênfase / links — Inter Medium)
-- inter-700.woff2      (bold inline — Inter Bold)
-- poppins-600.woff2    (subtítulos / headings secundários)
-- poppins-700.woff2    (títulos principais)
+- inter-variable.woff2   (TODOS os pesos do corpo, eixo 400-700 — latin, 47 KB)
+- poppins-variable.woff2 (TODOS os pesos de headings, eixo 100-900 — latin, 17,6 KB)
 ```
 
-Outras variantes (Poppins 500/900, JetBrains Mono 400/600/700) carregam normalmente via `@font-face` quando o browser parsea regras que as referenciam.
+> **Migração pra fontes variáveis (2026-06-12):** um woff2 variável guarda os contornos UMA vez + deltas de interpolação — o browser calcula qualquer peso do eixo em tempo real. Inter e JetBrains Mono vieram dos slices latin do Google Fonts; a **Poppins variável é build próprio do Finallf** (Google não a distribui; subset validado em `tools/fonts/font.html`). Inventário: 14 arquivos/366 KB → **5 arquivos/132 KB (−64%)**. Itálicas (Poppins/JetBrains) continuam estáticas — itálica real é desenho separado, e a JetBrains itálica variável pesava mais que a estática 400 (única usada).
+
+JetBrains Mono (variável + itálica estática) carrega normalmente via `@font-face` só em posts com Prism.
 
 #### 3. CSS Custom Properties (a "fonte da verdade" pro tema)
 

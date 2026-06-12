@@ -672,19 +672,21 @@ function rd_preload_critical_fonts() {
 	}
 
 	$base = get_template_directory_uri() . '/assets/fonts/';
-	// List validated by a Network audit (DevTools, cache disabled):
-	// all these variants show up at "Highest" priority as soon as the browser
-	// parses style.css. Preload anticipates the download in parallel with the CSS,
-	// reducing FOIT/FOUT on first paint. Items left at "Highest" priority
-	// during parse (poppins-500/800, inter-600/italic, jetbrains-mono)
-	// are left out — an audit item in the BACKLOG Background will decide
-	// whether they're really used above-the-fold or if the SCSS can reduce usage.
+
+	/*
+	 * Two variable files now cover the ENTIRE above-the-fold typography
+	 * (2026-06-12 variable-font migration, closing the BACKLOG font audit):
+	 * Inter variable (47 KB, body weights 400-700, Google latin slice) and
+	 * Poppins variable (17.6 KB, heading weights 100-900, custom build by
+	 * Finallf — Google doesn't ship a variable Poppins). The per-weight
+	 * preload guessing game is gone: the old list shipped ~173 KB across 5
+	 * static files and still missed weights (inter-600, poppins-500).
+	 * Out on purpose: italics (decorative/synthesized) and jetbrains-mono
+	 * (code blocks, below-the-fold posts only).
+	 */
 	$fonts = array(
-		'inter-regular.woff2',  // base text — Inter 400
-		'inter-500.woff2',      // emphasis / links — Inter Medium
-		'inter-700.woff2',      // inline bold — Inter Bold
-		'poppins-600.woff2',    // subtitles / secondary headings — Poppins SemiBold
-		'poppins-700.woff2',    // main titles — Poppins Bold
+		'inter-variable.woff2',   // ALL body text weights — Inter variable
+		'poppins-variable.woff2', // ALL heading weights — Poppins variable (custom build)
 	);
 
 	foreach ( $fonts as $file ) {
