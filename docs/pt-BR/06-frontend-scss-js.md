@@ -261,6 +261,14 @@ Pra evitar flashes/teleportes de elementos quando a janela é redimensionada cru
 
 `navigation.js` adiciona `.rd-resizing` no `<body>` no início do evento `resize` e remove após debounce de 150ms — durante a janela ativa, todas as transitions ficam desligadas globalmente, evitando que transitions disparem visualmente durante mudanças de `display`. Padrão da indústria pra esse cenário.
 
+### Transitions de tema escopadas (`html.rd-theme-switching`)
+
+O espelho do `.rd-resizing`: o `_globals.scss` tinha um `* { transition: background-color, border-color, color, box-shadow }` **incondicional** — todo elemento da página carregava 4 transitions em tempo integral (Lighthouse flagava 200+ "animações não compostas" e cada hover pagava taxa de style-recalc), sendo que o efeito só é desejado na troca dark/light. Agora a regra é `html.rd-theme-switching *`: o toggle de tema em `navigation.js` adiciona a classe no `<html>` imediatamente antes de virar o `data-theme` e remove ~400ms depois. Transitions de hover declaradas por componente (cards, links, botões) não são afetadas.
+
+### Fallbacks de fonte com métricas casadas
+
+`_variables.scss` define `Inter-fallback`/`Poppins-fallback` (`src: local('Arial')` + `size-adjust`/`ascent`/`descent`/`line-gap-override`) e os stacks `$font-primary`/`$font-heading` os incluem após a fonte real. Com `font-display: swap`, o primeiro paint usa Arial **redimensionado pra ocupar as mesmas caixas** da fonte final — a troca não re-quebra linha nenhuma (matou o CLS residual do banner LGPD). Detalhes no [doc de módulos](04-modulos-php.md), seção Critical fonts.
+
 ### Print stylesheet (`sass/components/_print.scss`)
 
 Otimiza o output em papel ou "Salvar como PDF". Adicionado em 2026-05-29 — antes disso o tema não tinha **nenhuma** regra `@media print`, então um Ctrl+P imprimia header + sidebar + ads + footer junto.

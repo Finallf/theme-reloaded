@@ -98,7 +98,9 @@ Hook em `embed_oembed_html` substitui iframes do YT por:
 
 ```html
 <div class="rd-facade" data-type="youtube" data-id="VIDEO_ID" style="position:relative; cursor:pointer;">
-    <img src="https://img.youtube.com/vi/VIDEO_ID/sddefault.jpg" alt="Video cover" loading="lazy">
+    <img src="https://img.youtube.com/vi/VIDEO_ID/sddefault.jpg"
+         srcset=".../hqdefault.jpg 480w, .../sddefault.jpg 640w"
+         sizes="auto, (max-width: 768px) 100vw, 640px" alt="Video cover" loading="lazy">
     <div class="play-button"><svg>...</svg></div>
 </div>
 ```
@@ -140,7 +142,7 @@ Habilitado via `enable_next_gen_images` no painel (default: ✅). Detalhes técn
 ### Como funciona
 
 1. **Upload** — você manda um JPEG/PNG/WebP via Media Library. WP gera todos os tamanhos (full, thumbnail, medium, medium_large, large + `rd-micro`, `rd-popular-thumb`, `rd-card-half`, `rd-card`, `rd-card-wide`, `rd-full-banner`, `rd-qr`)
-2. **Hook automático** (`wp_generate_attachment_metadata`) — pra cada tamanho gerado, o módulo cria WebP e/ou AVIF ao lado (preferência: Imagick; fallback: GD — forçado pra AVIF de fontes com alpha). Quality do painel; AVIF em escala derivada (valor−20, piso 45)
+2. **Hook automático** (`wp_generate_attachment_metadata`) — pra cada tamanho gerado, o módulo cria WebP e/ou AVIF ao lado (preferência: Imagick; fallback: GD — forçado pra AVIF de fontes com alpha). Quality do painel; AVIF em escala derivada (valor−30, piso 40)
 3. **Render no template** — qualquer chamada a `wp_get_attachment_image()` (featured image, post-card, gallery) e qualquer `<img>` do conteúdo tem o `<img>` envolvido em `<picture>` com `<source>` pra cada formato existente, **com srcset responsivo espelhado + `sizes`**
 4. **Browser decide** — pega o primeiro `<source>` que entender (AVIF se Chrome 85+/Firefox 86+/Safari 16+, WebP se outro browser moderno, fallback `<img>` pra browsers antigos) e o candidato do tamanho certo pro slot
 
@@ -168,33 +170,35 @@ Select com 3 opções (nesta ordem):
 
 Pra Media Library já populada antes de ativar o módulo:
 
-1. Painel → Performance → Next-gen Image Formats → **Start regeneration**
-2. Confirma o total de imagens
-3. Loop AJAX em chunks de 10 attachments, com progress bar percentual
+1. Painel → Images & Media → **Start regeneration**
+2. Confirma o total de imagens (JPEG/PNG/WebP)
+3. Loop AJAX em chunks com **orçamento de tempo** (até 10 attachments por request, parando antes se o budget estourar), com progress bar percentual
 4. Reusa a mesma lógica do hook on-upload — zero duplicação de código
+5. Ao final: resumo "X convertidos, Y falhas" (persistido na linha "Last regeneration" do painel)
 
-Pra Media Library grande, pode levar minutos. Se travar (timeout, network), basta clicar de novo — vai retomar de onde parou (offset baseado em ID).
+Pra Media Library grande, pode levar minutos. Se travar (timeout, network), basta clicar de novo — vai retomar de onde parou.
+
+> 🚨 **Com Cloudflare/CDN na frente: purgar o cache do edge após regenerar** — os arquivos mantêm os nomes e o edge continua servindo as versões antigas.
 
 ### Cobertura
 
 ✅ **Featured images, post thumbnails, galleries, custom logo** — tudo que passa por `wp_get_attachment_image()`
 
-⏳ **NÃO cobre** imagens inline no conteúdo do post (bloco Gutenberg `core/image`). Essas vêm direto como `<img>` no HTML do `the_content()`. Pra cobrir, Fase 2 com filter `the_content` + parsing seguro via DOMDocument.
+✅ **Imagens inline no conteúdo** (bloco Gutenberg `core/image`, Markdown, HTML cru) — filter `the_content` (prio 20) com parsing seguro via DOMDocument (`rd_img_wrap_content_images`)
 
 ### Originais sempre preservados
 
 Os JPEG/PNG **nunca são deletados nem alterados**. WebP/AVIF são acréscimos. Se você desativar o módulo um dia, o site continua funcionando — só perde o ganho de compressão.
 
-### Qualidade unificada com o painel
+### Qualidade ancorada no painel (com escala própria pro AVIF)
 
-A opção **"Qualidade das Imagens (%)"** em **Recursos Gerais** (`jpeg_quality`) é a fonte única de verdade pra qualidade de TODOS os formatos do tema:
+A opção **"Image Quality (%)"** em **Images & Media** (`jpeg_quality`) é a âncora de qualidade do tema:
 
-- **JPEG** — `mod-general.php` engata em 4 filtros do WP core (`jpeg_quality`, `webp_quality`, `avif_quality`, `wp_editor_set_quality`) — aplicado quando o WP gera os sizes a partir do upload
-- **WebP/AVIF do nosso módulo** — `rd_img_get_quality()` lê a mesma key e passa pro Imagick/GD na conversão
+- **JPEG** — `mod-general.php` engata nos filtros do WP core (`jpeg_quality`, `wp_editor_set_quality`) — aplicado quando o WP gera os sizes a partir do upload
+- **WebP do nosso módulo** — `rd_img_get_quality()` lê a mesma key e passa pro Imagick/GD na conversão
+- **AVIF** — escala derivada via `rd_img_get_quality_for('avif')`: **valor−30, piso 40** (painel 80 → AVIF 50). A escala 0-100 não é comparável entre codecs; o −30 foi calibrado contra o default histórico do libheif que o site sempre serviu sem queixa visual
 
-Mudou o painel pra 85%? Todos os formatos passam pra 85% nas próximas regenerações. Mudou pra 70%? Idem. Coerência total entre formatos.
-
-Pra aplicar a nova qualidade em imagens já existentes, clique **Start regeneration** no painel — re-cropa os sizes (com nova qualidade nos JPEGs) + regenera WebP/AVIF (com a mesma qualidade).
+Mudou o painel? Os formatos acompanham nas próximas conversões (AVIF sempre com o offset). Pra aplicar em imagens já existentes: **Start regeneration** + purge do CDN.
 
 ---
 
