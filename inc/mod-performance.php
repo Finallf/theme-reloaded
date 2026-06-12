@@ -145,8 +145,11 @@ function rd_print_font_fallback_faces() {
 		return;
 	}
 	$nonce_attr = function_exists( 'rd_csp_nonce_attr' ) ? rd_csp_nonce_attr() : '';
+	// Values calibrated against the shipped variable fonts + real Arial via
+	// frequency-weighted advance widths (fontTools, 2026-06-12) — keep in
+	// sync with sass/base/_variables.scss.
 	// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static CSS literal; nonce attribute pre-escaped by rd_csp_nonce_attr().
-	echo '<style' . $nonce_attr . '>@font-face{font-family:"Inter-fallback";src:local("Arial");size-adjust:107.4%;ascent-override:90.2%;descent-override:22.48%;line-gap-override:0%}@font-face{font-family:"Poppins-fallback";src:local("Arial");size-adjust:112.16%;ascent-override:93.62%;descent-override:31.21%;line-gap-override:8.92%}</style>' . "\n";
+	echo '<style' . $nonce_attr . '>@font-face{font-family:"Inter-fallback";src:local("Arial");size-adjust:107.48%;ascent-override:90.14%;descent-override:22.44%;line-gap-override:0%}@font-face{font-family:"Poppins-fallback";src:local("Arial");size-adjust:114.11%;ascent-override:92.02%;descent-override:30.67%;line-gap-override:8.76%}</style>' . "\n";
 }
 add_action( 'wp_head', 'rd_print_font_fallback_faces', 1 );
 
