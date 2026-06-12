@@ -123,6 +123,8 @@ function rd_get_default_options(): array {
 		'ad_topo_desktop'             => '',
 		'ad_topo_mobile'              => '',
 		'ad_sidebar_sticky'           => '',
+		'ads_lazy_load'               => 0, // OFF = loaders print inline (deduped); ON = loaders stripped and injected on first interaction (or timeout below).
+		'ads_lazy_timeout'            => 5, // seconds before ads load anyway when the visitor never interacts; 0 = interaction only.
 
 		'update_beta_channel'         => 0, // self-update release channel: OFF = stable (/releases/latest), ON = newest release incl. prereleases.
 
@@ -1627,6 +1629,30 @@ function rd_settings_init() {
 			'type'        => 'textarea',
 			'placeholder' => 'google.com, pub-0000000000000000, DIRECT, f08c47fec0942fa0',
 			'desc'        => __( 'Content served <strong>virtually</strong> at <code>/ads.txt</code> — no file to upload via SFTP, survives migrations and is included in the settings backup. Paste the lines your ad networks give you (AdSense shows yours under <em>Sites → ads.txt</em>), one record per line. Empty = no ads.txt is served. <strong>Note:</strong> a physical ads.txt file in the web root takes precedence — delete it to use this field.', 'reloaded' ),
+		)
+	);
+	add_settings_field(
+		'ads_lazy_load',
+		__( 'Delay ads until interaction', 'reloaded' ),
+		'rd_master_field_cb',
+		'rd_options_monetization',
+		'sec_ads_global',
+		array(
+			'id'   => 'ads_lazy_load',
+			'type' => 'checkbox',
+			'desc' => __( 'Loads the ad network scripts (adsbygoogle.js etc.) only on the visitor\'s <strong>first interaction</strong> — scroll, touch, mouse move or key press — instead of competing with your content during the initial page load. The ad units stay in the HTML with their reserved space (no layout shift); only the network JS arrives later. Engaged visitors see ads ~instantly after their first gesture; visitors who bounce without interacting never download ~440 KB of ad JS. Uses the official network loader unmodified — only the timing changes.', 'reloaded' ),
+		)
+	);
+	add_settings_field(
+		'ads_lazy_timeout',
+		__( 'Fallback timeout (seconds)', 'reloaded' ),
+		'rd_master_field_cb',
+		'rd_options_monetization',
+		'sec_ads_global',
+		array(
+			'id'   => 'ads_lazy_timeout',
+			'type' => 'number',
+			'desc' => __( 'Safety net for the option above: loads the ads anyway after this many seconds when the visitor never interacts (e.g. reading without scrolling). <code>0</code> = interaction only, no timer. Default: 5.', 'reloaded' ),
 		)
 	);
 
