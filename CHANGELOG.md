@@ -7,6 +7,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 <br>
 
 
+## [1.9.2-beta.1](https://github.com/Finallf/theme-reloaded/compare/v1.9.1...v1.9.2-beta.1) (2026-06-12)
+
+### 🐛 Bug Fixes
+
+* **perf:** zero residual CLS and recenter update-now icon ([4570544](https://github.com/Finallf/theme-reloaded/commit/457054446ee04969b31741c0037f14af469ebb3b))
+
+<br>
+
+---
+
 ## [1.9.1](https://github.com/Finallf/theme-reloaded/compare/v1.9.0...v1.9.1) (2026-06-12)
 
 ### 🐛 Bug Fixes
