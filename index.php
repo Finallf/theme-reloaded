@@ -2,6 +2,15 @@
 defined( 'ABSPATH' ) || exit;
 get_header();
 
+// SEO: with a Custom Logo configured the header renders an <img> instead of
+// the h1.site-title text fallback — leaving the home with NO <h1> at all
+// (flagged by Bing Webmaster Tools, 2026-06-12). Screen-reader-only heading
+// keeps the semantic outline without touching the visual layout.
+if ( is_home() || is_front_page() ) {
+	$rd_tagline = get_bloginfo( 'description' );
+	echo '<h1 class="screen-reader-text">' . esc_html( get_bloginfo( 'name' ) . ( '' !== $rd_tagline ? ' — ' . $rd_tagline : '' ) ) . '</h1>';
+}
+
 // Featured carousel — full-width band between the header and the main
 // content (renders only when enabled, on home page 1, with posts).
 if ( function_exists( 'rd_render_carousel' ) ) {

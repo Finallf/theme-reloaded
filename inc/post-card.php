@@ -100,17 +100,22 @@ function rd_render_post_card( $type ) {
 	// Per-layout `sizes` hint. The global rd_calculate_card_sizes filter
 	// (mod-performance.php) describes the index post-grid (~461px columns),
 	// but these card layouts have their own geometry — without the override,
-	// desktop browsers picked 600w for ~300px grid slots (PageSpeed flagged
-	// ~60 KiB of waste). grid: auto-fill minmax(280px,1fr) → ~280-340px
-	// columns on any container; vertical: full content-width thumb (~600px
-	// next to the sidebar). Compact/google use other thumbnail sizes.
+	// desktop browsers picked 600w for ~300px slots (PageSpeed flagged ~60
+	// KiB of waste). Both wrappers are multi-column grids whose cards land at
+	// ~280-340px on desktop (grid: auto-fill minmax(280px,1fr); vertical:
+	// measured 280-304px in the 2026-06-12 audit — the earlier 600px guess
+	// overshot and made browsers grab 600w for ~300px slots).
+	// Compact/google use other thumbnail sizes.
 	$layout_sizes = array(
 		'grid'     => '(min-width: 769px) 320px, 100vw',
-		'vertical' => '(min-width: 1025px) 600px, 100vw',
+		'vertical' => '(min-width: 769px) 320px, 100vw',
 	);
 	if ( isset( $layout_sizes[ $type ] ) ) {
 		$thumb_attrs['sizes'] = $layout_sizes[ $type ];
 	}
+
+	// Empty Media Library alt → post title (see rd_thumb_alt_fallback).
+	$thumb_attrs = rd_thumb_alt_fallback( $post_id, $thumb_attrs );
 
 	// rd-card (600x338 hardcrop, 16:9) is the size designed for these cards —
 	// WP's 'medium' (300px soft crop) was a leftover: too small for the

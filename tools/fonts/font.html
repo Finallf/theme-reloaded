@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Laboratório de Tipografia</title>
+    <style>
+        @font-face {
+            font-family: 'Poppins Variavel';
+            src: url('poppins-variable.woff2') format('woff2');
+            /* O segredo para habilitar a variação no CSS: */
+            font-weight: 100 900; 
+            font-display: swap;
+        }
+
+        body {
+            font-family: 'Poppins Variavel', system-ui, sans-serif;
+            background-color: #1a1a1a;
+            color: #f0f0f0;
+            padding: 40px;
+        }
+
+        .peso-normal { font-weight: 400; }
+        .peso-bold { font-weight: 700; }
+        .peso-black { font-weight: 900; }
+        
+        .alerta { color: #ff4757; }
+    </style>
+</head>
+<body>
+    <h2>Teste de Eixos Variáveis</h2>
+    <p style="font-weight: 100;">Weight 100: O portal ReloadeD está muito rápido.</p>
+    <p class="peso-normal">Weight 400 (Normal): O portal ReloadeD está muito rápido.</p>
+    <p class="peso-bold">Weight 700 (Bold): O portal ReloadeD está muito rápido.</p>
+    <p class="peso-black">Weight 900 (Black): O portal ReloadeD está muito rápido.</p>
+
+    <hr style="border: 1px solid #333; margin: 30px 0;">
+
+    <h2>Teste de Subsetting (Acentos Latinos)</h2>
+    <p class="peso-normal alerta">
+        Se alguma destas letras estiver usando uma fonte diferente (Arial/Times), o subset falhou: <br><br>
+        á é í ó ú <br>
+        â ê î ô û <br>
+        ã õ ñ <br>
+        ç Ç <br>
+        Ação, Emoção, Coração! O dragão caçou o leão no verão.
+    </p>
+</body>
+</html>

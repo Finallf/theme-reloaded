@@ -7,6 +7,26 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 <br>
 
 
+## [1.9.1-beta.2](https://github.com/Finallf/theme-reloaded/compare/v1.9.1-beta.1...v1.9.1-beta.2) (2026-06-12)
+
+### ⚡ Performance Improvements
+
+* **fonts:** migrate all families to variable fonts ([3c0229c](https://github.com/Finallf/theme-reloaded/commit/3c0229c2cc52a9fbab6311c42b98114782e73963))
+
+<br>
+
+---
+
+## [1.9.1-beta.1](https://github.com/Finallf/theme-reloaded/compare/v1.9.0...v1.9.1-beta.1) (2026-06-12)
+
+### 🐛 Bug Fixes
+
+* **seo:** home h1 + featured-image alt fallback (Bing WMT) ([2643fba](https://github.com/Finallf/theme-reloaded/commit/2643fba41dc4a670cd66e213db747cf665c7c0bc))
+
+<br>
+
+---
+
 ## [1.9.0](https://github.com/Finallf/theme-reloaded/compare/v1.8.0...v1.9.0) (2026-06-12)
 
 ### ✨ Features
