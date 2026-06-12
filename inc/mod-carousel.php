@@ -148,6 +148,18 @@ function rd_carousel_enqueue() {
 add_action( 'wp_enqueue_scripts', 'rd_carousel_enqueue' );
 
 /**
+ * The carousel <img> sizes attribute — mirrors the CSS (88vw slides on
+ * phones, 84% of the track on desktop, capped by the 1440px container).
+ * Single source of truth shared by the slide renderer below AND the LCP
+ * preload (rd_preload_lcp_image in mod-performance.php): both MUST emit the
+ * exact same string, or the browser may pick different srcset candidates and
+ * download the slide twice.
+ */
+function rd_carousel_img_sizes(): string {
+	return '(max-width: 768px) 88vw, (max-width: 1440px) 84vw, 1210px';
+}
+
+/**
  * Renders the carousel. Called from index.php between get_header() and <main>.
  */
 function rd_render_carousel() {
@@ -177,13 +189,13 @@ function rd_render_carousel() {
 
 				// Slide 1 is the LCP candidate — load it eagerly with high priority.
 				// The rest only load as the user (or the autoplay) approaches them.
-				// sizes mirrors the CSS: slides are 88% wide on phones, 84% of the
-				// track on desktop, capped by the 1440px container (max ~1210px).
-				// WP's default "(max-width: 1200px) 100vw, 1200px" made browsers
-				// always pick the 1200w candidate for ~630px slots.
+				// sizes comes from rd_carousel_img_sizes() (shared with the LCP
+				// preload — see the helper's doc). WP's default "(max-width:
+				// 1200px) 100vw, 1200px" made browsers always pick the 1200w
+				// candidate for ~630px slots.
 				$img_attr = array(
 					'class' => 'rd-carousel__img',
-					'sizes' => '(max-width: 768px) 88vw, (max-width: 1440px) 84vw, 1210px',
+					'sizes' => rd_carousel_img_sizes(),
 				);
 				if ( 0 === $i ) {
 					$img_attr['loading']       = 'eager';

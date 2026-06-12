@@ -57,15 +57,22 @@ function rd_img_get_quality(): int {
 
 /**
  * Per-format quality. The 0-100 scale is NOT portable across codecs: AVIF at
- * the JPEG's q80 produces bloated files (PageSpeed flagged a 139 KiB AVIF
- * that q55-60 encodes visually identical at ~50-60 KiB). JPEG/WebP keep the
- * panel value; AVIF gets a -20 offset with a floor of 45 — tracks the admin's
- * quality intent while staying in AVIF's efficient range.
+ * the JPEG's q80 produces bloated files. JPEG/WebP keep the panel value; AVIF
+ * gets a -30 offset with a floor of 40 — tracks the admin's quality intent
+ * while staying in AVIF's efficient range.
+ *
+ * Why -30 (was -20): calibrated against production data, 2026-06-12. For
+ * years the site unknowingly served AVIFs at libheif's DEFAULT quality (~q50
+ * equivalent — the per-image Imagick setter was ignored, see rd_img_convert)
+ * and nobody ever flagged visual issues. The first regen with the knob fixed
+ * at -20 (panel 80 → q60) produced files ~35% HEAVIER than that battle-tested
+ * default (nintendo-direct 1200x675: 95.8 KiB → 130 KiB; PageSpeed flagged
+ * the regression). Panel 80 → q50 lands exactly on the proven sweet spot.
  */
 function rd_img_get_quality_for( string $format ): int {
 	$quality = rd_img_get_quality();
 	if ( 'avif' === $format ) {
-		return max( 45, $quality - 20 );
+		return max( 40, $quality - 30 );
 	}
 	return $quality;
 }
