@@ -107,21 +107,26 @@
 // invisible. Browsers without size-adjust support ignore the descriptors and
 // behave exactly as before — pure progressive enhancement, zero requests.
 // ==========================================================================
+// Values calibrated against the ACTUAL shipped variable fonts + the real
+// Windows Arial via frequency-weighted advance widths (fontaine method,
+// fontTools script — 2026-06-12). The previous generic Poppins values were
+// ~2% narrow, enough to re-wrap the carousel title on swap (0.056 CLS).
+// Keep in sync with rd_print_font_fallback_faces() in mod-performance.php.
 @font-face {
     font-family: 'Inter-fallback';
     src: local('Arial');
-    size-adjust: 107.40%;
-    ascent-override: 90.20%;
-    descent-override: 22.48%;
+    size-adjust: 107.48%;
+    ascent-override: 90.14%;
+    descent-override: 22.44%;
     line-gap-override: 0%;
 }
 @font-face {
     font-family: 'Poppins-fallback';
     src: local('Arial');
-    size-adjust: 112.16%;
-    ascent-override: 93.62%;
-    descent-override: 31.21%;
-    line-gap-override: 8.92%;
+    size-adjust: 114.11%;
+    ascent-override: 92.02%;
+    descent-override: 30.67%;
+    line-gap-override: 8.76%;
 }
 
 /* ==========================================================================

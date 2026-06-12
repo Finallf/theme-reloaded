@@ -1650,10 +1650,16 @@ body {
 // spinning is-loading state then rotates around an off-center axis and the
 // glyph wobbles like a bent wheel. Flex centering + a square box with
 // line-height = height put the glyph (and the spin axis) dead center.
+// .wp-core-ui prefix on the class-based selector is REQUIRED: core's
+// `.wp-core-ui .button { display: inline-block }` (0,2,0) out-specifies a
+// bare `.rd-update-now` (0,1,0) and the icon fell back to baseline
+// alignment — the off-center wobble reappeared on exactly that button
+// (caught by Regis on the 1.9.x update). The #id selectors never had the
+// problem (1,0,0 wins).
 #rd-self-update-check,
 #rd-img-regen-start,
 #rd-img-cleanup-start,
-.rd-update-now {
+.wp-core-ui .rd-update-now {
     display: inline-flex;
     align-items: center;
     gap: 6px;
@@ -1672,7 +1678,7 @@ body {
 // painting its progress screen — the zip download happens in that gap and
 // the only native hint is the browser tab spinner).
 #rd-self-update-check.is-loading,
-.rd-update-now.is-loading {
+.wp-core-ui .rd-update-now.is-loading {
     opacity: 0.7;
     cursor: wait;
 

@@ -37,6 +37,13 @@
     box-shadow: 0 -5px 15px rgba(0, 0, 0, 0.5);
     border-top: 1px solid $border-subtle;
     transition: opacity 0.3s ease, transform 0.3s ease;
+    // System font ON PURPOSE (CLS kill, 2026-06-12): the banner was the
+    // single largest layout-shift contributor (0.067) — its height follows
+    // the text wrap, so ANY webfont swap that re-wraps a line moves the
+    // whole fixed box. Consent UI is utilitarian and already visually
+    // pinned-dark/detached from the site theme; the system stack removes
+    // its font dependency (and the shift) entirely.
+    font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif;
 
     display: flex;
     flex-direction: column;
