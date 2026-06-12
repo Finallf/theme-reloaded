@@ -139,10 +139,10 @@ Habilitado via `enable_next_gen_images` no painel (default: ✅). Detalhes técn
 
 ### Como funciona
 
-1. **Upload** — você manda um JPEG/PNG via Media Library. WP gera os tamanhos custom do tema (full, thumbnail, medium, large, `rd-micro`, `rd-card`, `rd-full-banner`)
-2. **Hook automático** (`wp_generate_attachment_metadata`) — pra cada tamanho gerado, o módulo cria WebP e/ou AVIF ao lado (preferência: Imagick; fallback: GD). Quality 80
-3. **Render no template** — qualquer chamada a `wp_get_attachment_image()` (featured image, post-card, gallery) tem o `<img>` envolvido em `<picture>` com `<source>` pra cada formato existente
-4. **Browser decide** — pega o primeiro `<source>` que entender (AVIF se Chrome 85+/Firefox 86+/Safari 16+, WebP se outro browser moderno, fallback `<img>` pra browsers antigos)
+1. **Upload** — você manda um JPEG/PNG/WebP via Media Library. WP gera todos os tamanhos (full, thumbnail, medium, medium_large, large + `rd-micro`, `rd-popular-thumb`, `rd-card-half`, `rd-card`, `rd-card-wide`, `rd-full-banner`, `rd-qr`)
+2. **Hook automático** (`wp_generate_attachment_metadata`) — pra cada tamanho gerado, o módulo cria WebP e/ou AVIF ao lado (preferência: Imagick; fallback: GD — forçado pra AVIF de fontes com alpha). Quality do painel; AVIF em escala derivada (valor−20, piso 45)
+3. **Render no template** — qualquer chamada a `wp_get_attachment_image()` (featured image, post-card, gallery) e qualquer `<img>` do conteúdo tem o `<img>` envolvido em `<picture>` com `<source>` pra cada formato existente, **com srcset responsivo espelhado + `sizes`**
+4. **Browser decide** — pega o primeiro `<source>` que entender (AVIF se Chrome 85+/Firefox 86+/Safari 16+, WebP se outro browser moderno, fallback `<img>` pra browsers antigos) e o candidato do tamanho certo pro slot
 
 ### Dependências de servidor (auto-detectadas)
 
