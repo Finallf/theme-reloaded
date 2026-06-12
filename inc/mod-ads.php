@@ -42,6 +42,29 @@ add_action( 'init', 'rd_ads_serve_ads_txt', 2 );
  *******************************************************************************/
 
 /**
+ * Whether the "Delay ads until interaction" panel toggle is ON.
+ */
+function rd_ads_lazy_enabled(): bool {
+	return rd_get_option_bool( 'ads_lazy_load' );
+}
+
+/**
+ * Per-request queue of external loader script URLs collected by
+ * rd_ads_dedupe_loader() when lazy mode is ON. The footer bootstrap
+ * (rd_ads_print_lazy_loader) injects them on the first interaction.
+ *
+ * @param string|null $add URL to enqueue (deduped); null = just read.
+ * @return string[] The collected URLs.
+ */
+function rd_ads_loader_queue( ?string $add = null ): array {
+	static $srcs = array();
+	if ( null !== $add && ! in_array( $add, $srcs, true ) ) {
+		$srcs[] = $add;
+	}
+	return $srcs;
+}
+
+/**
  * Strips duplicate ad-network loader <script src> tags at render time.
  *
  * Every AdSense unit pasted in the panel/widgets ships its own
@@ -57,16 +80,27 @@ add_action( 'init', 'rd_ads_serve_ads_txt', 2 );
  * render starts fresh. Generic by design — any duplicated external loader
  * (GAM's gpt.js, etc.) gets the same treatment.
  *
+ * Lazy mode ("Delay ads until interaction" toggle): instead of keeping the
+ * first occurrence, EVERY loader tag is stripped and its URL queued; the
+ * footer bootstrap injects them on the visitor's first scroll/touch/key/move
+ * (or after the fallback timeout). The per-unit <ins> + push() snippets stay
+ * inline — they only queue work for whenever the loader lands.
+ *
  * @param string $html Ad code (after CSP nonce injection).
- * @return string Same HTML with already-seen loader <script> tags removed.
+ * @return string Same HTML with loader <script> tags removed as appropriate.
  */
 function rd_ads_dedupe_loader( string $html ): string {
 	static $seen = array();
+	$lazy        = rd_ads_lazy_enabled();
 
 	return (string) preg_replace_callback(
 		'#<script\b[^>]*\bsrc=["\']([^"\']+)["\'][^>]*>\s*</script>#i',
-		function ( $matches ) use ( &$seen ) {
+		function ( $matches ) use ( &$seen, $lazy ) {
 			$src = $matches[1];
+			if ( $lazy ) {
+				rd_ads_loader_queue( html_entity_decode( $src, ENT_QUOTES ) );
+				return ''; // stripped — the footer bootstrap injects it on interaction
+			}
 			if ( isset( $seen[ $src ] ) ) {
 				return ''; // loader already on the page — drop the duplicate
 			}
@@ -76,6 +110,62 @@ function rd_ads_dedupe_loader( string $html ): string {
 		$html
 	);
 }
+
+/**
+ * Footer bootstrap for lazy ads: one inline script (CSP nonce'd, same pattern
+ * as the search-suggestions lazy loader) that injects every queued ad-network
+ * loader on the visitor's first interaction — scroll, touch, mouse move, key
+ * press or click — or after the configured fallback timeout.
+ *
+ * Why this is safe and effective:
+ *   - The official network loaders run unmodified; only WHEN they load changes.
+ *   - Ad units (<ins> + push()) are already in the HTML with reserved space,
+ *     so the late arrival costs zero CLS.
+ *   - Lab runs (Lighthouse/PageSpeed) never interact, so the ~440 KB of ad JS
+ *     stays out of the measured trace entirely — and real bouncing visitors
+ *     get the same saving.
+ *
+ * Hooked at wp_footer 99: after the mobile anchor (default 10) and widgets
+ * have rendered, so the queue is complete.
+ */
+function rd_ads_print_lazy_loader() {
+	if ( ! rd_ads_lazy_enabled() ) {
+		return;
+	}
+	$srcs = rd_ads_loader_queue();
+	if ( empty( $srcs ) ) {
+		return;
+	}
+
+	$timeout    = max( 0, (int) rd_get_option( 'ads_lazy_timeout', 5 ) );
+	$nonce_attr = function_exists( 'rd_csp_nonce_attr' ) ? rd_csp_nonce_attr() : '';
+	?>
+	<script<?php echo $nonce_attr; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- nonce attribute pre-escaped by rd_csp_nonce_attr(). ?>>
+	(function () {
+		var srcs = <?php echo wp_json_encode( array_values( $srcs ) ); ?>;
+		var events = ['scroll', 'mousemove', 'touchstart', 'keydown', 'click'];
+		var fired = false;
+		function load() {
+			if (fired) { return; }
+			fired = true;
+			events.forEach(function (ev) { document.removeEventListener(ev, load, { passive: true }); });
+			srcs.forEach(function (src) {
+				var s = document.createElement('script');
+				s.src = src;
+				s.async = true;
+				s.crossOrigin = 'anonymous';
+				document.head.appendChild(s);
+			});
+		}
+		events.forEach(function (ev) { document.addEventListener(ev, load, { passive: true }); });
+		<?php if ( $timeout > 0 ) : ?>
+		setTimeout(load, <?php echo (int) ( $timeout * 1000 ); ?>);
+		<?php endif; ?>
+	})();
+	</script>
+	<?php
+}
+add_action( 'wp_footer', 'rd_ads_print_lazy_loader', 99 );
 
 function rd_render_ad_topo() {
 	// 1. Renders the top banner (Desktop)

@@ -304,9 +304,11 @@ Chrome DevTools → F12 → menu `⋮` (canto sup. direito) → **More tools** �
 
 Tudo em **vanilla JS** (sem jQuery no frontend). Os arquivos:
 
-### `assets/js/navigation.js` (~330 linhas)
+### `assets/js/navigation.js` (~410 linhas)
 
-Arquivo principal do frontend. Vários `DOMContentLoaded` listeners independentes pra recursos diferentes:
+Arquivo principal do frontend — o único global incondicional. Vários `DOMContentLoaded` listeners independentes pra recursos diferentes.
+
+> **Dieta da v1.7.x (PageSpeed wave):** dois blocos que só trabalhavam em páginas específicas foram extraídos pra arquivos próprios com enqueue condicional — o controle de layout da busca (~7 KB → `search-layout.js`, só `is_search()`) e o submit AJAX de comentários (~4,7 KB → `comments.js`, só `is_singular() + comments_open()`). O arquivo caiu de ~29 KB pra ~18 KB.
 
 #### 1. **Voltar ao Topo**
 - Botão `#back-to-top` que aparece após scroll de 300px
@@ -362,11 +364,7 @@ A função usa `reloaded_i18n.copied` e `reloaded_i18n.copy_error` (via `wp_loca
 - Click em Reject/Accept/Save → grava cookie JSON `rd_lgpd_consent` (365 dias) + apaga cookie legado `rd_lgpd_accepted` + animação `.rd-lgpd-closing` + `location.reload()` após 350ms pra scripts gated re-avaliarem
 - Link `#rd-lgpd-reopen` no footer → remove classe `.rd-lgpd-hidden` do banner e expande direto (sem reload, sem perder valores dos toggles que vêm pré-marcados pelo PHP)
 
-#### 7. **Search Chips Toggle (AJAX redistribution)**
-- Click nos chips `.rd-chip` → toggle `.active` + atualiza `localStorage['rd_search_prefs']`
-- Se `paged > 1` → full reload pra page 1
-- Se `paged == 1` → AJAX `rd_search_redistribute` + swap de innerHTML
-- Loading state `.rd-loading` durante AJAX
+#### 7. **Search Chips Toggle** → movido pra `assets/js/search-layout.js` (ver abaixo)
 
 #### 8. **Ad Close (mobile anchor)**
 - Click em `.rd-ad-close` → fade out + `display: none`
@@ -385,6 +383,28 @@ Camada de controle do Carrossel de Destaques (markup em `mod-carousel.php`; enqu
 - **Matriz de pausas:** hover/foco, `pointerdown` no track, aba oculta (`visibilitychange`), fora da viewport (`IntersectionObserver` threshold 0.25), e `prefers-reduced-motion` → autoplay nunca liga
 - Setas/dots/teclado; slide ativo derivado da **posição de scroll** (fonte única de verdade — swipe, setas e autoplay convergem)
 - Gate `.is-ready` revela os controles (sem JS = fileira swipeável pura)
+
+### `assets/js/search-layout.js` (~200 linhas)
+
+Controle de layout da busca (chips + redistribuição AJAX) — enqueue **condicional em `is_search()`** (`mod-search.php`, que também localiza o `rd_search_data` nesse handle). Vivia dentro do `navigation.js`, entregando ~7 KB de código morto pra toda página que não fosse busca.
+
+- Click nos chips `.rd-chip` → toggle `.active` + atualiza `localStorage['rd_search_prefs']`
+- Se `paged > 1` → full reload pra page 1
+- Se `paged == 1` → AJAX `rd_search_redistribute` + swap de innerHTML
+- Loading state `.rd-loading` durante AJAX
+- Keyboard nav nos chips (setas/Home/End, padrão WAI-ARIA toolbar)
+
+### `assets/js/comments.js` (~120 linhas)
+
+Submit AJAX do form de comentários — enqueue **condicional em `is_singular() && comments_open()`** (`mod-performance.php`). Também extraído do `navigation.js`.
+
+- Captura o submit do `#commentform` (só se a action ainda é a nativa `wp-comments-post.php` — não interfere com Disqus/Discourse)
+- `fetch` com `redirect: 'manual'`: WP responde 302 no sucesso → `opaqueredirect` = comentário criado → feedback + soft reload; 200 com HTML de `wp_die` = erro → extrai a mensagem e mantém o form editável
+- Strings i18n via objeto global `reloaded_i18n` (localizado no handle `rd-navigation`, que é global e imprime antes de qualquer script `defer` executar)
+
+### `assets/js/search-suggestions.js` (~280 linhas)
+
+Autocomplete da busca — **não é mais enfileirado**: um loader inline (~0,5 KB, `wp_footer`, nonce CSP) injeta o script + dados no **primeiro `focusin`** de um campo de busca (detalhes no [doc de módulos](04-modulos-php.md), seção mod-search-suggestions). Por isso o init checa `document.readyState` em vez de só esperar `DOMContentLoaded`.
 
 ### `assets/js/views-tracker.js` (~25 linhas)
 
@@ -410,7 +430,7 @@ Dados (`post_id`, `nonce`, `ajaxurl`) injetados via `wp_localize_script` no `mod
 
 ### `assets/js/admin-panel.js`
 
-Bundle único do painel admin — consolida 7 módulos que antes eram arquivos separados por aba: uploads de mídia (WP Media Library), gráficos K4/auto-render (Chart.js), toggles inline do Dashboard, self-update do tema, import/export/restore de backup e regeneração WebP/AVIF. Enfileirado uma vez (`rd-admin-panel`, prioridade 5) em qualquer aba do painel; cada módulo interno tem escopo próprio e se auto-protege (sai cedo se o DOM/objeto localizado dele não existe), então o código fica inerte nas abas que não atende. Os módulos por aba (`mod-stats`/`mod-dashboard`/`mod-backup`/`mod-image-formats`) só injetam seus dados via `wp_localize_script` no handle `rd-admin-panel`.
+Bundle único do painel admin — consolida 7 módulos que antes eram arquivos separados por aba: uploads de mídia (WP Media Library), gráficos K4/auto-render (Chart.js), toggles inline do Dashboard, self-update do tema, import/export/restore de backup e regeneração WebP/AVIF (chunks com orçamento de tempo + resumo de falhas + botão "Remove unused format"). Enfileirado uma vez (`rd-admin-panel`, prioridade 5) em qualquer aba do painel; cada módulo interno tem escopo próprio e se auto-protege (sai cedo se o DOM/objeto localizado dele não existe), então o código fica inerte nas abas que não atende. Os módulos por aba (`mod-stats`/`mod-dashboard`/`mod-backup`/`mod-image-formats`) só injetam seus dados via `wp_localize_script` no handle `rd-admin-panel`.
 
 > O módulo de upload de mídia usa jQuery (porque o admin do WP carrega jQuery por padrão); o resto é vanilla.
 

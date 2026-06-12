@@ -24,8 +24,17 @@ add_action(
 
 		$ad_global = rd_get_option( 'ad_global' );
 		if ( ! empty( $ad_global ) ) {
+			$ad_global_out = rd_csp_inject_nonce( $ad_global );
+			// Register this loader with the dedupe BEFORE the body ad slots
+			// render: wp_head runs first, so when the global head snippet
+			// already carries adsbygoogle.js, every per-slot copy of the
+			// loader is stripped and the page ends up with exactly one
+			// (see rd_ads_dedupe_loader in mod-ads.php).
+			if ( function_exists( 'rd_ads_dedupe_loader' ) ) {
+				$ad_global_out = rd_ads_dedupe_loader( $ad_global_out );
+			}
 			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- BY DESIGN: global ad/tracking script (AdSense Auto Ads, custom head snippets). Admin with manage_options trusted under WP model. CSP nonce injected automatically into <script> tags via rd_csp_inject_nonce().
-			echo rd_csp_inject_nonce( $ad_global ) . "\n";
+			echo $ad_global_out . "\n";
 		}
 	}
 );

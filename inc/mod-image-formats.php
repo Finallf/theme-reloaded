@@ -184,6 +184,11 @@ function rd_img_convert( string $source_path, string $target_format, ?int $quali
 
 			$img->setImageFormat( strtoupper( $target_format ) );
 			$img->setImageCompressionQuality( $quality );
+			// ImageMagick 6's heic/AVIF delegate reads the GLOBAL quality setter
+			// and silently ignores the per-image one above — verified empirically
+			// on the production server (IM 6.9.11: q80 and q45 produced identical
+			// bytes until this was added). Set both; harmless on IM7/WebP.
+			$img->setCompressionQuality( $quality );
 
 			// AVIF: heic:speed balances speed vs quality (0=slow+better, 10=fast+worse)
 			if ( $target_format === 'avif' ) {

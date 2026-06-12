@@ -59,11 +59,22 @@ add_action( 'after_setup_theme', 'rd_setup' );
 
 /*******************************************************************************
  * Removes hidden/native WordPress image sizes                   - (Hardcoded) *
+ *                                                                             *
+ * Only the retina monsters (1536x1536, 2048x2048) — those ARE registered via  *
+ * add_image_size() internally, so remove_image_size() works on them.          *
+ *                                                                             *
+ * `medium_large` (768px) is DELIBERATELY KEPT. A remove_image_size() call     *
+ * used to sit here for it, but it was a silent no-op: medium_large is an      *
+ * option-based core size (`medium_large_size_w` in the DB), invisible to      *
+ * remove_image_size() — disabling it for real would require zeroing that      *
+ * option. Discovered during the 2026-06 PageSpeed wave… and kept on purpose:  *
+ * for 16:9 uploads its 768x432 output joins the theme's 16:9 srcset ladder    *
+ * and browsers pick it for the ~600-700px card slots, where it fits better    *
+ * than the 600/800 neighbors. Free win, costs only disk.                      *
  */
 add_action(
 	'init',
 	function () {
-		remove_image_size( 'medium_large' );
 		remove_image_size( '1536x1536' );
 		remove_image_size( '2048x2048' );
 	}

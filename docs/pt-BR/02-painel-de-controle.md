@@ -184,8 +184,8 @@ Aba criada na Wave 11 consolidando 4 controles dispersos. **2 sections** (1 stan
 | Opção | Default | O que faz |
 |---|---|---|
 | `image_resizing` | ✅ | Hard crop em uploads (banners/cards sempre alinhados) |
-| `jpeg_quality` | `80` | Qualidade de re-encode no upload (JPEG/WebP/AVIF). WP default = 82; tema = 80 |
-| `enable_next_gen_images` | ✅ | Gera WebP/AVIF de cada upload + wrappa `<img>` em `<picture>` com `<source>` |
+| `jpeg_quality` | `80` | Qualidade de re-encode no upload (JPEG/WebP). **AVIF usa escala derivada própria: valor−20 com piso 45** (painel 80 → AVIF 60) — a escala 0-100 não é comparável entre codecs. WP default = 82; tema = 80 |
+| `enable_next_gen_images` | ✅ | Gera WebP/AVIF de cada upload (uploads WebP ganham gêmeo AVIF) + wrappa `<img>` em `<picture>` com `<source>` de srcset espelhado |
 | `image_format_mode` | `avif` | Formato ativo: `avif` (default — ~50% menor), `webp` (~30% menor), ou `both` |
 
 ### Section: Regenerate Library (`sec_media_regenerate`) — *custom renderer*
@@ -193,7 +193,9 @@ Aba criada na Wave 11 consolidando 4 controles dispersos. **2 sections** (1 stan
 Renderizada por `rd_img_render_panel_section()` em `inc/mod-image-formats.php`. Layout 30/70 (Wave 11 Fase G):
 
 - **Card 30% (Server Capabilities):** detecção automática de Imagick/WebP/AVIF no servidor com badges `available`/`unavailable`. Status banner amber quando módulo está dormente (sem WebP nem AVIF).
-- **Card 70% (Regenerate Action):** descrição expandida + botão "Start regeneration" + contador de attachments + progress bar AJAX em chunks de 10.
+- **Card 70% (Regenerate Action):** descrição expandida + botão "Start regeneration" + contador de attachments (JPEG/PNG/WebP) + progress bar AJAX em chunks com orçamento de tempo (até 10 por request, parando antes se o budget de tempo estourar). Abaixo: linha **"Last regeneration: data — X converted, Y failures"** (option `rd_img_last_regen`, badge de aviso quando há falha) e botão **"Remove unused format"** — apaga do disco os arquivos do formato não coberto pelo Format Mode atual (desabilitado quando o modo é `both`).
+
+> 🚨 Com Cloudflare (ou qualquer CDN/proxy) na frente: **sempre purgar o cache do edge depois de regenerar** — os arquivos são sobrescritos com os mesmos nomes e o edge continua servindo as versões antigas.
 
 ---
 
@@ -384,6 +386,10 @@ Monetização. **2 sections.**
 |---|---|
 | `ad_global` | Tag global do `<head>` (ex: AdSense Auto Ads). Aceita JS/HTML raw |
 | `ads_txt_content` | Conteúdo servido **virtualmente** em `/ads.txt` (mesmo padrão do arquivo de chave do IndexNow — sem SFTP, sobrevive a migração, entra no backup). 1 registro por linha; vazio = dormante. ⚠️ Arquivo físico `ads.txt` na raiz tem precedência (o web server serve antes do WP) — apague-o pra usar o campo |
+| `ads_lazy_load` | **Delay ads until interaction** (default OFF): remove os loaders das redes (`adsbygoogle.js` etc.) do HTML e injeta no primeiro gesto do visitante (scroll/touch/tecla/mouse). Os `<ins>` ficam com espaço reservado — zero CLS. Loader oficial sem modificação, só o momento muda. Bônus: Lighthouse não interage → ads ficam fora da medição do lab |
+| `ads_lazy_timeout` | Rede de segurança do lazy: carrega os ads mesmo sem interação após N segundos (default `5`; `0` = só interação) |
+
+> Independente do lazy: os loaders duplicados são **deduplicados** na renderização (`rd_ads_dedupe_loader` — 1 tag `adsbygoogle.js` por página, por client ID), incluindo o do `ad_global` do head, que "vacina" os slots do body.
 
 ### Section: Banners by Position (`sec_ads_zones`)
 

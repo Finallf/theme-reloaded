@@ -15,9 +15,10 @@ Não é "módulo de feature", mas a base de tudo. Hooks no `after_setup_theme`:
   - `rd-popular-thumb` 200×113 — Widget "Most Read" (display 100×56 com DPR 2x retina, 16:9)
   - `rd-card-half` 400×225 — cards do post-grid em viewport intermediário (display ~390×220, 16:9). Aproveita o srcset auto do WP — browser escolhe esse entre `rd-micro` e `rd-card`
   - `rd-card` 600×338 — cards da home/archives/search (16:9)
-  - `rd-full-banner` 1200×675 — banner top do post single (16:9)
+  - `rd-card-wide` 800×450 — degrau intermediário entre `rd-card` e `rd-full-banner`: slides do carrossel (~630px CSS / mobile DPR 2) e cards hero (~700px) caíam no vão e forçavam o candidato 1200w (PageSpeed: "image larger than needed")
+  - `rd-full-banner` 1200×675 — banner top do post single (16:9) + carrossel da home
   - `rd-qr` 240×240 — QR codes de doação na sidebar (1:1, cobre retina sem desperdiçar banda)
-- Remove tamanhos nativos não usados (`medium_large`, `1536x1536`, `2048x2048`)
+- Remove os tamanhos retina nativos não usados (`1536x1536`, `2048x2048`). O `medium_large` (768px) é **mantido de propósito**: é option-based (`medium_large_size_w`), invisível ao `remove_image_size()` — e pra uploads 16:9 o 768×432 dele entra na escada do srcset e serve bem os slots de card ~600-700px (ver comentário no `core.php`)
 - Registra 1 menu (`menu-1` Primary). _(O `menu-footer` foi removido em 2026-06-04 — o menu do footer agora é por widget.)_
 - Registra 2 sidebars (`sidebar-1` Main, `footer-widget-area`)
 
@@ -236,7 +237,7 @@ Node + Puppeteer são **devDependencies** locais (em `node_modules/` gitignored)
 
 ## 🖼️ `inc/mod-image-formats.php` — WebP/AVIF (Next-gen image delivery)
 
-Gera automaticamente versões **WebP** e/ou **AVIF** de cada imagem JPEG/PNG no upload (todos os tamanhos do WP + tamanhos custom do tema) e entrega via `<picture><source>...<img></picture>` com fallback transparente pro original.
+Gera automaticamente versões **WebP** e/ou **AVIF** de cada imagem JPEG/PNG/WebP no upload (todos os tamanhos do WP + tamanhos custom do tema) e entrega via `<picture><source>...<img></picture>` com fallback transparente pro original. Uploads em WebP também ganham gêmeo AVIF (WebP→WebP é no-op).
 
 ### Dependências de servidor (auto-detectadas em runtime)
 
@@ -244,9 +245,9 @@ O módulo **degrada graciosamente** — sem dependência forte. Detecta capabili
 
 | Componente | Pra que serve | Versão mínima |
 |------------|--------------|--------------|
-| **Imagick** (PHP ext) + **ImageMagick** com WebP/AVIF | Conversão preferencial (qualidade superior) | ImageMagick 7.0+ com `--with-webp` e `libheif` (AVIF) |
-| **GD** com WebP | Fallback de WebP se Imagick indisponível | PHP 7.1+ (WebP nativo) |
-| **GD** com AVIF | Fallback de AVIF se Imagick indisponível | PHP 8.1+ (AVIF nativo) |
+| **Imagick** (PHP ext) + **ImageMagick** com WebP/AVIF | Conversão preferencial (qualidade superior) | ImageMagick 6.9+ com `--with-webp` e `libheif` (AVIF). ⚠️ No IM6 o delegate heic/AVIF **ignora** `setImageCompressionQuality` (per-image) e só lê `setCompressionQuality` (global) — descoberto empiricamente em 2026-06-11 (q80 e q45 geravam bytes idênticos); o módulo seta os DOIS, inofensivo no IM7 |
+| **GD** com WebP | Fallback de WebP se Imagick indisponível; leitura de uploads WebP | PHP 7.1+ (WebP nativo) |
+| **GD** com AVIF | Fallback de AVIF; **engine forçada** pra AVIF de fontes com alpha potencial (PNG, WebP — bug do IM6+libheif com transparência) | PHP 8.1+ (AVIF nativo) |
 
 **Diagnóstico:** o painel mostra o que está disponível no servidor em **Performance → Next-gen Image Formats → Server capabilities**. Se nem Imagick nem GD têm WebP/AVIF, o módulo fica dormente — uploads não são convertidos e o filter `<picture>` passa transparente. Não quebra nada.
 
@@ -281,35 +282,44 @@ Aba **Performance → Next-gen Image Formats**:
 |-----------|------|-----------|
 | `rd_img_get_capabilities()` | static cache | Detecta Imagick/GD + WebP/AVIF em cada |
 | `rd_img_can_generate($format)` | helper | Boolean — pode gerar WebP ou AVIF? |
-| `rd_img_convert($source, $format, $quality = null)` | helper de conversão | Converte 1 arquivo. Prefere Imagick (qualidade superior), fallback GD. **Quality default lê do painel** (`jpeg_quality` em Recursos Gerais) via `rd_img_get_quality()` — coerência com JPEGs gerados pelo WP. Pode passar `$quality` explícito pra override programático. AVIF usa `heic:speed: 6` (balance qualidade/velocidade) |
-| `rd_img_get_quality()` | helper | Lê `jpeg_quality` do painel com clamp 1-100. Mesmo valor aplicado a JPEG (via filter WP) e WebP/AVIF — coerência unificada. Default 80 se key ausente |
-| `rd_img_generate_on_upload($metadata, $id)` | `wp_generate_attachment_metadata` filter | Itera por TODOS os sizes do attachment (full + thumbnail + medium + large + custom sizes do tema) e gera WebP/AVIF de cada um |
-| `rd_img_wrap_in_picture($html, ...)` | `wp_get_attachment_image` filter | Envolve `<img>` em `<picture>` com `<source type="image/avif">` antes de `<source type="image/webp">` antes do `<img>` original. Browser pega o primeiro `<source>` compatível |
+| `rd_img_convert($source, $format, $quality = null)` | helper de conversão | Converte 1 arquivo (fonte jpg/jpeg/png/webp). Prefere Imagick, fallback GD — exceto AVIF de PNG/WebP (alpha potencial → direto GD). Quality default por formato via `rd_img_get_quality_for()`. AVIF usa `heic:speed: 6` + seta `setCompressionQuality` global (workaround IM6). Alimenta `rd_img_conversion_stats()` |
+| `rd_img_get_quality()` | helper | Lê `jpeg_quality` do painel com clamp 1-100. Default 80 |
+| `rd_img_get_quality_for($format)` | helper | **Qualidade por formato:** JPEG/WebP usam o valor do painel direto; **AVIF usa valor−20 com piso 45** (escala 0-100 não é portável entre codecs — AVIF em q de JPEG gera arquivo inchado). Painel 80 → AVIF 60 |
+| `rd_img_conversion_stats($op)` | static counters | Contadores converted/failed por request — alimentam o resumo "Last regeneration" do painel (option `rd_img_last_regen`) e o relatório de falhas no fim do regen |
+| `rd_img_generate_on_upload($metadata, $id)` | `wp_generate_attachment_metadata` filter | Itera por TODOS os sizes do attachment (full + thumbnail + medium + medium_large + large + custom sizes do tema) e gera WebP/AVIF de cada um. Fontes WebP geram só o gêmeo AVIF |
+| `rd_img_get_variant_url($url, $format)` | helper | Resolve a URL da variante next-gen de UMA URL original (checa extensão, escopo do uploads e existência no disco). Single source of truth dos dois geradores de `<source>` |
+| `rd_img_get_nextgen_srcsets($srcset, $fallback)` | helper | **Peça-chave da entrega responsiva:** espelha o `srcset` completo do `<img>` trocando cada candidato pra `.avif`/`.webp` quando o arquivo existe. Antes o `<source>` tinha UMA URL fixa — browser com suporte a AVIF ignorava o srcset inteiro e baixava o tamanho errado (flagrado pelo PageSpeed: AVIF 1200px pra slot de 630px) |
+| `rd_img_wrap_in_picture($html, ...)` | `wp_get_attachment_image` filter | Envolve `<img>` em `<picture>` com `<source type="image/avif">` antes de `<source type="image/webp">` antes do `<img>` original — cada `<source>` com srcset espelhado + `sizes` copiado do `<img>`. Browser pega o primeiro `<source>` compatível E o candidato do tamanho certo |
+| `rd_img_wrap_content_images($content)` | `the_content` filter (prio 20) | Mesma cobertura pra `<img>` direto no conteúdo (bloco `core/image`, Markdown, HTML cru) via DOMDocument — também com srcset espelhado |
 | `rd_img_force_correct_src($attr, $att, $size)` | `wp_get_attachment_image_attributes` filter | **Defensivo.** Em alguns cenários (metadata desatualizada após `add_image_size` novo, comportamento `sizes="auto"` do WP 6.7+) o `<img src>` aponta pro original em vez do size requested. Esse filter detecta o caso (verifica se o arquivo do size existe no filesystem) e força o `src` + `width`/`height` corretos. Fail-safe: se o arquivo realmente não existe, deixa o WP servir o original |
 | `rd_img_cleanup_on_delete($id)` | `delete_attachment` action | Apaga WebP/AVIF órfãos quando o attachment é deletado |
-| `rd_img_ajax_regenerate()` | `wp_ajax_rd_img_regenerate` | AJAX em chunks de 10 attachments — regenera lote pra imagens existentes (Media Library com conteúdo antigo) |
+| `rd_img_ajax_regenerate()` | `wp_ajax_rd_img_regenerate` | AJAX em chunks com **orçamento de tempo** (metade do `max_execution_time`, cap 20s, piso 5s; `RD_IMG_REGEN_CHUNK = 10` é só o teto da query) — para cedo quando o budget estoura e o JS retoma do ponto exato. Acumula stats de conversão em `rd_img_last_regen` |
+| `rd_img_ajax_cleanup_formats()` | `wp_ajax_rd_img_cleanup_formats` | Botão **Remove unused format**: apaga do disco os arquivos do formato NÃO coberto pelo Format Mode atual (trocou `both`→`avif`? os `.webp` órfãos saem). Single-shot, retorna arquivos removidos + KB liberados. Guard de same-path protege os WebP que são originais/sizes nativos |
 
-### Estratégia AVIF antes do WebP no `<picture>`
+### Estratégia AVIF antes do WebP no `<picture>` (com srcset espelhado)
 
 ```html
 <picture>
-    <source srcset="foto.avif" type="image/avif">
-    <source srcset="foto.webp" type="image/webp">
-    <img src="foto.jpg" alt="..." loading="lazy">
+    <source srcset="foto-400x225.avif 400w, foto-600x338.avif 600w, foto-1200x675.avif 1200w"
+            sizes="(min-width: 1025px) 461px, 100vw" type="image/avif">
+    <source srcset="foto-400x225.webp 400w, foto-600x338.webp 600w, ..." sizes="..." type="image/webp">
+    <img src="foto-600x338.jpg" srcset="foto-400x225.jpg 400w, ..." sizes="..." loading="lazy">
 </picture>
 ```
 
 Browser pega o **primeiro `<source>` compatível** — então:
-- Chrome 85+/Firefox 86+/Safari 16+ → pega AVIF (~50% menor)
+- Chrome 85+/Firefox 86+/Safari 16+ → pega AVIF (~50% menor) **no tamanho certo pro slot**
 - Outros browsers modernos → pegam WebP (~30% menor)
 - Browsers antigos → caem no `<img>` original
+
+> ⚠️ **Histórico:** até a v1.7.0 cada `<source>` carregava UMA URL fixa (o tamanho requested), sem candidatos nem `sizes`. Resultado: todo browser moderno ignorava o srcset responsivo do `<img>` e baixava o tamanho fixo — o PageSpeed flagrou 275 KiB de desperdício na home. O espelhamento do srcset (candidatos sem variante next-gen no disco são dropados individualmente) restaurou a seleção por tamanho.
 
 ### Regeneração de imagens existentes
 
 O botão **Start regeneration** no painel não regenera apenas WebP/AVIF — desde 2026-05-20 ele chama `wp_generate_attachment_metadata()` (função do WP core) que faz:
 
 1. **Apaga sizes obsoletos** dos attachments
-2. **Regenera TODOS os sizes** registrados via `add_image_size` no `core.php` (`rd-micro`, `rd-popular-thumb`, `rd-card`, `rd-full-banner`, `rd-qr` + thumbnail/medium/large nativos do WP)
+2. **Regenera TODOS os sizes** registrados via `add_image_size` no `core.php` (`rd-micro`, `rd-popular-thumb`, `rd-card-half`, `rd-card`, `rd-card-wide`, `rd-full-banner`, `rd-qr` + thumbnail/medium/medium_large/large nativos do WP)
 3. **Atualiza metadata** do attachment no DB
 4. Dispara filter `wp_generate_attachment_metadata` no final → aciona `rd_img_generate_on_upload` que gera WebP/AVIF de cada size recém-regenerado
 
@@ -319,24 +329,27 @@ O botão **Start regeneration** no painel não regenera apenas WebP/AVIF — des
 - Ativar o módulo num site com Media Library já populada
 - Trocar o Format Mode (`both` ↔ `webp` ↔ `avif`)
 - Adicionar/mudar um `add_image_size` no `core.php`
-- Trocar a Quality (se um dia for configurável)
+- Trocar a **Image Quality** no painel (o knob agora funciona de verdade pro AVIF — ver workaround IM6 acima)
 
 **UX:**
 1. Painel → Performance → Next-gen Image Formats → **Start regeneration**
-2. Confirma o processamento (mostra total de attachments JPEG/PNG)
-3. AJAX em chunks de 10 attachments, com progress bar percentual
+2. Confirma o processamento (mostra total de attachments JPEG/PNG/WebP)
+3. AJAX em chunks com orçamento de tempo (até 10 attachments por request, parando antes se o budget de tempo estourar), com progress bar percentual
 4. Cada chunk é uma request HTTP — se travar, basta clicar de novo (offset é recalculado)
 5. Pra Media Library grande pode levar minutos (re-cropar é mais pesado que só converter formato)
+6. Ao final: resumo com **X convertidos / Y falhas**; o painel guarda a última execução na linha "Last regeneration" (option `rd_img_last_regen`, badge de aviso quando há falha)
 
-### Cobertura (Fase 1)
+> 🚨 **Ritual obrigatório com CDN/proxy na frente (Cloudflare!):** o regen sobrescreve arquivos **mantendo os nomes** — e o edge tem cache de longa duração pra estáticos. Depois de regenerar, **purgar o cache do Cloudflare**, senão produção continua servindo as versões antigas indefinidamente (aconteceu em 2026-06-11: AVIFs re-encodados no origin, edge servindo os velhos com `Cf-Cache-Status: HIT`).
 
-✅ Cobre tudo que passa por `wp_get_attachment_image`:
+### Cobertura
+
+✅ Tudo que passa por `wp_get_attachment_image` (`rd_img_wrap_in_picture`):
 - Featured images do post
 - Post thumbnails nos cards (post-card.php usa essa função)
 - Galleries do Gutenberg
 - Custom logo
 
-⏳ **NÃO cobre** imagens inline do conteúdo do post (bloco Gutenberg `core/image`) — essas vêm como `<img>` direto no HTML do `the_content()`. Pra cobrir essas seria Fase 2 com filter `the_content` + parsing DOMDocument (não-regex pra evitar quebrar markup).
+✅ Imagens inline do conteúdo (`rd_img_wrap_content_images`, filter `the_content` prio 20 — depois do Markdown em 6 e do wpautop em 10): bloco Gutenberg `core/image`, Markdown processado, `<img>` cru no editor. Parsing via DOMDocument (não-regex), skip de `<img>` já dentro de `<picture>`.
 
 ### Original sempre preservado
 
@@ -713,6 +726,10 @@ O title e a description seguem usando os helpers nativos `the_archive_title()` e
 | `rd_render_ad_sidebar_sticky()` | `sidebar.php` (sticky) | 300×250 ou 300×600 |
 
 Cada um lê do `rd_settings` o HTML/JS literal do anúncio e renderiza só se preenchido. O banner "sidebar topo" virou o widget `RD_Ad_Widget` (`inc/class-rd-ad-widget.php`) — código no form do widget, nonce do CSP via `rd_csp_inject_nonce()`.
+
+**Dedupe do loader (`rd_ads_dedupe_loader`)** — cada bloco AdSense colado no painel/widget traz a própria tag `<script src=".../adsbygoogle.js?client=...">`; sem tratamento, a página carregava 5 cópias do loader (flagrado pelo PageSpeed). Todo código de anúncio passa por esse helper na renderização: mantém a **primeira** ocorrência de cada URL de loader e remove as repetidas (dedupe por URL exata — setups multi-client mantêm um loader por client ID). O `ad_global` do `<head>` (mod-integrations.php) também passa pelo helper ANTES dos slots do body, então o loader global "vacina" os slots → exatamente 1 tag por página. Genérico: qualquer loader externo duplicado (gpt.js do GAM etc.) recebe o mesmo tratamento.
+
+**Lazy ads (`ads_lazy_load`, default OFF)** — toggle "Delay ads until interaction" em Monetization → Global Script. Quando ON, o `rd_ads_dedupe_loader` muda de comportamento: em vez de manter a primeira tag, **remove TODOS os loaders** e enfileira as URLs (`rd_ads_loader_queue`); um bootstrap inline no footer (`rd_ads_print_lazy_loader`, `wp_footer` prio 99, nonce CSP) injeta os loaders oficiais no **primeiro gesto do visitante** (scroll/touch/tecla/mouse/click) ou após o `ads_lazy_timeout` (default 5s; `0` = só interação). Os `<ins>` + `push()` ficam inline com espaço reservado — zero CLS quando o ad chega. Efeito colateral desejado: o Lighthouse não interage no lab, então os ~440 KB de JS de ads ficam fora da medição; visitante que sai sem interagir nunca baixa nada. É o loader oficial sem modificação — só o momento muda.
 
 **ads.txt virtual** — `rd_ads_serve_ads_txt()` (hook `init`) serve `/ads.txt` direto da opção `ads_txt_content` (textarea em Monetization → Global Script). Mesmo padrão do arquivo de chave do IndexNow: sem arquivo físico, sem SFTP, sobrevive a migrações e entra no backup de settings. Sanitizado como plain-text (`sanitize_textarea_field` — a chave não casa com o prefixo `ad_` de HTML raw). Vazio = dormante; arquivo físico na raiz tem precedência.
 
@@ -1186,7 +1203,7 @@ Carrossel full-width entre o header e a main (home página 1, via `rd_render_car
 
 - **Fontes** (`carousel_source`): `sticky` (posts fixados ★, mais recentes primeiro, fallback pros últimos) / `category` / `latest`. Só posts **com imagem destacada** (`meta_key _thumbnail_id`)
 - **Anti-duplicação:** `rd_carousel_exclude_from_home()` (`pre_get_posts`) exclui os IDs do carrossel da main query da home; com source sticky também desliga o sticky-prepend do WP (o carrossel **é** a vitrine dos fixados)
-- **Performance:** slide 1 = candidato LCP (`eager` + `fetchpriority=high`), demais `lazy`; reusa o crop `rd-full-banner` (sem regenerate); `carousel.js` só enfileira quando o carrossel renderiza
+- **Performance:** slide 1 = candidato LCP (`eager` + `fetchpriority=high`), demais `lazy`; reusa o crop `rd-full-banner` (sem regenerate); `sizes` explícito espelhando o CSS (`88vw` mobile / `84vw` desktop, cap 1210px — o default do WP fazia o browser sempre baixar 1200w pra slots de ~630px); `carousel.js` só enfileira quando o carrossel renderiza
 - **Slide:** chip de categoria (`.post-tag.tag-{slug}`, cores do admin) + chapéu (`rd_get_post_overline_html()` contexto `carousel`) + título clampado em 2 linhas, sobre gradiente fixo
 - **A11y:** `aria-roledescription` carousel/slide, "x de N", setas/dots com labels, navegação por teclado
 - Card "Carousel" no Dashboard (toggle inline + engrenagem + nº de slides)
@@ -1405,6 +1422,10 @@ Sanitiza query (min 3 / max 50 chars), `WP_Query` com `s={query}`, `posts_per_pa
 
 Transient `rd_sugg_{md5(lowercase(query))}` TTL 15 min. Auto-flush em `save_post` + `deleted_post` via batch DELETE por prefixo (queries esparsas em save_post — performance OK).
 
+### Carregamento lazy por interação (v1.7.x)
+
+O script **não é mais enfileirado** via `wp_enqueue_script`: ele só trabalha quando alguém foca um campo de busca, então não faz sentido entregar ~10 KB pra todo visitante no load. Em vez disso, `rd_search_suggestions_print_loader()` (hook `wp_footer`) imprime um snippet inline (~0,5 KB, nonce CSP) que escuta `focusin` nos campos de busca e, no **primeiro foco**, injeta o `<script>` real + o objeto de dados `window.rdSearchSugg` (que antes vinha de `wp_localize_script`). O injetado é confiado pelo CSP via `strict-dynamic`. Por isso o `search-suggestions.js` inicializa checando `document.readyState` — quando ele executa, o `DOMContentLoaded` quase sempre já disparou.
+
 ### JS (`assets/js/search-suggestions.js`)
 
 - Debounce 250ms entre keystrokes
@@ -1415,9 +1436,9 @@ Transient `rd_sugg_{md5(lowercase(query))}` TTL 15 min. Auto-flush em `save_post
 - Keyboard nav: ↑↓ percorre items + `scrollIntoView`, Enter abre, Esc fecha
 - Click fora fecha; window scroll/resize esconde dropdowns (position:fixed não acompanha scroll)
 
-### Strings i18n via `wp_localize_script`
+### Strings i18n
 
-`rdSearchSugg.i18n`: `noResults`, `seeAll`, `loading`. URL de busca completa via footer "See all results for X →".
+`rdSearchSugg.i18n`: `noResults`, `seeAll`, `loading` — inlined no loader lazy (JSON via `wp_json_encode`), não mais via `wp_localize_script`. URL de busca completa via footer "See all results for X →".
 
 ---
 
