@@ -7,6 +7,25 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 <br>
 
 
+## [1.9.0](https://github.com/Finallf/theme-reloaded/compare/v1.8.0...v1.9.0) (2026-06-12)
+
+### ✨ Features
+
+* **perf:** recalibrate AVIF quality, preload LCP image, per-layout card sizes ([8920901](https://github.com/Finallf/theme-reloaded/commit/8920901ece31d14ccaaa4993cddf69190266a667))
+* **ui:** metric-matched font fallbacks and scoped theme transitions ([fe8845a](https://github.com/Finallf/theme-reloaded/commit/fe8845a869704be72b9ae0f5b3d96efc08daa976))
+
+### 🐛 Bug Fixes
+
+* **ads:** park hidden ad units until visible and ignore bare modifier keys ([2f04760](https://github.com/Finallf/theme-reloaded/commit/2f0476026af0e8aa82fda36b4001804fd0ef6471))
+
+### 📝 Documentation
+
+* refresh module/panel/frontend docs for the perf round ([c8caff3](https://github.com/Finallf/theme-reloaded/commit/c8caff3e1e9688988fd10099ae4d53aba5e1fe16))
+
+<br>
+
+---
+
 ## [1.9.0-beta.1](https://github.com/Finallf/theme-reloaded/compare/v1.8.0...v1.9.0-beta.1) (2026-06-12)
 
 ### ✨ Features
