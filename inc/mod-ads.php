@@ -145,10 +145,53 @@ function rd_ads_print_lazy_loader() {
 		var srcs = <?php echo wp_json_encode( array_values( $srcs ) ); ?>;
 		var events = ['scroll', 'mousemove', 'touchstart', 'keydown', 'click'];
 		var fired = false;
+		var parked = [];
+
+		function isVisible(el) {
+			return !!(el.offsetWidth || el.offsetHeight || el.getClientRects().length);
+		}
+
+		// adsbygoogle.push() fills pending units in DOM order with NO visibility
+		// check: a fixed 728x90 desktop unit processed while its container is
+		// display:none (mobile breakpoint) gets "auto-sized" by Google to page
+		// proportions (data-ad-auto-size rewrites the inline width/height — no
+		// public opt-out) and comes back as a stretched blank box when the
+		// breakpoint flips. So BEFORE the network loader runs, park every
+		// hidden unit outside the DOM (comment placeholder marks the spot) and
+		// drop its queued push; unpark + push when its container turns visible
+		// (breakpoint change = window resize crossing 768px or device rotation).
+		function park() {
+			document.querySelectorAll('ins.adsbygoogle').forEach(function (ins) {
+				if (isVisible(ins) || ins.getAttribute('data-adsbygoogle-status')) { return; }
+				var ph = document.createComment('rd-parked-ad');
+				ins.parentNode.insertBefore(ph, ins);
+				ins.parentNode.removeChild(ins);
+				parked.push({ ph: ph, ins: ins });
+				// The unit's inline push({}) already queued an entry — eat one
+				// so the loader doesn't look for a unit that isn't in the DOM.
+				if (window.adsbygoogle && typeof window.adsbygoogle.splice === 'function' && window.adsbygoogle.length) {
+					window.adsbygoogle.splice(0, 1);
+				}
+			});
+		}
+
+		function unparkVisible() {
+			parked = parked.filter(function (slot) {
+				var parent = slot.ph.parentNode;
+				if (!parent) { return false; }
+				if (!isVisible(parent)) { return true; } // still hidden — stay parked
+				parent.insertBefore(slot.ins, slot.ph);
+				parent.removeChild(slot.ph);
+				(window.adsbygoogle = window.adsbygoogle || []).push({});
+				return false;
+			});
+		}
+
 		function load() {
 			if (fired) { return; }
 			fired = true;
-			events.forEach(function (ev) { document.removeEventListener(ev, load, { passive: true }); });
+			events.forEach(function (ev) { document.removeEventListener(ev, trigger, { passive: true }); });
+			park();
 			srcs.forEach(function (src) {
 				var s = document.createElement('script');
 				s.src = src;
@@ -156,8 +199,24 @@ function rd_ads_print_lazy_loader() {
 				s.crossOrigin = 'anonymous';
 				document.head.appendChild(s);
 			});
+			if (parked.length && window.matchMedia) {
+				var mq = window.matchMedia('(max-width: 768px)');
+				if (typeof mq.addEventListener === 'function') {
+					mq.addEventListener('change', unparkVisible);
+				} else if (typeof mq.addListener === 'function') {
+					mq.addListener(unparkVisible); // Safari < 14
+				}
+			}
 		}
-		events.forEach(function (ev) { document.addEventListener(ev, load, { passive: true }); });
+		function trigger(e) {
+			// A bare modifier key is a browser shortcut (Ctrl+U view-source,
+			// Ctrl+T new tab...), not page engagement — wait for a real key.
+			if (e.type === 'keydown' && (e.key === 'Control' || e.key === 'Shift' || e.key === 'Alt' || e.key === 'Meta')) {
+				return;
+			}
+			load();
+		}
+		events.forEach(function (ev) { document.addEventListener(ev, trigger, { passive: true }); });
 		<?php if ( $timeout > 0 ) : ?>
 		setTimeout(load, <?php echo (int) ( $timeout * 1000 ); ?>);
 		<?php endif; ?>

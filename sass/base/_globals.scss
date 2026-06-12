@@ -100,8 +100,7 @@ body {
 	// on the sidebar. `hidden` broke the sticky by turning the body into a
 	// malformed scroll container.
 	overflow-x: clip; // Prevents accidental horizontal scroll
-	// Smooth transition between dark/light mode
-	transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+	// Dark/light transition lives in the scoped block below (html.rd-theme-switching)
 }
 
 // Applying Poppins to all headings
@@ -127,9 +126,16 @@ a {
 	}
 }
 
-// Elements that change color in dark/light mode
-// (backgrounds, borders, etc.) — smooth transition
-* {
+// Smooth dark/light mode switch — SCOPED on purpose.
+// This used to be an unconditional `* { transition: ... }`: every element on
+// the page carried 4 color transitions full-time, which (a) made Lighthouse
+// flag 200+ "non-composited animations" and (b) charged style-recalc tax on
+// every hover/state change, while the effect is only ever WANTED during the
+// theme toggle. navigation.js adds .rd-theme-switching to <html> right before
+// flipping data-theme and removes it ~350ms later — transitions exist only
+// inside that window. Component-level hover transitions are unaffected (they
+// declare their own).
+html.rd-theme-switching * {
 	transition-property: background-color, border-color, color, box-shadow;
 	transition-duration: 0.3s;
 	transition-timing-function: ease;
@@ -165,6 +171,22 @@ a {
 }
 
 /* --- Top logic: Desktop vs Mobile (Top anchor ad) --- */
+
+// Hard clamp to the designed slot (728x90). Guards against AdSense's mobile
+// "full-width responsive" mutation leaking into desktop: with a narrow window
+// at load the unit is hidden (mobile UX) but Google still processes it and
+// may rewrite the fixed 728x90 <ins> to viewport-proportional dimensions —
+// widening the window past 768px then revealed a stretched blank unit blowing
+// up the header. Root fix is data-full-width-responsive="false" on the <ins>
+// (panel ad code); this is the theme-side seatbelt. Normal 728x90 serving
+// never touches these limits.
+.rd-ad-desktop {
+    max-width: 728px;
+    max-height: 90px;
+    overflow: hidden;
+    margin-inline: auto;
+}
+
 .rd-ad-mobile {
     display: none;
 }

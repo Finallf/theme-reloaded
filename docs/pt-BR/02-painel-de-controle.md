@@ -184,7 +184,7 @@ Aba criada na Wave 11 consolidando 4 controles dispersos. **2 sections** (1 stan
 | Opção | Default | O que faz |
 |---|---|---|
 | `image_resizing` | ✅ | Hard crop em uploads (banners/cards sempre alinhados) |
-| `jpeg_quality` | `80` | Qualidade de re-encode no upload (JPEG/WebP). **AVIF usa escala derivada própria: valor−20 com piso 45** (painel 80 → AVIF 60) — a escala 0-100 não é comparável entre codecs. WP default = 82; tema = 80 |
+| `jpeg_quality` | `80` | Qualidade de re-encode no upload (JPEG/WebP). **AVIF usa escala derivada própria: valor−30 com piso 40** (painel 80 → AVIF 50, calibrado com dados de produção — o default histórico do libheif que o site sempre serviu) — a escala 0-100 não é comparável entre codecs. WP default = 82; tema = 80 |
 | `enable_next_gen_images` | ✅ | Gera WebP/AVIF de cada upload (uploads WebP ganham gêmeo AVIF) + wrappa `<img>` em `<picture>` com `<source>` de srcset espelhado |
 | `image_format_mode` | `avif` | Formato ativo: `avif` (default — ~50% menor), `webp` (~30% menor), ou `both` |
 

@@ -401,13 +401,26 @@ document.addEventListener('DOMContentLoaded', function() {
     const themeToggle = document.getElementById('rd-theme-toggle');
     if (!themeToggle) return;
 
+    let themeSwitchTimer;
+
     themeToggle.addEventListener('click', function() {
         // Reads and writes on <html> (documentElement) — consistent with the
         // anti-FOUC script that runs in the <head>.
-        const currentTheme = document.documentElement.getAttribute('data-theme') || 'dark';
+        const root = document.documentElement;
+        const currentTheme = root.getAttribute('data-theme') || 'dark';
         const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
 
-        document.documentElement.setAttribute('data-theme', newTheme);
+        // Arms the color transitions ONLY for the switch window — the global
+        // `html.rd-theme-switching *` rule in _globals.scss (the always-on
+        // universal transition was Lighthouse's "200+ non-composited
+        // animations" and charged style-recalc on every hover).
+        root.classList.add('rd-theme-switching');
+        clearTimeout(themeSwitchTimer);
+        themeSwitchTimer = setTimeout(function () {
+            root.classList.remove('rd-theme-switching');
+        }, 400);
+
+        root.setAttribute('data-theme', newTheme);
         localStorage.setItem('rd-theme', newTheme);
     });
 });

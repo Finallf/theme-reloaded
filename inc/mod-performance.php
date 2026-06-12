@@ -125,6 +125,82 @@ function rd_scripts() {
 }
 
 /*******************************************************************************
+ * LCP image preload                                           - (Performance) *
+ *                                                                             *
+ * The LCP audits showed 880ms (mobile) / 1.040ms (desktop) of "resource load  *
+ * delay": the browser only discovers the hero image after parsing a good      *
+ * chunk of HTML. The theme KNOWS the LCP element server-side — carousel       *
+ * slide 1 on the home, the featured banner on singles — so it announces it    *
+ * in <head> via <link rel="preload" as="image">.                              *
+ *                                                                             *
+ * Correctness rules (both prevent a DOUBLE download):                         *
+ *   1. imagesrcset/imagesizes mirror EXACTLY what the rendered <img>/<source> *
+ *      carries (same WP srcset APIs + the same next-gen mapping from          *
+ *      mod-image-formats + the same sizes string), so the candidate the      *
+ *      browser picks from the preload matches the one the markup picks.       *
+ *   2. `type` makes browsers without AVIF/WebP support skip the preload       *
+ *      entirely (they'd fall back to the <img> JPEG anyway).                  *
+ *******************************************************************************/
+function rd_preload_lcp_image() {
+	if ( is_admin() ) {
+		return;
+	}
+
+	$attachment_id = 0;
+	$size          = '';
+	$sizes_attr    = '';
+
+	if ( function_exists( 'rd_carousel_should_render' ) && rd_carousel_should_render() ) {
+		$rd_posts      = rd_carousel_get_posts();
+		$attachment_id = (int) get_post_thumbnail_id( $rd_posts[0] );
+		$size          = 'rd-full-banner';
+		$sizes_attr    = rd_carousel_img_sizes();
+	} elseif ( is_singular( 'post' ) && has_post_thumbnail() ) {
+		$attachment_id = (int) get_post_thumbnail_id();
+		$size          = 'rd-full-banner';
+		$wp_sizes      = wp_get_attachment_image_sizes( $attachment_id, $size );
+		$sizes_attr    = is_string( $wp_sizes ) ? $wp_sizes : '';
+	}
+
+	if ( ! $attachment_id ) {
+		return;
+	}
+
+	$srcset = wp_get_attachment_image_srcset( $attachment_id, $size );
+	if ( ! is_string( $srcset ) || '' === $srcset ) {
+		// Tiny original without intermediate sizes — preload the single file.
+		$src = wp_get_attachment_image_src( $attachment_id, $size );
+		if ( ! $src ) {
+			return;
+		}
+		$srcset     = $src[0];
+		$sizes_attr = '';
+	}
+
+	// Same next-gen mapping the <picture> sources use — the preload must point
+	// at the very URLs the markup will request.
+	$type = '';
+	if ( function_exists( 'rd_img_get_nextgen_srcsets' ) ) {
+		$nextgen = rd_img_get_nextgen_srcsets( $srcset, '' );
+		if ( isset( $nextgen['image/avif'] ) ) {
+			$srcset = $nextgen['image/avif'];
+			$type   = 'image/avif';
+		} elseif ( isset( $nextgen['image/webp'] ) ) {
+			$srcset = $nextgen['image/webp'];
+			$type   = 'image/webp';
+		}
+	}
+
+	printf(
+		'<link rel="preload" as="image" imagesrcset="%s"%s%s fetchpriority="high">' . "\n",
+		esc_attr( $srcset ),
+		'' !== $sizes_attr ? ' imagesizes="' . esc_attr( $sizes_attr ) . '"' : '',
+		'' !== $type ? ' type="' . esc_attr( $type ) . '"' : ''
+	);
+}
+add_action( 'wp_head', 'rd_preload_lcp_image', 2 );
+
+/*******************************************************************************
  * Adds `defer` to the theme scripts                           - (Performance) *
  *                                                                             *
  * Defer = downloads in parallel with HTML, runs only after the DOM is parsed  *
@@ -297,9 +373,22 @@ function rd_youtube_extract_id( $text ) {
  * Thumbnail + play button used inside the facade. Extracted so the Latest
  * Video widget can reuse the exact same cover for its "facade off" poster.
  * `alt` stays a literal to keep the facade output byte-for-byte unchanged.
+ *
+ * Responsive cover: the sidebar widget slot renders at ~310 CSS px but used
+ * to always download sddefault (640x480, ~33 KiB) — PageSpeed flagged it.
+ * hqdefault (480x360) joins the srcset and covers the small slots at roughly
+ * half the bytes. Both candidates are YouTube's 4:3 family on purpose: the
+ * 16:9 ones (mqdefault etc.) would change the cover's intrinsic ratio and
+ * reshape the facade box depending on which candidate the browser picks.
+ * sizes="auto" (valid on loading=lazy) lets Chrome match the real slot width;
+ * the static list is the fallback for engines without auto support.
  */
 function rd_youtube_cover_html( $video_id ) {
-	return '<img src="https://img.youtube.com/vi/' . esc_attr( $video_id ) . '/sddefault.jpg" alt="Video cover" loading="lazy" width="640" height="480">
+	$base = 'https://img.youtube.com/vi/' . esc_attr( $video_id );
+	return '<img src="' . $base . '/sddefault.jpg"'
+		. ' srcset="' . $base . '/hqdefault.jpg 480w, ' . $base . '/sddefault.jpg 640w"'
+		. ' sizes="auto, (max-width: 768px) 100vw, 640px"'
+		. ' alt="Video cover" loading="lazy" width="640" height="480">
                         <div class="play-button">
                             <svg viewBox="0 0 68 48">
                                 <path d="M66.52 7.74c-.78-2.93-2.49-5.41-5.42-6.19C55.79.13 34 0 34 0S12.21.13 6.9 1.55c-2.93.78-4.64 3.26-5.42 6.19C.06 13.05 0 24 0 24s.06 10.95 1.48 16.26c.78 2.93 2.49 5.41 5.42 6.19C12.21 47.87 34 48 34 48s21.79-.13 27.1-1.55c2.93-.78 4.64-3.26 5.42-6.19C67.94 34.95 68 24 68 24s-.06-10.95-1.48-16.26z" fill="#FF0000"/>

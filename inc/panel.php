@@ -1302,7 +1302,7 @@ function rd_settings_init() {
 			'id'      => 'jpeg_quality',
 			'type'    => 'number',
 			'default' => '80',
-			'desc'    => __( 'Quality used when WordPress re-encodes images on upload (JPEG, WebP). Range 1-100. WP core default is 82; the theme defaults to 80 for a better size/quality tradeoff. <strong>AVIF uses its own derived scale</strong> (this value minus 20, floor 45): the 0-100 scale is not comparable across codecs, and AVIF at JPEG-like values produces needlessly large files. <strong>Tip on file formats:</strong> upload featured images as <strong>WebP</strong> or <strong>JPEG</strong> for photos; avoid PNG unless you need transparency (PNG files are typically 3-5x larger than the equivalent WebP).', 'reloaded' ),
+			'desc'    => __( 'Quality used when WordPress re-encodes images on upload (JPEG, WebP). Range 1-100. WP core default is 82; the theme defaults to 80 for a better size/quality tradeoff. <strong>AVIF uses its own derived scale</strong> (this value minus 30, floor 40): the 0-100 scale is not comparable across codecs, and AVIF at JPEG-like values produces needlessly large files. <strong>Tip on file formats:</strong> upload featured images as <strong>WebP</strong> or <strong>JPEG</strong> for photos; avoid PNG unless you need transparency (PNG files are typically 3-5x larger than the equivalent WebP).', 'reloaded' ),
 		)
 	);
 	add_settings_field(
