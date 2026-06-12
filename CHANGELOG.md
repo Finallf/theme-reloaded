@@ -7,6 +7,27 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 <br>
 
 
+## [1.8.0-beta.1](https://github.com/Finallf/theme-reloaded/compare/v1.7.0...v1.8.0-beta.1) (2026-06-12)
+
+### ✨ Features
+
+* **ads:** delay ad network loaders until first interaction ([7d62cd4](https://github.com/Finallf/theme-reloaded/commit/7d62cd4feb5ca3e9247383a8ff1cedb7fe47996e))
+
+### 🐛 Bug Fixes
+
+* **admin:** center dashicons in panel action buttons ([b00b723](https://github.com/Finallf/theme-reloaded/commit/b00b723c4891b58511d5580ccd34612402197be0))
+* **ads:** seed loader dedupe from the global head script ([8e05392](https://github.com/Finallf/theme-reloaded/commit/8e05392739a0a6c7321ad62aa15bd7d0abf7020e))
+* **csp:** allow AdSense csi.gstatic.com latency beacon ([00cb388](https://github.com/Finallf/theme-reloaded/commit/00cb3888744f7395d9884dac55ed62dd62cc9cf4))
+* **images:** set global Imagick compression quality for AVIF (IM6 ignores per-image) ([0c0ae71](https://github.com/Finallf/theme-reloaded/commit/0c0ae7172fd81def6960a397bd99899ec0b44648))
+
+### 📝 Documentation
+
+* refresh module/panel/frontend docs after the PageSpeed wave ([110af90](https://github.com/Finallf/theme-reloaded/commit/110af90328e6a557333c2f848450a36125da325c))
+
+<br>
+
+---
+
 ## [1.7.0](https://github.com/Finallf/theme-reloaded/compare/v1.6.2...v1.7.0) (2026-06-11)
 
 ### ✨ Features
