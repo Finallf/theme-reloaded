@@ -32,7 +32,14 @@
     left: 0;
     width: 100%;
     background-color: $dark-surface;
-    padding: 18px 25px;
+    // Full-bleed dark bar, but the CONTENT is capped at the same width as
+    // the carousel (.rd-carousel.is-ready → $container-max). On ultrawide
+    // monitors the band kept stretching the text/buttons into the far
+    // corners with an ocean of dead space between them. The horizontal
+    // padding grows to (viewport - $container-max)/2 once the screen is
+    // wider than the cap, centering the content while the background stays
+    // edge-to-edge. Floor of 25px keeps the normal-screen gutter.
+    padding: 18px max(25px, calc((100% - #{$container-max}) / 2));
     z-index: 99999;
     box-shadow: 0 -5px 15px rgba(0, 0, 0, 0.5);
     border-top: 1px solid $border-subtle;
