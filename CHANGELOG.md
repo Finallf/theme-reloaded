@@ -7,6 +7,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 <br>
 
 
+## [1.9.3-beta.1](https://github.com/Finallf/theme-reloaded/compare/v1.9.2...v1.9.3-beta.1) (2026-06-13)
+
+### ⚡ Performance Improvements
+
+* trim oversized lazy card variants and cap LGPD bar on ultrawide ([15fddf6](https://github.com/Finallf/theme-reloaded/commit/15fddf61a567f5fe133afc30b3b4b57c6ec98592))
+
+<br>
+
+---
+
 ## [1.9.2](https://github.com/Finallf/theme-reloaded/compare/v1.9.1...v1.9.2) (2026-06-12)
 
 ### 🐛 Bug Fixes
