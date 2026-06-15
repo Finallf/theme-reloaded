@@ -7,6 +7,20 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 <br>
 
 
+## [1.9.3-beta.2](https://github.com/Finallf/theme-reloaded/compare/v1.9.3-beta.1...v1.9.3-beta.2) (2026-06-15)
+
+### 🐛 Bug Fixes
+
+* **carousel:** show all post categories in slides, not just the first ([84f4466](https://github.com/Finallf/theme-reloaded/commit/84f4466db0a3f70677185665dba4104d34245135))
+
+### 📝 Documentation
+
+* document auto-sizes strip + LGPD system-ui/ultrawide, fix stale CLS example ([4dc1b76](https://github.com/Finallf/theme-reloaded/commit/4dc1b76e55f3bf13dfe063d330b2aca93737013a))
+
+<br>
+
+---
+
 ## [1.9.3-beta.1](https://github.com/Finallf/theme-reloaded/compare/v1.9.2...v1.9.3-beta.1) (2026-06-13)
 
 ### ⚡ Performance Improvements
