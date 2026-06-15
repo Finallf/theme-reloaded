@@ -113,13 +113,16 @@
     padding: 48px 24px 34px;
     background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.82) 78%);
 
-    // Category chip — reuses .post-tag.tag-{slug} so it inherits the color
-    // configured in the admin (mod-category-colors). The structural styling
-    // is local because the global chip rules are scoped to .post-categories.
+    // Category chips — reuse .post-tag.tag-{slug} so each inherits the color
+    // configured in the admin (mod-category-colors). A post can carry several
+    // categories (matches the hero cards, which list them all); they wrap and
+    // keep a small horizontal gap. Structural styling is local because the
+    // global chip rules are scoped to .post-categories — which the slide,
+    // wrapped in a single <a>, deliberately doesn't use (links can't nest).
     .post-tag {
         display: inline-block;
         padding: 3px 8px 1px;
-        margin-bottom: 8px;
+        margin: 0 6px 8px 0;
         font-size: 0.7rem;
         font-weight: 600;
         text-transform: uppercase;
