@@ -10,7 +10,8 @@
 #
 # Expected outcome:
 #   - Admin endpoints (admin-post, admin-ajax non-nopriv, REST manage_options)
-#     must return 401/403/redirect-to-login
+#     must return 401/403/400, or a 3xx redirect AWAY from /wp-admin/ (to
+#     wp-login.php by default, or to home when the theme's Hide Login is on)
 #   - Public endpoints (nopriv, __return_true) must respond normally
 #     (200/400 depending on input - but NEVER 401/403 due to missing auth)
 # ============================================================================
@@ -100,10 +101,15 @@ foreach ($ep in $endpoints) {
         #   - 401 (Unauthorized) / 403 (Forbidden) - explicit auth rejection
         #   - 400 (Bad Request) - WP responds wp_die('0') for admin-post/admin-ajax
         #     actions without nopriv handler (intentional rejection mechanism)
-        #   - 302 redirect to wp-login.php - WP admin page redirect
-        $isLoginRedirect = ($code -ge 301 -and $code -le 308) -and ($location -match 'wp-login\.php')
+        #   - 3xx redirect AWAY from /wp-admin/ - admin page protection. Default
+        #     WP sends anon users to wp-login.php; with the theme's Hide Login
+        #     feature ON (Wave 8.5) it redirects to the site home instead, to
+        #     avoid leaking the custom login slug. Both are valid: no admin
+        #     content is served. We accept any 3xx whose target is NOT itself
+        #     under /wp-admin/ (a redirect back into admin wouldn't protect).
+        $isProtectiveRedirect = ($code -ge 301 -and $code -le 308) -and $location -and ($location -notmatch '/wp-admin/')
         $isRejected = ($code -eq 400 -or $code -eq 401 -or $code -eq 403)
-        if ($isLoginRedirect -or $isRejected) {
+        if ($isProtectiveRedirect -or $isRejected) {
             $verdict = "PASS"
             $color = "Green"
             $passCount++
