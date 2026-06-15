@@ -339,6 +339,35 @@ function rd_calculate_card_sizes( $sizes, $size ) {
 	return $sizes;
 }
 add_filter( 'wp_calculate_image_sizes', 'rd_calculate_card_sizes', 10, 2 );
+
+/*******************************************************************************
+ * Strip WP 6.7+ auto-sizes from lazy post thumbnails          - (Performance) *
+ *                                                                             *
+ * WP 6.7+ prepends `auto, ` to the `sizes` of every lazy-loaded image. The    *
+ * `auto` keyword tells Chrome to resolve the candidate from the laid-out      *
+ * width — handy when no good hint exists, but it OVERRIDES the hand-tuned      *
+ * per-layout `sizes` we set in post-card.php. On the desktop 3-col home        *
+ * sections it consistently over-resolves and grabs the 600w variant for the   *
+ * ~304px card slots (PageSpeed flagged ~66 KiB desktop, 2026-06-13), undoing  *
+ * the `(min-width: 769px) 320px` hint that correctly maps to 400w. Mobile is  *
+ * unaffected: those sections are 1-col there, so `100vw` and `auto` resolve   *
+ * to the same full-width candidate.                                           *
+ *                                                                             *
+ * We post-process the FINAL thumbnail HTML (after core injected `auto`) and   *
+ * drop the leading `auto, `, restoring our explicit hint — version-proof, no  *
+ * dependency on core internals. The eager hero/LCP cards never get `auto`     *
+ * (it's lazy-only), and the YouTube facade cover keeps its own intentional    *
+ * `sizes="auto, …"` (raw markup, not a post thumbnail, so this never sees it).*
+ *******************************************************************************/
+function rd_strip_thumbnail_auto_sizes( $html ) {
+	return preg_replace( '/(\ssizes=(["\']))auto,\s*/i', '$1', $html );
+}
+add_filter( 'post_thumbnail_html', 'rd_strip_thumbnail_auto_sizes' );
+
+// In-content images (the_content): keep our explicit/derived sizes, skip the
+// auto keyword. Also preserves the YouTube cover's own hardcoded sizes="auto".
+add_filter( 'wp_img_tag_add_auto_sizes', '__return_false' );
+
 add_action( 'wp_enqueue_scripts', 'rd_scripts' );
 
 /*******************************************************************************

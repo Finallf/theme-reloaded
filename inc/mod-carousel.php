@@ -185,7 +185,6 @@ function rd_render_carousel() {
 				<?php
 				$thumb_id   = get_post_thumbnail_id( $rd_post );
 				$categories = get_the_category( $rd_post->ID );
-				$category   = ! empty( $categories ) ? $categories[0] : null;
 
 				// Slide 1 is the LCP candidate — load it eagerly with high priority.
 				// The rest only load as the user (or the autoplay) approaches them.
@@ -216,8 +215,10 @@ function rd_render_carousel() {
 						echo wp_get_attachment_image( $thumb_id, 'rd-full-banner', false, $img_attr );
 						?>
 						<div class="rd-carousel__overlay">
-							<?php if ( $category ) : ?>
-								<span class="post-tag tag-<?php echo esc_attr( $category->slug ); ?>"><?php echo esc_html( $category->name ); ?></span>
+							<?php if ( ! empty( $categories ) ) : ?>
+								<?php foreach ( $categories as $rd_cat ) : ?>
+									<span class="post-tag tag-<?php echo esc_attr( $rd_cat->slug ); ?>"><?php echo esc_html( $rd_cat->name ); ?></span>
+								<?php endforeach; ?>
 							<?php endif; ?>
 							<?php
 							// Journalism overline (chapéu) — its own line between the

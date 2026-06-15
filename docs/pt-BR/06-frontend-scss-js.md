@@ -266,7 +266,14 @@ O espelho do `.rd-resizing`: o `_globals.scss` tinha um `* { transition: backgro
 
 ### Fallbacks de fonte com métricas casadas
 
-`_variables.scss` define `Inter-fallback`/`Poppins-fallback` (`src: local('Arial')` + `size-adjust`/`ascent`/`descent`/`line-gap-override`) e os stacks `$font-primary`/`$font-heading` os incluem após a fonte real. Com `font-display: swap`, o primeiro paint usa Arial **redimensionado pra ocupar as mesmas caixas** da fonte final — a troca não re-quebra linha nenhuma (matou o CLS residual do banner LGPD). Detalhes no [doc de módulos](04-modulos-php.md), seção Critical fonts.
+`_variables.scss` define `Inter-fallback`/`Poppins-fallback` (`src: local('Arial')` + `size-adjust`/`ascent`/`descent`/`line-gap-override`) e os stacks `$font-primary`/`$font-heading` os incluem após a fonte real. Com `font-display: swap`, o primeiro paint usa Arial **redimensionado pra ocupar as mesmas caixas** da fonte final — a troca não re-quebra linha nenhuma (curou o CLS residual de corpo/headings na carga de fonte). Detalhes no [doc de módulos](04-modulos-php.md), seção Critical fonts.
+
+### Banner LGPD: fonte `system-ui` + largura capada (`_lgpd.scss`)
+
+Duas decisões de propósito no `.rd-cookie-banner`:
+
+1. **`font-family: system-ui`** (não as webfonts do tema). O banner era o **maior offender de CLS isolado** (~0,067): por ser uma caixa `position: fixed` cuja altura segue a quebra de linha do texto, QUALQUER swap de webfont que re-quebrasse uma linha movia o box inteiro. A consent UI é utilitária e já é dark-pinned/destacada do tema, então a stack de sistema remove a dependência de fonte (e o shift) por completo.
+2. **Conteúdo capado em `$container-max` (1440px)** via `padding: 18px max(25px, calc((100% - 1440px)/2))`. A barra escura continua full-bleed de ponta a ponta, mas o conteúdo (texto+toggles+botões) para de esparramar pros cantos em monitores ultrawide. Só muda acima de 1440px; ≤1440px o layout é idêntico; zero risco de CLS (altura/quebra não mudam).
 
 ### Print stylesheet (`sass/components/_print.scss`)
 
