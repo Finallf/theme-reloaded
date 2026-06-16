@@ -7,6 +7,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 <br>
 
 
+## [1.10.0](https://github.com/Finallf/theme-reloaded/compare/v1.9.3...v1.10.0) (2026-06-16)
+
+### ✨ Features
+
+* **seo:** dedicated Meta Description field + Open Graph cards on archives ([578d2fc](https://github.com/Finallf/theme-reloaded/commit/578d2fc8056c8be725895f4a3347476a110bf109))
+
+<br>
+
+---
+
 ## [1.10.0-beta.1](https://github.com/Finallf/theme-reloaded/compare/v1.9.3...v1.10.0-beta.1) (2026-06-16)
 
 ### ✨ Features
