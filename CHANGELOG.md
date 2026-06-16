@@ -7,6 +7,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 <br>
 
 
+## [1.11.0](https://github.com/Finallf/theme-reloaded/compare/v1.10.0...v1.11.0) (2026-06-16)
+
+### ✨ Features
+
+* **ads:** in-article ad zones with reserved space + master enable toggle ([65fff9b](https://github.com/Finallf/theme-reloaded/commit/65fff9b5af2120939c29a28c8c29b0f09a0ea1d6))
+
+<br>
+
+---
+
 ## [1.11.0-beta.1](https://github.com/Finallf/theme-reloaded/compare/v1.10.0...v1.11.0-beta.1) (2026-06-16)
 
 ### ✨ Features
