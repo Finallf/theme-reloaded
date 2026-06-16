@@ -143,9 +143,15 @@ function rd_seo_extract_twitter_handle( string $url ): string {
  * Resolves the "punchy" description of a singular post                - (SEO) *
  *                                                                             *
  * Used by og:description and by <meta name="description"> on singulars.       *
- * Order: manual excerpt → 25-word trim of post_content.                       *
+ * Order: manual SEO field (Meta Description box) → excerpt → 25-word trim.     *
  *******************************************************************************/
 function rd_seo_resolve_post_description( WP_Post $post ): string {
+	// 1. Manual SEO description wins — lets the author diverge from the excerpt.
+	$manual = trim( (string) get_post_meta( $post->ID, '_rd_meta_description', true ) );
+	if ( '' !== $manual ) {
+		return wp_strip_all_tags( $manual );
+	}
+	// 2. Manual/auto excerpt → 3. 25-word trim of the content.
 	$excerpt = wp_strip_all_tags( get_the_excerpt( $post ) );
 	if ( empty( $excerpt ) ) {
 		$excerpt = wp_trim_words( wp_strip_all_tags( $post->post_content ), 25, '...' );
@@ -154,78 +160,217 @@ function rd_seo_resolve_post_description( WP_Post $post ): string {
 }
 
 /*******************************************************************************
- * Meta Tags Open Graph                                                - (SEO) *
+ * Meta Description meta box (post + page)                             - (SEO) *
+ *                                                                             *
+ * A dedicated "SEO description" textarea so the author can write a meta/og     *
+ * description independent of the visible excerpt. Stored in `_rd_meta_         *
+ * description`; consumed at the top of rd_seo_resolve_post_description(), so    *
+ * a single field drives <meta name="description">, og:description AND          *
+ * twitter:description on the singular. Own box (not the gated "Post Options")   *
+ * because it applies to pages too and is always available (SEO baseline).      *
  *******************************************************************************/
-function rd_add_open_graph_tags() {
-	if ( ! ( is_single() || is_page() ) ) {
+function rd_seo_add_meta_box() {
+	foreach ( array( 'post', 'page' ) as $screen ) {
+		add_meta_box(
+			'rd_seo_meta',
+			__( 'Meta Description (ReloadeD)', 'reloaded' ),
+			'rd_seo_meta_box_callback',
+			$screen,
+			'side',
+			'default'
+		);
+	}
+}
+add_action( 'add_meta_boxes', 'rd_seo_add_meta_box' );
+
+/**
+ * Renders the Meta Description textarea + live character counter.
+ *
+ * @param WP_Post $post Post being edited.
+ */
+function rd_seo_meta_box_callback( $post ) {
+	wp_nonce_field( 'rd_seo_save_meta', 'rd_seo_meta_nonce' );
+	$value = (string) get_post_meta( $post->ID, '_rd_meta_description', true );
+	?>
+	<textarea id="rd_meta_description" name="rd_meta_description" class="widefat" rows="3" maxlength="320" data-rd-seo-counter><?php echo esc_textarea( $value ); ?></textarea>
+	<p class="description">
+		<?php esc_html_e( 'Custom description for search engines and social shares. Leave empty to use the excerpt automatically.', 'reloaded' ); ?>
+		<span class="rd-seo-counter"><span data-rd-seo-count>0</span>/160</span>
+	</p>
+	<?php
+}
+
+/**
+ * Persists the Meta Description field. Empty clears the meta (falls back to
+ * the excerpt). Nonce + capability + autosave guarded.
+ *
+ * @param int $post_id Post ID being saved.
+ */
+function rd_seo_save_meta( $post_id ) {
+	if ( ! isset( $_POST['rd_seo_meta_nonce'] ) ||
+		! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['rd_seo_meta_nonce'] ) ), 'rd_seo_save_meta' ) ) {
 		return;
 	}
+	if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
+		return;
+	}
+	if ( ! current_user_can( 'edit_post', $post_id ) ) {
+		return;
+	}
+	if ( isset( $_POST['rd_meta_description'] ) ) {
+		$desc = sanitize_textarea_field( wp_unslash( $_POST['rd_meta_description'] ) );
+		if ( '' !== $desc ) {
+			update_post_meta( $post_id, '_rd_meta_description', $desc );
+		} else {
+			delete_post_meta( $post_id, '_rd_meta_description' );
+		}
+	}
+}
+add_action( 'save_post', 'rd_seo_save_meta' );
+
+/**
+ * Enqueues the tiny character-counter script on the post/page editor only.
+ *
+ * @param string $hook Current admin page.
+ */
+function rd_seo_admin_enqueue( $hook ) {
+	if ( 'post.php' !== $hook && 'post-new.php' !== $hook ) {
+		return;
+	}
+	wp_enqueue_script(
+		'rd-admin-seo',
+		get_template_directory_uri() . '/assets/js/admin-seo.js',
+		array(),
+		rd_asset_version( '/assets/js/admin-seo.js' ),
+		true
+	);
+}
+add_action( 'admin_enqueue_scripts', 'rd_seo_admin_enqueue' );
+
+/*******************************************************************************
+ * Meta Tags Open Graph + Twitter Cards                                - (SEO) *
+ *                                                                             *
+ * Emits a social card for EVERY indexable surface (not just singulars):       *
+ *   - Singular (post/page): og:type=article, post image, twitter:creator.     *
+ *   - Home / archives (category/tag/tax, author, date): og:type=website       *
+ *     (profile on author), description from rd_seo_resolve_description(),      *
+ *     image = the site logo (rd_seo_resolve_site_logo).                        *
+ * Skips 404/search/feed. Gated by the `enable_open_graph` panel toggle.       *
+ *******************************************************************************/
+function rd_add_open_graph_tags() {
 	if ( ! rd_get_option_bool( 'enable_open_graph' ) ) {
 		return;
 	}
+	if ( is_404() || is_search() || is_feed() ) {
+		return;
+	}
 
-	global $post;
+	$is_singular = is_singular();
+	$type        = 'website';
+	$image       = null;
+	$title       = '';
+	$url         = '';
 
-	$title = get_the_title();
-	$url   = get_permalink();
+	if ( $is_singular ) {
+		global $post;
+		if ( ! $post instanceof WP_Post ) {
+			return;
+		}
+		$title = get_the_title();
+		$url   = get_permalink();
+		$image = rd_seo_resolve_og_image( (int) $post->ID );
+		$type  = 'article';
+	} elseif ( is_front_page() || is_home() ) {
+		$title = get_bloginfo( 'name' );
+		$url   = home_url( '/' );
+		$image = rd_seo_resolve_site_logo();
+	} elseif ( is_category() || is_tag() || is_tax() ) {
+		$term = get_queried_object();
+		if ( ! $term || is_wp_error( $term ) ) {
+			return;
+		}
+		$title     = single_term_title( '', false );
+		$term_link = get_term_link( $term );
+		$url       = is_wp_error( $term_link ) ? home_url( '/' ) : $term_link;
+		$image     = rd_seo_resolve_site_logo();
+	} elseif ( is_author() ) {
+		$author_id = (int) get_queried_object_id();
+		$title     = get_the_author_meta( 'display_name', $author_id );
+		$url       = get_author_posts_url( $author_id );
+		$image     = rd_seo_resolve_site_logo();
+		$type      = 'profile';
+	} elseif ( is_year() || is_month() || is_day() ) {
+		$title = rd_seo_archive_period();
+		if ( is_year() ) {
+			$url = get_year_link( (int) get_query_var( 'year' ) );
+		} elseif ( is_month() ) {
+			$url = get_month_link( (int) get_query_var( 'year' ), (int) get_query_var( 'monthnum' ) );
+		} else {
+			$url = get_day_link( (int) get_query_var( 'year' ), (int) get_query_var( 'monthnum' ), (int) get_query_var( 'day' ) );
+		}
+		$image = rd_seo_resolve_site_logo();
+	} else {
+		return; // Unsupported context — no card.
+	}
 
-	$excerpt = rd_seo_resolve_post_description( $post );
+	$description = rd_seo_resolve_description();
+	$image_url   = isset( $image['url'] ) ? $image['url'] : '';
 
-	$image = rd_seo_resolve_og_image( (int) $post->ID );
-
-	// --- PRINTING THE META TAGS TO THE PAGE ---
+	// --- Open Graph ---
 	echo "\n\n";
-	echo '<meta property="og:type" content="article" />' . "\n";
+	echo '<meta property="og:type" content="' . esc_attr( $type ) . '" />' . "\n";
+	echo '<meta property="og:site_name" content="' . esc_attr( get_bloginfo( 'name' ) ) . '" />' . "\n";
 	echo '<meta property="og:title" content="' . esc_attr( $title ) . '" />' . "\n";
-	echo '<meta property="og:description" content="' . esc_attr( $excerpt ) . '" />' . "\n";
+	if ( '' !== $description ) {
+		echo '<meta property="og:description" content="' . esc_attr( $description ) . '" />' . "\n";
+	}
 	echo '<meta property="og:url" content="' . esc_url( $url ) . '" />' . "\n";
 
-	echo '<meta property="og:image" content="' . esc_url( $image['url'] ) . '" />' . "\n";
-
-	// Only declare dimensions if we actually know them — avoids lying
-	// to the social network (which adjusts the crop based on them)
-	if ( ! empty( $image['width'] ) && ! empty( $image['height'] ) ) {
-		echo '<meta property="og:image:width" content="' . (int) $image['width'] . '" />' . "\n";
-		echo '<meta property="og:image:height" content="' . (int) $image['height'] . '" />' . "\n";
+	if ( '' !== $image_url ) {
+		echo '<meta property="og:image" content="' . esc_url( $image_url ) . '" />' . "\n";
+		// Only declare dimensions if we know them — avoids lying to the network
+		// (which adjusts the crop based on them).
+		if ( ! empty( $image['width'] ) && ! empty( $image['height'] ) ) {
+			echo '<meta property="og:image:width" content="' . (int) $image['width'] . '" />' . "\n";
+			echo '<meta property="og:image:height" content="' . (int) $image['height'] . '" />' . "\n";
+		}
 	}
 
 	// --- Twitter Cards ---
-	// Twitter/X falls back to og:* when it can't find twitter:*, but declaring
-	// it explicitly ensures consistent render and unlocks `summary_large_image`
-	// as the card type (Twitter doesn't infer this from og:image).
+	// Twitter/X falls back to og:* but declaring twitter:* explicitly ensures
+	// consistent render and unlocks `summary_large_image` as the card type.
 	echo '<meta name="twitter:card" content="summary_large_image" />' . "\n";
 	echo '<meta name="twitter:title" content="' . esc_attr( $title ) . '" />' . "\n";
-	echo '<meta name="twitter:description" content="' . esc_attr( $excerpt ) . '" />' . "\n";
-	echo '<meta name="twitter:image" content="' . esc_url( $image['url'] ) . '" />' . "\n";
+	if ( '' !== $description ) {
+		echo '<meta name="twitter:description" content="' . esc_attr( $description ) . '" />' . "\n";
+	}
+	if ( '' !== $image_url ) {
+		echo '<meta name="twitter:image" content="' . esc_url( $image_url ) . '" />' . "\n";
+	}
 
-	// twitter:site — the site's global handle, extracted from the URL configured in
-	// Panel → Social Networks → Twitter (X). Accepts x.com/user or
-	// twitter.com/user. Omits it if the URL doesn't match the pattern.
+	// twitter:site — the site's global handle from Panel → Social Networks →
+	// Twitter (X). Accepts x.com/user or twitter.com/user. Applies to all contexts.
 	$site_handle = rd_seo_extract_twitter_handle( (string) rd_get_option( 'social_twitter' ) );
 	if ( ! empty( $site_handle ) ) {
 		echo '<meta name="twitter:site" content="' . esc_attr( $site_handle ) . '" />' . "\n";
 	}
 
-	// twitter:creator — the post author's personal handle. Read from a user meta
-	// `twitter_handle` that doesn't yet have a UI in the WP profile (future feature).
-	// When the field is added, this block starts emitting the tag
-	// automatically without needing to touch anything here.
-	//
-	// Fallback: if the author has no own handle, use the global `twitter:site`.
-	// For a single-author blog (or small team) this is correct in practice — the
-	// site handle AND the author are the same person.
-	$author_handle = trim( (string) get_the_author_meta( 'twitter_handle', (int) $post->post_author ) );
-	if ( ! empty( $author_handle ) ) {
-		// Ensure the @ at the start (admin may fill in "user" or "@user")
-		if ( strpos( $author_handle, '@' ) !== 0 ) {
-			$author_handle = '@' . ltrim( $author_handle, '@' );
+	// twitter:creator — only on singular (the post author's handle). User meta
+	// `twitter_handle` (no profile UI yet); falls back to the site handle.
+	if ( $is_singular ) {
+		global $post;
+		$author_handle = trim( (string) get_the_author_meta( 'twitter_handle', (int) $post->post_author ) );
+		if ( ! empty( $author_handle ) ) {
+			// Ensure the @ at the start (admin may fill in "user" or "@user").
+			if ( strpos( $author_handle, '@' ) !== 0 ) {
+				$author_handle = '@' . ltrim( $author_handle, '@' );
+			}
+		} elseif ( ! empty( $site_handle ) ) {
+			$author_handle = $site_handle;
 		}
-	} elseif ( ! empty( $site_handle ) ) {
-		$author_handle = $site_handle;
-	}
-
-	if ( ! empty( $author_handle ) ) {
-		echo '<meta name="twitter:creator" content="' . esc_attr( $author_handle ) . '" />' . "\n";
+		if ( ! empty( $author_handle ) ) {
+			echo '<meta name="twitter:creator" content="' . esc_attr( $author_handle ) . '" />' . "\n";
+		}
 	}
 
 	echo "\n";
@@ -303,26 +448,43 @@ remove_action( 'wp_head', 'rel_canonical' );
 add_action( 'wp_head', 'rd_add_canonical_url', 1 );
 
 /*******************************************************************************
- * Meta Description default                                            - (SEO) *
+ * Archive period label (year / month / day)                          - (SEO) *
  *                                                                             *
- * Prints <meta name="description"> on all indexable surfaces.                 *
- * Google still reads this tag to build the snippet when it's more relevant    *
- * than the content extracted from the page.                                   *
+ * Shared by the meta-description resolver AND the OG card title on date       *
+ * archives, so the date formatting lives in one place.                        *
+ *******************************************************************************/
+function rd_seo_archive_period(): string {
+	if ( is_year() ) {
+		return (string) get_query_var( 'year' );
+	}
+	if ( is_month() ) {
+		// Localized "F Y" from query vars (single_month_title duplicates the prefix).
+		$ts = mktime( 0, 0, 0, (int) get_query_var( 'monthnum' ), 1, (int) get_query_var( 'year' ) );
+		return date_i18n( 'F Y', $ts );
+	}
+	if ( is_day() ) {
+		// Query vars instead of get_the_date() (which would take the first post's
+		// date in the loop, not the archive's).
+		$ts = mktime( 0, 0, 0, (int) get_query_var( 'monthnum' ), (int) get_query_var( 'day' ), (int) get_query_var( 'year' ) );
+		return date_i18n( get_option( 'date_format' ), $ts );
+	}
+	return '';
+}
+
+/*******************************************************************************
+ * Context-aware description resolver (single source of truth)         - (SEO) *
  *                                                                             *
- *   - Singular: the post's excerpt (helper shared with OG)                    *
+ * Returns the best description string for the current context — consumed by   *
+ * BOTH <meta name="description"> AND og:/twitter:description so the two never  *
+ * diverge. Returns '' for contexts without one (callers guard 404/search/feed)*
+ *                                                                             *
+ *   - Singular: post excerpt / manual SEO field (rd_seo_resolve_post_description)
  *   - Home/Blog: the site tagline (General Settings → Tagline)                *
  *   - Category/Tag/Tax: the term description, with a generic fallback         *
  *   - Author: the author's bio ("description" field), with a generic fallback *
- *   - Date archives: a formatted label like "Posts from May 2026"             *
- *   - Search and 404: skipped (dynamic/non-existent page)                     *
- *                                                                             *
- * No panel option: meta description is an SEO baseline, no trade-off.         *
+ *   - Date archives: a formatted "Archive of posts from {period}." label      *
  *******************************************************************************/
-function rd_add_meta_description() {
-	if ( is_404() || is_search() || is_feed() ) {
-		return;
-	}
-
+function rd_seo_resolve_description(): string {
 	$description = '';
 
 	if ( is_singular() ) {
@@ -353,33 +515,33 @@ function rd_add_meta_description() {
 			$description = sprintf( __( 'Posts by %s.', 'reloaded' ), get_the_author_meta( 'display_name', $author_id ) );
 		}
 	} elseif ( is_year() || is_month() || is_day() ) {
-		// The same "Archive of posts from %s." string used in 3 contexts with
-		// different date formats — a single, generic translators comment
-		// covers all 3 (avoids the "different translator comments" warning
-		// from `wp i18n make-pot` when the same string has divergent hints).
-		if ( is_year() ) {
-			$period = get_query_var( 'year' );
-		} elseif ( is_month() ) {
-			// Builds a localized "F Y" from the query vars (WP's single_month_title
-			// uses the arg as a duplicated prefix, generating an extra space).
-			$ts     = mktime( 0, 0, 0, (int) get_query_var( 'monthnum' ), 1, (int) get_query_var( 'year' ) );
-			$period = date_i18n( 'F Y', $ts );
-		} else { // is_day()
-			// Same logic as month — query vars instead of get_the_date() (which
-			// would take the first post's date in the loop, not the archive's).
-			$ts     = mktime( 0, 0, 0, (int) get_query_var( 'monthnum' ), (int) get_query_var( 'day' ), (int) get_query_var( 'year' ) );
-			$period = date_i18n( get_option( 'date_format' ), $ts );
-		}
 		/* translators: %s: archive period (year like "2026", month like "May 2026", or full date like "May 15, 2026") */
-		$description = sprintf( __( 'Archive of posts from %s.', 'reloaded' ), $period );
+		$description = sprintf( __( 'Archive of posts from %s.', 'reloaded' ), rd_seo_archive_period() );
 	}
 
-	$description = trim( wp_strip_all_tags( $description ) );
-	if ( empty( $description ) ) {
+	return trim( wp_strip_all_tags( $description ) );
+}
+
+/*******************************************************************************
+ * Meta Description default                                            - (SEO) *
+ *                                                                             *
+ * Prints <meta name="description"> on all indexable surfaces, truncated to    *
+ * Google's ~160-char snippet limit. The per-context logic lives in            *
+ * rd_seo_resolve_description() (shared with the OG/Twitter card).             *
+ *                                                                             *
+ * No panel option: meta description is an SEO baseline, no trade-off.         *
+ *******************************************************************************/
+function rd_add_meta_description() {
+	if ( is_404() || is_search() || is_feed() ) {
 		return;
 	}
 
-	// Truncate at ~160 characters to stay within Google's snippet limit
+	$description = rd_seo_resolve_description();
+	if ( '' === $description ) {
+		return;
+	}
+
+	// Truncate at ~160 characters to stay within Google's snippet limit.
 	if ( mb_strlen( $description ) > 160 ) {
 		$description = mb_substr( $description, 0, 157 ) . '...';
 	}

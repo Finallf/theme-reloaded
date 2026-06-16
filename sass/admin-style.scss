@@ -560,6 +560,18 @@ $rd-bp-lg: 1024px;
     }
 }
 
+/* Meta Description box — live character counter (assets/js/admin-seo.js). */
+.rd-seo-counter {
+    float: right;
+    color: $rd-text-secondary;
+    font-variant-numeric: tabular-nums;
+
+    &.rd-seo-over {
+        color: $rd-red;
+        font-weight: 600;
+    }
+}
+
 /* ============================================================
    DASHBOARD — panel "Overview" tab (Wave 11 Phase F)
    Tab-specific classes; the general structure comes from the rd-p* components.

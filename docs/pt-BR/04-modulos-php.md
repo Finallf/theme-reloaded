@@ -525,20 +525,19 @@ Notificação push pros buscadores participantes (Bing/Yandex/Seznam/Naver) no m
 
 Um módulo, cinco frentes complementares. Tudo emitido no `<wp_head>` com prioridades distintas pra ordem previsível no source.
 
-### Open Graph (singular)
+### Open Graph + Twitter Cards (todos os contextos)
 
-Filtra `wp_head` pra adicionar meta tags OG quando `enable_open_graph` está ativo, somente em `is_single() || is_page()`:
-- `og:type`, `og:title`, `og:description`, `og:url`, `og:image`
-- `og:image:width` / `og:image:height` só quando as dimensões são realmente conhecidas (evita mentir pro crawler que ajusta crop)
-- Imagem: featured image do post → fallback `og_fallback_image` do painel → fallback do logo do tema
-- Validação de imagens: rejeita SVG (não suportado por Facebook/X/WhatsApp/Discord) e qualquer imagem abaixo de 200x200 (mínimo do Facebook)
+`rd_add_open_graph_tags()` (prio 5) emite um card social em **toda superfície indexável** (não só singular) quando `enable_open_graph` está ativo. Pula 404/busca/feeds.
+- **Singular (post/página):** `og:type=article`, imagem = featured image do post (→ fallback `og_fallback_image` do painel → logo do tema), e o `twitter:creator` do autor.
+- **Home / arquivos (category/tag/tax, author, date):** `og:type=website` (`profile` no autor), título/URL por contexto, imagem = **logo do site** (`rd_seo_resolve_site_logo()`).
+- Tags comuns: `og:type`, `og:site_name`, `og:title`, `og:description`, `og:url`, `og:image` (+ `width`/`height` só quando conhecidas — evita mentir pro crawler que ajusta o crop).
+- **Descrição** vem do resolvedor único `rd_seo_resolve_description()` (compartilhado com a `<meta name="description">`), então as duas nunca divergem.
+- Validação de imagens (singular): rejeita SVG (não suportado por Facebook/X/WhatsApp/Discord) e imagens abaixo de 200x200 (mínimo do Facebook).
 
-### Twitter Cards (singular)
-
-Junto com o bloco OG, emite cards completos `summary_large_image`:
+**Twitter Cards** (`summary_large_image`, junto com o OG em todos os contextos):
 - `twitter:card`, `twitter:title`, `twitter:description`, `twitter:image`
-- `twitter:site` — extraído automaticamente da URL configurada em **Redes Sociais → Twitter (X)** via regex (`x.com/usuario` ou `twitter.com/usuario`)
-- `twitter:creator` — lê o user meta `twitter_handle` do autor do post (UI no perfil ainda não criada — feature futura). Fallback pro `twitter:site` global, que é correto pra blog single-author
+- `twitter:site` — extraído da URL em **Redes Sociais → Twitter (X)** via regex (`x.com/usuario` ou `twitter.com/usuario`)
+- `twitter:creator` — **só no singular**; lê o user meta `twitter_handle` do autor (UI no perfil ainda não criada). Fallback pro `twitter:site` global, correto pra blog single-author
 
 ### Canonical URLs
 
@@ -555,12 +554,14 @@ Pula 404 e feeds. Sem opção no painel — canonical é baseline sem trade-off.
 
 ### Meta Description
 
-Emite `<meta name="description">` em todas as superfícies indexáveis, com fonte por contexto:
-- Singular → excerpt do post (helper `rd_seo_resolve_post_description()` compartilhado com OG)
+**Campo manual** (meta box "Meta Description (ReloadeD)"): textarea dedicada em **posts E páginas** (`rd_seo_add_meta_box`, contexto `side`, sempre visível) com **contador de caracteres ao vivo** (`assets/js/admin-seo.js`, mira nos 160, fica vermelho ao passar). Salva em `_rd_meta_description` → entra no **topo** do `rd_seo_resolve_post_description()`, então um único campo controla `<meta name=description>` + `og:description` + `twitter:description` do singular. Vazio → cai no excerpt.
+
+`rd_add_meta_description()` (prio 2) emite `<meta name="description">` em todas as superfícies indexáveis, com a fonte por contexto centralizada no resolvedor único `rd_seo_resolve_description()` (compartilhado com o card OG/Twitter):
+- Singular → campo manual `_rd_meta_description` → excerpt → trim de 25 palavras
 - Home/Blog → tagline do site (Configurações Gerais → Descrição)
 - Category/Tag/Tax → descrição do termo, fallback "Posts in NomeDoTermo."
 - Author → bio do autor, fallback "Posts by Nome."
-- Date archives → "Archive of posts from {ano/mês/dia}" localizado via `date_i18n`
+- Date archives → "Archive of posts from {período}" (`rd_seo_archive_period()` + `date_i18n`)
 
 Pula 404, busca e feeds. Trunca em 160 caracteres pra ficar dentro do snippet do Google.
 
