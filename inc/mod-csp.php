@@ -192,6 +192,9 @@ function rd_csp_parse_custom_origins( $raw ): array {
  * the Ad widget (placement = enabled, same convention as the Discord widget).
  */
 function rd_csp_ads_active(): bool {
+	if ( ! rd_get_option_bool( 'enable_ads', true ) ) {
+		return false;
+	}
 	if ( '' !== trim( (string) rd_get_option( 'ad_global' ) )
 		|| '' !== trim( (string) rd_get_option( 'ad_topo_desktop' ) )
 		|| '' !== trim( (string) rd_get_option( 'ad_topo_mobile' ) )

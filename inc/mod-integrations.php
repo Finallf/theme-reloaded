@@ -23,7 +23,7 @@ add_action(
 		}
 
 		$ad_global = rd_get_option( 'ad_global' );
-		if ( ! empty( $ad_global ) ) {
+		if ( ! empty( $ad_global ) && rd_get_option_bool( 'enable_ads', true ) ) {
 			$ad_global_out = rd_csp_inject_nonce( $ad_global );
 			// Register this loader with the dedupe BEFORE the body ad slots
 			// render: wp_head runs first, so when the global head snippet

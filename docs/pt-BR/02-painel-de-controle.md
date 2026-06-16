@@ -378,12 +378,13 @@ Todos default _vazio_. Quando vazio, ícone não renderiza.
 
 ## 📢 Aba 10 — Ads (`?tab=ads`)
 
-Monetização. **2 sections.**
+Monetização. **3 sections.**
 
 ### Section: Global Script (`sec_ads_global`)
 
 | Opção | O que faz |
 |---|---|
+| `enable_ads` | **Interruptor mestre** (default ON). OFF = suprime **toda** saída de ad (global, banners, in-article, widget, lazy) e a CSP dropa as origens de ad — mas os códigos ficam salvos (pausa/retomada de 1 clique). O `ads.txt` continua servindo |
 | `ad_global` | Tag global do `<head>` (ex: AdSense Auto Ads). Aceita JS/HTML raw |
 | `ads_txt_content` | Conteúdo servido **virtualmente** em `/ads.txt` (mesmo padrão do arquivo de chave do IndexNow — sem SFTP, sobrevive a migração, entra no backup). 1 registro por linha; vazio = dormante. ⚠️ Arquivo físico `ads.txt` na raiz tem precedência (o web server serve antes do WP) — apague-o pra usar o campo |
 | `ads_lazy_load` | **Delay ads until interaction** (default OFF): remove os loaders das redes (`adsbygoogle.js` etc.) do HTML e injeta no primeiro gesto do visitante (scroll/touch/tecla/mouse). Os `<ins>` ficam com espaço reservado — zero CLS. Loader oficial sem modificação, só o momento muda. Bônus: Lighthouse não interage → ads ficam fora da medição do lab |
@@ -401,7 +402,18 @@ Monetização. **2 sections.**
 
 > O banner "Sidebar topo" deixou de ser campo de painel — virou o widget **"ReloadeD: Ad / Banner"** (`RD_Ad_Widget`, Aparência → Widgets), que aceita qualquer código e vai em qualquer posição/ordem.
 
-> **Nota CSP:** Os 5 campos `ad_*` aceitam `<script>` raw. Nonce é **injetado automaticamente** via `rd_csp_inject_nonce()` antes do echo (Wave 8.5) — não precisa adicionar nonce manualmente.
+### Section: In-Article (`sec_ads_in_article`)
+
+Anúncio injetado **entre os parágrafos** dos single posts (não páginas), via `the_content` (prio 30, DOMDocument). Até 2 zonas independentes, com **espaço reservado = zero CLS** (o diferencial vs Auto Ads).
+
+| Opção | O que faz |
+|---|---|
+| `ad_in_article` | Código da zona #1 (retângulo **300×250** recomendado — cabe em desktop+mobile, alta demanda). Vazio = off |
+| `ad_in_article_paragraph` | Insere após o N-ésimo `<p>` de primeiro nível (default 4; evite 1 — Google penaliza ad acima do conteúdo). Só aparece com ≥ N+1 parágrafos |
+| `ad_in_article_min_height` | Altura reservada em px **antes do ad carregar** = zero CLS (default 300; faixa 0–1200). Case com o tamanho do ad |
+| `ad_in_article_2` + `_paragraph` + `_min_height` | Zona #2, mais ao fundo (default parágrafo 10) — só aparece em posts longos o bastante. Pra textos extensos |
+
+> **Nota CSP:** todos os campos `ad_*` aceitam `<script>` raw. Nonce **injetado automaticamente** via `rd_csp_inject_nonce()` antes do echo (Wave 8.5). Os numéricos do in-article (`_paragraph`/`_min_height`) são sanitizados como int (não raw, apesar do prefixo `ad_`).
 
 ---
 

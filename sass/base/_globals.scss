@@ -164,6 +164,28 @@ html.rd-theme-switching * {
     width: 100%;
 }
 
+// In-article ad — reserved-space zone injected between paragraphs of single
+// posts (mod-ads.php, the_content filter). The inline min-height (from the
+// panel) reserves the slot BEFORE the ad loads = zero CLS. Centered, with
+// breathing room and a discreet "Advertisement" label above (AdSense policy +
+// reader trust). Vertically centers the creative within the reserved box.
+.rd-ad-in-article {
+    margin: 32px auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.rd-ad-label {
+    display: block;
+    font-size: 0.7rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    opacity: 0.55;
+    margin-bottom: 6px;
+}
+
 // Ad/banner widget (RD_Ad_Widget) — no glass card (the ad creative brings its
 // own look); just bottom spacing to separate it from the next sidebar widget.
 .widget_rd_ad {
