@@ -118,11 +118,18 @@ function rd_get_default_options(): array {
 		'sitemap_include_authors'     => 0,
 		'sitemap_include_cpt'         => 1,
 
+		'enable_ads'                  => 1, // master switch: OFF suppresses ALL ad output (codes kept saved).
 		'ad_global'                   => '',
 		'ads_txt_content'             => '', // virtual /ads.txt content (served by mod-ads.php; empty = dormant).
 		'ad_topo_desktop'             => '',
 		'ad_topo_mobile'              => '',
 		'ad_sidebar_sticky'           => '',
+		'ad_in_article'               => '', // in-article zone #1 code; empty = off.
+		'ad_in_article_paragraph'     => 4,  // inject after this top-level paragraph.
+		'ad_in_article_min_height'    => 300, // reserved px (zero CLS) — match the ad size.
+		'ad_in_article_2'             => '', // in-article zone #2 (long articles); empty = off.
+		'ad_in_article_2_paragraph'   => 10,
+		'ad_in_article_2_min_height'  => 300,
 		'ads_lazy_load'               => 0, // OFF = loaders print inline (deduped); ON = loaders stripped and injected on first interaction (or timeout below).
 		'ads_lazy_timeout'            => 5, // seconds before ads load anyway when the visitor never interacts; 0 = interaction only.
 
@@ -1607,6 +1614,18 @@ function rd_settings_init() {
 	 */
 	rd_panel_register_section( 'sec_ads_global', __( 'Ads — Global Script', 'reloaded' ), 'editor-code', 'rd_options_monetization' );
 	add_settings_field(
+		'enable_ads',
+		__( 'Enable ads', 'reloaded' ),
+		'rd_master_field_cb',
+		'rd_options_monetization',
+		'sec_ads_global',
+		array(
+			'id'   => 'enable_ads',
+			'type' => 'checkbox',
+			'desc' => __( 'Master switch for <strong>all</strong> ad output: the global script, the banner zones (header/anchor/sidebar), the in-article zones and the Ad widget. Turn it <strong>off</strong> to pause every ad at once <strong>without removing your codes</strong> — they stay saved and come right back when you turn it on. The CSP also drops the ad origins while off. (Your <code>ads.txt</code> keeps being served — it is a declaration file, not an ad.)', 'reloaded' ),
+		)
+	);
+	add_settings_field(
 		'ad_global',
 		__( 'Global Ad Script', 'reloaded' ),
 		'rd_master_field_cb',
@@ -1691,6 +1710,84 @@ function rd_settings_init() {
 			'id'   => 'ad_sidebar_sticky',
 			'type' => 'textarea',
 			'desc' => __( 'Rendered at the bottom of the sidebar. Follows the screen scroll.', 'reloaded' ),
+		)
+	);
+
+	rd_panel_register_section( 'sec_ads_in_article', __( 'Ads — In-Article', 'reloaded' ), 'media-text', 'rd_options_monetization' );
+	add_settings_field(
+		'ad_in_article',
+		__( 'In-Article Ad #1', 'reloaded' ),
+		'rd_master_field_cb',
+		'rd_options_monetization',
+		'sec_ads_in_article',
+		array(
+			'id'   => 'ad_in_article',
+			'type' => 'textarea',
+			'desc' => __( 'Ad injected between paragraphs of single posts (not pages). A <strong>fixed 300x250</strong> rectangle is recommended — compact, high demand, and a predictable height for the reserved space below (zero layout shift). Leave empty to disable. CSP nonce and lazy-load are applied automatically.', 'reloaded' ),
+		)
+	);
+	add_settings_field(
+		'ad_in_article_paragraph',
+		__( 'Insert after paragraph #', 'reloaded' ),
+		'rd_master_field_cb',
+		'rd_options_monetization',
+		'sec_ads_in_article',
+		array(
+			'id'   => 'ad_in_article_paragraph',
+			'type' => 'number',
+			'desc' => __( 'The ad goes right after this top-level paragraph (paragraphs inside quotes/lists/code are skipped). Avoid 1 — Google penalizes ads above the content. Default: 4. The ad only appears if the post has at least one paragraph after this one.', 'reloaded' ),
+		)
+	);
+	add_settings_field(
+		'ad_in_article_min_height',
+		__( 'Reserved height (px)', 'reloaded' ),
+		'rd_master_field_cb',
+		'rd_options_monetization',
+		'sec_ads_in_article',
+		array(
+			'id'   => 'ad_in_article_min_height',
+			'type' => 'number',
+			'min'  => 0,
+			'max'  => 1200,
+			'desc' => __( 'Min-height reserved for the slot <strong>before the ad loads</strong> = zero layout shift (CLS). Match it to the ad size + label: a 300x250 wants ~290-300. Default: 300. Use 0 to reserve nothing (not recommended).', 'reloaded' ),
+		)
+	);
+	add_settings_field(
+		'ad_in_article_2',
+		__( 'In-Article Ad #2 (long articles)', 'reloaded' ),
+		'rd_master_field_cb',
+		'rd_options_monetization',
+		'sec_ads_in_article',
+		array(
+			'id'   => 'ad_in_article_2',
+			'type' => 'textarea',
+			'desc' => __( 'Optional second zone, deeper in the article. Only appears when the post is long enough to reach the paragraph below — short posts keep a single ad. Leave empty to disable.', 'reloaded' ),
+		)
+	);
+	add_settings_field(
+		'ad_in_article_2_paragraph',
+		__( 'Insert #2 after paragraph #', 'reloaded' ),
+		'rd_master_field_cb',
+		'rd_options_monetization',
+		'sec_ads_in_article',
+		array(
+			'id'   => 'ad_in_article_2_paragraph',
+			'type' => 'number',
+			'desc' => __( 'Set this deep (e.g. 10-12) so the second ad only shows on long reads. Default: 10.', 'reloaded' ),
+		)
+	);
+	add_settings_field(
+		'ad_in_article_2_min_height',
+		__( 'Reserved height #2 (px)', 'reloaded' ),
+		'rd_master_field_cb',
+		'rd_options_monetization',
+		'sec_ads_in_article',
+		array(
+			'id'   => 'ad_in_article_2_min_height',
+			'type' => 'number',
+			'min'  => 0,
+			'max'  => 1200,
+			'desc' => __( 'Reserved height for the second zone. Default: 300.', 'reloaded' ),
 		)
 	);
 
@@ -1971,7 +2068,10 @@ function rd_options_sanitize( array $input ) {
 	$new_input = array();
 	foreach ( $input as $key => $value ) {
 
-		if ( strpos( $key, 'ad_' ) === 0 ) {
+		if ( in_array( $key, array( 'ad_in_article_paragraph', 'ad_in_article_min_height', 'ad_in_article_2_paragraph', 'ad_in_article_2_min_height' ), true ) ) {
+			// 0. In-article ad numeric controls — int, NOT raw (despite the ad_ prefix).
+			$new_input[ $key ] = absint( $value );
+		} elseif ( strpos( $key, 'ad_' ) === 0 ) {
 			// 1. Ad zones: allows raw HTML and scripts (AdSense, etc).
 			$new_input[ $key ] = $value;
 		} elseif ( in_array( $key, array( 'lgpd_text', 'footer_subline', 'maintenance_text' ), true ) ) {

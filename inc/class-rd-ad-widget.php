@@ -35,6 +35,9 @@ class RD_Ad_Widget extends WP_Widget {
 	 * Frontend output. Renders nothing (not even the wrapper) when no code is set.
 	 */
 	public function widget( $args, $instance ) {
+		if ( ! rd_get_option_bool( 'enable_ads', true ) ) {
+			return;
+		}
 		$code = $instance['code'] ?? '';
 		if ( '' === trim( $code ) ) {
 			return;

@@ -42,6 +42,16 @@ add_action( 'init', 'rd_ads_serve_ads_txt', 2 );
  *******************************************************************************/
 
 /**
+ * Master switch: whether ad output is enabled at all. Default ON. When OFF,
+ * every ad slot (global script, banners, in-article, widget, lazy loader) is
+ * suppressed and the CSP drops the ad origins — but the saved ad codes stay
+ * intact in the panel, so it's a one-click pause/resume.
+ */
+function rd_ads_enabled(): bool {
+	return rd_get_option_bool( 'enable_ads', true );
+}
+
+/**
  * Whether the "Delay ads until interaction" panel toggle is ON.
  */
 function rd_ads_lazy_enabled(): bool {
@@ -129,7 +139,7 @@ function rd_ads_dedupe_loader( string $html ): string {
  * have rendered, so the queue is complete.
  */
 function rd_ads_print_lazy_loader() {
-	if ( ! rd_ads_lazy_enabled() ) {
+	if ( ! rd_ads_enabled() || ! rd_ads_lazy_enabled() ) {
 		return;
 	}
 	$srcs = rd_ads_loader_queue();
@@ -227,6 +237,9 @@ function rd_ads_print_lazy_loader() {
 add_action( 'wp_footer', 'rd_ads_print_lazy_loader', 99 );
 
 function rd_render_ad_topo() {
+	if ( ! rd_ads_enabled() ) {
+		return;
+	}
 	// 1. Renders the top banner (Desktop)
 	$ad_desktop = rd_get_option( 'ad_topo_desktop' );
 
@@ -240,6 +253,9 @@ function rd_render_ad_topo() {
  * 2. Injects the Mobile banner (Fixed Anchor) into the HTML footer.
  */
 function rd_render_ad_mobile_anchor() {
+	if ( ! rd_ads_enabled() ) {
+		return;
+	}
 	$ad_mobile = rd_get_option( 'ad_topo_mobile' );
 
 	if ( ! empty( $ad_mobile ) ) {
@@ -263,9 +279,165 @@ add_action( 'wp_footer', 'rd_render_ad_mobile_anchor' );
  * Renders the Sidebar banner (Sticky).
  */
 function rd_render_ad_sidebar_sticky() {
+	if ( ! rd_ads_enabled() ) {
+		return;
+	}
 	$ad_sidebar_sticky = rd_get_option( 'ad_sidebar_sticky' );
 	if ( ! empty( $ad_sidebar_sticky ) ) {
 		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- BY DESIGN: ad codes (AdSense, GAM, etc) require raw HTML/JS. Admin with manage_options trusted under WP model. CSP nonce injected automatically into <script> tags via rd_csp_inject_nonce().
 		echo '<div class="rd-ad-container rd-ad-sticky">' . rd_ads_dedupe_loader( rd_csp_inject_nonce( $ad_sidebar_sticky ) ) . '</div>';
 	}
 }
+
+/*******************************************************************************
+ * In-article ads — reserved-space zones injected between paragraphs           *
+ *                                                                             *
+ * A controlled alternative to AdSense Auto Ads: instead of letting Google     *
+ * inject wherever (causing CLS + breaking the reading rhythm), the theme drops *
+ * an ad zone AFTER the Nth top-level <p> of single posts, with a CSS-reserved  *
+ * min-height (panel) = ZERO CLS. Up to 2 positions; the 2nd is naturally       *
+ * limited to long articles (it only fires when there are enough paragraphs to  *
+ * reach it + one after). Runs on `the_content` at priority 30 — after          *
+ * markdown(6)/images(20)/TOC(25) — so it counts the FINAL paragraph structure. *
+ * Paragraphs nested in blockquote/figure/lists are NOT top-level children, so  *
+ * they're skipped automatically. Each zone reuses the same raw + CSP-nonce +   *
+ * lazy-dedupe pipeline as the other slots.                                     *
+ *******************************************************************************/
+
+/**
+ * Returns the configured in-article positions (only those with a non-empty
+ * ad code), each as [ after (paragraph #), code, height (reserved px) ].
+ *
+ * @return array<int, array{after:int,code:string,height:int}>
+ */
+function rd_ads_in_article_positions(): array {
+	$positions = array();
+
+	$code1 = trim( (string) rd_get_option( 'ad_in_article' ) );
+	if ( '' !== $code1 ) {
+		$positions[] = array(
+			'after'  => max( 1, (int) rd_get_option( 'ad_in_article_paragraph', 4 ) ),
+			'code'   => $code1,
+			'height' => max( 0, (int) rd_get_option( 'ad_in_article_min_height', 300 ) ),
+		);
+	}
+
+	$code2 = trim( (string) rd_get_option( 'ad_in_article_2' ) );
+	if ( '' !== $code2 ) {
+		$positions[] = array(
+			'after'  => max( 1, (int) rd_get_option( 'ad_in_article_2_paragraph', 10 ) ),
+			'code'   => $code2,
+			'height' => max( 0, (int) rd_get_option( 'ad_in_article_2_min_height', 300 ) ),
+		);
+	}
+
+	return $positions;
+}
+
+/**
+ * Builds the in-article ad container HTML: reserved-space wrapper + discreet
+ * "Advertisement" label + the raw ad code (CSP nonce + lazy dedupe applied).
+ * Kept as a string (not built in the DOM) so the ad's <script> survives — it is
+ * swapped into the saved HTML via a placeholder (DOMDocument mangles scripts).
+ *
+ * @param string $code   Raw ad code from the panel.
+ * @param int    $height Reserved min-height in px (0 = none).
+ */
+function rd_ads_in_article_html( string $code, int $height ): string {
+	$style = $height > 0 ? ' style="min-height:' . $height . 'px"' : '';
+	// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- BY DESIGN: ad code is raw HTML/JS (trusted admin, WP model); CSP nonce injected via rd_csp_inject_nonce(), loader deduped for lazy mode.
+	$ad = rd_ads_dedupe_loader( rd_csp_inject_nonce( $code ) );
+	return '<div class="rd-ad-container rd-ad-in-article"' . $style . '>'
+		. '<span class="rd-ad-label">' . esc_html__( 'Advertisement', 'reloaded' ) . '</span>'
+		. $ad
+		. '</div>';
+}
+
+/**
+ * `the_content` filter (prio 30): injects the in-article ad zone(s).
+ *
+ * @param string $content Post content HTML.
+ * @return string
+ */
+function rd_ads_inject_in_article( $content ) {
+	if ( ! is_singular( 'post' ) || ! in_the_loop() || ! is_main_query() || ! rd_ads_enabled() ) {
+		return $content;
+	}
+
+	$positions = rd_ads_in_article_positions();
+	if ( empty( $positions ) ) {
+		return $content;
+	}
+
+	// Idempotency: the_content can run more than once per render — notably the
+	// TOC module (mod-table-of-contents) re-applies the_content on the content to
+	// extract headings, baking our zone into its cached "modified_content" which
+	// it then returns to the main filter chain. If the zone is already present,
+	// don't inject a second time.
+	if ( strpos( (string) $content, 'rd-ad-in-article' ) !== false ) {
+		return $content;
+	}
+
+	// Fast path: no paragraph to anchor to.
+	if ( strpos( (string) $content, '<p' ) === false ) {
+		return $content;
+	}
+
+	libxml_use_internal_errors( true );
+	$dom = new DOMDocument();
+	// Same UTF-8 + no-wrapper trick used by rd_img_wrap_content_images().
+	$loaded = $dom->loadHTML(
+		'<?xml encoding="UTF-8">' . $content,
+		LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD
+	);
+	libxml_clear_errors();
+
+	if ( ! $loaded ) {
+		return $content;
+	}
+
+	// Top-level <p> only — paragraphs nested in blockquote/figure/lists are not
+	// direct children of the document (NOIMPLIED), so they're not counted.
+	$paragraphs = array();
+	// phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase -- native DOMNode property.
+	foreach ( iterator_to_array( $dom->childNodes ) as $node ) {
+		// phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase -- native DOMNode property.
+		if ( $node instanceof DOMElement && 'p' === $node->nodeName ) {
+			$paragraphs[] = $node;
+		}
+	}
+	$total = count( $paragraphs );
+
+	$swaps    = array(); // placeholder markup => real ad HTML.
+	$slot     = 0;
+	$injected = false;
+
+	foreach ( $positions as $pos ) {
+		// Qualify: need at least one paragraph AFTER the ad, so it never lands
+		// as the article's last element (skips short posts for that position).
+		if ( $total < $pos['after'] + 1 ) {
+			continue;
+		}
+		++$slot;
+		$anchor      = $paragraphs[ $pos['after'] - 1 ];
+		$placeholder = $dom->createElement( 'div' );
+		$placeholder->setAttribute( 'data-rd-ad-ph', (string) $slot );
+		// phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase -- native DOMNode property.
+		$anchor->parentNode->insertBefore( $placeholder, $anchor->nextSibling );
+
+		$swaps[ '<div data-rd-ad-ph="' . $slot . '"></div>' ] = rd_ads_in_article_html( $pos['code'], $pos['height'] );
+		$injected = true;
+	}
+
+	if ( ! $injected ) {
+		return $content;
+	}
+
+	$html = $dom->saveHTML();
+	$html = preg_replace( '/^<\?xml encoding="UTF-8">\s*/', '', $html );
+
+	// Swap the empty placeholder <div>s for the real ad HTML (keeps the <script>
+	// intact — DOMDocument would otherwise corrupt it).
+	return str_replace( array_keys( $swaps ), array_values( $swaps ), $html );
+}
+add_filter( 'the_content', 'rd_ads_inject_in_article', 30 );
