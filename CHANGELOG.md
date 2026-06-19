@@ -7,6 +7,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 <br>
 
 
+## [1.11.1-beta.1](https://github.com/Finallf/theme-reloaded/compare/v1.11.0...v1.11.1-beta.1) (2026-06-19)
+
+### 🐛 Bug Fixes
+
+* **updater:** pick the highest semver release, not [0] ([9c03ad3](https://github.com/Finallf/theme-reloaded/commit/9c03ad330a9f2e540e6b31b873f1e84fb16b146a))
+
+<br>
+
+---
+
 ## [1.11.0](https://github.com/Finallf/theme-reloaded/compare/v1.10.0...v1.11.0) (2026-06-16)
 
 ### ✨ Features
