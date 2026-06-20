@@ -25,11 +25,8 @@ $ErrorActionPreference = "SilentlyContinue"
 # Endpoint registry. Type 'admin' = must reject, 'public' = open by design.
 $endpoints = @(
     # Endpoints that MUST reject access without auth
-    @{ Type='admin'; Method='POST'; Url='/wp-admin/admin-post.php?action=rd_backup_export'; Name='admin_post: rd_backup_export' }
+    @{ Type='admin'; Method='POST'; Url='/wp-admin/admin-ajax.php?action=rd_backup_install'; Name='wp_ajax: rd_backup_install' }
     @{ Type='admin'; Method='POST'; Url='/wp-admin/admin-ajax.php?action=rd_img_regenerate'; Name='wp_ajax: rd_img_regenerate' }
-    @{ Type='admin'; Method='POST'; Url='/wp-json/rd/v1/backup/preview'; Name='REST: rd/v1/backup/preview' }
-    @{ Type='admin'; Method='POST'; Url='/wp-json/rd/v1/backup/import'; Name='REST: rd/v1/backup/import' }
-    @{ Type='admin'; Method='POST'; Url='/wp-json/rd/v1/backup/restore'; Name='REST: rd/v1/backup/restore' }
 
     # WordPress admin pages (must redirect to login)
     @{ Type='admin'; Method='GET'; Url='/wp-admin/'; Name='wp-admin root' }

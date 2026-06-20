@@ -1911,9 +1911,10 @@ function rd_settings_init() {
 	);
 
 	/*
-	 * --- BACKUP & RESTORE --- (Wave 11)
-	 * Promoted from a sub-section of Maintenance to its own tab. The custom
-	 * renderer is intact — only the page where it is registered changed.
+	 * --- BACKUP ---
+	 * The tab is a launcher for the standalone ReloadeD Backup plugin (install /
+	 * activate / open). The legacy settings export/import was retired alongside
+	 * the plugin — full-site backups capture these settings anyway.
 	 */
 	// Empty title — callback rd_backup_render_panel emits its own section_header with icon.
 	add_settings_section( 'sec_backup', '', 'rd_backup_render_panel', 'rd_options_backup' );
@@ -2115,9 +2116,9 @@ function rd_options_sanitize( array $input ) {
 				? rd_login_sanitize_slug( $value )
 				: '';
 		} elseif ( $value === '0' || $value === '1' || $value === 0 || $value === 1 ) {
-			// 4. Checkboxes: arrive as '0'/'1' (string, from HTML form via hidden fallback)
-			// OR 0/1 (int, coming from JSON in mod-backup after json_decode).
-			// Coerced to int to standardize storage and enable strict comparisons (=== 1).
+			// 4. Checkboxes: arrive as '0'/'1' (string, from the HTML form via the
+			// hidden fallback). Coerced to int to standardize storage and enable
+			// strict comparisons (=== 1).
 			$new_input[ $key ] = (int) $value;
 		} else {
 			// 5. Other fields: strict cleanup, destroys any HTML and scripts.

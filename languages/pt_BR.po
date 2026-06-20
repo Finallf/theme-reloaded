@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ReloadeD 0.1.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/theme/reloaded\n"
-"POT-Creation-Date: 2026-06-16T05:59:02-03:00\n"
-"PO-Revision-Date: 2026-06-16 06:00-0300\n"
+"POT-Creation-Date: 2026-06-20T02:58:31-03:00\n"
+"PO-Revision-Date: 2026-06-20 03:04-0300\n"
 "Last-Translator: Regis Vieira Delgado (Finallf) <finallf2@gmail.com>\n"
 "Language-Team: Brazilian Portuguese\n"
 "Language: pt_BR\n"
@@ -261,7 +261,7 @@ msgid "Select image"
 msgstr "Selecionar Imagem"
 
 #: inc/class-rd-discord-widget.php:114 inc/class-rd-support-widget.php:101
-#: inc/panel.php:1965
+#: inc/panel.php:1966
 msgid "Remove"
 msgstr "Remover"
 
@@ -529,290 +529,86 @@ msgstr[1] "%s posts"
 msgid "View all posts by %s"
 msgstr "Ver todos os posts de %s"
 
-#: inc/mod-backup.php:148
-msgid "You do not have permission to export theme settings."
-msgstr "Você não tem permissão para exportar as configurações do tema."
+#: inc/mod-backup.php:115
+msgid "You are not allowed to install plugins."
+msgstr "Você não tem permissão para instalar plugins."
 
-#: inc/mod-backup.php:213
-msgid "Backup file is not a valid JSON object."
-msgstr "O arquivo de backup não é um objeto JSON válido."
-
-#: inc/mod-backup.php:217
-msgid "Backup file is missing the _meta envelope (not a ReloadeD backup?)."
+#: inc/mod-backup.php:121
+msgid "Could not reach GitHub to fetch the latest release. Try again later."
 msgstr ""
-"O arquivo de backup não possui o envelope _meta (não é um backup Reloaded?)."
+"Não foi possível conectar ao GitHub para buscar o último release. Tente "
+"novamente mais tarde."
 
-#. translators: 1: schema version found in the file; 2: schema version this theme supports
-#: inc/mod-backup.php:226
+#: inc/mod-backup.php:144
+msgid "Installation failed."
+msgstr "A instalação falhou."
+
+#. translators: %s: the WordPress activation error message.
+#: inc/mod-backup.php:153
 #, php-format
-msgid ""
-"Backup schema version %1$d is not supported by this theme (max: %2$d). Maybe "
-"the file is from a newer version of ReloadeD?"
-msgstr ""
-"A versão %1$d do esquema de backup não é compatível com este tema (máximo: "
-"%2$d). Talvez o arquivo seja de uma versão mais recente do tema ReloadeD?"
+msgid "Installed, but activation failed: %s"
+msgstr "Instalado, mas a ativação falhou: %s"
 
-#: inc/mod-backup.php:236
-msgid ""
-"Backup file contains no recognized sections (settings, category_colors, "
-"ad_banners)."
-msgstr ""
-"O arquivo de backup não contém nenhuma seção reconhecida (settings, "
-"category_colors, ad_banners)."
+#: inc/mod-backup.php:192
+msgid "Installing & activating… this can take a moment."
+msgstr "Instalando e ativando… isso pode levar um instante."
 
-#: inc/mod-backup.php:244
-msgid "Settings section must be an object."
-msgstr "A seção de configurações deve ser um objeto."
+#: inc/mod-backup.php:193
+msgid "Install failed:"
+msgstr "A instalação falhou:"
 
-#: inc/mod-backup.php:252
-msgid "Category colors section must be a list."
-msgstr "A seção de cores da categoria deve ser uma lista."
-
-#: inc/mod-backup.php:273
-msgid "Ad banners section must be an object."
-msgstr "A seção de banners de anúncios deve ser um objeto."
-
-#: inc/mod-backup.php:599
-msgid "No snapshot available — restore unavailable."
-msgstr "Nenhum snapshot disponível — restauração indisponível."
-
-#: inc/mod-backup.php:665
-msgid "Reading file..."
-msgstr "Lendo arquivo…"
-
-#: inc/mod-backup.php:666
-msgid "File is not valid JSON."
-msgstr "O arquivo não é um JSON válido."
-
-#: inc/mod-backup.php:667
-msgid "Validating and calculating diff..."
-msgstr "Validando e calculando as diferenças…"
-
-#: inc/mod-backup.php:668
-msgid "Applying import..."
-msgstr "Aplicando importação…"
-
-#: inc/mod-backup.php:669
-msgid "Import applied! Reloading page..."
-msgstr "Importação concluída! Recarregando a página…"
-
-#: inc/mod-backup.php:670
-msgid "Import failed:"
-msgstr "A importação falhou:"
-
-#: inc/mod-backup.php:671
-msgid ""
-"Confirm import? This will overwrite the current settings (an auto-backup will "
-"be saved before)."
-msgstr ""
-"Confirmar importação? Isso substituirá as configurações atuais (um backup "
-"automático será salvo antes)."
-
-#: inc/mod-backup.php:672
-msgid "Restoring previous state..."
-msgstr "Restaurando o estado anterior…"
-
-#: inc/mod-backup.php:673
-msgid "Previous state restored! Reloading..."
-msgstr "Estado anterior restaurado! Recarregando…"
-
-#: inc/mod-backup.php:674
-msgid "Restore failed:"
-msgstr "A restauração falhou:"
-
-#: inc/mod-backup.php:675
-msgid ""
-"Restore the previous state (before the last import)? The current settings "
-"will be overwritten. This is a one-shot undo — the snapshot is deleted after "
-"restore."
-msgstr ""
-"Restaura o estado anterior (antes da última importação)? As configurações "
-"atuais serão sobrescritas. Esta ação pode ser feita apenas uma vez — o "
-"instantâneo é excluído após a restauração."
-
-#: inc/mod-backup.php:677
-msgid "Preview"
-msgstr "Pré-visualização"
-
-#: inc/mod-backup.php:678
-msgid "Exported from:"
-msgstr "Exportado de:"
-
-#. translators: %s = theme version string like "0.4.0-beta.64"
-#: inc/mod-backup.php:680
-#, php-format
-msgid "theme %s"
-msgstr "tema %s"
-
-#: inc/mod-backup.php:681 inc/mod-backup.php:784
-msgid "Settings"
-msgstr "Configurações"
-
-#: inc/mod-backup.php:682 inc/mod-backup.php:805
-msgid "Ad banners"
-msgstr "Banners de anúncios"
-
-#: inc/mod-backup.php:683 inc/mod-backup.php:792
-msgid "Category colors"
-msgstr "Cores das categorias"
-
-#. translators: %d = number of keys/items that will be updated by the import
-#: inc/mod-backup.php:685
-#, php-format
-msgid "%d will be UPDATED"
-msgstr "%d serão ATUALIZADAS"
-
-#. translators: %d = number of keys/items that will be added by the import
-#: inc/mod-backup.php:687
-#, php-format
-msgid "%d will be ADDED"
-msgstr "%d serão ADICIONADAS"
-
-#. translators: %d = number of settings keys currently set but absent from the import file
-#: inc/mod-backup.php:689
-#, php-format
-msgid "%d current keys NOT in file (will be kept)"
-msgstr "%d chaves atuais NÃO estão no arquivo (serão mantidas)"
-
-#. translators: %d = number of ad banner slots currently filled but absent from the import file
-#: inc/mod-backup.php:691
-#, php-format
-msgid "%d current ads NOT in file (will be kept)"
-msgstr "%d anúncios atuais NÃO estão no arquivo (serão mantidos)"
-
-#. translators: %d = number of category color entries skipped because no category with that slug exists on this site
-#: inc/mod-backup.php:693
-#, php-format
-msgid "%d SKIPPED (no matching slug here)"
-msgstr "%d IGNORADOS (nenhum slug correspondente aqui)"
-
-#: inc/mod-backup.php:694
-msgid "Show keys that will change"
-msgstr "Mostrar chaves que serão alteradas"
-
-#: inc/mod-backup.php:695
-msgid "Apply import"
-msgstr "Aplicar"
-
-#: inc/mod-backup.php:696
-msgid "Cancel"
-msgstr "Cancelar"
-
-#: inc/mod-backup.php:720 inc/mod-dashboard.php:790 inc/panel.php:277
+#: inc/mod-backup.php:212 inc/mod-dashboard.php:790 inc/panel.php:277
 msgid "Backup"
 msgstr "Backup"
 
-#: inc/mod-backup.php:763
-msgid "Export"
-msgstr "Exportar"
+#: inc/mod-backup.php:223
+msgid "ReloadeD Backup"
+msgstr "ReloadeD Backup"
 
-#: inc/mod-backup.php:764
+#: inc/mod-backup.php:224
 msgid ""
-"Download a JSON file with the theme configuration from this install. Useful "
-"for migration (sandbox → production), snapshots before risky changes, or "
-"replicating the theme on another site."
+"Complete, portable backups of this site — the full database (these panel "
+"settings included) plus the uploads folder, in a single .zip restorable on "
+"any host. Provided by the standalone ReloadeD Backup plugin."
 msgstr ""
-"Baixe um arquivo JSON com as configurações do tema. Útil para migração, "
-"criação de snapshots antes de alterações arriscadas ou para replicar o tema "
-"em outro site."
+"Backups completos e portáteis deste site — o banco de dados inteiro (estas "
+"configurações do painel inclusas) mais a pasta de uploads, num único .zip "
+"restaurável em qualquer host. Fornecido pelo plugin independente ReloadeD "
+"Backup."
 
-#: inc/mod-backup.php:774
-msgid "Theme configuration backup only."
-msgstr "Backup apenas das configurações do tema."
+#: inc/mod-backup.php:231
+msgid "ReloadeD Backup is installed and active."
+msgstr "O ReloadeD Backup está instalado e ativo."
 
-#: inc/mod-backup.php:775
-msgid ""
-"This file contains panel options, category colors and ad codes. It does NOT "
-"include posts, pages, comments, media files or WordPress core data. For full "
-"site backups, use a dedicated plugin (UpdraftPlus, WPVivid, etc.) or your "
-"hosting provider's tools."
-msgstr ""
-"Este arquivo contém opções do painel, cores de categoria e códigos de "
-"anúncio. Ele NÃO inclui posts, páginas, comentários, arquivos de mídia ou "
-"dados do core do WordPress. Para backup completo do site, use um plugin "
-"dedicado (UpdraftPlus, WPVivid, etc.) ou as ferramentas do seu provedor de "
-"hospedagem."
+#: inc/mod-backup.php:236
+msgid "Open ReloadeD Backup"
+msgstr "Abrir o ReloadeD Backup"
 
-#: inc/mod-backup.php:779
-msgid "Sections to include in the export"
-msgstr "Seções a serem incluídas na exportação"
+#: inc/mod-backup.php:241
+msgid "ReloadeD Backup is installed but not active."
+msgstr "O ReloadeD Backup está instalado, mas não está ativo."
 
-#: inc/mod-backup.php:785
-msgid ""
-"All panel toggles, IDs and texts (rd_settings option) — single key in the "
-"database, fully portable between sites"
-msgstr ""
-"Todos os botões de alternância do painel, IDs e textos — totalmente portátil "
-"entre sites"
+#: inc/mod-backup.php:246
+msgid "Activate ReloadeD Backup"
+msgstr "Ativar o ReloadeD Backup"
 
-#. translators: %d = number of categories with custom color set
-#: inc/mod-backup.php:796
+#: inc/mod-backup.php:254
+msgid "Install ReloadeD Backup"
+msgstr "Instalar o ReloadeD Backup"
+
+#. translators: %s: version number, e.g. 1.1.0
+#: inc/mod-backup.php:264
 #, php-format
-msgid "%d category with custom color"
-msgid_plural "%d categories with custom colors"
-msgstr[0] "%d categoria com cor personalizada"
-msgstr[1] "%d categorias com cores personalizadas"
+msgid "Installs the latest stable release (v%s) from GitHub and activates it."
+msgstr "Instala o último release estável (v%s) do GitHub e o ativa."
 
-#. translators: %d = number of ad zones with content (keys starting with ad_)
-#: inc/mod-backup.php:809
-#, php-format
-msgid "%d ad zone with content"
-msgid_plural "%d ad zones with content"
-msgstr[0] "%d zona de anúncio com conteúdo"
-msgstr[1] "%d zonas de anúncio com conteúdo"
-
-#: inc/mod-backup.php:811
+#: inc/mod-backup.php:271
 msgid ""
-"tip: uncheck if migrating to another site (ad codes are often site-specific)"
+"Could not reach GitHub to check the latest release — you can still try "
+"installing."
 msgstr ""
-"dica: desmarque esta opção se estiver migrando para outro site (os códigos de "
-"anúncios geralmente são específicos de cada site)"
-
-#. translators: %s = filename template like reloaded-backup-{host}-{YYYY-MM-DD}.json
-#: inc/mod-backup.php:822
-#, php-format
-msgid "Filename: %s"
-msgstr "Nome do arquivo: %s"
-
-#: inc/mod-backup.php:834
-msgid "Download backup JSON"
-msgstr "Baixar JSON"
-
-#: inc/mod-backup.php:856
-msgid "Import"
-msgstr "Importar"
-
-#: inc/mod-backup.php:857
-msgid ""
-"Upload a backup JSON, preview the diff, then apply. An auto-snapshot of the "
-"current state is saved before applying — safe to experiment."
-msgstr ""
-"Faça o upload de um arquivo JSON de backup, visualize as diferenças e aplique "
-"as alterações. Um instantâneo automático do estado atual é salvo antes da "
-"aplicação — seguro para experimentar."
-
-#: inc/mod-backup.php:863
-msgid "Use the Restore card (below) to undo if needed."
-msgstr "Use o campo Restaurar (abaixo) para desfazer, se necessário."
-
-#: inc/mod-backup.php:867
-msgid "Choose backup JSON"
-msgstr "Enviar JSON"
-
-#: inc/mod-backup.php:897 inc/mod-backup.php:909
-msgid "Restore previous state"
-msgstr "Restaurar"
-
-#. translators: %s = formatted date/time of the last auto-snapshot
-#: inc/mod-backup.php:900
-#, php-format
-msgid ""
-"Auto-snapshot saved before the last import: %s. You can restore that exact "
-"state in one click. After restoring, the snapshot is deleted (one-shot undo)."
-msgstr ""
-"Um instantâneo automático foi salvo antes da última importação: %s. Você pode "
-"restaurar esse estado exato com um clique. Após a restauração, o instantâneo "
-"é excluído (desfazer com um único clique)."
+"Não foi possível conectar ao GitHub para verificar o último release — você "
+"ainda pode tentar instalar."
 
 #: inc/mod-breadcrumbs.php:35
 msgid "Home"
@@ -984,11 +780,11 @@ msgstr ""
 "Estado atual das principais funcionalidades. Clique em qualquer aba na "
 "navegação acima para alterar uma configuração."
 
-#: inc/mod-dashboard.php:78 inc/mod-dashboard.php:343
+#: inc/mod-dashboard.php:78 inc/mod-dashboard.php:342
 msgid "Disable"
 msgstr "Desativar"
 
-#: inc/mod-dashboard.php:79 inc/mod-dashboard.php:344
+#: inc/mod-dashboard.php:79 inc/mod-dashboard.php:343
 msgid "Enable"
 msgstr "Ativar"
 
@@ -1065,12 +861,12 @@ msgid "never"
 msgstr "nunca"
 
 #: inc/mod-dashboard.php:320 inc/mod-dashboard.php:1017
-#: inc/mod-self-update.php:323
+#: inc/mod-self-update.php:334
 msgid "Update available"
 msgstr "Atualização disponível"
 
 #: inc/mod-dashboard.php:322 inc/mod-dashboard.php:1016
-#: inc/mod-self-update.php:324
+#: inc/mod-self-update.php:335
 msgid "Up to date"
 msgstr "Atualizado"
 
@@ -1084,17 +880,17 @@ msgstr "%s atrás"
 msgid "unknown"
 msgstr "desconhecido"
 
-#: inc/mod-dashboard.php:335
-msgid "Release status"
-msgstr "Status do Release"
-
-#: inc/mod-dashboard.php:338 inc/mod-dashboard.php:352
+#: inc/mod-dashboard.php:337 inc/mod-dashboard.php:351
 msgid "Beta channel"
 msgstr "Canal beta"
 
-#: inc/mod-dashboard.php:361
+#: inc/mod-dashboard.php:360
 msgid "Check for updates"
 msgstr "Verificar atualizações"
+
+#: inc/mod-dashboard.php:363
+msgid "Release status"
+msgstr "Status do Release"
 
 #: inc/mod-dashboard.php:367
 msgid "Current version"
@@ -1307,12 +1103,12 @@ msgstr "Estatísticas"
 msgid "Checking…"
 msgstr "Verificando…"
 
-#: inc/mod-dashboard.php:1015 inc/mod-self-update.php:309
-#: inc/mod-self-update.php:325
+#: inc/mod-dashboard.php:1015 inc/mod-self-update.php:320
+#: inc/mod-self-update.php:336
 msgid "just now"
 msgstr "agora mesmo"
 
-#: inc/mod-dashboard.php:1020 inc/mod-self-update.php:308
+#: inc/mod-dashboard.php:1020 inc/mod-self-update.php:319
 msgid "Could not reach GitHub. Try again later."
 msgstr "Não foi possível acessar o GitHub. Tente novamente mais tarde."
 
@@ -1807,7 +1603,7 @@ msgstr ""
 msgid "In the meantime, please try refreshing the page in a few minutes."
 msgstr "Enquanto isso, tente atualizar a página em alguns minutos."
 
-#: inc/mod-self-update.php:268
+#: inc/mod-self-update.php:279
 msgid "Failed to rename theme directory during update."
 msgstr "Falha ao renomear o diretório do tema durante a atualização."
 
@@ -3821,7 +3617,7 @@ msgstr ""
 "O valor padrão é 5 (para manter o painel compacto)."
 
 # --- Botões e Componentes Reutilizáveis ---
-#: inc/panel.php:1962
+#: inc/panel.php:1963
 msgid "Select Image"
 msgstr "Selecionar Imagem"
 
@@ -3875,6 +3671,225 @@ msgstr "Exibir:"
 msgid "No levels found for this term. Try using different keywords."
 msgstr ""
 "Nenhum nível encontrado com este termo. Tente usar outras palavras-chave."
+
+#~ msgid "You do not have permission to export theme settings."
+#~ msgstr "Você não tem permissão para exportar as configurações do tema."
+
+#~ msgid "Backup file is not a valid JSON object."
+#~ msgstr "O arquivo de backup não é um objeto JSON válido."
+
+#~ msgid "Backup file is missing the _meta envelope (not a ReloadeD backup?)."
+#~ msgstr ""
+#~ "O arquivo de backup não possui o envelope _meta (não é um backup "
+#~ "Reloaded?)."
+
+#, php-format
+#~ msgid ""
+#~ "Backup schema version %1$d is not supported by this theme (max: %2$d). "
+#~ "Maybe the file is from a newer version of ReloadeD?"
+#~ msgstr ""
+#~ "A versão %1$d do esquema de backup não é compatível com este tema (máximo: "
+#~ "%2$d). Talvez o arquivo seja de uma versão mais recente do tema ReloadeD?"
+
+#~ msgid ""
+#~ "Backup file contains no recognized sections (settings, category_colors, "
+#~ "ad_banners)."
+#~ msgstr ""
+#~ "O arquivo de backup não contém nenhuma seção reconhecida (settings, "
+#~ "category_colors, ad_banners)."
+
+#~ msgid "Settings section must be an object."
+#~ msgstr "A seção de configurações deve ser um objeto."
+
+#~ msgid "Category colors section must be a list."
+#~ msgstr "A seção de cores da categoria deve ser uma lista."
+
+#~ msgid "Ad banners section must be an object."
+#~ msgstr "A seção de banners de anúncios deve ser um objeto."
+
+#~ msgid "No snapshot available — restore unavailable."
+#~ msgstr "Nenhum snapshot disponível — restauração indisponível."
+
+#~ msgid "Reading file..."
+#~ msgstr "Lendo arquivo…"
+
+#~ msgid "File is not valid JSON."
+#~ msgstr "O arquivo não é um JSON válido."
+
+#~ msgid "Validating and calculating diff..."
+#~ msgstr "Validando e calculando as diferenças…"
+
+#~ msgid "Applying import..."
+#~ msgstr "Aplicando importação…"
+
+#~ msgid "Import applied! Reloading page..."
+#~ msgstr "Importação concluída! Recarregando a página…"
+
+#~ msgid ""
+#~ "Confirm import? This will overwrite the current settings (an auto-backup "
+#~ "will be saved before)."
+#~ msgstr ""
+#~ "Confirmar importação? Isso substituirá as configurações atuais (um backup "
+#~ "automático será salvo antes)."
+
+#~ msgid "Restoring previous state..."
+#~ msgstr "Restaurando o estado anterior…"
+
+#~ msgid "Previous state restored! Reloading..."
+#~ msgstr "Estado anterior restaurado! Recarregando…"
+
+#~ msgid "Restore failed:"
+#~ msgstr "A restauração falhou:"
+
+#~ msgid ""
+#~ "Restore the previous state (before the last import)? The current settings "
+#~ "will be overwritten. This is a one-shot undo — the snapshot is deleted "
+#~ "after restore."
+#~ msgstr ""
+#~ "Restaura o estado anterior (antes da última importação)? As configurações "
+#~ "atuais serão sobrescritas. Esta ação pode ser feita apenas uma vez — o "
+#~ "instantâneo é excluído após a restauração."
+
+#~ msgid "Preview"
+#~ msgstr "Pré-visualização"
+
+#~ msgid "Exported from:"
+#~ msgstr "Exportado de:"
+
+#, php-format
+#~ msgid "theme %s"
+#~ msgstr "tema %s"
+
+#~ msgid "Settings"
+#~ msgstr "Configurações"
+
+#~ msgid "Ad banners"
+#~ msgstr "Banners de anúncios"
+
+#~ msgid "Category colors"
+#~ msgstr "Cores das categorias"
+
+#, php-format
+#~ msgid "%d will be UPDATED"
+#~ msgstr "%d serão ATUALIZADAS"
+
+#, php-format
+#~ msgid "%d will be ADDED"
+#~ msgstr "%d serão ADICIONADAS"
+
+#, php-format
+#~ msgid "%d current keys NOT in file (will be kept)"
+#~ msgstr "%d chaves atuais NÃO estão no arquivo (serão mantidas)"
+
+#, php-format
+#~ msgid "%d current ads NOT in file (will be kept)"
+#~ msgstr "%d anúncios atuais NÃO estão no arquivo (serão mantidos)"
+
+#, php-format
+#~ msgid "%d SKIPPED (no matching slug here)"
+#~ msgstr "%d IGNORADOS (nenhum slug correspondente aqui)"
+
+#~ msgid "Show keys that will change"
+#~ msgstr "Mostrar chaves que serão alteradas"
+
+#~ msgid "Apply import"
+#~ msgstr "Aplicar"
+
+#~ msgid "Cancel"
+#~ msgstr "Cancelar"
+
+#~ msgid "Export"
+#~ msgstr "Exportar"
+
+#~ msgid ""
+#~ "Download a JSON file with the theme configuration from this install. "
+#~ "Useful for migration (sandbox → production), snapshots before risky "
+#~ "changes, or replicating the theme on another site."
+#~ msgstr ""
+#~ "Baixe um arquivo JSON com as configurações do tema. Útil para migração, "
+#~ "criação de snapshots antes de alterações arriscadas ou para replicar o "
+#~ "tema em outro site."
+
+#~ msgid "Theme configuration backup only."
+#~ msgstr "Backup apenas das configurações do tema."
+
+#~ msgid ""
+#~ "This file contains panel options, category colors and ad codes. It does "
+#~ "NOT include posts, pages, comments, media files or WordPress core data. "
+#~ "For full site backups, use a dedicated plugin (UpdraftPlus, WPVivid, etc.) "
+#~ "or your hosting provider's tools."
+#~ msgstr ""
+#~ "Este arquivo contém opções do painel, cores de categoria e códigos de "
+#~ "anúncio. Ele NÃO inclui posts, páginas, comentários, arquivos de mídia ou "
+#~ "dados do core do WordPress. Para backup completo do site, use um plugin "
+#~ "dedicado (UpdraftPlus, WPVivid, etc.) ou as ferramentas do seu provedor de "
+#~ "hospedagem."
+
+#~ msgid "Sections to include in the export"
+#~ msgstr "Seções a serem incluídas na exportação"
+
+#~ msgid ""
+#~ "All panel toggles, IDs and texts (rd_settings option) — single key in the "
+#~ "database, fully portable between sites"
+#~ msgstr ""
+#~ "Todos os botões de alternância do painel, IDs e textos — totalmente "
+#~ "portátil entre sites"
+
+#, php-format
+#~ msgid "%d category with custom color"
+#~ msgid_plural "%d categories with custom colors"
+#~ msgstr[0] "%d categoria com cor personalizada"
+#~ msgstr[1] "%d categorias com cores personalizadas"
+
+#, php-format
+#~ msgid "%d ad zone with content"
+#~ msgid_plural "%d ad zones with content"
+#~ msgstr[0] "%d zona de anúncio com conteúdo"
+#~ msgstr[1] "%d zonas de anúncio com conteúdo"
+
+#~ msgid ""
+#~ "tip: uncheck if migrating to another site (ad codes are often site-"
+#~ "specific)"
+#~ msgstr ""
+#~ "dica: desmarque esta opção se estiver migrando para outro site (os códigos "
+#~ "de anúncios geralmente são específicos de cada site)"
+
+#, php-format
+#~ msgid "Filename: %s"
+#~ msgstr "Nome do arquivo: %s"
+
+#~ msgid "Download backup JSON"
+#~ msgstr "Baixar JSON"
+
+#~ msgid "Import"
+#~ msgstr "Importar"
+
+#~ msgid ""
+#~ "Upload a backup JSON, preview the diff, then apply. An auto-snapshot of "
+#~ "the current state is saved before applying — safe to experiment."
+#~ msgstr ""
+#~ "Faça o upload de um arquivo JSON de backup, visualize as diferenças e "
+#~ "aplique as alterações. Um instantâneo automático do estado atual é salvo "
+#~ "antes da aplicação — seguro para experimentar."
+
+#~ msgid "Use the Restore card (below) to undo if needed."
+#~ msgstr "Use o campo Restaurar (abaixo) para desfazer, se necessário."
+
+#~ msgid "Choose backup JSON"
+#~ msgstr "Enviar JSON"
+
+#~ msgid "Restore previous state"
+#~ msgstr "Restaurar"
+
+#, php-format
+#~ msgid ""
+#~ "Auto-snapshot saved before the last import: %s. You can restore that exact "
+#~ "state in one click. After restoring, the snapshot is deleted (one-shot "
+#~ "undo)."
+#~ msgstr ""
+#~ "Um instantâneo automático foi salvo antes da última importação: %s. Você "
+#~ "pode restaurar esse estado exato com um clique. Após a restauração, o "
+#~ "instantâneo é excluído (desfazer com um único clique)."
 
 #~ msgid "Go to Themes → Update Now"
 #~ msgstr "Acesse Temas → Atualizar Agora"

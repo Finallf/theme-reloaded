@@ -444,7 +444,7 @@ Dados (`post_id`, `nonce`, `ajaxurl`) injetados via `wp_localize_script` no `mod
 
 ### `assets/js/admin-panel.js`
 
-Bundle único do painel admin — consolida 7 módulos que antes eram arquivos separados por aba: uploads de mídia (WP Media Library), gráficos K4/auto-render (Chart.js), toggles inline do Dashboard, self-update do tema, import/export/restore de backup e regeneração WebP/AVIF (chunks com orçamento de tempo + resumo de falhas + botão "Remove unused format"). Enfileirado uma vez (`rd-admin-panel`, prioridade 5) em qualquer aba do painel; cada módulo interno tem escopo próprio e se auto-protege (sai cedo se o DOM/objeto localizado dele não existe), então o código fica inerte nas abas que não atende. Os módulos por aba (`mod-stats`/`mod-dashboard`/`mod-backup`/`mod-image-formats`) só injetam seus dados via `wp_localize_script` no handle `rd-admin-panel`.
+Bundle único do painel admin — consolida 7 módulos que antes eram arquivos separados por aba: uploads de mídia (WP Media Library), gráficos K4/auto-render (Chart.js), toggles inline do Dashboard, self-update do tema, instalador 1-clique do plugin ReloadeD Backup e regeneração WebP/AVIF (chunks com orçamento de tempo + resumo de falhas + botão "Remove unused format"). Enfileirado uma vez (`rd-admin-panel`, prioridade 5) em qualquer aba do painel; cada módulo interno tem escopo próprio e se auto-protege (sai cedo se o DOM/objeto localizado dele não existe), então o código fica inerte nas abas que não atende. Os módulos por aba (`mod-stats`/`mod-dashboard`/`mod-backup`/`mod-image-formats`) só injetam seus dados via `wp_localize_script` no handle `rd-admin-panel`.
 
 > O módulo de upload de mídia usa jQuery (porque o admin do WP carrega jQuery por padrão); o resto é vanilla.
 

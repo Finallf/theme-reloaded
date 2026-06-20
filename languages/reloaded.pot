@@ -2,14 +2,14 @@
 # This file is distributed under the GPL v2 or later.
 msgid ""
 msgstr ""
-"Project-Id-Version: ReloadeD 1.10.0\n"
+"Project-Id-Version: ReloadeD 1.11.1-beta.1\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/theme/reloaded\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-06-16T05:59:02-03:00\n"
+"POT-Creation-Date: 2026-06-20T02:58:31-03:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: reloaded\n"
@@ -236,7 +236,7 @@ msgstr ""
 
 #: inc/class-rd-discord-widget.php:114
 #: inc/class-rd-support-widget.php:101
-#: inc/panel.php:1965
+#: inc/panel.php:1966
 msgid "Remove"
 msgstr ""
 
@@ -476,244 +476,74 @@ msgstr[1] ""
 msgid "View all posts by %s"
 msgstr ""
 
-#: inc/mod-backup.php:148
-msgid "You do not have permission to export theme settings."
+#: inc/mod-backup.php:115
+msgid "You are not allowed to install plugins."
 msgstr ""
 
-#: inc/mod-backup.php:213
-msgid "Backup file is not a valid JSON object."
+#: inc/mod-backup.php:121
+msgid "Could not reach GitHub to fetch the latest release. Try again later."
 msgstr ""
 
-#: inc/mod-backup.php:217
-msgid "Backup file is missing the _meta envelope (not a ReloadeD backup?)."
+#: inc/mod-backup.php:144
+msgid "Installation failed."
 msgstr ""
 
-#. translators: 1: schema version found in the file; 2: schema version this theme supports
-#: inc/mod-backup.php:226
+#. translators: %s: the WordPress activation error message.
+#: inc/mod-backup.php:153
 #, php-format
-msgid "Backup schema version %1$d is not supported by this theme (max: %2$d). Maybe the file is from a newer version of ReloadeD?"
+msgid "Installed, but activation failed: %s"
 msgstr ""
 
-#: inc/mod-backup.php:236
-msgid "Backup file contains no recognized sections (settings, category_colors, ad_banners)."
+#: inc/mod-backup.php:192
+msgid "Installing & activating… this can take a moment."
 msgstr ""
 
-#: inc/mod-backup.php:244
-msgid "Settings section must be an object."
+#: inc/mod-backup.php:193
+msgid "Install failed:"
 msgstr ""
 
-#: inc/mod-backup.php:252
-msgid "Category colors section must be a list."
-msgstr ""
-
-#: inc/mod-backup.php:273
-msgid "Ad banners section must be an object."
-msgstr ""
-
-#: inc/mod-backup.php:599
-msgid "No snapshot available — restore unavailable."
-msgstr ""
-
-#: inc/mod-backup.php:665
-msgid "Reading file..."
-msgstr ""
-
-#: inc/mod-backup.php:666
-msgid "File is not valid JSON."
-msgstr ""
-
-#: inc/mod-backup.php:667
-msgid "Validating and calculating diff..."
-msgstr ""
-
-#: inc/mod-backup.php:668
-msgid "Applying import..."
-msgstr ""
-
-#: inc/mod-backup.php:669
-msgid "Import applied! Reloading page..."
-msgstr ""
-
-#: inc/mod-backup.php:670
-msgid "Import failed:"
-msgstr ""
-
-#: inc/mod-backup.php:671
-msgid "Confirm import? This will overwrite the current settings (an auto-backup will be saved before)."
-msgstr ""
-
-#: inc/mod-backup.php:672
-msgid "Restoring previous state..."
-msgstr ""
-
-#: inc/mod-backup.php:673
-msgid "Previous state restored! Reloading..."
-msgstr ""
-
-#: inc/mod-backup.php:674
-msgid "Restore failed:"
-msgstr ""
-
-#: inc/mod-backup.php:675
-msgid "Restore the previous state (before the last import)? The current settings will be overwritten. This is a one-shot undo — the snapshot is deleted after restore."
-msgstr ""
-
-#: inc/mod-backup.php:677
-msgid "Preview"
-msgstr ""
-
-#: inc/mod-backup.php:678
-msgid "Exported from:"
-msgstr ""
-
-#. translators: %s = theme version string like "0.4.0-beta.64"
-#: inc/mod-backup.php:680
-#, php-format
-msgid "theme %s"
-msgstr ""
-
-#: inc/mod-backup.php:681
-#: inc/mod-backup.php:784
-msgid "Settings"
-msgstr ""
-
-#: inc/mod-backup.php:682
-#: inc/mod-backup.php:805
-msgid "Ad banners"
-msgstr ""
-
-#: inc/mod-backup.php:683
-#: inc/mod-backup.php:792
-msgid "Category colors"
-msgstr ""
-
-#. translators: %d = number of keys/items that will be updated by the import
-#: inc/mod-backup.php:685
-#, php-format
-msgid "%d will be UPDATED"
-msgstr ""
-
-#. translators: %d = number of keys/items that will be added by the import
-#: inc/mod-backup.php:687
-#, php-format
-msgid "%d will be ADDED"
-msgstr ""
-
-#. translators: %d = number of settings keys currently set but absent from the import file
-#: inc/mod-backup.php:689
-#, php-format
-msgid "%d current keys NOT in file (will be kept)"
-msgstr ""
-
-#. translators: %d = number of ad banner slots currently filled but absent from the import file
-#: inc/mod-backup.php:691
-#, php-format
-msgid "%d current ads NOT in file (will be kept)"
-msgstr ""
-
-#. translators: %d = number of category color entries skipped because no category with that slug exists on this site
-#: inc/mod-backup.php:693
-#, php-format
-msgid "%d SKIPPED (no matching slug here)"
-msgstr ""
-
-#: inc/mod-backup.php:694
-msgid "Show keys that will change"
-msgstr ""
-
-#: inc/mod-backup.php:695
-msgid "Apply import"
-msgstr ""
-
-#: inc/mod-backup.php:696
-msgid "Cancel"
-msgstr ""
-
-#: inc/mod-backup.php:720
+#: inc/mod-backup.php:212
 #: inc/mod-dashboard.php:790
 #: inc/panel.php:277
 msgid "Backup"
 msgstr ""
 
-#: inc/mod-backup.php:763
-msgid "Export"
+#: inc/mod-backup.php:223
+msgid "ReloadeD Backup"
 msgstr ""
 
-#: inc/mod-backup.php:764
-msgid "Download a JSON file with the theme configuration from this install. Useful for migration (sandbox → production), snapshots before risky changes, or replicating the theme on another site."
+#: inc/mod-backup.php:224
+msgid "Complete, portable backups of this site — the full database (these panel settings included) plus the uploads folder, in a single .zip restorable on any host. Provided by the standalone ReloadeD Backup plugin."
 msgstr ""
 
-#: inc/mod-backup.php:774
-msgid "Theme configuration backup only."
+#: inc/mod-backup.php:231
+msgid "ReloadeD Backup is installed and active."
 msgstr ""
 
-#: inc/mod-backup.php:775
-msgid "This file contains panel options, category colors and ad codes. It does NOT include posts, pages, comments, media files or WordPress core data. For full site backups, use a dedicated plugin (UpdraftPlus, WPVivid, etc.) or your hosting provider's tools."
+#: inc/mod-backup.php:236
+msgid "Open ReloadeD Backup"
 msgstr ""
 
-#: inc/mod-backup.php:779
-msgid "Sections to include in the export"
+#: inc/mod-backup.php:241
+msgid "ReloadeD Backup is installed but not active."
 msgstr ""
 
-#: inc/mod-backup.php:785
-msgid "All panel toggles, IDs and texts (rd_settings option) — single key in the database, fully portable between sites"
+#: inc/mod-backup.php:246
+msgid "Activate ReloadeD Backup"
 msgstr ""
 
-#. translators: %d = number of categories with custom color set
-#: inc/mod-backup.php:796
+#: inc/mod-backup.php:254
+msgid "Install ReloadeD Backup"
+msgstr ""
+
+#. translators: %s: version number, e.g. 1.1.0
+#: inc/mod-backup.php:264
 #, php-format
-msgid "%d category with custom color"
-msgid_plural "%d categories with custom colors"
-msgstr[0] ""
-msgstr[1] ""
-
-#. translators: %d = number of ad zones with content (keys starting with ad_)
-#: inc/mod-backup.php:809
-#, php-format
-msgid "%d ad zone with content"
-msgid_plural "%d ad zones with content"
-msgstr[0] ""
-msgstr[1] ""
-
-#: inc/mod-backup.php:811
-msgid "tip: uncheck if migrating to another site (ad codes are often site-specific)"
+msgid "Installs the latest stable release (v%s) from GitHub and activates it."
 msgstr ""
 
-#. translators: %s = filename template like reloaded-backup-{host}-{YYYY-MM-DD}.json
-#: inc/mod-backup.php:822
-#, php-format
-msgid "Filename: %s"
-msgstr ""
-
-#: inc/mod-backup.php:834
-msgid "Download backup JSON"
-msgstr ""
-
-#: inc/mod-backup.php:856
-msgid "Import"
-msgstr ""
-
-#: inc/mod-backup.php:857
-msgid "Upload a backup JSON, preview the diff, then apply. An auto-snapshot of the current state is saved before applying — safe to experiment."
-msgstr ""
-
-#: inc/mod-backup.php:863
-msgid "Use the Restore card (below) to undo if needed."
-msgstr ""
-
-#: inc/mod-backup.php:867
-msgid "Choose backup JSON"
-msgstr ""
-
-#: inc/mod-backup.php:897
-#: inc/mod-backup.php:909
-msgid "Restore previous state"
-msgstr ""
-
-#. translators: %s = formatted date/time of the last auto-snapshot
-#: inc/mod-backup.php:900
-#, php-format
-msgid "Auto-snapshot saved before the last import: %s. You can restore that exact state in one click. After restoring, the snapshot is deleted (one-shot undo)."
+#: inc/mod-backup.php:271
+msgid "Could not reach GitHub to check the latest release — you can still try installing."
 msgstr ""
 
 #: inc/mod-breadcrumbs.php:35
@@ -856,12 +686,12 @@ msgid "Current state of key features. Click any tab on the navigation above to c
 msgstr ""
 
 #: inc/mod-dashboard.php:78
-#: inc/mod-dashboard.php:343
+#: inc/mod-dashboard.php:342
 msgid "Disable"
 msgstr ""
 
 #: inc/mod-dashboard.php:79
-#: inc/mod-dashboard.php:344
+#: inc/mod-dashboard.php:343
 msgid "Enable"
 msgstr ""
 
@@ -929,13 +759,13 @@ msgstr ""
 
 #: inc/mod-dashboard.php:320
 #: inc/mod-dashboard.php:1017
-#: inc/mod-self-update.php:323
+#: inc/mod-self-update.php:334
 msgid "Update available"
 msgstr ""
 
 #: inc/mod-dashboard.php:322
 #: inc/mod-dashboard.php:1016
-#: inc/mod-self-update.php:324
+#: inc/mod-self-update.php:335
 msgid "Up to date"
 msgstr ""
 
@@ -949,17 +779,17 @@ msgstr ""
 msgid "unknown"
 msgstr ""
 
-#: inc/mod-dashboard.php:335
-msgid "Release status"
-msgstr ""
-
-#: inc/mod-dashboard.php:338
-#: inc/mod-dashboard.php:352
+#: inc/mod-dashboard.php:337
+#: inc/mod-dashboard.php:351
 msgid "Beta channel"
 msgstr ""
 
-#: inc/mod-dashboard.php:361
+#: inc/mod-dashboard.php:360
 msgid "Check for updates"
+msgstr ""
+
+#: inc/mod-dashboard.php:363
+msgid "Release status"
 msgstr ""
 
 #: inc/mod-dashboard.php:367
@@ -1202,13 +1032,13 @@ msgid "Checking…"
 msgstr ""
 
 #: inc/mod-dashboard.php:1015
-#: inc/mod-self-update.php:309
-#: inc/mod-self-update.php:325
+#: inc/mod-self-update.php:320
+#: inc/mod-self-update.php:336
 msgid "just now"
 msgstr ""
 
 #: inc/mod-dashboard.php:1020
-#: inc/mod-self-update.php:308
+#: inc/mod-self-update.php:319
 msgid "Could not reach GitHub. Try again later."
 msgstr ""
 
@@ -1621,7 +1451,7 @@ msgstr ""
 msgid "In the meantime, please try refreshing the page in a few minutes."
 msgstr ""
 
-#: inc/mod-self-update.php:268
+#: inc/mod-self-update.php:279
 msgid "Failed to rename theme directory during update."
 msgstr ""
 
@@ -2896,7 +2726,7 @@ msgstr ""
 msgid "Number of posts shown in the Top Views and Top Comments rankings. Default 5 (keeps the dashboard compact)."
 msgstr ""
 
-#: inc/panel.php:1962
+#: inc/panel.php:1963
 msgid "Select Image"
 msgstr ""
 
