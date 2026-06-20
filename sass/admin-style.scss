@@ -728,21 +728,6 @@ $rd-bp-lg: 1024px;
     text-transform: none; /* the title is uppercase — keep the explanation in normal case */
 }
 
-/* Horizontal list of buttons in the Quick Actions section. */
-.rd-dashboard-actions {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    margin: 0;
-
-    .button .dashicons {
-        margin-right: 4px;
-        font-size: 18px;
-        line-height: 1;
-        vertical-align: middle;
-    }
-}
-
 /* Footer with theme · WP · PHP version — discreet and centered. */
 .rd-dashboard-footer-info {
     margin-top: 24px;
@@ -1422,7 +1407,7 @@ body {
         display: grid;
         grid-template-columns: max-content 1fr;
         gap: 8px 16px;
-        margin: 0 0 12px;
+        margin: 0 0 10px;
         align-items: center;
 
         dt {
@@ -1449,8 +1434,6 @@ body {
 
     &__action {
         margin: 0;
-        padding-top: 6px;
-        border-top: 1px solid $rd-border-faint;
         display: flex;
         align-items: center;
         gap: 12px;

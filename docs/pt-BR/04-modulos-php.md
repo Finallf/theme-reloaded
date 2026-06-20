@@ -853,8 +853,6 @@ Retorna JSON `{ ok: true|false, key, value | error }`. Maintenance Mode é o ún
 
 **Enqueue dedicado** `rd_dashboard_admin_enqueue()` carrega o JS apenas em `?tab=dashboard` (gate independente do Chart.js gate em `mod-stats.php`).
 
-3. **Quick Actions** — 4-5 botões pra atalhar pras outras abas (General, Security & CSP, Images & Media, Backup, Statistics se ativa)
-
 4. **Footer Info** — linha discreta com versão do tema (`wp_get_theme()->get('Version')`), versão WP (`get_bloginfo('version')`) e versão PHP (`PHP_VERSION`)
 
 ### Decisões de design
@@ -863,21 +861,18 @@ Retorna JSON `{ ok: true|false, key, value | error }`. Maintenance Mode é o ún
 - **Sem botão "Refresh"** — desnecessário; reload da página já refresca.
 - **Sem botão "Clear cache"** — boundaries claros entre tema e infra. Redis Object Cache plugin e Nginx Helper plugin têm UI própria pra purge.
 - **Cards em grid 3 cols** em desktop (`.rd-pgrid--three-cols`), 1 col em mobile.
-- **Statistics tab no `quick_actions`** sempre aparece (a aba é incondicional desde a remoção do feature flag `enable_stats`).
 
 ### Helpers internos
 
 - `rd_dashboard_get_status_data()` — coleta os itens de status (lê os options via `rd_get_option_bool`)
 - `rd_dashboard_get_status_tooltips()` — mapa `option name → explicação curta` mostrada no tooltip do nome do card (mantido separado do status data pra não inchar aquele array)
 - `rd_dashboard_get_metrics_data()` — coleta as 3 métricas
-- `rd_dashboard_get_quick_actions()` — monta a lista de atalhos (URL/icon/label)
 
 ### CSS específico
 
 Em `assets/css/admin-style.css`, section "DASHBOARD" (após sistema rd-p* e antes do PAINEL DE OPÇÕES legacy):
 
 - `.rd-dashboard-status-line` — linha "[BADGE] [detail]" dentro dos cards de Status (line-height generoso pra acomodar badges + code inline)
-- `.rd-dashboard-actions` — flex row dos botões em Quick Actions
 - `.rd-dashboard-footer-info` — texto centralizado discreto do footer
 
 Adicionado também ao sistema de componentes (porque é reusável fora do Dashboard):
@@ -1542,7 +1537,7 @@ Solução: `rd_self_update_fetch_release()` itera `data.assets` procurando o pri
 
 ### UI no Dashboard
 
-Card "Theme Updates" entre Activity Trend e Quick Actions (`rd_dashboard_render_updates_card()` em `inc/mod-dashboard.php`):
+Card "Theme Updates" — pareado lado a lado com o card "Backup" numa linha de duas colunas (`.rd-pgrid--two-cols`), após o Activity Trend (`rd_dashboard_render_updates_card()` em `inc/mod-dashboard.php`):
 
 - **Current version** — lida do `style.css`
 - **Latest version** — lida do cache (sem disparar fetch novo)
