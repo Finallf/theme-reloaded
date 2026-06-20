@@ -7,6 +7,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 <br>
 
 
+## [1.12.0-beta.2](https://github.com/Finallf/theme-reloaded/compare/v1.12.0-beta.1...v1.12.0-beta.2) (2026-06-20)
+
+### ✨ Features
+
+* **dashboard:** add a Backup card pulling the last backup from the plugin ([e7f6458](https://github.com/Finallf/theme-reloaded/commit/e7f64585f8ed3b85388664f7bca915c2d1303350))
+
+<br>
+
+---
+
 ## [1.12.0-beta.1](https://github.com/Finallf/theme-reloaded/compare/v1.11.1-beta.2...v1.12.0-beta.1) (2026-06-20)
 
 ### ✨ Features
