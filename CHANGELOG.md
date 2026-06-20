@@ -7,6 +7,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 <br>
 
 
+## [1.11.1-beta.2](https://github.com/Finallf/theme-reloaded/compare/v1.11.1-beta.1...v1.11.1-beta.2) (2026-06-20)
+
+### 🐛 Bug Fixes
+
+* **dashboard:** pin the update card title to the top ([7e42bc7](https://github.com/Finallf/theme-reloaded/commit/7e42bc75b9a959fd3728be090fb0493654c3dcd3))
+
+<br>
+
+---
+
 ## [1.11.1-beta.1](https://github.com/Finallf/theme-reloaded/compare/v1.11.0...v1.11.1-beta.1) (2026-06-19)
 
 ### 🐛 Bug Fixes
