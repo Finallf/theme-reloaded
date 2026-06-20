@@ -1574,10 +1574,10 @@ body {
 
 .rd-self-update {
     &__header {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 12px;
+        // The controls float to the top-right (out of flow; in the markup they
+        // come BEFORE the title so the float can sit beside it). The title sits
+        // at the top and the version grid rises right beneath it, filling the
+        // space to the controls' left.
         margin: 0 0 14px;
     }
 
@@ -1595,6 +1595,8 @@ body {
     // button on top, Beta-channel switch BELOW it, aligned to its right edge
     // (column-reverse flips the DOM order: channel renders first in markup).
     &__controls {
+        float: right;
+        margin-left: 16px;
         display: inline-flex;
         flex-direction: column-reverse;
         align-items: flex-end;

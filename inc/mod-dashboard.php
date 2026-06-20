@@ -332,7 +332,6 @@ function rd_dashboard_render_updates_card(): void {
 	rd_panel_card_open( array( 'class' => 'rd-self-update' ) );
 	?>
 	<div class="rd-self-update__header">
-		<h3 class="rd-self-update__title"><?php esc_html_e( 'Release status', 'reloaded' ); ?></h3>
 		<span class="rd-self-update__controls">
 			<span class="rd-self-update__channel">
 				<span class="rd-self-update__channel-label"><?php esc_html_e( 'Beta channel', 'reloaded' ); ?></span>
@@ -361,6 +360,7 @@ function rd_dashboard_render_updates_card(): void {
 				<?php esc_html_e( 'Check for updates', 'reloaded' ); ?>
 			</button>
 		</span>
+		<h3 class="rd-self-update__title"><?php esc_html_e( 'Release status', 'reloaded' ); ?></h3>
 	</div>
 
 	<dl class="rd-self-update__grid">
