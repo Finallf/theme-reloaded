@@ -455,17 +455,19 @@ Controle de acesso. **1 section.** Backup foi promovido pra aba própria na Wave
 
 ---
 
-## 💾 Aba 13 — Backup & Restore (`?tab=backup`)
+## 💾 Aba 13 — Backup (`?tab=backup`)
 
-Aba dedicada (Wave 11) — saiu de sub-section da Manutenção. **1 section custom-rendered.**
+Aba dedicada — **launcher** do plugin **ReloadeD Backup** (produto standalone de backup full-site: banco inteiro + uploads num `.zip` portátil). **1 section custom-rendered.**
 
-### Section: Backup & Restore (`sec_backup`) — *custom renderer*
+### Section: Backup (`sec_backup`) — *custom renderer*
 
-Renderizada por `rd_backup_render_panel()` em `inc/mod-backup.php`. UI em grid de 2 colunas:
+Renderizada por `rd_backup_render_panel()` em `inc/mod-backup.php`. Card único com estado dinâmico conforme o plugin:
 
-- **Card Export:** fieldset com 3 checkboxes (Settings / Category colors / Ad banners) + botão "Download backup JSON". URL atualiza dinamicamente via JS conforme seções marcadas.
-- **Card Import:** input file pra JSON + preview do diff (will_update / will_add / will_keep) + botão "Apply".
-- **Card Restore** *(aparece só se há snapshot)*: variant warning amber pra sinalizar ação reversível mas perigosa. Auto-snapshot salvo antes de cada import; restore é one-shot undo.
+- **Ausente:** botão **Instalar ReloadeD Backup** — 1-clique que busca o último release *stable* no GitHub (`Finallf/rd-backup`), instala via `Plugin_Upgrader` e **ativa** (AJAX `rd_backup_install`, cap `install_plugins`), redirecionando pra página do plugin.
+- **Instalado, inativo:** botão **Ativar**.
+- **Ativo:** link **Abrir ReloadeD Backup** (Ferramentas → ReloadeD Backup).
+
+> O export/import de configurações legado (Wave 7) foi **aposentado** junto com a chegada do plugin — o backup full-site já captura essas configs (vivem no banco de dados).
 
 ---
 

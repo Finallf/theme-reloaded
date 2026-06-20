@@ -126,7 +126,7 @@ function rd_render_logo() {
  * Source of truth for "which logo to use outside the regular frontend".         *
  * Resolves in order:                                                             *
  *   1. WP Custom Logo (Appearance → Customize → Site Identity)                 *
- *   2. assets/img/logo-reloaded-panel.webp (theme hardcoded fallback)          *
+ *   2. assets/img/reloaded-logo-200-55.webp (theme hardcoded fallback)          *
  *                                                                                *
  * Used by: mod-maintenance.php (503 screen), mod-security.php (WSOD 500),       *
  * mod-integrations.php (Discord facade when admin did not register a dedicated  *
@@ -156,9 +156,9 @@ function rd_get_site_logo( string $size = 'medium' ): array {
 		}
 	}
 
-	// Fallback: hardcoded file at assets/img/logo-reloaded-panel.webp (430x100).
+	// Fallback: hardcoded file at assets/img/reloaded-logo-200-55.webp (430x100).
 	return array(
-		'url'    => get_template_directory_uri() . '/assets/img/logo-reloaded-panel.webp',
+		'url'    => get_template_directory_uri() . '/assets/img/reloaded-logo-200-55.webp',
 		'width'  => 430,
 		'height' => 100,
 	);

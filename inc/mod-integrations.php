@@ -187,7 +187,7 @@ function rd_get_discord_widget_html( array $data ): string {
 					// 3-level resolution:
 					// 1. facade_logo from the widget (admin chose a dedicated image)
 					// 2. WP's Custom Logo (rd_get_site_logo)
-					// 3. logo-reloaded-panel.webp (hardcoded fallback — inside rd_get_site_logo)
+					// 3. reloaded-logo-200-55.webp (hardcoded fallback — inside rd_get_site_logo)
 					$facade_logo_url = $data['facade_logo'] ?? '';
 					if ( empty( $facade_logo_url ) ) {
 						$logo_data       = rd_get_site_logo( 'medium' );

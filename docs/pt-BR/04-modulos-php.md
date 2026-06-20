@@ -25,7 +25,7 @@ Não é "módulo de feature", mas a base de tudo. Hooks no `after_setup_theme`:
 Helpers expostos:
 
 - `rd_render_logo()` — custom logo do WP ou fallback de texto com `bloginfo('name')`
-- `rd_get_site_logo($size = 'medium')` — **source of truth** pro logo do site em contextos fora do frontend regular (tela manutenção, WSOD, Discord facade, Schema.org). Resolução em 2 níveis: (1) Custom Logo do WP em `Aparência → Personalizar → Identidade do Site`; (2) fallback hardcoded em `assets/img/logo-reloaded-panel.webp` (430×100). Retorna array `{ url, width, height }`. Consumido por `mod-maintenance`, `mod-security`, `mod-integrations` (Discord facade quando `discord_facade_logo` não cadastrado), `mod-seo` (Schema.org Organization logo). **Não usado** em `panel.php` (UI do tema, intencionalmente hardcoded) nem no fallback de OG image em `mod-seo` (Custom Logo geralmente é horizontal, proporção errada pra preview social 1.91:1 — admin deve cadastrar `og_fallback_image` dedicado)
+- `rd_get_site_logo($size = 'medium')` — **source of truth** pro logo do site em contextos fora do frontend regular (tela manutenção, WSOD, Discord facade, Schema.org). Resolução em 2 níveis: (1) Custom Logo do WP em `Aparência → Personalizar → Identidade do Site`; (2) fallback hardcoded em `assets/img/reloaded-logo-200-55.webp` (430×100). Retorna array `{ url, width, height }`. Consumido por `mod-maintenance`, `mod-security`, `mod-integrations` (Discord facade quando `discord_facade_logo` não cadastrado), `mod-seo` (Schema.org Organization logo). **Não usado** em `panel.php` (UI do tema, intencionalmente hardcoded) nem no fallback de OG image em `mod-seo` (Custom Logo geralmente é horizontal, proporção errada pra preview social 1.91:1 — admin deve cadastrar `og_fallback_image` dedicado)
 - `rd_asset_version($relative)` — `filemtime()` do arquivo pra cache busting
 - `rd_get_client_ip()` — IP real do cliente com proteção contra header spoofing. Valida `REMOTE_ADDR` (vem do TCP, não-spoofável) contra ranges de proxy reconhecidos antes de confiar em `CF-Connecting-IP`/`X-Forwarded-For`. Consumido por `mod-maintenance` (rate-limit da senha de dev), `mod-views` (dedup de views por IP) e `mod-csp` (rate-limit do endpoint de reports)
 - `rd_remote_is_trusted_proxy($ip)` — true se `$ip` está numa faixa de proxy reconhecida. Combina lista hardcoded do Cloudflare (15 ranges IPv4 + 7 IPv6 — https://www.cloudflare.com/ips/) com ranges custom do painel (opção `trusted_proxy_ips` na aba Segurança, CIDR um por linha)
@@ -758,7 +758,7 @@ Quando `maintenance_mode = 1`:
 1. `template_redirect` intercepta requests
 2. Se usuário NÃO é admin logado → mostra `wp_die()` com tela 503
 3. Tela usa o `maintenance_text` customizado ou texto padrão com `%s` substituído por `get_bloginfo('name')`
-4. Logo da tela vem de `assets/img/logo-reloaded-panel.webp`
+4. Logo da tela vem de `assets/img/reloaded-logo-200-55.webp`
 
 **Escapatória pra dev:**
 - URL `/?rd_maint_login` mostra um form de senha
@@ -853,8 +853,6 @@ Retorna JSON `{ ok: true|false, key, value | error }`. Maintenance Mode é o ún
 
 **Enqueue dedicado** `rd_dashboard_admin_enqueue()` carrega o JS apenas em `?tab=dashboard` (gate independente do Chart.js gate em `mod-stats.php`).
 
-3. **Quick Actions** — 4-5 botões pra atalhar pras outras abas (General, Security & CSP, Images & Media, Backup, Statistics se ativa)
-
 4. **Footer Info** — linha discreta com versão do tema (`wp_get_theme()->get('Version')`), versão WP (`get_bloginfo('version')`) e versão PHP (`PHP_VERSION`)
 
 ### Decisões de design
@@ -863,21 +861,18 @@ Retorna JSON `{ ok: true|false, key, value | error }`. Maintenance Mode é o ún
 - **Sem botão "Refresh"** — desnecessário; reload da página já refresca.
 - **Sem botão "Clear cache"** — boundaries claros entre tema e infra. Redis Object Cache plugin e Nginx Helper plugin têm UI própria pra purge.
 - **Cards em grid 3 cols** em desktop (`.rd-pgrid--three-cols`), 1 col em mobile.
-- **Statistics tab no `quick_actions`** sempre aparece (a aba é incondicional desde a remoção do feature flag `enable_stats`).
 
 ### Helpers internos
 
 - `rd_dashboard_get_status_data()` — coleta os itens de status (lê os options via `rd_get_option_bool`)
 - `rd_dashboard_get_status_tooltips()` — mapa `option name → explicação curta` mostrada no tooltip do nome do card (mantido separado do status data pra não inchar aquele array)
 - `rd_dashboard_get_metrics_data()` — coleta as 3 métricas
-- `rd_dashboard_get_quick_actions()` — monta a lista de atalhos (URL/icon/label)
 
 ### CSS específico
 
 Em `assets/css/admin-style.css`, section "DASHBOARD" (após sistema rd-p* e antes do PAINEL DE OPÇÕES legacy):
 
 - `.rd-dashboard-status-line` — linha "[BADGE] [detail]" dentro dos cards de Status (line-height generoso pra acomodar badges + code inline)
-- `.rd-dashboard-actions` — flex row dos botões em Quick Actions
 - `.rd-dashboard-footer-info` — texto centralizado discreto do footer
 
 Adicionado também ao sistema de componentes (porque é reusável fora do Dashboard):
@@ -1542,7 +1537,7 @@ Solução: `rd_self_update_fetch_release()` itera `data.assets` procurando o pri
 
 ### UI no Dashboard
 
-Card "Theme Updates" entre Activity Trend e Quick Actions (`rd_dashboard_render_updates_card()` em `inc/mod-dashboard.php`):
+Card "Theme Updates" — pareado lado a lado com o card "Backup" numa linha de duas colunas (`.rd-pgrid--two-cols`), após o Activity Trend (`rd_dashboard_render_updates_card()` em `inc/mod-dashboard.php`):
 
 - **Current version** — lida do `style.css`
 - **Latest version** — lida do cache (sem disparar fetch novo)

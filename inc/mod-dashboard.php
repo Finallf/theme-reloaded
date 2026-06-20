@@ -231,32 +231,20 @@ function rd_dashboard_render(): void {
 		echo '</div>'; // .rd-pgrid--sidebar-main
 	}
 
-	// ============ Section 4: Theme Updates ============
+	// ============ Section 4: Backup + Theme Updates ============
+	// Both are compact cards, so they share one two-column row (like the CSP
+	// doughnut + Activity Trend pair above). Title-only headers keep the two
+	// card tops aligned; they stack to one column on narrow screens.
+	echo '<div class="rd-pgrid rd-pgrid--two-cols">';
+	echo '<div>';
+	rd_dashboard_render_backup_card();
+	echo '</div>';
+	echo '<div>';
 	rd_dashboard_render_updates_card();
+	echo '</div>';
+	echo '</div>';
 
-	// ============ Section 5: Quick Actions ============
-	rd_panel_section_header(
-		array(
-			'icon'  => 'admin-tools',
-			'title' => __( 'Quick Actions', 'reloaded' ),
-			'desc'  => __( 'Jump straight to the most-used screens.', 'reloaded' ),
-		)
-	);
-
-	rd_panel_card_open();
-	echo '<p class="rd-dashboard-actions">';
-	foreach ( rd_dashboard_get_quick_actions() as $action ) {
-		printf(
-			'<a href="%1$s" class="button"><span class="dashicons %2$s" aria-hidden="true"></span> %3$s</a> ',
-			esc_url( $action['url'] ),
-			esc_attr( $action['icon'] ),
-			esc_html( $action['label'] )
-		);
-	}
-	echo '</p>';
-	rd_panel_card_close();
-
-	// ============ Section 4: Footer Info ============
+	// ============ Footer Info ============
 	$theme       = wp_get_theme();
 	$theme_ver   = $theme->get( 'Version' );
 	$wp_ver      = get_bloginfo( 'version' );
@@ -275,6 +263,97 @@ function rd_dashboard_render(): void {
 }
 
 /**
+ * Renders the "Backup" card on the Dashboard — the last backup taken by the
+ * ReloadeD Backup plugin, or a prompt to install / activate it.
+ *
+ * Decoupled from the plugin: detects it via rd_backup_plugin_state() and reads
+ * the last backup through the plugin's public rdbk_get_last_backup() — both
+ * guarded with function_exists() so the card degrades gracefully when the
+ * plugin is absent or older.
+ */
+function rd_dashboard_render_backup_card(): void {
+	rd_panel_section_header(
+		array(
+			'icon'  => 'backup',
+			'title' => __( 'Backup', 'reloaded' ),
+		)
+	);
+
+	$backup_tab = admin_url( 'admin.php?page=rd_options&tab=backup' );
+	$state      = function_exists( 'rd_backup_plugin_state' ) ? rd_backup_plugin_state() : 'missing';
+
+	// Plugin not usable → nudge to the Backup tab (installer / activate).
+	if ( 'active' !== $state ) {
+		rd_panel_card_open(
+			array(
+				'desc' => __( 'Portable full-site backups — the database plus the uploads folder — via the ReloadeD Backup plugin.', 'reloaded' ),
+			)
+		);
+		printf(
+			'<p><a class="button button-primary" href="%1$s">%2$s</a></p>',
+			esc_url( $backup_tab ),
+			'inactive' === $state
+				? esc_html__( 'Activate ReloadeD Backup', 'reloaded' )
+				: esc_html__( 'Set up backups', 'reloaded' )
+		);
+		rd_panel_card_close();
+		return;
+	}
+
+	// Active → most recent backup, or a prompt to create the first one.
+	// false = plugin active but older (no public helper) → don't claim a count.
+	$last       = function_exists( 'rdbk_get_last_backup' ) ? rdbk_get_last_backup() : false;
+	$plugin_url = admin_url( 'tools.php?page=rd-backup' );
+	$gear       = sprintf(
+		'<a href="%1$s" class="rd-dashboard-card-link rd-pcard__desc-gear" data-tooltip="%2$s" aria-label="%2$s"><span class="dashicons dashicons-admin-generic" aria-hidden="true"></span></a>',
+		esc_url( $plugin_url ),
+		esc_attr__( 'Manage backups', 'reloaded' )
+	);
+
+	rd_panel_card_open(
+		array(
+			'desc' => $gear . __( 'The most recent full-site backup taken by ReloadeD Backup.', 'reloaded' ),
+		)
+	);
+
+	if ( is_array( $last ) ) {
+		printf(
+			'<p><strong>%1$s</strong> · %2$s · %3$s</p>',
+			esc_html(
+				sprintf(
+					/* translators: %s: human-readable time difference, e.g. "2 days". */
+					__( '%s ago', 'reloaded' ),
+					human_time_diff( (int) $last['modified'] )
+				)
+			),
+			esc_html( $last['dateh'] ),
+			esc_html( $last['sizeh'] )
+		);
+		printf(
+			'<p><a class="button" href="%1$s">%2$s</a></p>',
+			esc_url( $plugin_url ),
+			esc_html__( 'Manage backups', 'reloaded' )
+		);
+	} elseif ( null === $last ) {
+		printf( '<p>%s</p>', esc_html__( 'No backups yet.', 'reloaded' ) );
+		printf(
+			'<p><a class="button button-primary" href="%1$s">%2$s</a></p>',
+			esc_url( $plugin_url ),
+			esc_html__( 'Create your first backup', 'reloaded' )
+		);
+	} else {
+		// Plugin active but predates rdbk_get_last_backup() — just link out.
+		printf(
+			'<p><a class="button" href="%1$s">%2$s</a></p>',
+			esc_url( $plugin_url ),
+			esc_html__( 'Manage backups', 'reloaded' )
+		);
+	}
+
+	rd_panel_card_close();
+}
+
+/**
  * Renders the "Theme Updates" card on the Dashboard.
  *
  * Reads the local version (style.css) + tries to read the cache of the last
@@ -288,11 +367,13 @@ function rd_dashboard_render(): void {
  *   #rd-self-update-action.
  */
 function rd_dashboard_render_updates_card(): void {
+	// Title-only header — paired side by side with the Backup card, the two
+	// title-only headers keep the card tops aligned (the 24h auto-check detail
+	// is already implicit in the "Last check" row + the check button).
 	rd_panel_section_header(
 		array(
 			'icon'  => 'update',
 			'title' => __( 'Theme Updates', 'reloaded' ),
-			'desc'  => __( 'The theme checks GitHub Releases every 24h. Click the button to check immediately.', 'reloaded' ),
 		)
 	);
 
@@ -332,7 +413,6 @@ function rd_dashboard_render_updates_card(): void {
 	rd_panel_card_open( array( 'class' => 'rd-self-update' ) );
 	?>
 	<div class="rd-self-update__header">
-		<h3 class="rd-self-update__title"><?php esc_html_e( 'Release status', 'reloaded' ); ?></h3>
 		<span class="rd-self-update__controls">
 			<span class="rd-self-update__channel">
 				<span class="rd-self-update__channel-label"><?php esc_html_e( 'Beta channel', 'reloaded' ); ?></span>
@@ -361,6 +441,7 @@ function rd_dashboard_render_updates_card(): void {
 				<?php esc_html_e( 'Check for updates', 'reloaded' ); ?>
 			</button>
 		</span>
+		<h3 class="rd-self-update__title"><?php esc_html_e( 'Release status', 'reloaded' ); ?></h3>
 	</div>
 
 	<dl class="rd-self-update__grid">
@@ -756,48 +837,6 @@ function rd_dashboard_get_metrics_data(): array {
 	);
 
 	return $metrics;
-}
-
-/**
- * List of quick shortcuts to the most-used tabs.
- *
- * Order optimized by expected frequency of use. "Statistics" only appears
- * if the feature is enabled.
- *
- * @return array[] Array of actions with url/icon/label.
- */
-function rd_dashboard_get_quick_actions(): array {
-	$base    = admin_url( 'admin.php?page=rd_options' );
-	$actions = array(
-		array(
-			'url'   => $base . '&tab=general',
-			'icon'  => 'dashicons-admin-settings',
-			'label' => __( 'General Settings', 'reloaded' ),
-		),
-		array(
-			'url'   => $base . '&tab=security',
-			'icon'  => 'dashicons-shield-alt',
-			'label' => __( 'Security & CSP', 'reloaded' ),
-		),
-		array(
-			'url'   => $base . '&tab=media',
-			'icon'  => 'dashicons-format-image',
-			'label' => __( 'Images & Media', 'reloaded' ),
-		),
-		array(
-			'url'   => $base . '&tab=backup',
-			'icon'  => 'dashicons-backup',
-			'label' => __( 'Backup', 'reloaded' ),
-		),
-	);
-
-	$actions[] = array(
-		'url'   => $base . '&tab=statistics',
-		'icon'  => 'dashicons-chart-line',
-		'label' => __( 'Statistics', 'reloaded' ),
-	);
-
-	return $actions;
 }
 
 /**

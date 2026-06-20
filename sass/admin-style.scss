@@ -728,21 +728,6 @@ $rd-bp-lg: 1024px;
     text-transform: none; /* the title is uppercase — keep the explanation in normal case */
 }
 
-/* Horizontal list of buttons in the Quick Actions section. */
-.rd-dashboard-actions {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    margin: 0;
-
-    .button .dashicons {
-        margin-right: 4px;
-        font-size: 18px;
-        line-height: 1;
-        vertical-align: middle;
-    }
-}
-
 /* Footer with theme · WP · PHP version — discreet and centered. */
 .rd-dashboard-footer-info {
     margin-top: 24px;
@@ -1338,78 +1323,23 @@ body {
     }
 }
 
+
 /* ==========================================================================
-   BACKUP & RESTORE — dedicated ReloadeD panel tab (Wave 11)
-   Wrappers/cards/status migrated to the rd-p* design system in Phase E —
-   the classes remaining here are ONLY the feature-specific ones (export
-   sections fieldset, diff preview, etc.) with no rd-p* equivalent.
+   BACKUP — ReloadeD Backup plugin installer (Backup tab)
+   The tab is a launcher for the standalone plugin; the only feature-specific
+   style left is the inline install-status text next to the button.
    ========================================================================== */
 
-/* Fieldset with checkboxes to choose the export sections.
-   Mobile: vertical stack (1 col). Desktop ≥ 1024px: 3 columns side by side. */
-.rd-backup-sections {
-    border: 1px solid $rd-border-light;
-    border-radius: 4px;
-    padding: 12px 16px;
-    margin: 0 0 16px;
-    background: $rd-bg-strip;
-    display: grid;
-    gap: 12px;
-    grid-template-columns: 1fr;
-
-    @media (min-width: $rd-bp-lg) {
-        grid-template-columns: 1fr 1fr 1fr;
-    }
-}
-
-.rd-backup-section {
-    display: flex;
-    align-items: flex-start;
-    gap: 10px;
-    padding: 8px 0;
-    cursor: pointer;
-    /* no border-bottom — it only made sense in a vertical stack. In the 3-col
-       layout, each checkbox becomes card-like (visually separated by the grid gap). */
-
-    input[type="checkbox"] {
-        margin-top: 4px;
-        flex-shrink: 0;
-    }
-
-    &__label {
-        display: flex;
-        flex-direction: column;
-        gap: 2px;
-
-        strong {
-            color: $rd-text;
-            font-size: 0.95rem;
-        }
-
-        small {
-            color: $rd-text-muted;
-            font-size: 0.82rem;
-        }
-    }
-}
-
-/* ===== Export action — inline text next to the Download button ===== */
-/* Layout (flex + justify-end) comes from .rd-pcard__action-row.
-   Here we only style the companion text (italic + code highlight). */
-
-.rd-backup-export-filename {
+.rd-backup-install-status {
+    margin-left: 10px;
     color: $rd-text-secondary;
     font-size: 0.9rem;
-    font-style: italic;
 
-    code {
-        font-style: normal;
-        background: rgba(0, 0, 0, 0.04);
-        padding: 1px 6px;
-        border-radius: 3px;
-        font-size: 0.95em;
+    &--error {
+        color: $rd-red-muted;
     }
 }
+
 
 /* ===== robots.txt — block of WP defaults in the field description ===== */
 
@@ -1424,148 +1354,6 @@ body {
     overflow-x: auto;
 }
 
-/* ===== Import UI ===== */
-
-/* Defensive inline hint next to the "Choose backup JSON" button — warns about
-   the destructive behavior + points to the Restore card as a recovery hatch.
-   Layout (flex + justify-end) comes from .rd-pcard__action-row. */
-.rd-backup-import-explainer {
-    flex: 1 1 auto; /* takes the leftover space, pushing the button to the end */
-    min-width: 0;   /* allows text-wrap in flex without overflow */
-    color: $rd-text-secondary;
-    font-size: 0.85rem;
-    font-style: italic;
-    text-align: right;
-}
-
-/* Filename feedback row ("file X.json selected") — appears after the user
-   chooses a file. Hidden entirely via :has() when the child span is empty
-   (pre-selection) so there's no visual gap below the button. */
-.rd-backup-filename-row {
-    margin-top: 12px;
-
-    &:has(.rd-backup-filename:empty) {
-        display: none;
-    }
-}
-
-.rd-backup-filename {
-    color: $rd-text-secondary;
-    font-size: 0.9rem;
-    font-style: italic;
-}
-
-/* .rd-backup-status* migrated to .rd-pstatus in Wave 11 Phase E. */
-
-/* Preview box */
-.rd-backup-preview {
-    margin-top: 16px;
-    padding: 16px;
-    background: $rd-bg-strip;
-    border: 1px solid $rd-border-light;
-    border-radius: 4px;
-
-    &__title {
-        margin: 0 0 8px;
-        color: $rd-text;
-        font-size: 0.95rem;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-    }
-
-    &__meta {
-        color: $rd-text-muted;
-        margin-bottom: 12px;
-    }
-}
-
-.rd-backup-diff-section {
-    margin: 12px 0;
-    padding: 10px 12px;
-    background: $rd-white;
-    border: 1px solid $rd-border-light;
-    border-radius: 4px;
-
-    h5 {
-        margin: 0 0 8px;
-        color: $rd-text;
-        font-size: 0.88rem;
-    }
-}
-
-.rd-backup-diff-list {
-    list-style: none;
-    padding: 0;
-    margin: 0 0 8px;
-
-    li {
-        padding: 3px 0;
-        font-size: 0.92rem;
-        font-family: monospace;
-    }
-}
-
-.rd-backup-diff {
-    &--update { color: $rd-blue; }
-    &--add    { color: $rd-green; }
-    &--keep   { color: $rd-text-secondary; }
-    &--skip   { color: $rd-red-muted; }
-}
-
-.rd-backup-diff-details {
-    margin-top: 8px;
-
-    summary {
-        cursor: pointer;
-        color: $rd-blue;
-        font-size: 0.88rem;
-        user-select: none;
-    }
-}
-
-.rd-backup-diff-keys {
-    list-style: none;
-    padding: 8px 0 0 16px;
-    margin: 0;
-    max-height: 240px;
-    overflow-y: auto;
-    border-top: 1px solid $rd-border-faint;
-    margin-top: 6px;
-
-    li {
-        padding: 4px 0;
-        font-size: 0.85rem;
-        border-bottom: 1px solid $rd-bg-strip;
-
-        &:last-child {
-            border-bottom: none;
-        }
-    }
-
-    code {
-        color: $rd-text;
-        background: $rd-border-faint;
-        padding: 1px 6px;
-        border-radius: 3px;
-        font-size: 0.85rem;
-    }
-
-    small {
-        color: $rd-text-muted;
-        margin-left: 8px;
-        word-break: break-all;
-    }
-}
-
-.rd-backup-preview__actions {
-    margin: 16px 0 0;
-    display: flex;
-    justify-content: flex-end;
-    gap: 8px;
-}
-
-/* .rd-backup-card--restore migrated to .rd-pcard--warning + .rd-pgrid__item--full
-   in Wave 11 Phase E (amber accent + full-width span). */
 
 /* === Theme Updates card (Dashboard) === */
 
@@ -1574,10 +1362,10 @@ body {
 
 .rd-self-update {
     &__header {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 12px;
+        // The controls float to the top-right (out of flow; in the markup they
+        // come BEFORE the title so the float can sit beside it). The title sits
+        // at the top and the version grid rises right beneath it, filling the
+        // space to the controls' left.
         margin: 0 0 14px;
     }
 
@@ -1595,6 +1383,8 @@ body {
     // button on top, Beta-channel switch BELOW it, aligned to its right edge
     // (column-reverse flips the DOM order: channel renders first in markup).
     &__controls {
+        float: right;
+        margin-left: 16px;
         display: inline-flex;
         flex-direction: column-reverse;
         align-items: flex-end;
@@ -1617,7 +1407,7 @@ body {
         display: grid;
         grid-template-columns: max-content 1fr;
         gap: 8px 16px;
-        margin: 0 0 12px;
+        margin: 0 0 10px;
         align-items: center;
 
         dt {
@@ -1644,8 +1434,6 @@ body {
 
     &__action {
         margin: 0;
-        padding-top: 6px;
-        border-top: 1px solid $rd-border-faint;
         display: flex;
         align-items: center;
         gap: 12px;
