@@ -230,7 +230,7 @@ Pra evitar brute force, há limit por IP via WP transients:
 ### Customização visual
 
 A tela de manutenção é renderizada via `wp_die()` com HTML inline (CSS embutido). Estilo:
-- Logo do site (vem de `assets/img/logo-reloaded-panel.webp`)
+- Logo do site (vem de `assets/img/reloaded-logo-200-55.webp`)
 - Pulse animation no texto
 - Mensagem do admin (com `%s` substituído por `get_bloginfo('name')`)
 

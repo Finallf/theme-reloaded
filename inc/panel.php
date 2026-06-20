@@ -286,7 +286,7 @@ function rd_options_render() {
 	<div class="wrap">
 		<div class="rd-panel-header">
 			<h1 class="rd-panel-title"><?php esc_html_e( 'ReloadeD - Control Panel', 'reloaded' ); ?></h1>
-			<img class="rd-panel-logo" src="<?php echo esc_url( $theme_dir ); ?>/assets/img/logo-reloaded-panel.webp" alt="ReloadeD Logo">
+			<img class="rd-panel-logo" src="<?php echo esc_url( $theme_dir ); ?>/assets/img/reloaded-logo-200-55.webp" alt="ReloadeD Logo">
 		</div>
 
 			<?php settings_errors(); ?>

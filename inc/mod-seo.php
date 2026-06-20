@@ -110,7 +110,7 @@ function rd_seo_resolve_og_image( int $post_id ) {
 
 	// 3. Final fallback: the theme logo
 	return array(
-		'url'    => get_template_directory_uri() . '/assets/img/logo-reloaded-panel.webp',
+		'url'    => get_template_directory_uri() . '/assets/img/reloaded-logo-200-55.webp',
 		'width'  => null,
 		'height' => null,
 	);
@@ -555,7 +555,7 @@ add_action( 'wp_head', 'rd_add_meta_description', 2 );
  *                                                                             *
  * Order of preference:                                                        *
  *   1. Custom Logo (Appearance → Customize → Site Identity)                   *
- *   2. The theme's default logo (assets/img/logo-reloaded-panel.webp)         *
+ *   2. The theme's default logo (assets/img/reloaded-logo-200-55.webp)         *
  *                                                                             *
  * Always returns ['url', 'width', 'height']. For the theme fallback the       *
  * dimensions go null (Google accepts a dimensionless image for publisher).    *
@@ -571,7 +571,7 @@ function rd_seo_resolve_site_logo(): array {
 
 	// Defensive fallback: if core.php didn't load (unlikely), serve directly
 	return array(
-		'url'    => get_template_directory_uri() . '/assets/img/logo-reloaded-panel.webp',
+		'url'    => get_template_directory_uri() . '/assets/img/reloaded-logo-200-55.webp',
 		'width'  => 430,
 		'height' => 100,
 	);

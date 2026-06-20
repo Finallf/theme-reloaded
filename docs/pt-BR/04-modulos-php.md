@@ -25,7 +25,7 @@ Não é "módulo de feature", mas a base de tudo. Hooks no `after_setup_theme`:
 Helpers expostos:
 
 - `rd_render_logo()` — custom logo do WP ou fallback de texto com `bloginfo('name')`
-- `rd_get_site_logo($size = 'medium')` — **source of truth** pro logo do site em contextos fora do frontend regular (tela manutenção, WSOD, Discord facade, Schema.org). Resolução em 2 níveis: (1) Custom Logo do WP em `Aparência → Personalizar → Identidade do Site`; (2) fallback hardcoded em `assets/img/logo-reloaded-panel.webp` (430×100). Retorna array `{ url, width, height }`. Consumido por `mod-maintenance`, `mod-security`, `mod-integrations` (Discord facade quando `discord_facade_logo` não cadastrado), `mod-seo` (Schema.org Organization logo). **Não usado** em `panel.php` (UI do tema, intencionalmente hardcoded) nem no fallback de OG image em `mod-seo` (Custom Logo geralmente é horizontal, proporção errada pra preview social 1.91:1 — admin deve cadastrar `og_fallback_image` dedicado)
+- `rd_get_site_logo($size = 'medium')` — **source of truth** pro logo do site em contextos fora do frontend regular (tela manutenção, WSOD, Discord facade, Schema.org). Resolução em 2 níveis: (1) Custom Logo do WP em `Aparência → Personalizar → Identidade do Site`; (2) fallback hardcoded em `assets/img/reloaded-logo-200-55.webp` (430×100). Retorna array `{ url, width, height }`. Consumido por `mod-maintenance`, `mod-security`, `mod-integrations` (Discord facade quando `discord_facade_logo` não cadastrado), `mod-seo` (Schema.org Organization logo). **Não usado** em `panel.php` (UI do tema, intencionalmente hardcoded) nem no fallback de OG image em `mod-seo` (Custom Logo geralmente é horizontal, proporção errada pra preview social 1.91:1 — admin deve cadastrar `og_fallback_image` dedicado)
 - `rd_asset_version($relative)` — `filemtime()` do arquivo pra cache busting
 - `rd_get_client_ip()` — IP real do cliente com proteção contra header spoofing. Valida `REMOTE_ADDR` (vem do TCP, não-spoofável) contra ranges de proxy reconhecidos antes de confiar em `CF-Connecting-IP`/`X-Forwarded-For`. Consumido por `mod-maintenance` (rate-limit da senha de dev), `mod-views` (dedup de views por IP) e `mod-csp` (rate-limit do endpoint de reports)
 - `rd_remote_is_trusted_proxy($ip)` — true se `$ip` está numa faixa de proxy reconhecida. Combina lista hardcoded do Cloudflare (15 ranges IPv4 + 7 IPv6 — https://www.cloudflare.com/ips/) com ranges custom do painel (opção `trusted_proxy_ips` na aba Segurança, CIDR um por linha)
@@ -758,7 +758,7 @@ Quando `maintenance_mode = 1`:
 1. `template_redirect` intercepta requests
 2. Se usuário NÃO é admin logado → mostra `wp_die()` com tela 503
 3. Tela usa o `maintenance_text` customizado ou texto padrão com `%s` substituído por `get_bloginfo('name')`
-4. Logo da tela vem de `assets/img/logo-reloaded-panel.webp`
+4. Logo da tela vem de `assets/img/reloaded-logo-200-55.webp`
 
 **Escapatória pra dev:**
 - URL `/?rd_maint_login` mostra um form de senha

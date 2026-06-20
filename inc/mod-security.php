@@ -175,7 +175,7 @@ add_filter(
 		// WSOD runs when PHP fatalled — WP may be partially broken.
 		// If rd_get_site_logo() isn't available (core.php didn't load
 		// or the helper is unavailable), falls back to the hardcoded one without breaking.
-		$logo_url = esc_url( get_template_directory_uri() . '/assets/img/logo-reloaded-panel.webp' );
+		$logo_url = esc_url( get_template_directory_uri() . '/assets/img/reloaded-logo-200-55.webp' );
 		if ( function_exists( 'rd_get_site_logo' ) ) {
 			$logo_data = rd_get_site_logo( 'medium' );
 			if ( ! empty( $logo_data['url'] ) ) {
