@@ -7,6 +7,22 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 <br>
 
 
+## [1.12.0](https://github.com/Finallf/theme-reloaded/compare/v1.11.0...v1.12.0) (2026-06-20)
+
+### ✨ Features
+
+* **backup:** replace the settings export/import with a plugin installer ([c9bb3bc](https://github.com/Finallf/theme-reloaded/commit/c9bb3bc0fbf5badfbd6651135ab38d994bf8bcf1))
+* **dashboard:** add a Backup card pulling the last backup from the plugin ([e7f6458](https://github.com/Finallf/theme-reloaded/commit/e7f64585f8ed3b85388664f7bca915c2d1303350))
+
+### 🐛 Bug Fixes
+
+* **dashboard:** pin the update card title to the top ([7e42bc7](https://github.com/Finallf/theme-reloaded/commit/7e42bc75b9a959fd3728be090fb0493654c3dcd3))
+* **updater:** pick the highest semver release, not [0] ([9c03ad3](https://github.com/Finallf/theme-reloaded/commit/9c03ad330a9f2e540e6b31b873f1e84fb16b146a))
+
+<br>
+
+---
+
 ## [1.12.0-beta.2](https://github.com/Finallf/theme-reloaded/compare/v1.12.0-beta.1...v1.12.0-beta.2) (2026-06-20)
 
 ### ✨ Features
