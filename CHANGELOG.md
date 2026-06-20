@@ -7,6 +7,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 <br>
 
 
+## [1.12.0-beta.1](https://github.com/Finallf/theme-reloaded/compare/v1.11.1-beta.2...v1.12.0-beta.1) (2026-06-20)
+
+### ✨ Features
+
+* **backup:** replace the settings export/import with a plugin installer ([c9bb3bc](https://github.com/Finallf/theme-reloaded/commit/c9bb3bc0fbf5badfbd6651135ab38d994bf8bcf1))
+
+<br>
+
+---
+
 ## [1.11.1-beta.2](https://github.com/Finallf/theme-reloaded/compare/v1.11.1-beta.1...v1.11.1-beta.2) (2026-06-20)
 
 ### 🐛 Bug Fixes
