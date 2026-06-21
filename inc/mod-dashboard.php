@@ -323,6 +323,9 @@ function rd_dashboard_render_backup_card(): void {
 
 	// false = plugin active but older (no public helper) → don't claim a count.
 	$last = function_exists( 'rdbk_get_last_backup' ) ? rdbk_get_last_backup() : false;
+	// The last scheduled run (status + when) — null on an older plugin or when no
+	// automatic backup has run yet.
+	$auto = function_exists( 'rdbk_get_last_auto_backup' ) ? rdbk_get_last_auto_backup() : null;
 
 	rd_panel_card_open( array( 'class' => 'rd-backup-card' ) );
 	?>
@@ -363,6 +366,28 @@ function rd_dashboard_render_backup_card(): void {
 				);
 			} elseif ( null === $last ) {
 				esc_html_e( 'No backups yet', 'reloaded' );
+			} else {
+				echo '&mdash;';
+			}
+			?>
+		</dd>
+
+		<dt><?php esc_html_e( 'Last automatic backup', 'reloaded' ); ?></dt>
+		<dd>
+			<?php
+			if ( is_array( $auto ) && ! empty( $auto['time'] ) ) {
+				$auto_ok = 'done' === ( $auto['status'] ?? '' );
+				echo rd_panel_badge( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- rd_panel_badge() escapes internally.
+					$auto_ok ? 'success' : 'danger',
+					$auto_ok ? __( 'OK', 'reloaded' ) : __( 'Failed', 'reloaded' )
+				);
+				echo esc_html(
+					sprintf(
+						/* translators: %s: human-readable time difference, e.g. "2 days". */
+						__( '%s ago', 'reloaded' ),
+						human_time_diff( (int) $auto['time'] )
+					)
+				);
 			} else {
 				echo '&mdash;';
 			}
