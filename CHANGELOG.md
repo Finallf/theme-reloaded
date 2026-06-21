@@ -7,6 +7,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 <br>
 
 
+## [1.13.0-beta.1](https://github.com/Finallf/theme-reloaded/compare/v1.12.0...v1.13.0-beta.1) (2026-06-21)
+
+### ✨ Features
+
+* **dashboard:** fold the Backup tab into the Backup card ([340a542](https://github.com/Finallf/theme-reloaded/commit/340a54245453b13241cfa8bab288a365a2818029))
+
+<br>
+
+---
+
 ## [1.12.0](https://github.com/Finallf/theme-reloaded/compare/v1.11.0...v1.12.0) (2026-06-20)
 
 ### ✨ Features
