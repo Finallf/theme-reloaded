@@ -262,7 +262,9 @@ function rd_options_render() {
 
 	// Master list of tabs for the loop (Wave 11 — reorganized taxonomy).
 	// Dashboard is the first (default landing); the rest ordered by expected
-	// frequency of use, with operational ones (Maintenance/Backup) at the end.
+	// frequency of use, with the operational one (Maintenance) at the end.
+	// Backup has no tab of its own — it lives entirely in the Dashboard's
+	// Backup card (install / status / manage), which replaced the old tab.
 	$tabs = array(
 		'dashboard'    => __( 'Dashboard', 'reloaded' ),
 		'general'      => __( 'General', 'reloaded' ),
@@ -274,7 +276,6 @@ function rd_options_render() {
 		'monetization' => __( 'Monetization', 'reloaded' ),
 		'statistics'   => __( 'Statistics', 'reloaded' ),
 		'maintenance'  => __( 'Maintenance', 'reloaded' ),
-		'backup'       => __( 'Backup', 'reloaded' ),
 	);
 
 	// Defensive: invalid slug (typo, bookmark to a removed tab, etc.) falls
@@ -1910,14 +1911,11 @@ function rd_settings_init() {
 		'rd_options_statistics'
 	);
 
-	/*
-	 * --- BACKUP ---
-	 * The tab is a launcher for the standalone ReloadeD Backup plugin (install /
-	 * activate / open). The legacy settings export/import was retired alongside
-	 * the plugin — full-site backups capture these settings anyway.
-	 */
-	// Empty title — callback rd_backup_render_panel emits its own section_header with icon.
-	add_settings_section( 'sec_backup', '', 'rd_backup_render_panel', 'rd_options_backup' );
+	// --- BACKUP ---
+	// No tab/section: the ReloadeD Backup plugin (install / activate / status /
+	// manage) lives entirely in the Dashboard's Backup card. The legacy settings
+	// export/import was retired alongside the plugin — full-site backups capture
+	// these settings anyway.
 }
 add_action( 'admin_init', 'rd_settings_init' );
 
