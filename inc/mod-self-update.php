@@ -190,7 +190,12 @@ function rd_self_update_inject( $transient ) {
 		$transient->response[ RD_SELF_UPDATE_SLUG ] = array(
 			'theme'       => RD_SELF_UPDATE_SLUG,
 			'new_version' => $release['version'],
-			'url'         => $release['release_url'],
+			// WP iframes this URL for the theme's "View version details" link.
+			// Point it at our own themes_api modal (theme-install.php), NOT the
+			// GitHub release page — github.com sends X-Frame-Options: deny, so the
+			// browser refuses to embed it ("connection refused"). Our modal renders
+			// the changelog inline and is same-origin, so it frames fine.
+			'url'         => self_admin_url( 'theme-install.php?tab=theme-information&theme=' . RD_SELF_UPDATE_SLUG ),
 			'package'     => $release['download_url'],
 		);
 	}
