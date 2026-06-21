@@ -7,6 +7,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 <br>
 
 
+## [1.13.1-beta.1](https://github.com/Finallf/theme-reloaded/compare/v1.13.0...v1.13.1-beta.1) (2026-06-21)
+
+### 🐛 Bug Fixes
+
+* **updater:** theme "View details" modal — stop iframing github.com ([9856391](https://github.com/Finallf/theme-reloaded/commit/9856391b0813b4e760d57681b49f14120b009dee))
+
+<br>
+
+---
+
 ## [1.13.0](https://github.com/Finallf/theme-reloaded/compare/v1.12.0...v1.13.0) (2026-06-21)
 
 ### ✨ Features
