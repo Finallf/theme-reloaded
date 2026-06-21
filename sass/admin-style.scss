@@ -1325,9 +1325,9 @@ body {
 
 
 /* ==========================================================================
-   BACKUP — ReloadeD Backup plugin installer (Backup tab)
-   The tab is a launcher for the standalone plugin; the only feature-specific
-   style left is the inline install-status text next to the button.
+   BACKUP — ReloadeD Backup plugin (Dashboard Backup card)
+   The plugin lives entirely in the Dashboard's Backup card (install / status /
+   manage). The inline install-status text sits next to the install button.
    ========================================================================== */
 
 .rd-backup-install-status {
@@ -1337,6 +1337,73 @@ body {
 
     &--error {
         color: $rd-red-muted;
+    }
+}
+
+/* Backup status card — mirrors the Theme Updates card beside it: an uppercase
+   title with the backup glyph floated top-right, a version/last-backup grid,
+   then the action button. */
+.rd-backup-card {
+    // Same technique as the Theme Updates card: the action floats top-right
+    // (out of flow; in the markup it comes BEFORE the title so the float sits
+    // beside it), and the title stays pinned at the top — flex centering pushed
+    // the short title down against the taller button.
+    &__header {
+        margin: 0 0 14px;
+    }
+
+    &__cta {
+        float: right;
+        margin-left: 16px;
+    }
+
+    &__title {
+        margin: 0;
+        font-size: 14px;
+        font-weight: 600;
+        color: $rd-text;
+        text-transform: uppercase;
+        letter-spacing: 0.3px;
+    }
+
+    &__grid {
+        display: grid;
+        grid-template-columns: max-content 1fr;
+        gap: 8px 16px;
+        margin: 0 0 14px;
+        align-items: center;
+
+        dt {
+            font-weight: 600;
+            color: $rd-text-secondary;
+            font-size: 13px;
+        }
+
+        dd {
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+
+            code {
+                padding: 2px 6px;
+                border-radius: 3px;
+                background: $rd-border-faint;
+                font-size: 12px;
+            }
+        }
+    }
+
+    &__action {
+        margin: 0;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+
+        &:empty {
+            display: none;
+        }
     }
 }
 
@@ -1459,6 +1526,7 @@ body {
 #rd-self-update-check,
 #rd-img-regen-start,
 #rd-img-cleanup-start,
+#rd-backup-install,
 .wp-core-ui .rd-update-now {
     display: inline-flex;
     align-items: center;

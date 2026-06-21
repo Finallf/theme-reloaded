@@ -31,6 +31,20 @@ defined( 'ABSPATH' ) || exit;
 function rd_dashboard_render(): void {
 	rd_panel_dash_open();
 
+	// ============ Backup + Theme Updates (top of the dashboard) ============
+	// The two operational cards the admin checks first — "is my backup fresh?"
+	// and "is the theme up to date?". Both are compact, so they share one
+	// two-column row (title-only headers keep the card tops aligned; they stack
+	// to one column on narrow screens).
+	echo '<div class="rd-pgrid rd-pgrid--two-cols">';
+	echo '<div>';
+	rd_dashboard_render_backup_card();
+	echo '</div>';
+	echo '<div>';
+	rd_dashboard_render_updates_card();
+	echo '</div>';
+	echo '</div>';
+
 	// ============ Section 1: Site Status ============
 	rd_panel_section_header(
 		array(
@@ -231,19 +245,6 @@ function rd_dashboard_render(): void {
 		echo '</div>'; // .rd-pgrid--sidebar-main
 	}
 
-	// ============ Section 4: Backup + Theme Updates ============
-	// Both are compact cards, so they share one two-column row (like the CSP
-	// doughnut + Activity Trend pair above). Title-only headers keep the two
-	// card tops aligned; they stack to one column on narrow screens.
-	echo '<div class="rd-pgrid rd-pgrid--two-cols">';
-	echo '<div>';
-	rd_dashboard_render_backup_card();
-	echo '</div>';
-	echo '<div>';
-	rd_dashboard_render_updates_card();
-	echo '</div>';
-	echo '</div>';
-
 	// ============ Footer Info ============
 	$theme       = wp_get_theme();
 	$theme_ver   = $theme->get( 'Version' );
@@ -263,13 +264,15 @@ function rd_dashboard_render(): void {
 }
 
 /**
- * Renders the "Backup" card on the Dashboard — the last backup taken by the
- * ReloadeD Backup plugin, or a prompt to install / activate it.
+ * Renders the "Backup" card on the Dashboard — a status card for the ReloadeD
+ * Backup plugin (name, installed version + up-to-date state, last backup), or a
+ * 1-click install / activate prompt when it isn't running yet. This card is the
+ * full home for the plugin on the panel — there is no separate Backup tab.
  *
- * Decoupled from the plugin: detects it via rd_backup_plugin_state() and reads
- * the last backup through the plugin's public rdbk_get_last_backup() — both
- * guarded with function_exists() so the card degrades gracefully when the
- * plugin is absent or older.
+ * Decoupled from the plugin: detects it via rd_backup_plugin_state(), reads the
+ * installed version from the plugin header (not its constants) and the last
+ * backup through the public rdbk_get_last_backup() — all guarded so the card
+ * degrades gracefully when the plugin is absent or older.
  */
 function rd_dashboard_render_backup_card(): void {
 	rd_panel_section_header(
@@ -279,77 +282,141 @@ function rd_dashboard_render_backup_card(): void {
 		)
 	);
 
-	$backup_tab = admin_url( 'admin.php?page=rd_options&tab=backup' );
-	$state      = function_exists( 'rd_backup_plugin_state' ) ? rd_backup_plugin_state() : 'missing';
-
-	// Plugin not usable → nudge to the Backup tab (installer / activate).
-	if ( 'active' !== $state ) {
-		rd_panel_card_open(
-			array(
-				'desc' => __( 'Portable full-site backups — the database plus the uploads folder — via the ReloadeD Backup plugin.', 'reloaded' ),
-			)
-		);
-		printf(
-			'<p><a class="button button-primary" href="%1$s">%2$s</a></p>',
-			esc_url( $backup_tab ),
-			'inactive' === $state
-				? esc_html__( 'Activate ReloadeD Backup', 'reloaded' )
-				: esc_html__( 'Set up backups', 'reloaded' )
-		);
+	// mod-backup.php (the launcher) defines both the state helper and the
+	// constants the setup card needs — if it isn't loaded, bail to a neutral
+	// note instead of risking an undefined-constant fatal.
+	if ( ! function_exists( 'rd_backup_plugin_state' ) ) {
+		rd_panel_card_open();
+		rd_panel_empty( __( 'Backup module unavailable.', 'reloaded' ) );
 		rd_panel_card_close();
 		return;
 	}
 
-	// Active → most recent backup, or a prompt to create the first one.
-	// false = plugin active but older (no public helper) → don't claim a count.
-	$last       = function_exists( 'rdbk_get_last_backup' ) ? rdbk_get_last_backup() : false;
-	$plugin_url = admin_url( 'tools.php?page=rd-backup' );
-	$gear       = sprintf(
-		'<a href="%1$s" class="rd-dashboard-card-link rd-pcard__desc-gear" data-tooltip="%2$s" aria-label="%2$s"><span class="dashicons dashicons-admin-generic" aria-hidden="true"></span></a>',
-		esc_url( $plugin_url ),
-		esc_attr__( 'Manage backups', 'reloaded' )
-	);
+	$state = rd_backup_plugin_state();
 
-	rd_panel_card_open(
-		array(
-			'desc' => $gear . __( 'The most recent full-site backup taken by ReloadeD Backup.', 'reloaded' ),
-		)
-	);
-
-	if ( is_array( $last ) ) {
-		printf(
-			'<p><strong>%1$s</strong> · %2$s · %3$s</p>',
-			esc_html(
-				sprintf(
-					/* translators: %s: human-readable time difference, e.g. "2 days". */
-					__( '%s ago', 'reloaded' ),
-					human_time_diff( (int) $last['modified'] )
-				)
-			),
-			esc_html( $last['dateh'] ),
-			esc_html( $last['sizeh'] )
-		);
-		printf(
-			'<p><a class="button" href="%1$s">%2$s</a></p>',
-			esc_url( $plugin_url ),
-			esc_html__( 'Manage backups', 'reloaded' )
-		);
-	} elseif ( null === $last ) {
-		printf( '<p>%s</p>', esc_html__( 'No backups yet.', 'reloaded' ) );
-		printf(
-			'<p><a class="button button-primary" href="%1$s">%2$s</a></p>',
-			esc_url( $plugin_url ),
-			esc_html__( 'Create your first backup', 'reloaded' )
-		);
-	} else {
-		// Plugin active but predates rdbk_get_last_backup() — just link out.
-		printf(
-			'<p><a class="button" href="%1$s">%2$s</a></p>',
-			esc_url( $plugin_url ),
-			esc_html__( 'Manage backups', 'reloaded' )
-		);
+	// Not running yet → 1-click install (missing) or activate (inactive),
+	// inline on the Dashboard (this card replaces the old Backup tab).
+	if ( 'active' !== $state ) {
+		rd_dashboard_render_backup_setup_card( $state );
+		return;
 	}
 
+	$plugin_url = admin_url( 'tools.php?page=rd-backup' );
+
+	// Installed version — read the plugin header directly (stays decoupled from
+	// the plugin's internal RDBK_VERSION constant).
+	if ( ! function_exists( 'get_plugin_data' ) ) {
+		require_once ABSPATH . 'wp-admin/includes/plugin.php';
+	}
+	$pdata     = get_plugin_data( WP_PLUGIN_DIR . '/' . RD_BACKUP_PLUGIN_FILE, false, false );
+	$installed = (string) ( $pdata['Version'] ?? '' );
+
+	// Up to date? Read WP's native update_plugins transient — the ReloadeD Backup
+	// self-updater injects itself there when a newer release exists (the same
+	// data the Plugins screen uses). Free and non-blocking: no GitHub call on
+	// the Dashboard render, unlike forcing a release fetch here.
+	$updates     = get_site_transient( 'update_plugins' );
+	$has_update  = is_object( $updates ) && isset( $updates->response[ RD_BACKUP_PLUGIN_FILE ] );
+	$status_html = $has_update
+		? rd_panel_badge( 'warning', __( 'Update available', 'reloaded' ) )
+		: rd_panel_badge( 'success', __( 'Up to date', 'reloaded' ) );
+
+	// false = plugin active but older (no public helper) → don't claim a count.
+	$last = function_exists( 'rdbk_get_last_backup' ) ? rdbk_get_last_backup() : false;
+
+	rd_panel_card_open( array( 'class' => 'rd-backup-card' ) );
+	?>
+	<div class="rd-backup-card__header">
+		<a class="button button-primary rd-backup-card__cta" href="<?php echo esc_url( $plugin_url ); ?>">
+			<?php
+			echo esc_html(
+				null === $last
+					? __( 'Create your first backup', 'reloaded' )
+					: __( 'Manage backups', 'reloaded' )
+			);
+			?>
+		</a>
+		<h3 class="rd-backup-card__title"><?php esc_html_e( 'ReloadeD Backup', 'reloaded' ); ?></h3>
+	</div>
+
+	<dl class="rd-backup-card__grid">
+		<dt><?php esc_html_e( 'Installed version', 'reloaded' ); ?></dt>
+		<dd>
+			<code><?php echo esc_html( '' !== $installed ? $installed : '—' ); ?></code>
+			<?php echo $status_html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- rd_panel_badge() escapes internally. ?>
+		</dd>
+
+		<dt><?php esc_html_e( 'Last backup', 'reloaded' ); ?></dt>
+		<dd>
+			<?php
+			if ( is_array( $last ) ) {
+				printf(
+					'%1$s · %2$s',
+					esc_html(
+						sprintf(
+							/* translators: %s: human-readable time difference, e.g. "2 days". */
+							__( '%s ago', 'reloaded' ),
+							human_time_diff( (int) $last['modified'] )
+						)
+					),
+					esc_html( $last['sizeh'] )
+				);
+			} elseif ( null === $last ) {
+				esc_html_e( 'No backups yet', 'reloaded' );
+			} else {
+				echo '&mdash;';
+			}
+			?>
+		</dd>
+	</dl>
+	<?php
+	rd_panel_card_close();
+}
+
+/**
+ * Renders the "not running yet" state of the Backup card: a 1-click install
+ * (plugin missing) or activate (installed but inactive), inline on the
+ * Dashboard. The install button is driven by admin-panel.js (the same AJAX
+ * installer the old Backup tab used) via the rdBackupInstaller localized data.
+ *
+ * @param string $state Either 'missing' or 'inactive'.
+ */
+function rd_dashboard_render_backup_setup_card( string $state ): void {
+	rd_panel_card_open( array( 'class' => 'rd-backup-card' ) );
+	?>
+	<div class="rd-backup-card__header">
+		<h3 class="rd-backup-card__title"><?php esc_html_e( 'ReloadeD Backup', 'reloaded' ); ?></h3>
+	</div>
+	<p class="rd-pcard__desc"><?php esc_html_e( 'Portable full-site backups — the database plus the uploads folder — in a single .zip restorable on any host.', 'reloaded' ); ?></p>
+	<?php
+	if ( 'inactive' === $state ) {
+		printf(
+			'<p class="rd-backup-card__action"><a class="button button-primary" href="%1$s">%2$s</a></p>',
+			esc_url( wp_nonce_url( admin_url( 'plugins.php?action=activate&plugin=' . RD_BACKUP_PLUGIN_FILE ), 'activate-plugin_' . RD_BACKUP_PLUGIN_FILE ) ),
+			esc_html__( 'Activate ReloadeD Backup', 'reloaded' )
+		);
+	} else {
+		$release = rd_backup_fetch_plugin_release();
+		?>
+		<p class="rd-backup-card__action">
+			<button type="button" class="button button-primary" id="rd-backup-install" data-nonce="<?php echo esc_attr( wp_create_nonce( 'rd_backup_install' ) ); ?>">
+				<span class="dashicons dashicons-download" aria-hidden="true"></span>
+				<?php esc_html_e( 'Install ReloadeD Backup', 'reloaded' ); ?>
+			</button>
+			<span id="rd-backup-install-status" class="rd-backup-install-status" aria-live="polite"></span>
+		</p>
+		<?php
+		if ( is_array( $release ) && ! empty( $release['version'] ) ) {
+			printf(
+				'<p class="rd-pcard__hint">%s</p>',
+				sprintf(
+					/* translators: %s: version number, e.g. 1.1.0 */
+					esc_html__( 'Installs the latest stable release (v%s) from GitHub and activates it.', 'reloaded' ),
+					esc_html( $release['version'] )
+				)
+			);
+		}
+	}
 	rd_panel_card_close();
 }
 

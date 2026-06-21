@@ -4,18 +4,19 @@ defined( 'ABSPATH' ) || exit;
 /*******************************************************************************
  * Module: Backup — ReloadeD Backup plugin installer / launcher                *
  *                                                                             *
- * The Backup tab no longer ships a settings export/import. Full-site backups  *
- * belong in the standalone ReloadeD Backup plugin, which captures the whole   *
- * database (these panel settings included) plus the uploads folder in a       *
- * single, portable .zip. This module turns the tab into a state-aware         *
- * launcher for that plugin:                                                    *
+ * Full-site backups belong in the standalone ReloadeD Backup plugin, which    *
+ * captures the whole database (these panel settings included) plus the        *
+ * uploads folder in a single, portable .zip. This module provides the         *
+ * plumbing the Dashboard's Backup card uses to install / activate / launch    *
+ * that plugin (there is no Backup tab — the card is its only home):           *
  *                                                                             *
- *   - missing  → 1-click install (latest STABLE GitHub release) + auto-activate
- *   - inactive → 1-click activate                                             *
- *   - active   → link to Tools → ReloadeD Backup                              *
+ *   - state  : missing / inactive / active (rd_backup_plugin_state)           *
+ *   - fetch  : latest STABLE GitHub release, 12h cached                       *
+ *   - install: 1-click AJAX (Plugin_Upgrader + auto-activate)                 *
  *                                                                             *
  * The install reuses the same GitHub-release source as the theme self-updater *
- * (mod-self-update.php), driving WP's core Plugin_Upgrader server-side.        *
+ * (mod-self-update.php), driving WP's core Plugin_Upgrader server-side. The    *
+ * card rendering itself lives in mod-dashboard.php.                           *
  *******************************************************************************/
 
 const RD_BACKUP_PLUGIN_FILE       = 'rd-backup/rd-backup.php';
@@ -168,7 +169,8 @@ add_action( 'wp_ajax_rd_backup_install', 'rd_backup_ajax_install' );
 
 /**
  * Localizes the installer's ajax URL + nonce + strings onto the consolidated
- * admin-panel.js bundle, gated to the Backup tab.
+ * admin-panel.js bundle, gated to the Dashboard tab (where the Backup card —
+ * with its 1-click install button — now lives).
  *
  * @param string $hook Current admin page hook.
  */
@@ -177,8 +179,8 @@ function rd_backup_admin_enqueue( $hook ): void {
 		return;
 	}
 	// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only tab gate in admin_enqueue_scripts: decides whether to localize the installer data, doesn't process a form.
-	$active_tab = isset( $_GET['tab'] ) ? sanitize_key( wp_unslash( $_GET['tab'] ) ) : 'general';
-	if ( 'backup' !== $active_tab ) {
+	$active_tab = isset( $_GET['tab'] ) ? sanitize_key( wp_unslash( $_GET['tab'] ) ) : 'dashboard';
+	if ( 'dashboard' !== $active_tab ) {
 		return;
 	}
 
@@ -196,85 +198,3 @@ function rd_backup_admin_enqueue( $hook ): void {
 	);
 }
 add_action( 'admin_enqueue_scripts', 'rd_backup_admin_enqueue' );
-
-/*
-=============================================================================
- *  RENDER — the Backup tab UI (callback for sec_backup in panel.php)
- * ============================================================================= */
-
-/**
- * Renders the Backup tab: a state-aware launcher for the ReloadeD Backup plugin.
- */
-function rd_backup_render_panel(): void {
-	rd_panel_section_header(
-		array(
-			'icon'  => 'backup',
-			'title' => __( 'Backup', 'reloaded' ),
-		)
-	);
-
-	$state = rd_backup_plugin_state();
-
-	echo '<div class="rd-pdash">';
-	echo '<div class="rd-pgrid">';
-
-	rd_panel_card_open(
-		array(
-			'title' => __( 'ReloadeD Backup', 'reloaded' ),
-			'desc'  => esc_html__( 'Complete, portable backups of this site — the full database (these panel settings included) plus the uploads folder, in a single .zip restorable on any host. Provided by the standalone ReloadeD Backup plugin.', 'reloaded' ),
-		)
-	);
-
-	if ( 'active' === $state ) {
-		rd_panel_status(
-			'success',
-			'<strong>' . esc_html__( 'ReloadeD Backup is installed and active.', 'reloaded' ) . '</strong>'
-		);
-		printf(
-			'<p><a class="button button-primary" href="%1$s"><span class="dashicons dashicons-backup" aria-hidden="true"></span> %2$s</a></p>',
-			esc_url( admin_url( RD_BACKUP_PLUGIN_PAGE ) ),
-			esc_html__( 'Open ReloadeD Backup', 'reloaded' )
-		);
-	} elseif ( 'inactive' === $state ) {
-		rd_panel_status(
-			'info',
-			'<strong>' . esc_html__( 'ReloadeD Backup is installed but not active.', 'reloaded' ) . '</strong>'
-		);
-		printf(
-			'<p><a class="button button-primary" href="%1$s">%2$s</a></p>',
-			esc_url( wp_nonce_url( admin_url( 'plugins.php?action=activate&plugin=' . RD_BACKUP_PLUGIN_FILE ), 'activate-plugin_' . RD_BACKUP_PLUGIN_FILE ) ),
-			esc_html__( 'Activate ReloadeD Backup', 'reloaded' )
-		);
-	} else {
-		$release = rd_backup_fetch_plugin_release();
-		?>
-		<p>
-			<button type="button" class="button button-primary" id="rd-backup-install" data-nonce="<?php echo esc_attr( wp_create_nonce( 'rd_backup_install' ) ); ?>">
-				<span class="dashicons dashicons-download" aria-hidden="true"></span>
-				<?php esc_html_e( 'Install ReloadeD Backup', 'reloaded' ); ?>
-			</button>
-			<span id="rd-backup-install-status" class="rd-backup-install-status" aria-live="polite"></span>
-		</p>
-		<?php
-		if ( is_array( $release ) && ! empty( $release['version'] ) ) {
-			printf(
-				'<p class="rd-pcard__hint">%s</p>',
-				sprintf(
-					/* translators: %s: version number, e.g. 1.1.0 */
-					esc_html__( 'Installs the latest stable release (v%s) from GitHub and activates it.', 'reloaded' ),
-					esc_html( $release['version'] )
-				)
-			);
-		} else {
-			rd_panel_status(
-				'warning',
-				esc_html__( 'Could not reach GitHub to check the latest release — you can still try installing.', 'reloaded' )
-			);
-		}
-	}
-
-	rd_panel_card_close();
-
-	echo '</div>'; // .rd-pgrid
-	echo '</div>'; // .rd-pdash
-}
