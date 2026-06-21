@@ -495,7 +495,7 @@ function rd_dashboard_render_updates_card(): void {
 			$status_html = rd_panel_badge( 'success', __( 'Up to date', 'reloaded' ) );
 		}
 		$last_check_human = $checked_at > 0
-			/* translators: %s: human-readable time-ago (e.g. "2 hours") */
+			/* translators: %s: human-readable time difference, e.g. "2 days". */
 			? sprintf( __( '%s ago', 'reloaded' ), human_time_diff( $checked_at, time() ) )
 			: __( 'unknown', 'reloaded' );
 	}

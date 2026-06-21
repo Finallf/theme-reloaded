@@ -2,14 +2,14 @@
 # This file is distributed under the GPL v2 or later.
 msgid ""
 msgstr ""
-"Project-Id-Version: ReloadeD 1.11.1-beta.1\n"
+"Project-Id-Version: ReloadeD 1.13.0-beta.2\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/theme/reloaded\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-06-20T02:58:31-03:00\n"
+"POT-Creation-Date: 2026-06-21T16:35:18-03:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: reloaded\n"
@@ -236,7 +236,7 @@ msgstr ""
 
 #: inc/class-rd-discord-widget.php:114
 #: inc/class-rd-support-widget.php:101
-#: inc/panel.php:1966
+#: inc/panel.php:1964
 msgid "Remove"
 msgstr ""
 
@@ -283,7 +283,7 @@ msgid "Category:"
 msgstr ""
 
 #: inc/class-rd-latest-video-widget.php:159
-#: inc/panel.php:330
+#: inc/panel.php:331
 msgid "— Select —"
 msgstr ""
 
@@ -305,7 +305,7 @@ msgid "No popular posts yet."
 msgstr ""
 
 #: inc/class-rd-popular-posts-widget.php:100
-#: inc/mod-dashboard.php:222
+#: inc/mod-dashboard.php:236
 #: inc/mod-stats.php:877
 #: inc/post-card.php:36
 msgid "Views"
@@ -476,74 +476,30 @@ msgstr[1] ""
 msgid "View all posts by %s"
 msgstr ""
 
-#: inc/mod-backup.php:115
+#: inc/mod-backup.php:116
 msgid "You are not allowed to install plugins."
 msgstr ""
 
-#: inc/mod-backup.php:121
+#: inc/mod-backup.php:122
 msgid "Could not reach GitHub to fetch the latest release. Try again later."
 msgstr ""
 
-#: inc/mod-backup.php:144
+#: inc/mod-backup.php:145
 msgid "Installation failed."
 msgstr ""
 
 #. translators: %s: the WordPress activation error message.
-#: inc/mod-backup.php:153
+#: inc/mod-backup.php:154
 #, php-format
 msgid "Installed, but activation failed: %s"
 msgstr ""
 
-#: inc/mod-backup.php:192
+#: inc/mod-backup.php:194
 msgid "Installing & activating… this can take a moment."
 msgstr ""
 
-#: inc/mod-backup.php:193
+#: inc/mod-backup.php:195
 msgid "Install failed:"
-msgstr ""
-
-#: inc/mod-backup.php:212
-#: inc/mod-dashboard.php:790
-#: inc/panel.php:277
-msgid "Backup"
-msgstr ""
-
-#: inc/mod-backup.php:223
-msgid "ReloadeD Backup"
-msgstr ""
-
-#: inc/mod-backup.php:224
-msgid "Complete, portable backups of this site — the full database (these panel settings included) plus the uploads folder, in a single .zip restorable on any host. Provided by the standalone ReloadeD Backup plugin."
-msgstr ""
-
-#: inc/mod-backup.php:231
-msgid "ReloadeD Backup is installed and active."
-msgstr ""
-
-#: inc/mod-backup.php:236
-msgid "Open ReloadeD Backup"
-msgstr ""
-
-#: inc/mod-backup.php:241
-msgid "ReloadeD Backup is installed but not active."
-msgstr ""
-
-#: inc/mod-backup.php:246
-msgid "Activate ReloadeD Backup"
-msgstr ""
-
-#: inc/mod-backup.php:254
-msgid "Install ReloadeD Backup"
-msgstr ""
-
-#. translators: %s: version number, e.g. 1.1.0
-#: inc/mod-backup.php:264
-#, php-format
-msgid "Installs the latest stable release (v%s) from GitHub and activates it."
-msgstr ""
-
-#: inc/mod-backup.php:271
-msgid "Could not reach GitHub to check the latest release — you can still try installing."
 msgstr ""
 
 #: inc/mod-breadcrumbs.php:35
@@ -626,7 +582,7 @@ msgid "ENFORCE MODE"
 msgstr ""
 
 #: inc/mod-csp.php:875
-#: inc/mod-dashboard.php:433
+#: inc/mod-dashboard.php:606
 msgid "REPORT-ONLY"
 msgstr ""
 
@@ -649,7 +605,7 @@ msgid "No reports yet — either nothing violated the policy, or no one has load
 msgstr ""
 
 #: inc/mod-csp.php:919
-#: inc/mod-dashboard.php:165
+#: inc/mod-dashboard.php:179
 msgid "Violations by Directive"
 msgstr ""
 
@@ -677,367 +633,402 @@ msgstr ""
 msgid "Sample of the blocked inline script (report-sample)"
 msgstr ""
 
-#: inc/mod-dashboard.php:38
+#: inc/mod-dashboard.php:52
 msgid "Site Status"
 msgstr ""
 
-#: inc/mod-dashboard.php:39
+#: inc/mod-dashboard.php:53
 msgid "Current state of key features. Click any tab on the navigation above to change a setting."
 msgstr ""
 
-#: inc/mod-dashboard.php:78
-#: inc/mod-dashboard.php:342
+#: inc/mod-dashboard.php:92
+#: inc/mod-dashboard.php:515
 msgid "Disable"
 msgstr ""
 
-#: inc/mod-dashboard.php:79
-#: inc/mod-dashboard.php:343
+#: inc/mod-dashboard.php:93
+#: inc/mod-dashboard.php:516
 msgid "Enable"
 msgstr ""
 
-#: inc/mod-dashboard.php:97
+#: inc/mod-dashboard.php:111
 msgid "Configure"
 msgstr ""
 
-#: inc/mod-dashboard.php:124
+#: inc/mod-dashboard.php:138
 msgid "Quick Metrics"
 msgstr ""
 
-#: inc/mod-dashboard.php:125
+#: inc/mod-dashboard.php:139
 msgid "Snapshot of recent activity. Full breakdown in the Statistics tab."
 msgstr ""
 
-#: inc/mod-dashboard.php:173
+#: inc/mod-dashboard.php:187
 msgid "View CSP reports"
 msgstr ""
 
-#: inc/mod-dashboard.php:179
+#: inc/mod-dashboard.php:193
 msgid "Recorded violations grouped by CSP directive."
 msgstr ""
 
-#: inc/mod-dashboard.php:200
+#: inc/mod-dashboard.php:214
 msgid "Activity Trend"
 msgstr ""
 
-#: inc/mod-dashboard.php:211
+#: inc/mod-dashboard.php:225
 msgid "View statistics"
 msgstr ""
 
-#: inc/mod-dashboard.php:215
+#: inc/mod-dashboard.php:229
 msgid "Views per day over the last 7 days. Useful to spot weekly patterns and traffic spikes."
 msgstr ""
 
-#: inc/mod-dashboard.php:241
-msgid "Quick Actions"
-msgstr ""
-
-#: inc/mod-dashboard.php:242
-msgid "Jump straight to the most-used screens."
-msgstr ""
-
 #. translators: 1: theme version, 2: WordPress version, 3: PHP version
-#: inc/mod-dashboard.php:266
+#: inc/mod-dashboard.php:255
 #, php-format
 msgid "Theme %1$s · WordPress %2$s · PHP %3$s"
 msgstr ""
 
-#: inc/mod-dashboard.php:294
-msgid "Theme Updates"
+#: inc/mod-dashboard.php:281
+msgid "Backup"
 msgstr ""
 
-#: inc/mod-dashboard.php:295
-msgid "The theme checks GitHub Releases every 24h. Click the button to check immediately."
+#: inc/mod-dashboard.php:290
+msgid "Backup module unavailable."
 msgstr ""
 
-#: inc/mod-dashboard.php:314
-msgid "Never checked"
-msgstr ""
-
-#: inc/mod-dashboard.php:315
-msgid "never"
-msgstr ""
-
-#: inc/mod-dashboard.php:320
-#: inc/mod-dashboard.php:1017
+#: inc/mod-dashboard.php:321
+#: inc/mod-dashboard.php:493
+#: inc/mod-dashboard.php:1148
 #: inc/mod-self-update.php:334
 msgid "Update available"
 msgstr ""
 
 #: inc/mod-dashboard.php:322
-#: inc/mod-dashboard.php:1016
+#: inc/mod-dashboard.php:495
+#: inc/mod-dashboard.php:1147
 #: inc/mod-self-update.php:335
 msgid "Up to date"
 msgstr ""
 
-#. translators: %s: human-readable time-ago (e.g. "2 hours")
-#: inc/mod-dashboard.php:326
+#: inc/mod-dashboard.php:337
+msgid "Create your first backup"
+msgstr ""
+
+#: inc/mod-dashboard.php:338
+msgid "Manage backups"
+msgstr ""
+
+#: inc/mod-dashboard.php:342
+#: inc/mod-dashboard.php:413
+msgid "ReloadeD Backup"
+msgstr ""
+
+#: inc/mod-dashboard.php:346
+msgid "Installed version"
+msgstr ""
+
+#: inc/mod-dashboard.php:352
+msgid "Last backup"
+msgstr ""
+
+#. translators: %s: human-readable time difference, e.g. "2 days".
+#: inc/mod-dashboard.php:361
+#: inc/mod-dashboard.php:387
+#: inc/mod-dashboard.php:499
 #, php-format
 msgid "%s ago"
 msgstr ""
 
-#: inc/mod-dashboard.php:327
-msgid "unknown"
+#: inc/mod-dashboard.php:368
+msgid "No backups yet"
 msgstr ""
 
-#: inc/mod-dashboard.php:337
-#: inc/mod-dashboard.php:351
-msgid "Beta channel"
+#: inc/mod-dashboard.php:375
+msgid "Last automatic backup"
 msgstr ""
 
-#: inc/mod-dashboard.php:360
-msgid "Check for updates"
+#: inc/mod-dashboard.php:382
+msgid "OK"
 msgstr ""
 
-#: inc/mod-dashboard.php:363
-msgid "Release status"
+#: inc/mod-dashboard.php:382
+msgid "Failed"
 msgstr ""
 
-#: inc/mod-dashboard.php:367
-msgid "Current version"
+#: inc/mod-dashboard.php:415
+msgid "Portable full-site backups — the database plus the uploads folder — in a single .zip restorable on any host."
 msgstr ""
 
-#: inc/mod-dashboard.php:370
-msgid "Latest version"
-msgstr ""
-
-#: inc/mod-dashboard.php:377
-msgid "BETA"
-msgstr ""
-
-#: inc/mod-dashboard.php:381
-msgid "Last check"
-msgstr ""
-
-#: inc/mod-dashboard.php:399
-#: inc/mod-dashboard.php:1018
-msgid "Update now"
-msgstr ""
-
-#: inc/mod-dashboard.php:403
-#: inc/mod-dashboard.php:1019
-msgid "View release on GitHub"
+#: inc/mod-dashboard.php:421
+msgid "Activate ReloadeD Backup"
 msgstr ""
 
 #: inc/mod-dashboard.php:429
-#: inc/mod-dashboard.php:451
-#: inc/mod-dashboard.php:477
-#: inc/mod-dashboard.php:494
-#: inc/mod-dashboard.php:507
-#: inc/mod-dashboard.php:516
-#: inc/mod-dashboard.php:540
-#: inc/mod-dashboard.php:552
-#: inc/mod-dashboard.php:564
-#: inc/mod-dashboard.php:576
-#: inc/mod-dashboard.php:590
-#: inc/mod-dashboard.php:605
-#: inc/mod-dashboard.php:619
-#: inc/mod-dashboard.php:631
-#: inc/mod-dashboard.php:643
-msgid "OFF"
+msgid "Install ReloadeD Backup"
 msgstr ""
 
-#: inc/mod-dashboard.php:431
-msgid "ENFORCE"
+#. translators: %s: version number, e.g. 1.1.0
+#: inc/mod-dashboard.php:439
+#, php-format
+msgid "Installs the latest stable release (v%s) from GitHub and activates it."
 msgstr ""
 
-#: inc/mod-dashboard.php:436
-msgid "CSP"
+#: inc/mod-dashboard.php:468
+msgid "Theme Updates"
 msgstr ""
 
-#: inc/mod-dashboard.php:454
-#: inc/mod-dashboard.php:476
-#: inc/mod-dashboard.php:493
-#: inc/mod-dashboard.php:506
-#: inc/mod-dashboard.php:520
-#: inc/mod-dashboard.php:539
-#: inc/mod-dashboard.php:551
-#: inc/mod-dashboard.php:563
-#: inc/mod-dashboard.php:575
-#: inc/mod-dashboard.php:589
-#: inc/mod-dashboard.php:604
-#: inc/mod-dashboard.php:618
-#: inc/mod-dashboard.php:630
-#: inc/mod-dashboard.php:642
-msgid "ON"
+#: inc/mod-dashboard.php:487
+msgid "Never checked"
 msgstr ""
 
-#: inc/mod-dashboard.php:458
-#: inc/panel.php:925
-msgid "Login Protection"
+#: inc/mod-dashboard.php:488
+msgid "never"
 msgstr ""
 
-#: inc/mod-dashboard.php:474
-msgid "Maintenance Mode"
+#: inc/mod-dashboard.php:500
+msgid "unknown"
 msgstr ""
 
-#: inc/mod-dashboard.php:482
-msgid "Maintenance Mode blocks ALL visitors of the site. Are you sure?"
-msgstr ""
-
-#: inc/mod-dashboard.php:491
-msgid "Statistics Tracking"
-msgstr ""
-
-#: inc/mod-dashboard.php:504
-msgid "Critical CSS Inline"
-msgstr ""
-
+#: inc/mod-dashboard.php:510
 #: inc/mod-dashboard.php:524
-msgid "Next-gen Images"
+msgid "Beta channel"
 msgstr ""
 
-#: inc/mod-dashboard.php:537
-msgid "Top Bar"
+#: inc/mod-dashboard.php:533
+msgid "Check for updates"
 msgstr ""
 
-#: inc/mod-dashboard.php:549
-#: inc/panel.php:592
-msgid "Comments"
+#: inc/mod-dashboard.php:536
+msgid "Release status"
 msgstr ""
 
-#: inc/mod-dashboard.php:561
-#: inc/panel.php:520
-msgid "Markdown"
+#: inc/mod-dashboard.php:540
+msgid "Current version"
 msgstr ""
 
-#: inc/mod-dashboard.php:573
-#: inc/panel.php:1220
-msgid "YouTube Facade"
+#: inc/mod-dashboard.php:543
+msgid "Latest version"
 msgstr ""
 
-#: inc/mod-dashboard.php:587
-msgid "Carousel"
+#: inc/mod-dashboard.php:550
+msgid "BETA"
+msgstr ""
+
+#: inc/mod-dashboard.php:554
+msgid "Last check"
+msgstr ""
+
+#: inc/mod-dashboard.php:572
+#: inc/mod-dashboard.php:1149
+msgid "Update now"
+msgstr ""
+
+#: inc/mod-dashboard.php:576
+#: inc/mod-dashboard.php:1150
+msgid "View release on GitHub"
 msgstr ""
 
 #: inc/mod-dashboard.php:602
-msgid "Breadcrumbs"
-msgstr ""
-
-#: inc/mod-dashboard.php:616
-#: inc/panel.php:849
-msgid "Cookie Banner"
-msgstr ""
-
-#: inc/mod-dashboard.php:628
-#: inc/panel.php:1525
-msgid "Sitemap"
-msgstr ""
-
-#: inc/mod-dashboard.php:640
-msgid "Open Graph"
-msgstr ""
-
-#: inc/mod-dashboard.php:665
-msgid "Browser policy that blocks unauthorized scripts and resources."
-msgstr ""
-
-#: inc/mod-dashboard.php:666
-msgid "Hides the login URL behind a secret slug and limits attempts."
-msgstr ""
-
+#: inc/mod-dashboard.php:624
+#: inc/mod-dashboard.php:650
 #: inc/mod-dashboard.php:667
-msgid "Shows a holding page to visitors while the site is offline."
+#: inc/mod-dashboard.php:680
+#: inc/mod-dashboard.php:689
+#: inc/mod-dashboard.php:713
+#: inc/mod-dashboard.php:725
+#: inc/mod-dashboard.php:737
+#: inc/mod-dashboard.php:749
+#: inc/mod-dashboard.php:763
+#: inc/mod-dashboard.php:778
+#: inc/mod-dashboard.php:792
+#: inc/mod-dashboard.php:804
+#: inc/mod-dashboard.php:816
+msgid "OFF"
 msgstr ""
 
-#: inc/mod-dashboard.php:668
-msgid "Records the page views shown in the Statistics tab."
+#: inc/mod-dashboard.php:604
+msgid "ENFORCE"
 msgstr ""
 
-#: inc/mod-dashboard.php:669
-msgid "Inlines critical CSS to speed up the first paint."
+#: inc/mod-dashboard.php:609
+msgid "CSP"
 msgstr ""
 
-#: inc/mod-dashboard.php:670
-msgid "Serves WebP/AVIF image versions to supported browsers."
+#: inc/mod-dashboard.php:627
+#: inc/mod-dashboard.php:649
+#: inc/mod-dashboard.php:666
+#: inc/mod-dashboard.php:679
+#: inc/mod-dashboard.php:693
+#: inc/mod-dashboard.php:712
+#: inc/mod-dashboard.php:724
+#: inc/mod-dashboard.php:736
+#: inc/mod-dashboard.php:748
+#: inc/mod-dashboard.php:762
+#: inc/mod-dashboard.php:777
+#: inc/mod-dashboard.php:791
+#: inc/mod-dashboard.php:803
+#: inc/mod-dashboard.php:815
+msgid "ON"
 msgstr ""
 
-#: inc/mod-dashboard.php:671
-msgid "Announcement bar shown above the site header."
+#: inc/mod-dashboard.php:631
+#: inc/panel.php:926
+msgid "Login Protection"
 msgstr ""
 
-#: inc/mod-dashboard.php:672
-msgid "Enables the comment system across the whole site."
+#: inc/mod-dashboard.php:647
+msgid "Maintenance Mode"
 msgstr ""
 
-#: inc/mod-dashboard.php:673
-msgid "Lets you write posts using Markdown syntax."
+#: inc/mod-dashboard.php:655
+msgid "Maintenance Mode blocks ALL visitors of the site. Are you sure?"
 msgstr ""
 
-#: inc/mod-dashboard.php:674
-msgid "Replaces YouTube embeds with a light click-to-load preview."
-msgstr ""
-
-#: inc/mod-dashboard.php:675
-msgid "Full-width featured carousel between the header and the home content."
-msgstr ""
-
-#: inc/mod-dashboard.php:676
-msgid "Shows the navigation trail above post titles."
+#: inc/mod-dashboard.php:664
+msgid "Statistics Tracking"
 msgstr ""
 
 #: inc/mod-dashboard.php:677
-msgid "Granular cookie consent banner (LGPD/GDPR)."
+msgid "Critical CSS Inline"
 msgstr ""
 
-#: inc/mod-dashboard.php:678
-msgid "Enables the native wp-sitemap.xml for search engines."
+#: inc/mod-dashboard.php:697
+msgid "Next-gen Images"
 msgstr ""
 
-#: inc/mod-dashboard.php:679
-msgid "Adds Open Graph tags for rich social previews."
+#: inc/mod-dashboard.php:710
+msgid "Top Bar"
 msgstr ""
 
-#: inc/mod-dashboard.php:708
-msgid "Views Last 24h"
+#: inc/mod-dashboard.php:722
+#: inc/panel.php:593
+msgid "Comments"
 msgstr ""
 
 #: inc/mod-dashboard.php:734
-msgid "Posts Last 30 Days"
+#: inc/panel.php:521
+msgid "Markdown"
 msgstr ""
 
-#: inc/mod-dashboard.php:747
-msgid "Review queue"
+#: inc/mod-dashboard.php:746
+#: inc/panel.php:1221
+msgid "YouTube Facade"
 msgstr ""
 
-#: inc/mod-dashboard.php:750
-msgid "Inbox zero ✓"
-msgstr ""
-
-#: inc/mod-dashboard.php:753
-msgid "Pending Comments"
+#: inc/mod-dashboard.php:760
+msgid "Carousel"
 msgstr ""
 
 #: inc/mod-dashboard.php:775
-msgid "General Settings"
+msgid "Breadcrumbs"
 msgstr ""
 
-#: inc/mod-dashboard.php:780
-msgid "Security & CSP"
+#: inc/mod-dashboard.php:789
+#: inc/panel.php:850
+msgid "Cookie Banner"
 msgstr ""
 
-#: inc/mod-dashboard.php:785
-#: inc/panel.php:269
-msgid "Images & Media"
+#: inc/mod-dashboard.php:801
+#: inc/panel.php:1526
+msgid "Sitemap"
 msgstr ""
 
-#: inc/mod-dashboard.php:797
-#: inc/mod-privacy.php:174
-#: inc/panel.php:275
-#: inc/panel.php:1905
-msgid "Statistics"
+#: inc/mod-dashboard.php:813
+msgid "Open Graph"
 msgstr ""
 
-#: inc/mod-dashboard.php:1014
+#: inc/mod-dashboard.php:838
+msgid "Browser policy that blocks unauthorized scripts and resources."
+msgstr ""
+
+#: inc/mod-dashboard.php:839
+msgid "Hides the login URL behind a secret slug and limits attempts."
+msgstr ""
+
+#: inc/mod-dashboard.php:840
+msgid "Shows a holding page to visitors while the site is offline."
+msgstr ""
+
+#: inc/mod-dashboard.php:841
+msgid "Records the page views shown in the Statistics tab."
+msgstr ""
+
+#: inc/mod-dashboard.php:842
+msgid "Inlines critical CSS to speed up the first paint."
+msgstr ""
+
+#: inc/mod-dashboard.php:843
+msgid "Serves WebP/AVIF image versions to supported browsers."
+msgstr ""
+
+#: inc/mod-dashboard.php:844
+msgid "Announcement bar shown above the site header."
+msgstr ""
+
+#: inc/mod-dashboard.php:845
+msgid "Enables the comment system across the whole site."
+msgstr ""
+
+#: inc/mod-dashboard.php:846
+msgid "Lets you write posts using Markdown syntax."
+msgstr ""
+
+#: inc/mod-dashboard.php:847
+msgid "Replaces YouTube embeds with a light click-to-load preview."
+msgstr ""
+
+#: inc/mod-dashboard.php:848
+msgid "Full-width featured carousel between the header and the home content."
+msgstr ""
+
+#: inc/mod-dashboard.php:849
+msgid "Shows the navigation trail above post titles."
+msgstr ""
+
+#: inc/mod-dashboard.php:850
+msgid "Granular cookie consent banner (LGPD/GDPR)."
+msgstr ""
+
+#: inc/mod-dashboard.php:851
+msgid "Enables the native wp-sitemap.xml for search engines."
+msgstr ""
+
+#: inc/mod-dashboard.php:852
+msgid "Adds Open Graph tags for rich social previews."
+msgstr ""
+
+#: inc/mod-dashboard.php:881
+msgid "Views Last 24h"
+msgstr ""
+
+#: inc/mod-dashboard.php:907
+msgid "Posts Last 30 Days"
+msgstr ""
+
+#: inc/mod-dashboard.php:920
+msgid "Review queue"
+msgstr ""
+
+#: inc/mod-dashboard.php:923
+msgid "Inbox zero ✓"
+msgstr ""
+
+#: inc/mod-dashboard.php:926
+msgid "Pending Comments"
+msgstr ""
+
+#: inc/mod-dashboard.php:1145
 msgid "Checking…"
 msgstr ""
 
-#: inc/mod-dashboard.php:1015
+#: inc/mod-dashboard.php:1146
 #: inc/mod-self-update.php:320
 #: inc/mod-self-update.php:336
 msgid "just now"
 msgstr ""
 
-#: inc/mod-dashboard.php:1020
+#: inc/mod-dashboard.php:1151
 #: inc/mod-self-update.php:319
 msgid "Could not reach GitHub. Try again later."
 msgstr ""
@@ -1089,7 +1080,7 @@ msgid "Check to prevent the thumbnail from duplicating with videos inserted at t
 msgstr ""
 
 #: inc/mod-general.php:57
-#: inc/panel.php:468
+#: inc/panel.php:469
 msgid "Primary Category"
 msgstr ""
 
@@ -1381,6 +1372,12 @@ msgstr ""
 msgid "Essential cookies for the site to work (login, theme, your preferences)."
 msgstr ""
 
+#: inc/mod-privacy.php:174
+#: inc/panel.php:277
+#: inc/panel.php:1906
+msgid "Statistics"
+msgstr ""
+
 #: inc/mod-privacy.php:176
 msgid "Help us understand how you use the site (Google Analytics, Clarity, Plausible)."
 msgstr ""
@@ -1654,1079 +1651,1083 @@ msgstr ""
 msgid "ReloadeD Options"
 msgstr ""
 
-#: inc/panel.php:267
+#: inc/panel.php:269
 msgid "Dashboard"
 msgstr ""
 
-#: inc/panel.php:268
+#: inc/panel.php:270
 msgid "General"
 msgstr ""
 
-#: inc/panel.php:270
-msgid "Performance"
-msgstr ""
-
 #: inc/panel.php:271
-msgid "Security & Privacy"
+msgid "Images & Media"
 msgstr ""
 
 #: inc/panel.php:272
-msgid "Integrations"
+msgid "Performance"
 msgstr ""
 
 #: inc/panel.php:273
-msgid "SEO"
+msgid "Security & Privacy"
 msgstr ""
 
 #: inc/panel.php:274
-msgid "Monetization"
+msgid "Integrations"
+msgstr ""
+
+#: inc/panel.php:275
+msgid "SEO"
 msgstr ""
 
 #: inc/panel.php:276
+msgid "Monetization"
+msgstr ""
+
+#: inc/panel.php:278
 msgid "Maintenance"
 msgstr ""
 
-#: inc/panel.php:288
+#: inc/panel.php:289
 msgid "ReloadeD - Control Panel"
 msgstr ""
 
-#: inc/panel.php:356
+#: inc/panel.php:357
 msgid "Visual Shell"
 msgstr ""
 
-#: inc/panel.php:359
+#: inc/panel.php:360
 msgid "Enable Top Bar"
 msgstr ""
 
-#: inc/panel.php:366
+#: inc/panel.php:367
 msgid "Displays a small bar at the top with date, latest news, and social networks."
 msgstr ""
 
-#: inc/panel.php:371
+#: inc/panel.php:372
 msgid "Show Breadcrumbs"
 msgstr ""
 
-#: inc/panel.php:378
+#: inc/panel.php:379
 msgid "Displays a breadcrumb trail (Home › Category › Post) below the header on every page except the front page. The Schema.org BreadcrumbList for SEO is always generated, regardless of this toggle."
 msgstr ""
 
-#: inc/panel.php:383
+#: inc/panel.php:384
 msgid "Sidebar Position"
 msgstr ""
 
-#: inc/panel.php:391
+#: inc/panel.php:392
 msgid "Right (default)"
 msgstr ""
 
-#: inc/panel.php:392
+#: inc/panel.php:393
 msgid "Left"
 msgstr ""
 
-#: inc/panel.php:394
+#: inc/panel.php:395
 msgid "Side where the sidebar appears on desktop layouts. On mobile (≤1024px) the sidebar always stacks below the main content regardless of this setting."
 msgstr ""
 
-#: inc/panel.php:399
+#: inc/panel.php:400
 msgid "Back to Top Button"
 msgstr ""
 
-#: inc/panel.php:406
+#: inc/panel.php:407
 msgid "Enables a floating button in the bottom right corner for the user to quickly return to the top of the page."
 msgstr ""
 
-#: inc/panel.php:411
+#: inc/panel.php:412
 msgid "Dark/Light Switcher"
 msgstr ""
 
-#: inc/panel.php:418
+#: inc/panel.php:419
 msgid "Enables the theme mode switcher (Dark/Light) in the header."
 msgstr ""
 
-#: inc/panel.php:423
+#: inc/panel.php:424
 msgid "Default Theme Mode"
 msgstr ""
 
-#: inc/panel.php:431
+#: inc/panel.php:432
 msgid "System (follow OS)"
 msgstr ""
 
-#: inc/panel.php:432
+#: inc/panel.php:433
 msgid "Dark"
 msgstr ""
 
-#: inc/panel.php:433
+#: inc/panel.php:434
 msgid "Light"
 msgstr ""
 
-#: inc/panel.php:435
+#: inc/panel.php:436
 msgid "Initial theme mode for first-time visitors. Visitors who clicked the switcher keep their choice in localStorage."
 msgstr ""
 
-#: inc/panel.php:440
+#: inc/panel.php:441
 msgid "Footer Subline"
 msgstr ""
 
-#: inc/panel.php:447
+#: inc/panel.php:448
 msgid "Ex: Hosted on private infrastructure."
 msgstr ""
 
-#: inc/panel.php:448
+#: inc/panel.php:449
 msgid "Optional extra line below the copyright in the footer. Accepts basic HTML (links, strong, em). Leave empty to hide."
 msgstr ""
 
-#: inc/panel.php:453
+#: inc/panel.php:454
 msgid "Content"
 msgstr ""
 
-#: inc/panel.php:456
+#: inc/panel.php:457
 msgid "Featured Image"
 msgstr ""
 
-#: inc/panel.php:463
+#: inc/panel.php:464
 msgid "Adds an option in the post editor sidebar to hide the featured image when reading the article (ideal for posts with videos at the top)."
 msgstr ""
 
-#: inc/panel.php:475
+#: inc/panel.php:476
 msgid "Adds a dropdown in the post editor to choose which category highlights in the menu when the post belongs to multiple categories. Without this, all matching menu items light up at once."
 msgstr ""
 
-#: inc/panel.php:480
+#: inc/panel.php:481
 msgid "Post Overline"
 msgstr ""
 
-#: inc/panel.php:487
+#: inc/panel.php:488
 msgid "Adds a free-text \"overline\" field in the post editor (journalism-style label like INTERVIEW, EXCLUSIVE, ANALYSIS). When set, it renders above the title on single posts and above the title on grid cards (smaller, uppercase)."
 msgstr ""
 
-#: inc/panel.php:492
+#: inc/panel.php:493
 msgid "Excerpt Length (words)"
 msgstr ""
 
-#: inc/panel.php:502
+#: inc/panel.php:503
 msgid "Number of words shown in automatic excerpts on archives, search and category pages. The WordPress default is 55. Posts with manually written excerpts are not affected."
 msgstr ""
 
-#: inc/panel.php:507
+#: inc/panel.php:508
 msgid "Read More Button Text"
 msgstr ""
 
-#: inc/panel.php:514
+#: inc/panel.php:515
 msgid "Ex: Continue Reading &rarr;"
 msgstr ""
 
-#: inc/panel.php:515
+#: inc/panel.php:516
 msgid "Customizes the excerpt button text. Leave blank to use the theme default."
 msgstr ""
 
-#: inc/panel.php:527
+#: inc/panel.php:528
 msgid "Enables support for Markdown syntax, allowing you to write articles natively (like GitHub or Docker Hub)."
 msgstr ""
 
-#: inc/panel.php:532
+#: inc/panel.php:533
 msgid "Code Highlight"
 msgstr ""
 
-#: inc/panel.php:539
+#: inc/panel.php:540
 msgid "Enables Syntax Highlight support, which colors programming codes. It is only loaded on posts for performance."
 msgstr ""
 
-#: inc/panel.php:544
+#: inc/panel.php:545
 msgid "Related Posts"
 msgstr ""
 
-#: inc/panel.php:551
+#: inc/panel.php:552
 msgid "Shows a block of 3 related posts at the end of each single post (between the article footer and the comments). Picks posts from the same primary category, ordered by tag overlap. Helps with time-on-site and reduces bounce rate."
 msgstr ""
 
-#: inc/panel.php:556
+#: inc/panel.php:557
 msgid "Author Bio Box"
 msgstr ""
 
-#: inc/panel.php:563
+#: inc/panel.php:564
 msgid "Shows a box with avatar, name, bio and social links of the post author at the end of each single. Reinforces E-E-A-T signals (the same data also feeds Schema.org Person on the author archive). If the author has no bio and no social links, the box auto-hides to avoid noise."
 msgstr ""
 
-#: inc/panel.php:568
+#: inc/panel.php:569
 msgid "Reading Time"
 msgstr ""
 
-#: inc/panel.php:575
+#: inc/panel.php:576
 msgid "Shows an estimated reading time (e.g. \"5 min read\") in the single post meta line, right-aligned next to the date/author/views. Computed at 200 words per minute (international average) and cached when the post is saved."
 msgstr ""
 
-#: inc/panel.php:580
+#: inc/panel.php:581
 msgid "Table of Contents"
 msgstr ""
 
-#: inc/panel.php:587
+#: inc/panel.php:588
 msgid "Adds a floating action button at the top-right of single posts that opens a collapsible panel with auto-generated links to each section (H2 and H3 headings). Only renders when the post has 3 or more headings — short posts stay clean. Click outside, press ESC, or click any heading to close the panel."
 msgstr ""
 
-#: inc/panel.php:595
+#: inc/panel.php:596
 msgid "Enable Comments Globally"
 msgstr ""
 
-#: inc/panel.php:602
+#: inc/panel.php:603
 msgid "Master switch that controls comments site-wide. When OFF, no comment form, list, count or Recent Comments widget appears on any post or page — regardless of per-post settings or the WordPress Discussion settings. Useful to quickly kill comments on the whole site (e.g. after migrating to Discourse, Disqus or another platform) without bulk-editing every post. When ON, normal WordPress behavior applies (each post can still be opened/closed individually). External comment plugins (WP-Discourse, Disqus, etc.) that override the comments template continue to work regardless of this toggle. <strong>Note:</strong> manually added widget blocks (e.g. a separate Heading \"Comments\" above the Recent Comments widget) may need to be removed manually in <em>Appearance → Widgets</em> to avoid orphaned titles."
 msgstr ""
 
-#: inc/panel.php:607
+#: inc/panel.php:608
 msgid "Comment Accessibility"
 msgstr ""
 
-#: inc/panel.php:614
+#: inc/panel.php:615
 msgid "Adds labels and autocomplete attributes to the comment form."
 msgstr ""
 
-#: inc/panel.php:619
+#: inc/panel.php:620
 msgid "Comments Separator"
 msgstr ""
 
-#: inc/panel.php:626
+#: inc/panel.php:627
 msgid "Text between Author and Post (e.g., \"commented on post:\"). Leave <strong>empty</strong> for WP default or type <strong>&amp;nbsp;</strong> to hide."
 msgstr ""
 
-#: inc/panel.php:631
+#: inc/panel.php:632
 msgid "Featured Carousel"
 msgstr ""
 
-#: inc/panel.php:634
+#: inc/panel.php:635
 msgid "Enable Carousel"
 msgstr ""
 
-#: inc/panel.php:641
+#: inc/panel.php:642
 msgid "Shows a full-width featured carousel between the header and the home content (home page 1 only). Slides swipe natively on touch; autoplay pauses on hover, background tabs and off-screen."
 msgstr ""
 
-#: inc/panel.php:646
+#: inc/panel.php:647
 msgid "Content Source"
 msgstr ""
 
-#: inc/panel.php:654
+#: inc/panel.php:655
 msgid "Sticky posts (falls back to latest)"
 msgstr ""
 
-#: inc/panel.php:655
+#: inc/panel.php:656
 msgid "Category"
 msgstr ""
 
-#: inc/panel.php:656
+#: inc/panel.php:657
 msgid "Latest posts"
 msgstr ""
 
-#: inc/panel.php:658
+#: inc/panel.php:659
 msgid "<strong>Sticky posts</strong> = editorial curation: mark posts with \"Stick to the top of the blog\" in the editor and they enter the carousel (newest first). With none stickied, the latest posts fill in. Only posts with a featured image qualify. Carousel posts are automatically excluded from the home grids below (no duplicates)."
 msgstr ""
 
-#: inc/panel.php:663
+#: inc/panel.php:664
 msgid "Category (if source = Category)"
 msgstr ""
 
-#: inc/panel.php:671
+#: inc/panel.php:672
 msgid "Used only when the Content Source above is set to Category."
 msgstr ""
 
-#: inc/panel.php:676
+#: inc/panel.php:677
 msgid "Slides"
 msgstr ""
 
-#: inc/panel.php:691
+#: inc/panel.php:692
 msgid "How many slides the carousel holds."
 msgstr ""
 
-#: inc/panel.php:696
+#: inc/panel.php:697
 msgid "Autoplay Interval"
 msgstr ""
 
-#: inc/panel.php:704
+#: inc/panel.php:705
 msgid "Off (manual only)"
 msgstr ""
 
-#: inc/panel.php:705
+#: inc/panel.php:706
 msgid "4 seconds"
 msgstr ""
 
-#: inc/panel.php:706
+#: inc/panel.php:707
 msgid "6 seconds"
 msgstr ""
 
-#: inc/panel.php:707
+#: inc/panel.php:708
 msgid "8 seconds"
 msgstr ""
 
-#: inc/panel.php:708
+#: inc/panel.php:709
 msgid "10 seconds"
 msgstr ""
 
-#: inc/panel.php:710
+#: inc/panel.php:711
 msgid "Time between automatic slides. Respects the visitor's reduced-motion preference (autoplay stays off for them)."
 msgstr ""
 
-#: inc/panel.php:715
+#: inc/panel.php:716
 msgid "Home Page"
 msgstr ""
 
-#: inc/panel.php:718
+#: inc/panel.php:719
 msgid "Grid Section"
 msgstr ""
 
-#: inc/panel.php:726
-#: inc/panel.php:744
-#: inc/panel.php:762
+#: inc/panel.php:727
+#: inc/panel.php:745
+#: inc/panel.php:763
 msgid "Off"
 msgstr ""
 
-#: inc/panel.php:731
+#: inc/panel.php:732
 msgid "Number of Grid cards (3 per row) shown below the 2 hero cards on the home."
 msgstr ""
 
-#: inc/panel.php:736
+#: inc/panel.php:737
 msgid "Vertical Section"
 msgstr ""
 
-#: inc/panel.php:749
+#: inc/panel.php:750
 msgid "Number of Vertical cards (large image + excerpt) shown after the Grid section."
 msgstr ""
 
-#: inc/panel.php:754
+#: inc/panel.php:755
 msgid "Compact Section"
 msgstr ""
 
-#: inc/panel.php:767
+#: inc/panel.php:768
 msgid "Number of Compact cards (thumbnail + title, 2 per row) shown last. <strong>Note:</strong> with all three sections set to Off the home falls back to the classic grid of hero cards with pagination."
 msgstr ""
 
-#: inc/panel.php:772
+#: inc/panel.php:773
 msgid "Search Page"
 msgstr ""
 
-#: inc/panel.php:775
+#: inc/panel.php:776
 msgid "Grid Layout"
 msgstr ""
 
-#: inc/panel.php:782
+#: inc/panel.php:783
 msgid "Enables Grid layout (Cards side by side)."
 msgstr ""
 
-#: inc/panel.php:787
+#: inc/panel.php:788
 msgid "Vertical List"
 msgstr ""
 
-#: inc/panel.php:794
+#: inc/panel.php:795
 msgid "Enables Vertical List layout (Large image + excerpt)."
 msgstr ""
 
-#: inc/panel.php:799
+#: inc/panel.php:800
 msgid "Compact List"
 msgstr ""
 
-#: inc/panel.php:806
+#: inc/panel.php:807
 msgid "Enables Compact layout (Thumbnail + title inline). <strong>Note:</strong> Compact also acts as a safety net — if the visitor disables every chip on the frontend, all results fall back here regardless of this setting."
 msgstr ""
 
-#: inc/panel.php:811
+#: inc/panel.php:812
 msgid "Google Style"
 msgstr ""
 
-#: inc/panel.php:818
+#: inc/panel.php:819
 msgid "Enables minimalist text-focused layout, similar to search engines."
 msgstr ""
 
-#: inc/panel.php:823
+#: inc/panel.php:824
 msgid "Search Suggestions (autocomplete)"
 msgstr ""
 
-#: inc/panel.php:830
+#: inc/panel.php:831
 msgid "Shows a dropdown of up to 5 matching posts as visitors type in the search input (after 3 characters, 250ms debounce). Speeds up content discovery — visitors can jump to a post without leaving the form. Results cached for 15 minutes server-side; cache auto-flushes when posts are saved or deleted."
 msgstr ""
 
-#: inc/panel.php:846
+#: inc/panel.php:847
 msgid "Cookie Consent"
 msgstr ""
 
-#: inc/panel.php:856
+#: inc/panel.php:857
 msgid "Enables the cookie consent banner in the site footer for legal compliance."
 msgstr ""
 
-#: inc/panel.php:862
+#: inc/panel.php:863
 msgid "Cookie Banner Text"
 msgstr ""
 
 #. translators: the literal "%s" inside <strong>...</strong> is shown AS-IS to the admin as an instruction (it's the placeholder they should type in the cookie banner template, not a sprintf substitution here) — keep the literal "%s" in the translation
-#: inc/panel.php:870
+#: inc/panel.php:871
 #, php-format
 msgid "Customize the cookie banner message. Use <strong>%s</strong> where you want the Privacy Policy link to appear — the URL comes from <em>Settings → Privacy → Privacy Policy Page</em>. Leave empty to use the default translatable text."
 msgstr ""
 
-#: inc/panel.php:874
+#: inc/panel.php:875
 msgid "Hardening"
 msgstr ""
 
-#: inc/panel.php:877
+#: inc/panel.php:878
 msgid "Disable XML-RPC"
 msgstr ""
 
-#: inc/panel.php:884
+#: inc/panel.php:885
 msgid "Disables the WordPress XML-RPC endpoint, the legacy API used by old mobile apps and the Jetpack/pingback ecosystem. Common target for brute-force and DDoS amplification attacks. Keep <strong>enabled</strong> unless you actually use a remote app or pingbacks."
 msgstr ""
 
-#: inc/panel.php:889
+#: inc/panel.php:890
 msgid "Hide WP Version"
 msgstr ""
 
-#: inc/panel.php:896
+#: inc/panel.php:897
 msgid "Removes the WordPress generator meta tag from the source code. A basic security best practice."
 msgstr ""
 
-#: inc/panel.php:901
+#: inc/panel.php:902
 msgid "Security Headers"
 msgstr ""
 
-#: inc/panel.php:908
+#: inc/panel.php:909
 msgid "Sends defensive HTTP headers on the frontend (X-Frame-Options, X-Content-Type-Options, Referrer-Policy, Permissions-Policy) to mitigate clickjacking and MIME sniffing. Does not affect the admin panel."
 msgstr ""
 
-#: inc/panel.php:913
+#: inc/panel.php:914
 msgid "Trusted Proxy IPs"
 msgstr ""
 
-#: inc/panel.php:920
+#: inc/panel.php:921
 msgid "IP ranges (CIDR, one per line) of reverse proxies or CDNs in front of your site. When a request arrives from one of these IPs, the theme trusts the <code>CF-Connecting-IP</code> and <code>X-Forwarded-For</code> headers to identify the real visitor — used internally for rate limiting and abuse protection. <strong>Cloudflare ranges are already included by default</strong>, so leave this empty if you use only Cloudflare or no proxy at all. Add custom ranges only for other setups (custom Nginx reverse-proxy, AWS ALB, Sucuri, BunnyCDN, etc). Example:<br><code>203.0.113.0/24<br>198.51.100.0/24<br>2001:db8::/32</code>"
 msgstr ""
 
-#: inc/panel.php:929
+#: inc/panel.php:930
 msgid "Enable Login Protection"
 msgstr ""
 
-#: inc/panel.php:936
+#: inc/panel.php:937
 msgid "Master switch for all Login Protection features (hide URL + rate limit + anti-enumeration). When OFF, the custom slug is preserved in storage but ignored, and the rate limit is disabled — login behaves like a standard WordPress install. Re-enable to restore all protections without losing your saved slug."
 msgstr ""
 
-#: inc/panel.php:942
+#: inc/panel.php:943
 msgid "Hide Login URL (custom slug)"
 msgstr ""
 
 #. translators: %s: current full login URL
-#: inc/panel.php:951
+#: inc/panel.php:952
 #, php-format
 msgid "Optional custom slug to hide the login page. When set, <code>/wp-login.php</code> returns 404 to anonymous visitors (logged-in users keep access for logout), and login is reachable only via <code>/{slug}</code>. Blocks the ~95%% of bots that only know <code>/wp-login.php</code>. Leave empty to disable. 3–50 chars, lowercase letters/numbers/hyphens. Reserved words (<code>wp-admin</code>, <code>login</code>, <code>feed</code>, etc) are rejected.<br><br><strong>Current login URL:</strong> <code>%s</code><br><br>⚠️ <strong>Save this URL in a secure place.</strong> If you lose it, see the theme documentation for recovery steps."
 msgstr ""
 
-#: inc/panel.php:959
+#: inc/panel.php:960
 msgid "Max Failed Login Attempts"
 msgstr ""
 
-#: inc/panel.php:966
+#: inc/panel.php:967
 msgid "Maximum failed login attempts per IP within the window below before further attempts are blocked. Default: 5. The client IP is detected reliably and resistant to header spoofing via the Trusted Proxy IPs whitelist above."
 msgstr ""
 
-#: inc/panel.php:972
+#: inc/panel.php:973
 msgid "Lockout Window (minutes)"
 msgstr ""
 
-#: inc/panel.php:979
+#: inc/panel.php:980
 msgid "Time window for counting failed login attempts. After this duration without new failures, the counter resets and the IP can try again. Default: 15 minutes."
 msgstr ""
 
-#: inc/panel.php:985
+#: inc/panel.php:986
 msgid "Hide User Enumeration"
 msgstr ""
 
-#: inc/panel.php:992
+#: inc/panel.php:993
 msgid "Replaces WordPress's default login errors that reveal whether a username exists (<em>\"User does not exist\"</em> vs <em>\"Password is incorrect for user X\"</em>) with a generic <em>\"Invalid username or password\"</em>. Stops attackers from enumerating valid usernames before brute-forcing. <strong>Recommended:</strong> keep enabled. Disable only if you want friendlier error messages for legitimate users who forgot their username — they can still use the \"Lost your password?\" link."
 msgstr ""
 
-#: inc/panel.php:1000
+#: inc/panel.php:1001
 msgid "Content Security Policy (Report-Only)"
 msgstr ""
 
-#: inc/panel.php:1003
+#: inc/panel.php:1004
 msgid "Enable CSP"
 msgstr ""
 
-#: inc/panel.php:1010
+#: inc/panel.php:1011
 msgid "Sends the <code>Content-Security-Policy</code> header on the frontend with a policy calculated from your active integrations (GA, Clarity, FB Pixel, Discord, YouTube, etc.). By default uses <strong>Report-Only mode</strong> — does not block anything, only reports violations to the browser console and to an internal endpoint (<code>/wp-json/rd/v1/csp-report</code>). Useful for auditing what your site loads from external sources. Use the <strong>Enforce Mode</strong> toggle below to promote to actual blocking. <strong>Note:</strong> generates a POST request per violation, so disable in heavy traffic if not actively monitoring."
 msgstr ""
 
-#: inc/panel.php:1016
+#: inc/panel.php:1017
 msgid "⚠️ Enforce Mode"
 msgstr ""
 
-#: inc/panel.php:1023
+#: inc/panel.php:1024
 msgid "<strong style=\"color:#d63638\">DANGER ZONE.</strong> Promotes CSP from <em>Report-Only</em> (passive monitoring) to <em>Enforce</em> mode — the browser will <strong>actually block</strong> resources that violate the policy. <strong>Only enable this after 30+ days monitoring reports without unexpected violations</strong> — turning on prematurely will break legitimate functionality (images, embeds, scripts). Requires the toggle above to be ON. Easy rollback: just uncheck this. See <code>docs/pt-BR/10-content-security-policy.md</code> for the full promotion checklist."
 msgstr ""
 
-#: inc/panel.php:1033
+#: inc/panel.php:1034
 msgid "Custom Origins — Scripts & APIs"
 msgstr ""
 
-#: inc/panel.php:1040
+#: inc/panel.php:1041
 msgid "Adds origins to <code>script-src</code> and <code>connect-src</code>. Use for new trackers, SDKs, JS libraries or any external API your frontend calls. <strong>One per line.</strong> Examples: <code>https://cdn.mixpanel.com</code>, <code>https://api.mixpanel.com</code>, <code>https://*.example.com</code>. Only HTTPS origins accepted; keywords with quotes (<code>'self'</code>, <code>'unsafe-inline'</code>) and the bare wildcard (<code>*</code>) are rejected for safety."
 msgstr ""
 
-#: inc/panel.php:1046
+#: inc/panel.php:1047
 msgid "Custom Origins — Iframes & Embeds"
 msgstr ""
 
-#: inc/panel.php:1053
+#: inc/panel.php:1054
 msgid "Adds origins to <code>frame-src</code>. Use for video players, music embeds, third-party widgets that load in <code>&lt;iframe&gt;</code>. <strong>One per line.</strong> Examples: <code>https://player.vimeo.com</code>, <code>https://open.spotify.com</code>, <code>https://player.twitch.tv</code>. Only HTTPS origins accepted."
 msgstr ""
 
-#: inc/panel.php:1059
+#: inc/panel.php:1060
 msgid "Custom Origins — Styles & Fonts"
 msgstr ""
 
-#: inc/panel.php:1066
+#: inc/panel.php:1067
 msgid "Adds origins to <code>style-src</code> and <code>font-src</code>. Use for external font CDNs (Bunny Fonts, Google Fonts mirror) or external stylesheets. <strong>One per line.</strong> Examples: <code>https://fonts.bunny.net</code>, <code>https://fonts.googleapis.com</code>. Only HTTPS origins accepted."
 msgstr ""
 
-#: inc/panel.php:1075
+#: inc/panel.php:1076
 msgid "Report Noise Filter — Ignored Hosts"
 msgstr ""
 
-#: inc/panel.php:1082
+#: inc/panel.php:1083
 msgid "Hosts whose violations are <strong>dropped before being stored</strong>, to keep the reports below focused on real, actionable issues. Violations injected by browser extensions are already filtered automatically (by their <code>chrome-extension://</code> / <code>moz-extension://</code> scheme); use this list only for noise that slips through without an extension source — e.g. fonts injected by the Adobe Acrobat extension (<code>use.typekit.net</code>). <strong>One host per line, no scheme.</strong> Example: <code>use.typekit.net</code>."
 msgstr ""
 
-#: inc/panel.php:1093
+#: inc/panel.php:1094
 msgid "Analytics"
 msgstr ""
 
-#: inc/panel.php:1096
+#: inc/panel.php:1097
 msgid "Google Analytics ID"
 msgstr ""
 
-#: inc/panel.php:1104
+#: inc/panel.php:1105
 msgid "Insert only the tracking code (Tag ID). Leave empty to disable."
 msgstr ""
 
-#: inc/panel.php:1109
+#: inc/panel.php:1110
 msgid "Microsoft Clarity ID"
 msgstr ""
 
-#: inc/panel.php:1117
+#: inc/panel.php:1118
 msgid "Project ID from <a href=\"https://clarity.microsoft.com\" target=\"_blank\" rel=\"noopener\">clarity.microsoft.com</a> → your project → Settings → Setup. Free heatmaps + session recordings. Leave empty to disable."
 msgstr ""
 
-#: inc/panel.php:1122
+#: inc/panel.php:1123
 msgid "Plausible Domain"
 msgstr ""
 
-#: inc/panel.php:1130
+#: inc/panel.php:1131
 msgid "Domain as registered in <a href=\"https://plausible.io\" target=\"_blank\" rel=\"noopener\">plausible.io</a> (e.g. example.com, without https://). Loads the Plausible cloud script. Privacy-friendly alternative to Google Analytics. Leave empty to disable."
 msgstr ""
 
-#: inc/panel.php:1135
+#: inc/panel.php:1136
 msgid "Umami Website ID"
 msgstr ""
 
-#: inc/panel.php:1143
+#: inc/panel.php:1144
 msgid "Website ID (UUID) from your Umami dashboard → Settings → Websites. Requires the script URL below to render. Leave both fields empty to disable."
 msgstr ""
 
-#: inc/panel.php:1148
+#: inc/panel.php:1149
 msgid "Umami Script URL"
 msgstr ""
 
-#: inc/panel.php:1156
+#: inc/panel.php:1157
 msgid "Full URL to your self-hosted Umami script file (typically <code>/script.js</code> on your Umami instance). Used together with the Website ID above."
 msgstr ""
 
-#: inc/panel.php:1160
+#: inc/panel.php:1161
 msgid "Marketing & Conversion Pixels"
 msgstr ""
 
-#: inc/panel.php:1163
+#: inc/panel.php:1164
 msgid "Facebook Pixel ID"
 msgstr ""
 
-#: inc/panel.php:1171
+#: inc/panel.php:1172
 msgid "Numeric Pixel ID from <a href=\"https://business.facebook.com/events_manager\" target=\"_blank\" rel=\"noopener\">Meta Events Manager</a> → Data Sources → Settings. Enables retargeting and conversion tracking. Leave empty to disable."
 msgstr ""
 
-#: inc/panel.php:1176
+#: inc/panel.php:1177
 msgid "TikTok Pixel ID"
 msgstr ""
 
-#: inc/panel.php:1184
+#: inc/panel.php:1185
 msgid "Pixel ID from <a href=\"https://ads.tiktok.com\" target=\"_blank\" rel=\"noopener\">TikTok Ads Manager</a> → Assets → Events → Web Events. Leave empty to disable."
 msgstr ""
 
-#: inc/panel.php:1193
+#: inc/panel.php:1194
 msgid "Loading Optimization"
 msgstr ""
 
-#: inc/panel.php:1196
+#: inc/panel.php:1197
 msgid "Preload Critical Fonts"
 msgstr ""
 
-#: inc/panel.php:1203
+#: inc/panel.php:1204
 msgid "Tells the browser to start downloading the two most-used fonts (Inter Regular + Poppins Bold) in parallel with the stylesheet, instead of waiting until the CSS is parsed. Reduces FOIT/FOUT (the blank-text flash) and improves LCP/FCP scores on speed tests. The other font variants (italic, light, mono) are NOT preloaded — they are only used in specific contexts and preloading all 16 files would hurt more than help."
 msgstr ""
 
-#: inc/panel.php:1208
+#: inc/panel.php:1209
 msgid "Inline Critical CSS"
 msgstr ""
 
-#: inc/panel.php:1215
+#: inc/panel.php:1216
 msgid "Eliminates render-blocking by inlining the above-the-fold CSS in the <code>&lt;head&gt;</code> and loading the full stylesheet asynchronously. Lighthouse estimates ~1 second LCP improvement on mobile. <strong>Requires pre-generated critical CSS files</strong> in <code>assets/css/critical-{template}.css</code> — run <code>npm run critical:all</code> from the theme root after major SCSS changes to above-the-fold rules. If the critical file for the current template is missing, the theme gracefully degrades to synchronous loading. Off by default — opt-in only after you confirm the critical files are generated."
 msgstr ""
 
-#: inc/panel.php:1227
+#: inc/panel.php:1228
 msgid "Replaces YouTube embeds with a lightweight thumbnail image, loading the player iframe only when the user clicks. Drastically reduces initial page weight on posts with videos."
 msgstr ""
 
-#: inc/panel.php:1230
+#: inc/panel.php:1231
 msgid "Bloat Reducers"
 msgstr ""
 
-#: inc/panel.php:1233
+#: inc/panel.php:1234
 msgid "Disable Native Emojis"
 msgstr ""
 
-#: inc/panel.php:1240
+#: inc/panel.php:1241
 msgid "Removes the WP emojis script. Modern browsers already render emojis natively, enable this to save requests."
 msgstr ""
 
-#: inc/panel.php:1245
+#: inc/panel.php:1246
 msgid "Disable WP CSS (Bloat)"
 msgstr ""
 
-#: inc/panel.php:1252
+#: inc/panel.php:1253
 msgid "Removes global and block CSS from Gutenberg. Makes the site lighter, ideal for those using Markdown."
 msgstr ""
 
-#: inc/panel.php:1257
+#: inc/panel.php:1258
 msgid "Post Revisions Limit"
 msgstr ""
 
-#: inc/panel.php:1267
+#: inc/panel.php:1268
 msgid "Maximum number of revisions WordPress keeps per post. WP default is unlimited — over years that bloats the database. Recommended: 5 (enough to recover from accidental edits without storing dozens of stale copies). Set to 0 to disable revisions entirely."
 msgstr ""
 
-#: inc/panel.php:1272
+#: inc/panel.php:1273
 msgid "Optimize Heartbeat"
 msgstr ""
 
-#: inc/panel.php:1279
+#: inc/panel.php:1280
 msgid "Reduces WordPress Heartbeat API frequency: bumps admin pages from 60 to 120 seconds (WP max, halves admin-ajax.php requests), keeps the default on post editor screens (preserves autosave and edit locking), and defensively deregisters Heartbeat on the frontend (in case any plugin enqueues it there). Useful on shared hosting or to reduce server load."
 msgstr ""
 
-#: inc/panel.php:1289
+#: inc/panel.php:1290
 msgid "Upload & Quality"
 msgstr ""
 
-#: inc/panel.php:1292
+#: inc/panel.php:1293
 msgid "Resize Images"
 msgstr ""
 
-#: inc/panel.php:1299
+#: inc/panel.php:1300
 msgid "Enables exact cropping (Hard Crop) of uploaded images to ensure banners and cards are always aligned."
 msgstr ""
 
-#: inc/panel.php:1304
+#: inc/panel.php:1305
 msgid "Image Quality (%)"
 msgstr ""
 
-#: inc/panel.php:1312
+#: inc/panel.php:1313
 msgid "Quality used when WordPress re-encodes images on upload (JPEG, WebP). Range 1-100. WP core default is 82; the theme defaults to 80 for a better size/quality tradeoff. <strong>AVIF uses its own derived scale</strong> (this value minus 30, floor 40): the 0-100 scale is not comparable across codecs, and AVIF at JPEG-like values produces needlessly large files. <strong>Tip on file formats:</strong> upload featured images as <strong>WebP</strong> or <strong>JPEG</strong> for photos; avoid PNG unless you need transparency (PNG files are typically 3-5x larger than the equivalent WebP)."
 msgstr ""
 
-#: inc/panel.php:1317
+#: inc/panel.php:1318
 msgid "Enable WebP/AVIF Delivery"
 msgstr ""
 
-#: inc/panel.php:1324
+#: inc/panel.php:1325
 msgid "Automatically generates WebP/AVIF versions of every uploaded JPEG/PNG (all sizes) and wraps <img> tags in <picture> with <source> elements. WebP uploads get an AVIF twin too. Browsers that support next-gen formats get the smaller file (AVIF ~50%, WebP ~30% smaller than JPEG), older browsers fall back transparently to the original. Original files are always preserved."
 msgstr ""
 
-#: inc/panel.php:1329
+#: inc/panel.php:1330
 msgid "Format Mode"
 msgstr ""
 
-#: inc/panel.php:1337
+#: inc/panel.php:1338
 msgid "AVIF only"
 msgstr ""
 
-#: inc/panel.php:1338
+#: inc/panel.php:1339
 msgid "WebP only"
 msgstr ""
 
-#: inc/panel.php:1339
+#: inc/panel.php:1340
 msgid "AVIF + WebP"
 msgstr ""
 
-#: inc/panel.php:1341
+#: inc/panel.php:1342
 msgid "Choose which next-gen format(s) to generate. <strong>AVIF only</strong> (default): ~50% smaller than JPEG, ~80% browser support (Chrome 85+, Firefox 86+, Safari 16+). Best compression but reduces fallback chain. <strong>WebP only</strong>: ~30% smaller than JPEG, ~95% browser support. <strong>AVIF + WebP</strong>: maximum compatibility — browser picks AVIF if supported, falls back to WebP for older browsers, falls back to original for very old browsers. Trade-off: each image generates 2 extra files on disk (~2x extra space)."
 msgstr ""
 
-#: inc/panel.php:1345
+#: inc/panel.php:1346
 msgid "Regenerate Library"
 msgstr ""
 
-#: inc/panel.php:1348
+#: inc/panel.php:1349
 msgid "Social Networks"
 msgstr ""
 
-#: inc/panel.php:1351
+#: inc/panel.php:1352
 msgid "Discord"
 msgstr ""
 
-#: inc/panel.php:1359
+#: inc/panel.php:1360
 msgid "Link to your server or permanent invite to the community."
 msgstr ""
 
-#: inc/panel.php:1364
+#: inc/panel.php:1365
 msgid "Telegram"
 msgstr ""
 
-#: inc/panel.php:1372
+#: inc/panel.php:1373
 msgid "Link to your official channel or group."
 msgstr ""
 
-#: inc/panel.php:1377
+#: inc/panel.php:1378
 msgid "YouTube"
 msgstr ""
 
-#: inc/panel.php:1385
+#: inc/panel.php:1386
 msgid "URL to your channel to display videos and streams."
 msgstr ""
 
-#: inc/panel.php:1390
+#: inc/panel.php:1391
 msgid "Instagram"
 msgstr ""
 
-#: inc/panel.php:1398
+#: inc/panel.php:1399
 msgid "Link to your profile for photos and visual updates."
 msgstr ""
 
-#: inc/panel.php:1403
+#: inc/panel.php:1404
 msgid "Steam"
 msgstr ""
 
-#: inc/panel.php:1411
+#: inc/panel.php:1412
 msgid "Link to your Steam group or curator profile."
 msgstr ""
 
-#: inc/panel.php:1416
+#: inc/panel.php:1417
 msgid "Twitter (X)"
 msgstr ""
 
-#: inc/panel.php:1424
+#: inc/panel.php:1425
 msgid "Link to your official profile on X."
 msgstr ""
 
-#: inc/panel.php:1429
+#: inc/panel.php:1430
 msgid "Facebook"
 msgstr ""
 
-#: inc/panel.php:1437
+#: inc/panel.php:1438
 msgid "Link to your official page or community."
 msgstr ""
 
-#: inc/panel.php:1442
+#: inc/panel.php:1443
 msgid "WhatsApp"
 msgstr ""
 
-#: inc/panel.php:1450
+#: inc/panel.php:1451
 msgid "Direct link to your WhatsApp number or group (use international format)."
 msgstr ""
 
-#: inc/panel.php:1458
+#: inc/panel.php:1459
 msgid "Site Verification"
 msgstr ""
 
-#: inc/panel.php:1461
+#: inc/panel.php:1462
 msgid "Google Search Console Verification"
 msgstr ""
 
-#: inc/panel.php:1469
+#: inc/panel.php:1470
 msgid "Verification code from Search Console → Settings → Ownership verification → HTML tag method. Paste only the <strong>content value</strong> (the part between quotes), not the full meta tag. Leave empty to skip."
 msgstr ""
 
-#: inc/panel.php:1474
+#: inc/panel.php:1475
 msgid "Bing Webmaster Verification"
 msgstr ""
 
-#: inc/panel.php:1482
+#: inc/panel.php:1483
 msgid "Verification code from Bing Webmaster Tools → Site → Ownership verification → HTML tag method. Paste only the <strong>content value</strong>, not the full meta tag. Leave empty to skip."
 msgstr ""
 
-#: inc/panel.php:1487
+#: inc/panel.php:1488
 msgid "Other Verification Meta Tags"
 msgstr ""
 
-#: inc/panel.php:1495
+#: inc/panel.php:1496
 msgid "Paste full <code>&lt;meta&gt;</code> tags from other verification services (one per line). Useful for: Pinterest (<code>p:domain_verify</code>), Facebook Domain (<code>facebook-domain-verification</code>), Yandex, Naver, Norton SafeWeb, Apple News, etc. Only <code>&lt;meta&gt;</code> tags with <code>name</code> + <code>content</code> attributes are accepted — anything else is stripped at save."
 msgstr ""
 
-#: inc/panel.php:1499
+#: inc/panel.php:1500
 msgid "Open Graph & Sharing"
 msgstr ""
 
-#: inc/panel.php:1502
+#: inc/panel.php:1503
 msgid "Open Graph Meta Tags"
 msgstr ""
 
-#: inc/panel.php:1509
+#: inc/panel.php:1510
 msgid "Enables the OG Tags system. Generates the necessary tags for social networks (Facebook, Discord, WhatsApp)."
 msgstr ""
 
-#: inc/panel.php:1514
+#: inc/panel.php:1515
 msgid "Fallback Image (Open Graph)"
 msgstr ""
 
-#: inc/panel.php:1521
+#: inc/panel.php:1522
 msgid "Select an image from your library to be the default on social networks."
 msgstr ""
 
-#: inc/panel.php:1528
+#: inc/panel.php:1529
 msgid "Enable WordPress Sitemap"
 msgstr ""
 
-#: inc/panel.php:1535
+#: inc/panel.php:1536
 msgid "Generates <code>/wp-sitemap.xml</code> with sub-sitemaps for posts, pages, taxonomies and authors (WP 5.5+ native). Disable only if you use a third-party SEO plugin (Yoast, RankMath) that provides its own sitemap."
 msgstr ""
 
-#: inc/panel.php:1540
+#: inc/panel.php:1541
 msgid "Include Authors in Sitemap"
 msgstr ""
 
-#: inc/panel.php:1547
+#: inc/panel.php:1548
 msgid "Adds <code>/wp-sitemap-users-1.xml</code> with author archive URLs. Useful for multi-author blogs. <strong>Leave off for solo blogs</strong> — the author archive duplicates the home page and creates near-duplicate content for crawlers."
 msgstr ""
 
-#: inc/panel.php:1552
+#: inc/panel.php:1553
 msgid "Include Custom Post Types in Sitemap"
 msgstr ""
 
-#: inc/panel.php:1559
+#: inc/panel.php:1560
 msgid "Includes any public Custom Post Types registered by the theme or plugins (alongside the standard <code>post</code> and <code>page</code>). Turn off if you have CPTs you don't want indexed (e.g. portfolio items used only as widgets)."
 msgstr ""
 
-#: inc/panel.php:1564
+#: inc/panel.php:1565
 msgid "IndexNow"
 msgstr ""
 
-#: inc/panel.php:1567
+#: inc/panel.php:1568
 msgid "Enable IndexNow"
 msgstr ""
 
-#: inc/panel.php:1574
+#: inc/panel.php:1575
 msgid "Notifies Bing, Yandex and other participating engines the moment a post or page is published, updated or unpublished — push indexing in minutes instead of waiting for the crawler. One ping is shared between all participating engines. <strong>Google does not join IndexNow</strong>, so keep the sitemap on. The key file is served automatically at <code>/{key}.txt</code> — nothing to upload."
 msgstr ""
 
-#: inc/panel.php:1579
+#: inc/panel.php:1580
 msgid "IndexNow Key"
 msgstr ""
 
-#: inc/panel.php:1586
+#: inc/panel.php:1587
 msgid "auto-generated on save when empty"
 msgstr ""
 
-#: inc/panel.php:1591
+#: inc/panel.php:1592
 msgid "robots.txt"
 msgstr ""
 
-#: inc/panel.php:1594
+#: inc/panel.php:1595
 msgid "Custom robots.txt"
 msgstr ""
 
 #. translators: %s = the site's sitemap URL like https://site.com/wp-sitemap.xml — appears inside a <pre> code block showing the WP default robots.txt
-#: inc/panel.php:1603
+#: inc/panel.php:1604
 #, php-format
 msgid "Override the WordPress default <code>/robots.txt</code> entirely. Leave empty to keep the WP-generated content. When filled, this <strong>replaces</strong> the output completely — you must include all directives you want crawlers to see.<br><br><strong>WP defaults (what you are overriding):</strong><pre class=\"rd-robots-defaults\">User-agent: *%1$sDisallow: /wp-admin/%1$sAllow: /wp-admin/admin-ajax.php%1$s%1$sSitemap: %2$s</pre>Copy any defaults you want to keep into your custom output. Common additions: block LLM scrapers (<code>GPTBot</code>, <code>ClaudeBot</code>, <code>CCBot</code>), block search/pagination URLs, declare multiple sitemaps."
 msgstr ""
 
-#: inc/panel.php:1615
+#: inc/panel.php:1616
 msgid "Ads — Global Script"
 msgstr ""
 
-#: inc/panel.php:1618
+#: inc/panel.php:1619
 msgid "Enable ads"
 msgstr ""
 
-#: inc/panel.php:1625
+#: inc/panel.php:1626
 msgid "Master switch for <strong>all</strong> ad output: the global script, the banner zones (header/anchor/sidebar), the in-article zones and the Ad widget. Turn it <strong>off</strong> to pause every ad at once <strong>without removing your codes</strong> — they stay saved and come right back when you turn it on. The CSP also drops the ad origins while off. (Your <code>ads.txt</code> keeps being served — it is a declaration file, not an ad.)"
 msgstr ""
 
-#: inc/panel.php:1630
+#: inc/panel.php:1631
 msgid "Global Ad Script"
 msgstr ""
 
-#: inc/panel.php:1637
+#: inc/panel.php:1638
 msgid "Paste here the global &lt;head&gt; tag (e.g. AdSense Auto Ads)."
 msgstr ""
 
-#: inc/panel.php:1642
+#: inc/panel.php:1643
 msgid "ads.txt"
 msgstr ""
 
-#: inc/panel.php:1650
+#: inc/panel.php:1651
 msgid "Content served <strong>virtually</strong> at <code>/ads.txt</code> — no file to upload via SFTP, survives migrations and is included in the settings backup. Paste the lines your ad networks give you (AdSense shows yours under <em>Sites → ads.txt</em>), one record per line. Empty = no ads.txt is served. <strong>Note:</strong> a physical ads.txt file in the web root takes precedence — delete it to use this field."
 msgstr ""
 
-#: inc/panel.php:1655
+#: inc/panel.php:1656
 msgid "Delay ads until interaction"
 msgstr ""
 
-#: inc/panel.php:1662
+#: inc/panel.php:1663
 msgid "Loads the ad network scripts (adsbygoogle.js etc.) only on the visitor's <strong>first interaction</strong> — scroll, touch, mouse move or key press — instead of competing with your content during the initial page load. The ad units stay in the HTML with their reserved space (no layout shift); only the network JS arrives later. Engaged visitors see ads ~instantly after their first gesture; visitors who bounce without interacting never download ~440 KB of ad JS. Uses the official network loader unmodified — only the timing changes."
 msgstr ""
 
-#: inc/panel.php:1667
+#: inc/panel.php:1668
 msgid "Fallback timeout (seconds)"
 msgstr ""
 
-#: inc/panel.php:1674
+#: inc/panel.php:1675
 msgid "Safety net for the option above: loads the ads anyway after this many seconds when the visitor never interacts (e.g. reading without scrolling). <code>0</code> = interaction only, no timer. Default: 5."
 msgstr ""
 
-#: inc/panel.php:1678
+#: inc/panel.php:1679
 msgid "Ads — Banners by Position"
 msgstr ""
 
-#: inc/panel.php:1681
+#: inc/panel.php:1682
 msgid "Top Banner - Desktop (728x90)"
 msgstr ""
 
-#: inc/panel.php:1688
+#: inc/panel.php:1689
 msgid "Rendered in the header only on large screens (PCs and Laptops)."
 msgstr ""
 
-#: inc/panel.php:1693
+#: inc/panel.php:1694
 msgid "Top Banner - Mobile (320x100)"
 msgstr ""
 
-#: inc/panel.php:1700
+#: inc/panel.php:1701
 msgid "Rendered in the header only on smartphone screens."
 msgstr ""
 
-#: inc/panel.php:1705
+#: inc/panel.php:1706
 msgid "Sidebar Banner - Sticky (300x600)"
 msgstr ""
 
-#: inc/panel.php:1712
+#: inc/panel.php:1713
 msgid "Rendered at the bottom of the sidebar. Follows the screen scroll."
 msgstr ""
 
-#: inc/panel.php:1716
+#: inc/panel.php:1717
 msgid "Ads — In-Article"
 msgstr ""
 
-#: inc/panel.php:1719
+#: inc/panel.php:1720
 msgid "In-Article Ad #1"
 msgstr ""
 
-#: inc/panel.php:1726
+#: inc/panel.php:1727
 msgid "Ad injected between paragraphs of single posts (not pages). A <strong>fixed 300x250</strong> rectangle is recommended — compact, high demand, and a predictable height for the reserved space below (zero layout shift). Leave empty to disable. CSP nonce and lazy-load are applied automatically."
 msgstr ""
 
-#: inc/panel.php:1731
+#: inc/panel.php:1732
 msgid "Insert after paragraph #"
 msgstr ""
 
-#: inc/panel.php:1738
+#: inc/panel.php:1739
 msgid "The ad goes right after this top-level paragraph (paragraphs inside quotes/lists/code are skipped). Avoid 1 — Google penalizes ads above the content. Default: 4. The ad only appears if the post has at least one paragraph after this one."
 msgstr ""
 
-#: inc/panel.php:1743
+#: inc/panel.php:1744
 msgid "Reserved height (px)"
 msgstr ""
 
-#: inc/panel.php:1752
+#: inc/panel.php:1753
 msgid "Min-height reserved for the slot <strong>before the ad loads</strong> = zero layout shift (CLS). Match it to the ad size + label: a 300x250 wants ~290-300. Default: 300. Use 0 to reserve nothing (not recommended)."
 msgstr ""
 
-#: inc/panel.php:1757
+#: inc/panel.php:1758
 msgid "In-Article Ad #2 (long articles)"
 msgstr ""
 
-#: inc/panel.php:1764
+#: inc/panel.php:1765
 msgid "Optional second zone, deeper in the article. Only appears when the post is long enough to reach the paragraph below — short posts keep a single ad. Leave empty to disable."
 msgstr ""
 
-#: inc/panel.php:1769
+#: inc/panel.php:1770
 msgid "Insert #2 after paragraph #"
 msgstr ""
 
-#: inc/panel.php:1776
+#: inc/panel.php:1777
 msgid "Set this deep (e.g. 10-12) so the second ad only shows on long reads. Default: 10."
 msgstr ""
 
-#: inc/panel.php:1781
+#: inc/panel.php:1782
 msgid "Reserved height #2 (px)"
 msgstr ""
 
-#: inc/panel.php:1790
+#: inc/panel.php:1791
 msgid "Reserved height for the second zone. Default: 300."
 msgstr ""
 
-#: inc/panel.php:1799
+#: inc/panel.php:1800
 msgid "Access Control"
 msgstr ""
 
-#: inc/panel.php:1802
+#: inc/panel.php:1803
 msgid "Enable Maintenance"
 msgstr ""
 
-#: inc/panel.php:1809
+#: inc/panel.php:1810
 msgid "Blocks access from regular visitors and displays a \"We'll be right back\" screen (Returns HTTP 503 to Google)."
 msgstr ""
 
-#: inc/panel.php:1814
+#: inc/panel.php:1815
 msgid "Dev Password"
 msgstr ""
 
-#: inc/panel.php:1821
+#: inc/panel.php:1822
 msgid "Password for developers to bypass maintenance. Access: <strong>yourdomain.com/?rd-dev-login</strong> and enter the password in the form (do not pass it through the URL). The password is stored as a cryptographic hash — after saving, this field will appear empty (this is normal and secure)."
 msgstr ""
 
-#: inc/panel.php:1826
+#: inc/panel.php:1827
 msgid "Maintenance Text"
 msgstr ""
 
-#: inc/panel.php:1833
+#: inc/panel.php:1834
 msgid "Customize the message visitors will see on the block screen. Accepts basic HTML (e.g. &lt;strong&gt;, &lt;br&gt;)."
 msgstr ""
 
-#: inc/panel.php:1843
+#: inc/panel.php:1844
 msgid "Tracking Settings"
 msgstr ""
 
-#: inc/panel.php:1846
+#: inc/panel.php:1847
 msgid "Views Counter"
 msgstr ""
 
-#: inc/panel.php:1853
+#: inc/panel.php:1854
 msgid "Enables the post views counting system. A single IP counts only once every 30 minutes. Known bots are automatically ignored."
 msgstr ""
 
-#: inc/panel.php:1858
+#: inc/panel.php:1859
 msgid "Views Display Format"
 msgstr ""
 
-#: inc/panel.php:1866
+#: inc/panel.php:1867
 msgid "Full (1.234)"
 msgstr ""
 
-#: inc/panel.php:1867
+#: inc/panel.php:1868
 msgid "Compact (1.2k / 1.2M)"
 msgstr ""
 
-#: inc/panel.php:1869
+#: inc/panel.php:1870
 msgid "How view counts are displayed on the frontend (post cards and single posts). The admin panel always shows exact numbers."
 msgstr ""
 
-#: inc/panel.php:1874
+#: inc/panel.php:1875
 msgid "Items per Ranking"
 msgstr ""
 
-#: inc/panel.php:1889
+#: inc/panel.php:1890
 msgid "Number of posts shown in the Top Views and Top Comments rankings. Default 5 (keeps the dashboard compact)."
 msgstr ""
 
-#: inc/panel.php:1963
+#: inc/panel.php:1961
 msgid "Select Image"
 msgstr ""
 
