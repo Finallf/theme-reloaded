@@ -20,7 +20,7 @@ defined( 'ABSPATH' ) || exit;
  *                                                                             *
  * WordPress APIs used (stable since WP 2.8+):                                 *
  *   - pre_set_site_transient_update_themes  → inject the update into transient*
- *   - themes_api                            → feed the "View Details" modal   *
+ *   - admin_post_rd_self_update_changelog   → our own "View Details" page     *
  *   - upgrader_source_selection             → defense in depth for the        *
  *                                              extracted ZIP's folder name    *
  *   - wp_ajax_rd_check_update                → endpoint for "Check now" button*
@@ -191,11 +191,12 @@ function rd_self_update_inject( $transient ) {
 			'theme'       => RD_SELF_UPDATE_SLUG,
 			'new_version' => $release['version'],
 			// WP iframes this URL for the theme's "View version details" link.
-			// Point it at our own themes_api modal (theme-install.php), NOT the
-			// GitHub release page — github.com sends X-Frame-Options: deny, so the
-			// browser refuses to embed it ("connection refused"). Our modal renders
-			// the changelog inline and is same-origin, so it frames fine.
-			'url'         => self_admin_url( 'theme-install.php?tab=theme-information&theme=' . RD_SELF_UPDATE_SLUG ),
+			// Point it at OUR own same-origin changelog page (the admin-post
+			// handler below) — NOT the GitHub release page (github.com sends
+			// X-Frame-Options: deny → "connection refused"), and NOT WP's
+			// theme-information modal (the THEME modal is screenshot/install-only
+			// and ignores our `sections`, so it renders blank).
+			'url'         => admin_url( 'admin-post.php?action=rd_self_update_changelog' ),
 			'package'     => $release['download_url'],
 		);
 	}
@@ -206,46 +207,71 @@ add_filter( 'pre_set_site_transient_update_themes', 'rd_self_update_inject' );
 
 /*
 =============================================================================
- *  "VIEW DETAILS" MODAL (themes_api) — render via our Parsedown
+ *  "VIEW DETAILS" MODAL — our own changelog page (thickbox iframe)
  * ============================================================================= */
 
 /**
- * Hook on themes_api — when the admin clicks "View version details" on the
- * theme card (modal popup), WP calls this filter to build the content.
+ * Renders the release changelog inside the theme-update "View version details"
+ * thickbox. WP iframes the update's `url` (set to this admin-post action in
+ * rd_self_update_inject()), so we serve a small same-origin page with the
+ * changelog — instead of the GitHub release page (X-Frame-Options: deny) or WP's
+ * theme-information modal (which is screenshot/install-only and ignores our
+ * sections, rendering blank).
  *
- * Markdown rendering via OUR Parsedown — zero external dep.
+ * Markdown → HTML via our bundled Parsedown (safe mode), then wp_kses_post.
  */
-function rd_self_update_themes_api( $result, $action, $args ) {
-	if ( 'theme_information' !== $action || empty( $args->slug ) || RD_SELF_UPDATE_SLUG !== $args->slug ) {
-		return $result;
+function rd_self_update_changelog_iframe() {
+	if ( ! current_user_can( 'update_themes' ) ) {
+		wp_die( esc_html__( 'You are not allowed to view this.', 'reloaded' ) );
 	}
 
-	$release = rd_self_update_fetch_release();
-	if ( ! $release ) {
-		return $result;
+	$release   = rd_self_update_fetch_release();
+	$changelog = '';
+	if ( $release && '' !== (string) $release['body'] ) {
+		if ( ! class_exists( 'Parsedown' ) ) {
+			require_once get_template_directory() . '/lib/Parsedown.php';
+		}
+		// semantic-release appends a trailing "<br>" + "---" separator. Parsedown's
+		// safe mode escapes the "<br>" into literal text and turns "---" into a
+		// stray rule, so drop those standalone separator lines first.
+		$body = (string) preg_replace( '/^[ \t]*(?:<br\s*\/?>|-{3,}|\*{3,}|_{3,})[ \t]*$/mi', '', (string) $release['body'] );
+
+		$parsedown = new Parsedown();
+		$parsedown->setSafeMode( true ); // strip dangerous HTML from the release markdown.
+		$changelog = wp_kses_post( $parsedown->text( $body ) );
 	}
 
-	if ( ! class_exists( 'Parsedown' ) ) {
-		require_once get_template_directory() . '/lib/Parsedown.php';
-	}
-	$parsedown = new Parsedown();
-	$parsedown->setSafeMode( true ); // strip dangerous HTML from the release markdown.
-
-	$theme = wp_get_theme( RD_SELF_UPDATE_SLUG );
-
-	return (object) array(
-		'name'          => (string) $theme->get( 'Name' ),
-		'slug'          => RD_SELF_UPDATE_SLUG,
-		'version'       => $release['version'],
-		'author'        => (string) $theme->get( 'Author' ),
-		'homepage'      => 'https://github.com/' . RD_SELF_UPDATE_REPO,
-		'download_link' => $release['download_url'],
-		'sections'      => array(
-			'changelog' => $parsedown->text( $release['body'] ),
-		),
-	);
+	// A small SELF-CONTAINED page — deliberately NOT iframe_header(), which boots
+	// the whole admin_enqueue_scripts / admin_head machinery in this screenless
+	// admin-post context (no current screen, null hook suffix) and trips other
+	// callbacks (e.g. a plugin enqueue typed `string $hook` fatals on the null).
+	// We control every byte here, so the modal can't be broken by other plugins.
+	nocache_headers();
+	header( 'Content-Type: text/html; charset=' . get_option( 'blog_charset' ) );
+	?>
+<!DOCTYPE html>
+<html <?php language_attributes(); ?>>
+<head>
+	<meta charset="<?php bloginfo( 'charset' ); ?>">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title><?php esc_html_e( 'Changelog', 'reloaded' ); ?></title>
+	<?php printf( '<link rel="stylesheet" href="%s" media="all">', esc_url( admin_url( 'css/common.min.css' ) ) ); // phpcs:ignore WordPress.WP.EnqueuedResources.NonEnqueuedStylesheet -- standalone admin-post page; there is no wp_head to enqueue into, so a direct link is the only option. ?>
+</head>
+<body class="wp-core-ui rd-changelog-modal">
+	<div class="wrap">
+		<?php if ( '' !== $changelog ) : ?>
+			<h1><?php echo esc_html( 'ReloadeD ' . (string) ( $release['version'] ?? '' ) ); ?></h1>
+			<?php echo $changelog; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- wp_kses_post() applied above. ?>
+		<?php else : ?>
+			<p><?php esc_html_e( 'No changelog available for this release.', 'reloaded' ); ?></p>
+		<?php endif; ?>
+	</div>
+</body>
+</html>
+	<?php
+	exit;
 }
-add_filter( 'themes_api', 'rd_self_update_themes_api', 10, 3 );
+add_action( 'admin_post_rd_self_update_changelog', 'rd_self_update_changelog_iframe' );
 
 /*
 =============================================================================
