@@ -7,11 +7,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 <br>
 
 
-## [1.13.1-beta.2](https://github.com/Finallf/theme-reloaded/compare/v1.13.1-beta.1...v1.13.1-beta.2) (2026-06-22)
+## [1.13.1](https://github.com/Finallf/theme-reloaded/compare/v1.13.0...v1.13.1) (2026-06-21)
 
 ### 🐛 Bug Fixes
 
-* **updater:** render the theme changelog in a self-contained modal page ([322ade7](https://github.com/Finallf/theme-reloaded/commit/322ade7fc0bd89e1c9978f02a576168346a71a5a))
+* **updater:** theme "View details" modal — stop iframing github.com ([9856391](https://github.com/Finallf/theme-reloaded/commit/9856391b0813b4e760d57681b49f14120b009dee))
 
 <br>
 
